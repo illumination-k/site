@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Code, Link, Root, Text } from "mdast";
+import { Code, Link, Root } from "mdast";
 import { toString } from "mdast-util-to-string";
 import { visit } from "unist-util-visit";
 import { URL } from "url";
@@ -63,7 +63,7 @@ export default function embedGithub() {
         const linkNode: Link = { type: "link", url: text, children: [{ type: "text", value: parsed.filePath }] };
         linkNode.data = {};
         linkNode.data.hProperties = { className: "github-embed-title" };
-        parent.children.splice(index, 1, linkNode, newNode)
+        parent.children.splice(index, 1, linkNode, newNode);
       });
     });
 
