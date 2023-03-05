@@ -6,14 +6,15 @@ import remarkMath from "remark-math";
 import remarkMdx from "remark-mdx";
 
 import rehypePrism from "./rehype-plugins/rehypePrism";
-import { attachIdToHeadings, embedGithub } from "./remark-plugins";
+import { attachIdToHeadings } from "./remark-plugins";
+import remarkDirectiveEmbedGenerator, { GithubTransformer } from "./remark-plugins/embed";
 
 export const REMARK_PLUGINS = [
   remarkGfm,
   remarkMath,
   remarkDirective,
   attachIdToHeadings,
-  embedGithub,
+  remarkDirectiveEmbedGenerator([new GithubTransformer()]),
   remarkMdx,
 ];
 

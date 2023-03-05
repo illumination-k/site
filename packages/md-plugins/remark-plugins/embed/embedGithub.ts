@@ -1,8 +1,12 @@
 import axios from "axios";
-import { Code, Link, Root } from "mdast";
-import { toString } from "mdast-util-to-string";
-import { visit } from "unist-util-visit";
+import type { Code, Link, Parent } from "mdast";
+
+import type { Directive } from "mdast-util-directive";
 import { URL } from "url";
+
+import { toString } from "mdast-util-to-string";
+
+import { DirectiveTransformer } from ".";
 
 function parseGithubUrl(url: string) {
   const target = new URL(url);
@@ -32,41 +36,57 @@ function parseGithubUrl(url: string) {
   };
 }
 
-export default function embedGithub() {
-  return async (ast: Root) => {
-    const transforms: (() => Promise<void>)[] = [];
+/*
+Directive = `::gh[url]` or `::github[url]`
+*/
+export class GithubTransformer implements DirectiveTransformer {
+  url?: string;
+  constructor() {}
 
-    // @ts-ignore
-    visit(ast, "paragraph", (node, index, parent) => {
-      const text = toString(node);
-      if (!text.startsWith("https://github.com/")) {
-        return;
-      }
+  shouldTransform(node: Directive) {
+    if (node.type !== "leafDirective") return false;
 
-      const parsed = parseGithubUrl(text);
+    if (!(node.name === "gh" || node.name === "github")) {
+      return false;
+    }
 
-      transforms.push(async () => {
-        const allValue = (await axios.get(parsed.rawFileUrl)).data;
-        let lines = allValue.split("\n");
+    const url = toString(node);
 
-        if (parsed.startLine > 0) {
-          lines = lines.slice(Number(parsed.startLine) - 1, parsed.endLine);
-        }
+    if (!url && typeof url !== "string") {
+      return false;
+    }
 
-        const newNode: Code = {
-          type: "code",
-          meta: `showLineNumber=${parsed.startLine}`,
-          lang: parsed.fileExtension,
-          value: lines.join("\n"),
-        };
+    if (!url.startsWith("https://github.com/")) {
+      return false;
+    }
 
-        const linkNode: Link = { type: "link", url: text, children: [{ type: "text", value: parsed.filePath }] };
-        linkNode.data = {};
-        linkNode.data.hProperties = { className: "github-embed-title" };
-        parent.children.splice(index, 1, linkNode, newNode);
-      });
-    });
+    this.url = url;
 
-    await Promise.all(transforms.map((f) => f()));
-  };
+    return true;
+  }
+
+  async transform(node: Directive, index: number | null, parent: Parent) {
+    if (!this.url) return;
+    const parsed = parseGithubUrl(this.url);
+
+    const allValue = (await axios.get(parsed.rawFileUrl)).data;
+    let lines = allValue.split("\n");
+
+    if (parsed.startLine > 0) {
+      lines = lines.slice(Number(parsed.startLine) - 1, parsed.endLine);
+    }
+
+    const newNode: Code = {
+      type: "code",
+      meta: `showLineNumbers=${parsed.startLine},github-embed`,
+      lang: parsed.fileExtension,
+      value: lines.join("\n"),
+    };
+
+    const linkNode: Link = { type: "link", url: this.url, children: [{ type: "text", value: parsed.filePath }] };
+    linkNode.data = {};
+    linkNode.data.hProperties = { className: "github-embed-title" };
+
+    parent.children.splice(index || 0, 1, linkNode, newNode);
+  }
 }
