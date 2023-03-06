@@ -15,6 +15,6 @@ describe("Test: attachIdToHeading", async () => {
       .use(rehypeStringify)
       .process("# h1\n## h2 ## h3");
 
-    expect(vfile.value).toStrictEqual("<h2 id=\"0\">h1</h2>\n<h3 id=\"1\">h2 ## h3</h3>");
+    expect(vfile.value).toStrictEqual("<h1 id=\"0\">h1</h1>\n<h2 id=\"1\">h2 ## h3</h2>");
   });
 });

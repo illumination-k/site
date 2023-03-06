@@ -3,11 +3,12 @@ import type { NextPage } from "next";
 import Head from "next/head";
 
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
+import "katex/dist/katex.min.css";
 
 import { runSync } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 
-import { css, tw } from "@twind/core";
+import { css } from "@twind/core";
 
 export type MdViewProps = {
   compiledMarkdown: string;
@@ -17,25 +18,48 @@ export type MdViewProps = {
 function MdView({ compiledMarkdown, components }: MdViewProps) {
   const Content = runSync(compiledMarkdown, runtime).default;
 
-  return <Content />;
+  return <Content components={components} />;
 }
 
 const Home: NextPage<{ compiledMarkdown: string }> = ({ compiledMarkdown }) => {
   const style = css({
-    label: "main",
+    label: "markdown",
     "h1,h2,h3,h4,h5,h6": { "@apply": "font-sans px-2" },
-    h1: { "@apply": "font-black text-3xl" },
+    h1: { "@apply": "font-black text-3xl mt-2 mb-3" },
     h2: {
-      "@apply": "font-black text-2xl border-b-1 border-gray-200 pb-1",
+      "@apply": "font-black text-2xl border-b-1 border-gray-200 pb-1 mt-2 mb-2",
     },
-    "& a.github-embed-title": {
-      "@apply": "px-4 text-lg text-blue-500 w-full bg-slate-100 rounded-lg",
+    h3: {
+      "@apply": "text-xl font-bold mb-1",
+    },
+    ul: { "@apply": "max-w-md text-gray-500 list-[circle] list-inside" },
+
+    // code block
+    "code[class*=\"language-\"],pre[class*=\"language-\"]": {
+      "@apply": "py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
+      "& span.code-line": {
+        "@apply": "px-4",
+      },
     },
 
-    // prisma
-    "code[class*=\"language-\"],pre[class*=\"language-\"]": {
-      "@apply": "bg-slate-100 font-mono",
+    // embed
+    "div.github-embed": {
+      "@apply": "bg-slate-200 rounded-lg border-slate-200 border-1 m-1",
+      "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
+        "@apply": "rounded-t-none",
+        "& span.code-line": {
+          "@apply": "px-10",
+        },
+        "& span.line-number::before": {
+          "@apply": "-ml-9 content-[attr(line)] mr-4 text-right text-slate-400",
+        },
+      },
+      "& a.github-embed-title": {
+        "@apply": "px-4 py-[2px] text-sm text-blue-500 text-ellipsis overflow-hidden",
+      },
     },
+
+    /// prisma token
     "token.namespace": { "@apply": "opacity-[.7]" },
     [
       `.token.string,
@@ -83,12 +107,9 @@ const Home: NextPage<{ compiledMarkdown: string }> = ({ compiledMarkdown }) => {
     .token.bold`
     ]: { "@apply": "font-medium" },
 
-    // github-embed
-    "span.code-line": {
-      "@apply": "px-10",
-    },
-    "span.line-number::before": {
-      "@apply": "-ml-10 content-[attr(line)] mr-4 text-right text-slate-400",
+    // gh-card
+    "& div.gh-card": {
+      "@apply": "py-2",
     },
   });
   return (
@@ -109,19 +130,37 @@ const Home: NextPage<{ compiledMarkdown: string }> = ({ compiledMarkdown }) => {
 
 export async function getStaticProps() {
   const t = `# Refractor
-## Import refractor and register lang
 
-- a
+## List
+
+- 1
+- 2
+  - 3
+
+## TaskList
 
 - [x] b
+- [ ] c
 
 |a|b|
 |---|---|
 |t|t|
 
+## Math
+
+$\\sum_{a}^{b}$
+
+## Code
+
 We should import refractor and register langs as following:
 
+\`\`\`js
+console.log('test')
+\`\`\`
+
 ::gh[https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15]
+
+::gh-card[illumination-k/blog-remark]
 `;
 
   const compiledMarkdown = String(
@@ -129,6 +168,7 @@ We should import refractor and register langs as following:
       outputFormat: "function-body",
       format: "mdx",
       development: false,
+      // @ts-ignore
       remarkPlugins: REMARK_PLUGINS,
       rehypePlugins: REHYPE_PLUGINS,
     }),

@@ -1,12 +1,17 @@
 {
   "name": "site",
-  "version": "1.0.0",
   "description": "",
+  "version": "1.0.0",
+  "author": "",
+  "keywords": [],
+  "license": "ISC",
   "main": "index.js",
   "scripts": {
+    "format": "fixpack && dprint fmt",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "devDependencies": {
+    "dprint": "^0.34.5",
+    "fixpack": "^4.0.0"
+  }
 }

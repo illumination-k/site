@@ -13,7 +13,7 @@ export const postMetaSchema = z.object({
 
 export type PostMeta = z.infer<typeof postMetaSchema>;
 
-export const postSchema = postMetaSchema.extend({ markdown: z.string() });
+export const postSchema = z.object({ meta: postMetaSchema, markdown: z.string() });
 export type Post = z.infer<typeof postSchema>;
 
 export const postsSchema = z.array(postSchema);

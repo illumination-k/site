@@ -11,10 +11,16 @@ export default defineConfig({
   presets: [presetAutoprefix(), presetTailwind()],
   ignorelist: [
     // md related
-    "line-number",
+    // gfm
     "contains-task-list",
     "task-list-item",
+
+    // embed
     "github-embed-title",
+    "github-embed",
+    "gh-card",
+    // prisma
+    "line-number",
     "code-highlight",
     "code-line",
     "token",
@@ -24,5 +30,22 @@ export default defineConfig({
     "function",
     "operator",
     /language-*/,
+
+    // katex
+    /math*/,
+    /katex*/,
+    /vlist-*/,
+    "base",
+    "strut",
+    "pstrut",
+    "sizing",
+    /reset-*/,
+    /size*/,
+    "mop",
+    "mord",
+    "mtight",
+    "op-symbol",
+    "small-op",
+    "msupsub",
   ],
 });

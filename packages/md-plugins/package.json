@@ -35,6 +35,7 @@
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "test": "vitest"
+    "watch:test": "vitest watch",
+    "test": "vitest run"
   }
 }
