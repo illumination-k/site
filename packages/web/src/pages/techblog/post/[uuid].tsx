@@ -20,7 +20,7 @@ type Props = {
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
   const dump = await readDump(".");
-  const post = dump.posts.filter((p) => p.meta.uuid === params?.id).pop();
+  const post = dump.posts.filter((p) => p.meta.uuid === params?.uuid).pop();
 
   if (!post) {
     throw `${params?.id} is not found`;
@@ -43,12 +43,18 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
 };
 
 interface Params extends ParsedUrlQuery {
-  id: string;
+  uuid: string;
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
+  const dump = await readDump(".");
+
+  const paths = dump.posts.map((post) => {
+    return { params: { uuid: post.meta.uuid }, locale: post.meta.lang };
+  });
+
   return {
-    paths: [{ params: { id: "1" } }],
+    paths,
     fallback: false,
   };
 };

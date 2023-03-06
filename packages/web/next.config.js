@@ -14,6 +14,10 @@ const nextConfig = {
     "@twind/preset-tailwind",
     "@twind/with-next",
   ],
+  i18n: {
+    locales: ["ja", "en"],
+    defaultLocale: "ja",
+  },
 };
 
 module.exports = nextConfig;
