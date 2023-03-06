@@ -22,7 +22,7 @@ describe("github-card embed", () => {
     const vfile = await processor.process(`::gh-card[illumination-k/blog]`);
 
     expect(vfile.value).toStrictEqual(
-      "<a href=\"https://github.com/illumination-k/blog\"><img src=\"https://gh-card.dev/repos/illumination-k/blog.svg?fullname=\" alt=\"illumination-k/blog\"></a>",
+      "<div class=\"gh-card\"><a href=\"https://github.com/illumination-k/blog\"><img src=\"https://gh-card.dev/repos/illumination-k/blog.svg?fullname=\" alt=\"illumination-k/blog\"></a></div>",
     );
   });
 });

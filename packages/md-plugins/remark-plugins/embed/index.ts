@@ -2,7 +2,8 @@ import type { Parent, Root } from "mdast";
 import type { Directive } from "mdast-util-directive";
 import { visit } from "unist-util-visit";
 
-export { GithubTransformer } from "./embedGithub";
+export { GithubTransformer } from "./github";
+export { default as GithubCardTransfomer } from "./github-card";
 
 export interface DirectiveTransformer {
   shouldTransform: (node: Directive) => boolean;

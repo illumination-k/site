@@ -10,28 +10,24 @@ import remarkDirectiveEmbedGenerator, { GithubTransformer } from ".";
 
 const embedGithub = remarkDirectiveEmbedGenerator([new GithubTransformer()]);
 
+const processor = unified()
+  .use(remarkParse)
+  .use(remarkDirective)
+  .use(remarkDirectiveEmbedGenerator([new GithubTransformer()]))
+  .use(remarkRehype)
+  .use(rehypePrism)
+  .use(rehypeStringify);
+
 describe("test github embed", () => {
   it("test no url text", async () => {
-    const vfile = await unified()
-      .use(remarkParse)
-      .use(remarkDirective)
-      .use(remarkDirectiveEmbedGenerator([new GithubTransformer()]))
-      .use(remarkRehype)
-      .use(rehypePrism)
-      .use(rehypeStringify)
+    const vfile = await processor
       .process("# h1");
 
     expect(vfile.value).toStrictEqual("<h1>h1</h1>");
   });
 
   it("test url only", async () => {
-    const vfile = await unified()
-      .use(remarkParse)
-      .use(remarkDirective)
-      .use(embedGithub)
-      .use(remarkRehype)
-      .use(rehypePrism)
-      .use(rehypeStringify)
+    const vfile = await processor
       .process(
         "::gh[https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15]",
         // "::hr{.red}"
@@ -49,13 +45,7 @@ describe("test github embed", () => {
   });
 
   it("test usual markdown", async () => {
-    const vfile = await unified()
-      .use(remarkParse)
-      .use(remarkDirective)
-      .use(remarkDirectiveEmbedGenerator([new GithubTransformer()]))
-      .use(remarkRehype)
-      .use(rehypePrism)
-      .use(rehypeStringify)
+    const vfile = await processor
       .process(`# Refractor
 ## Import refractor and register lang
 

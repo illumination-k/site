@@ -11,4 +11,4 @@
   - https://citation.crosscite.org/docs.html
   - curl -LH "Accept: text/x-bibliography; style=apa" https://doi.org/10.1126/science.169.3946.635
 - isbn: `::isbn10[isbn]`
-- post: `::post[uuid]`
+- post: `::post[[dir]/[categories]/[uuid]]`

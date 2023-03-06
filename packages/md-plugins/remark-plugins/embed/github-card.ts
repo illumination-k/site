@@ -24,8 +24,14 @@ export default class GithubCardTransformer implements DirectiveTransformer {
     const svgUrl = `https://gh-card.dev/repos/${this.repo}.svg?fullname=`;
 
     const imageNode: Image = { type: "image", url: svgUrl, alt: this.repo };
-    const linkNode: Link = { type: "link", url: repoUrl, children: [imageNode] };
+    const linkNode: Link = {
+      type: "link",
+      url: repoUrl,
+      children: [imageNode],
+    };
 
-    parent.children[index || 0] = linkNode;
+    node.data = { hProperties: { className: "gh-card" } };
+
+    node.children = [linkNode];
   }
 }
