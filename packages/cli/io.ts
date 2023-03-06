@@ -1,9 +1,12 @@
 import { PathLike, readFile } from "fs";
 import { promisify } from "util";
 
+// @ts-ignore
 import fm, { FrontMatterResult } from "front-matter";
+import { glob } from "glob";
+import tinysegmenter from "tiny-segmenter";
 
-import { PostMeta, postMetaSchema } from "../share/type";
+import { DumpPost, Post, PostMeta, postMetaSchema } from "common";
 
 const readFileAsync = promisify(readFile);
 
@@ -23,6 +26,18 @@ export async function readPost(path: PathLike) {
   }
 
   return { ...meta.data, markdown: fmResult.body };
+}
+
+function dumpPost(post: Post): DumpPost {
+  const segmenter = new tinysegmenter();
+  const tokens = segmenter.segment(post.markdown);
+  return { ...post, tokens };
+}
+
+export async function getDumpPosts(src: PathLike): Promise<DumpPost[]> {
+  const mdFiles = await glob(`${src}/**/*.md`, { ignore: "node_modules/*" });
+
+  return Promise.all(mdFiles.map(async (f) => dumpPost(await readPost(f))));
 }
 
 function generateUuid() {

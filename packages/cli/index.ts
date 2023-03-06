@@ -13,8 +13,8 @@ yargs
         describe: "the name to say hello to",
       });
     },
-    function (argv) {
+    function(argv) {
       console.log("hello", argv.name, "welcome to yargs!");
-    }
+    },
   )
   .help().parse();

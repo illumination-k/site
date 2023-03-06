@@ -2,15 +2,12 @@ import { compile } from "@mdx-js/mdx";
 import type { NextPage } from "next";
 import Head from "next/head";
 
-// import MdView from "@/client/post/components/MdView";
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
 
-import { run, runSync } from "@mdx-js/mdx";
-import { Fragment, useEffect, useState } from "react";
+import { runSync } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 
-import "prismjs/themes/prism-twilight.css";
-import { tw, css } from "@twind/core";
+import { css, tw } from "@twind/core";
 
 export type MdViewProps = {
   compiledMarkdown: string;
@@ -26,19 +23,71 @@ function MdView({ compiledMarkdown, components }: MdViewProps) {
 const Home: NextPage<{ compiledMarkdown: string }> = ({ compiledMarkdown }) => {
   const style = css({
     label: "main",
-    "& h1": {
-      "@apply": "text-3xl text-red-500",
+    "h1,h2,h3,h4,h5,h6": { "@apply": "font-sans px-2" },
+    h1: { "@apply": "font-black text-3xl" },
+    h2: {
+      "@apply": "font-black text-2xl border-b-1 border-gray-200 pb-1",
     },
     "& a.github-embed-title": {
       "@apply": "px-4 text-lg text-blue-500 w-full bg-slate-100 rounded-lg",
     },
-    "& pre": {
-      "@apply": "mt-0",
+
+    // prisma
+    "code[class*=\"language-\"],pre[class*=\"language-\"]": {
+      "@apply": "bg-slate-100 font-mono",
     },
-    "& span.code-line": {
+    "token.namespace": { "@apply": "opacity-[.7]" },
+    [
+      `.token.string,
+    .token.attr-value`
+    ]: { "@apply": "text-[#e3116c]" },
+    [
+      `.token.comment,
+      .token.prolog,
+      .token.doctype,
+      .token.cdata`
+    ]: { "@apply": "text-[#999988] italic" },
+    [
+      `.token.entity,
+      .token.url,
+      .token.symbol,
+      .token.number,
+      .token.boolean,
+      .token.variable,
+      .token.constant,
+      .token.property,
+      .token.regex,
+      .token.inserted`
+    ]: { "@apply": "text-[#36acaa]" },
+    [
+      `.token.atrule,
+      .token.keyword,
+      .token.attr-name,
+      .language-autohotkey .token.selector`
+    ]: {
+      "@apply": "text-[#00a4db]",
+    },
+    [
+      `.token.function,
+    .token.deleted,
+    .language-autohotkey .token.tag`
+    ]: { "@apply": "text-[#9a050f]" },
+    [
+      `.token.tag,
+    .token.selector,
+    .language-autohotkey .token.keyword`
+    ]: { "@apply": "text-[#00009f]" },
+    [
+      `.token.important,
+    .token.function,
+    .token.bold`
+    ]: { "@apply": "font-medium" },
+
+    // github-embed
+    "span.code-line": {
       "@apply": "px-10",
     },
-    "& span.line-number::before": {
+    "span.line-number::before": {
       "@apply": "-ml-10 content-[attr(line)] mr-4 text-right text-slate-400",
     },
   });
@@ -62,9 +111,17 @@ export async function getStaticProps() {
   const t = `# Refractor
 ## Import refractor and register lang
 
+- a
+
+- [x] b
+
+|a|b|
+|---|---|
+|t|t|
+
 We should import refractor and register langs as following:
 
-https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15
+::gh[https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15]
 `;
 
   const compiledMarkdown = String(
@@ -74,7 +131,7 @@ https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd
       development: false,
       remarkPlugins: REMARK_PLUGINS,
       rehypePlugins: REHYPE_PLUGINS,
-    })
+    }),
   );
   return { props: { compiledMarkdown } };
 }

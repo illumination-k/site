@@ -11,12 +11,16 @@
   "license": "ISC",
   "dependencies": {
     "common": "workspace:^",
+    "front-matter": "^4.0.2",
+    "glob": "^9.2.1",
+    "tiny-segmenter": "^0.2.0",
     "yargs": "^17.7.1"
   },
   "devDependencies": {
     "@types/node": "18.14.6",
     "@types/yargs": "^17.0.22",
     "tsx": "^3.12.3",
-    "typescript": "4.9.5"
+    "typescript": "4.9.5",
+    "vitest": "^0.29.2"
   }
 }
