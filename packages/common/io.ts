@@ -4,11 +4,11 @@ import { Dump, dumpSchema } from ".";
 
 export async function readDump(path: PathLike): Promise<Dump> {
   const readFileAsync = promisify(readFile);
-  const _dump = await (await readFileAsync(path)).toJSON();
-
+  const _dump = JSON.parse(await (await readFileAsync(path)).toString());
   const parse = dumpSchema.safeParse(_dump);
 
   if (!parse.success) {
+    console.error(parse.error);
     throw "Invalid dump file";
   }
 

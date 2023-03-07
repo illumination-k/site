@@ -7,8 +7,8 @@ export const postMetaSchema = z.object({
   category: z.string(),
   tags: z.array(z.string()),
   lang: z.enum(["ja", "en"]),
-  created_at: z.date(),
-  updated_at: z.date(),
+  created_at: z.string().pipe(z.coerce.date()),
+  updated_at: z.string().pipe(z.coerce.date()),
 });
 
 export type PostMeta = z.infer<typeof postMetaSchema>;
