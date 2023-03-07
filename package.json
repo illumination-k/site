@@ -3,17 +3,17 @@
   "description": "",
   "version": "1.0.0",
   "author": "",
+  "devDependencies": {
+    "dprint": "^0.34.5",
+    "fixpack": "^4.0.0"
+  },
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
   "scripts": {
-    "format": "fixpack && dprint fmt",
-    "cli:build": "pnpm run --filter cli build",
     "cli": "node ./packages/cli/dist/main.js",
+    "cli:build": "pnpm run --filter cli build",
+    "format": "fixpack && dprint fmt",
     "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "devDependencies": {
-    "dprint": "^0.34.5",
-    "fixpack": "^4.0.0"
   }
 }
