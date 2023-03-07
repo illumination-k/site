@@ -19,7 +19,13 @@ export type Post = z.infer<typeof postSchema>;
 export const postsSchema = z.array(postSchema);
 export type Posts = z.infer<typeof postsSchema>;
 
-export const dumpPostSchema = postSchema.extend({ tokens: z.array(z.string()) });
+export const headingsSchema = z.array(z.object({ depth: z.number(), heading: z.string() }));
+export type Headings = z.infer<typeof headingsSchema>;
+
+export const dumpPostSchema = postSchema.extend({
+  tokens: z.array(z.string()),
+  headings: headingsSchema,
+});
 export type DumpPost = z.infer<typeof dumpPostSchema>;
 
 export const dumpSchema = z.object({

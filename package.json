@@ -8,6 +8,7 @@
   "main": "index.js",
   "scripts": {
     "format": "fixpack && dprint fmt",
+    "template": "pnpm run",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

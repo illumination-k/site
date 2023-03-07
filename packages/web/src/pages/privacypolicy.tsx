@@ -1,3 +1,4 @@
+import Nav from "@/components/Nav";
 import type { GetStaticProps, NextPage } from "next";
 import { Fragment } from "react";
 
@@ -9,6 +10,7 @@ type Props = {
 const PrivacyPolicy: NextPage<Props> = ({ header, texts }: Props) => {
   return (
     <>
+      <Nav />
       <h1>{header}</h1>
       {Object.entries(texts).map(([k, v], i) => {
         return (

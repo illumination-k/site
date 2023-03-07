@@ -6,7 +6,8 @@
   "scripts": {
     "test": "vitest run",
     "watch:test": "vitest watch",
-    "run": "tsx index.ts"
+    "dump": "tsx dump.ts",
+    "template": "tsx template.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,14 +16,20 @@
     "common": "workspace:^",
     "front-matter": "^4.0.2",
     "glob": "^9.2.1",
+    "mdast-util-to-string": "^3.1.1",
+    "remark": "^14.0.2",
+    "strip-markdown": "^5.0.0",
     "tiny-segmenter": "^0.2.0",
+    "unist-util-visit": "^4.1.2",
     "yargs": "^17.7.1"
   },
   "devDependencies": {
+    "@types/mdast": "^3.0.10",
     "@types/node": "18.14.6",
     "@types/yargs": "^17.0.22",
     "tsx": "^3.12.3",
     "typescript": "4.9.5",
+    "unified": "^10.1.2",
     "vitest": "^0.29.2"
   }
 }

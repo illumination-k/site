@@ -1,20 +1,19 @@
 import { compile } from "@mdx-js/mdx";
 import { ParsedUrlQuery } from "querystring";
 
-import { PostMeta } from "common";
+import { Headings, PostMeta } from "common";
 import { readDump } from "common/io";
 
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
-import MdView from "@/features/techblog/components/Post/MdxView";
-
-const TechBlogPost: NextPage<Props> = ({ meta, compiledMarkdown }) => {
+const TechBlogPost: NextPage<Props> = ({ meta, headings, compiledMarkdown }) => {
   return <></>;
 };
 
 type Props = {
   meta: PostMeta;
+  headings: Headings;
   compiledMarkdown: string;
 };
 
@@ -38,7 +37,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) 
   );
 
   return {
-    props: { meta: post.meta, compiledMarkdown },
+    props: { meta: post.meta, headings: post.headings, compiledMarkdown },
   };
 };
 

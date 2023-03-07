@@ -1,6 +1,6 @@
 import * as yargs from "yargs";
 
-yargs
+const args = yargs
   .scriptName("post-utils")
   .usage("$0 <cmd> [args]")
   .command(
@@ -18,3 +18,5 @@ yargs
     },
   )
   .help().parse();
+
+console.log(args);
