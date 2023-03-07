@@ -57,6 +57,9 @@ const Home: NextPage<{ compiledMarkdown: string }> = ({ compiledMarkdown }) => {
       "& a.github-embed-title": {
         "@apply": "px-4 py-[2px] text-sm text-blue-500 text-ellipsis overflow-hidden",
       },
+      "& a.github-embed-title::before": {
+        "@apply": "mr-1 align-middle content-[url(\"/icons/mark-github.svg\")]",
+      },
     },
 
     /// prisma token

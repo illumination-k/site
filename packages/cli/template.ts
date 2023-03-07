@@ -15,6 +15,13 @@ function generateUuid() {
   return chars.join("");
 }
 
+function formatDate(dt: Date): string {
+  const y = dt.getFullYear();
+  const m = ("00" + (dt.getMonth() + 1)).slice(-2);
+  const d = ("00" + dt.getDate()).slice(-2);
+  return (y + "-" + m + "-" + d);
+}
+
 export function template(): string {
   const template = `---
 uuid: ${generateUuid()}
@@ -24,8 +31,8 @@ lang: ja
 tags:
     - techblog
 categories:
-created_at: ${new Date()}
-updated_at: ${new Date()}
+created_at: ${formatDate(new Date())}
+updated_at: ${formatDate(new Date())}
 ---
   `;
   return template;
