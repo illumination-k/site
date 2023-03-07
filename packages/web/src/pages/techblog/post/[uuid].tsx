@@ -4,11 +4,17 @@ import { ParsedUrlQuery } from "querystring";
 import { Headings, PostMeta } from "common";
 import { readDump } from "common/io";
 
+import Post from "@/features/techblog/components/Post";
+import { dumpFile } from "@/features/techblog/constant";
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
 const TechBlogPost: NextPage<Props> = ({ meta, headings, compiledMarkdown }) => {
-  return <></>;
+  return (
+    <>
+      <Post headigns={headings} meta={meta} compiledMarkdown={compiledMarkdown} />
+    </>
+  );
 };
 
 type Props = {
@@ -18,7 +24,7 @@ type Props = {
 };
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
-  const dump = await readDump(".");
+  const dump = await readDump(dumpFile);
   const post = dump.posts.filter((p) => p.meta.uuid === params?.uuid).pop();
 
   if (!post) {
@@ -46,7 +52,7 @@ interface Params extends ParsedUrlQuery {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const dump = await readDump(".");
+  const dump = await readDump(dumpFile);
 
   const paths = dump.posts.map((post) => {
     return { params: { uuid: post.meta.uuid }, locale: post.meta.lang };

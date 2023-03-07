@@ -2,14 +2,13 @@ import MdView from "./MdxView";
 
 import { css } from "@twind/core";
 
-import { PostMeta } from "common";
+import Nav from "@/components/Nav";
+import { Headings, PostMeta } from "common";
 import Footer from "./Footer";
 import Header from "./Header";
+import Sidebar from "./Sidebar";
 
-type Props = {
-  meta: PostMeta;
-  compiledMarkdown: string;
-};
+import { NextSeo } from "next-seo";
 
 const style = css({
   label: "markdown",
@@ -19,13 +18,45 @@ const style = css({
     "@apply": "font-black text-2xl border-b-1 border-gray-200 pb-1 mt-2 mb-2",
   },
   h3: {
-    "@apply": "text-xl font-bold mb-1",
+    "@apply": "text-2xl font-bold mb-1",
   },
-  ul: { "@apply": "max-w-md text-gray-500 list-[circle] list-inside" },
+
+  h4: { "@apply": "font-bold text-xl mb-1" },
+
+  ul: { "@apply": "list-disc list-inside" },
+
+  // rounded table
+  "table": {
+    "@apply": "my-4 mx-1 w-full",
+    "th,td": {
+      "@apply": "text-left px-2",
+    },
+    "& thead": {
+      "& tr": { "@apply": "rounded-t-lg bg-gray-200" },
+      "& th:first-child": { "@apply": "rounded-tl-lg" },
+      "& th:last-child": { "@apply": "rounded-tr-lg" },
+    },
+
+    "& tbody": {
+      "& tr:nth-child(even)": {
+        "@apply": "bg-slate-100",
+      },
+      "& tr:nth-child(odd)": {
+        "@apply": "bg-slate-50",
+      },
+      "& tr:last-child": {
+        "& td:first-child": { "@apply": "rounded-bl-lg" },
+        "& td:last-child": { "@apply": "rounded-br-lg" },
+      },
+    },
+  },
+
+  // code
+  "code": { "@apply": "bg-slate-50 rounded-md px-2 py-1" },
 
   // code block
   "code[class*=\"language-\"],pre[class*=\"language-\"]": {
-    "@apply": "py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
+    "@apply": "my-4 px-0 py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
     "& span.code-line": {
       "@apply": "px-4",
     },
@@ -46,6 +77,11 @@ const style = css({
     "& a.github-embed-title": {
       "@apply": "px-4 py-[2px] text-sm text-blue-500 text-ellipsis overflow-hidden",
     },
+  },
+
+  // math
+  "div.math-display": {
+    "@apply": "break-normal whitespace-pre overflow-x-auto",
   },
 
   /// prisma token
@@ -102,15 +138,29 @@ const style = css({
   },
 });
 
-export default function Post({ compiledMarkdown, meta }: Props) {
+type Props = {
+  headigns: Headings;
+  meta: PostMeta;
+  compiledMarkdown: string;
+};
+
+export default function Post({ headigns, compiledMarkdown, meta }: Props) {
   return (
     <>
-      <Header meta={meta} />
-      <div className={style}>
-        <h1>{meta.title}</h1>
-        <MdView compiledMarkdown={compiledMarkdown} components={[]} />
+      <NextSeo title={meta.title} description={meta.description}></NextSeo>
+      <Nav />
+      <div className="px-4 md:px-6 lg:px-0 lg:grid lg:grid-cols-6 lg:justify-center">
+        <div></div>
+        <article className="lg:col-span-3">
+          <Header meta={meta} headings={headigns} />
+          <article className={style}>
+            <MdView compiledMarkdown={compiledMarkdown} components={[]} />
+          </article>
+          <Footer meta={meta} />
+        </article>
+        <Sidebar className="hidden lg:block" meta={meta} />
+        <div></div>
       </div>
-      <Footer meta={meta} />
     </>
   );
 }

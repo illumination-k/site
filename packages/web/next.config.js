@@ -1,4 +1,5 @@
 const path = require("path");
+const { withSuperjson } = require("next-superjson");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -20,4 +21,4 @@ const nextConfig = {
   },
 };
 
-module.exports = nextConfig;
+module.exports = withSuperjson()(nextConfig);
