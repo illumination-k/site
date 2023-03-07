@@ -15,7 +15,7 @@ function generateUuid() {
   return chars.join("");
 }
 
-function template(): string {
+export function template(): string {
   const template = `---
 uuid: ${generateUuid()}
 title:
@@ -30,5 +30,3 @@ updated_at: ${new Date()}
   `;
   return template;
 }
-
-console.log(template());

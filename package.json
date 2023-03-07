@@ -8,7 +8,8 @@
   "main": "index.js",
   "scripts": {
     "format": "fixpack && dprint fmt",
-    "template": "pnpm run",
+    "cli:build": "pnpm run --filter cli build",
+    "cli": "node ./packages/cli/dist/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {

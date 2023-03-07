@@ -2,12 +2,13 @@
   "name": "cli",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./dist/main.js",
+  "private": "true",
   "scripts": {
     "test": "vitest run",
     "watch:test": "vitest watch",
-    "dump": "tsx dump.ts",
-    "template": "tsx template.ts"
+    "build": "webpack",
+    "r": "tsx index.ts"
   },
   "keywords": [],
   "author": "",
@@ -27,9 +28,12 @@
     "@types/mdast": "^3.0.10",
     "@types/node": "18.14.6",
     "@types/yargs": "^17.0.22",
+    "ts-loader": "^9.4.2",
     "tsx": "^3.12.3",
     "typescript": "4.9.5",
     "unified": "^10.1.2",
-    "vitest": "^0.29.2"
+    "vitest": "^0.29.2",
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   }
 }

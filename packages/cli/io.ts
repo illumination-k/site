@@ -1,9 +1,10 @@
 import { PathLike, readFile, writeFile } from "fs";
 import { promisify } from "util";
 
-// @ts-ignore
 import fm, { FrontMatterResult } from "front-matter";
 import { glob } from "glob";
+
+// @ts-ignore
 import tinysegmenter from "tiny-segmenter";
 
 import { remark } from "remark";
@@ -27,7 +28,7 @@ export async function readPost(path: PathLike): Promise<Post> {
   });
 
   if (!meta.success) {
-    throw new Error(JSON.stringify(meta.error, null, 2));
+    throw new Error(`${path}: JSON.stringify(meta.error, null, 2)`);
   }
 
   return { meta: meta.data, markdown: fmResult.body };
@@ -47,6 +48,7 @@ async function dumpPost(post: Post): Promise<DumpPost> {
   const parsed = headingsSchema.safeParse(_headings);
 
   if (!parsed.success) {
+    console.error(_headings);
     throw "Error in extracting headers";
   }
   return { ...post, tokens, headings: parsed.data };
@@ -54,11 +56,10 @@ async function dumpPost(post: Post): Promise<DumpPost> {
 
 export async function getDumpPosts(src: PathLike): Promise<DumpPost[]> {
   const mdFiles = await glob(`${src}/**/*.md`, { ignore: "node_modules/*" });
-
   return Promise.all(mdFiles.map(async (f) => await dumpPost(await readPost(f))));
 }
 
-async function getDump(dumpPosts: DumpPost[]): Promise<Dump> {
+function getDump(dumpPosts: DumpPost[]): Dump {
   const tags = [...new Set(dumpPosts.map((p) => p.meta.tags).flat())];
   const categories = [...new Set(dumpPosts.map((p) => p.meta.category))];
 
@@ -69,7 +70,8 @@ async function getDump(dumpPosts: DumpPost[]): Promise<Dump> {
   };
 }
 
-async function writeDump(path: PathLike, dump: Dump) {
+export async function writeDump(path: PathLike, dumpPosts: DumpPost[]) {
+  const dump = getDump(dumpPosts);
   const writeAsync = promisify(writeFile);
 
   await writeAsync(path, JSON.stringify(dump, null, 2));

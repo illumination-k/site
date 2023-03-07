@@ -19,7 +19,7 @@ export type Post = z.infer<typeof postSchema>;
 export const postsSchema = z.array(postSchema);
 export type Posts = z.infer<typeof postsSchema>;
 
-export const headingsSchema = z.array(z.object({ depth: z.number(), heading: z.string() }));
+export const headingsSchema = z.array(z.object({ depth: z.number(), value: z.string() }));
 export type Headings = z.infer<typeof headingsSchema>;
 
 export const dumpPostSchema = postSchema.extend({

@@ -1,15 +1,12 @@
+import type { Headings } from "common";
 import type { Heading as AstHeading, Root } from "mdast";
+import type { VFileWithOutput } from "unified";
+
 import { toString } from "mdast-util-to-string";
-import { Plugin, VFileWithOutput } from "unified";
 import { visit } from "unist-util-visit";
 
-type Heading = {
-  depth: number;
-  value: string;
-};
-
 export function headings(ast: Root, depth: number) {
-  const headingsList: Heading[] = [];
+  const headingsList: Headings = [];
 
   // @ts-ignore
   visit(ast, "heading", (node: AstHeading) => {
