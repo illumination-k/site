@@ -6,6 +6,7 @@ lang: ja
 category: techblog
 tags:
   - javascript
+created_at: "2022-08-19T11:42:43+00:00"
 updated_at: "2022-08-19T11:42:43+00:00"
 ---
 

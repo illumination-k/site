@@ -7,7 +7,8 @@ category: techblog
 tags:
   - bioinformatics
   - data-structure
-updated_at: "2022-06-12T15:55:39+00:00"
+created_at: "2022-05-20T18:42:50+00:00"
+updated_at: "2022-05-20T18:42:50+00:00"
 ---
 
 ## TL;DR

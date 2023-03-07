@@ -7,6 +7,7 @@ category: techblog
 tags:
   - rust
   - code-reading
+created_at: "2022-06-04T11:51:17+00:00"
 updated_at: "2022-06-04T11:51:17+00:00"
 ---
 
