@@ -1,12 +1,15 @@
 import { z } from "zod";
 
+const lang = z.enum(["ja", "en"]);
+export type Lang = z.infer<typeof lang>;
+
 export const postMetaSchema = z.object({
   uuid: z.string().uuid(),
   title: z.string(),
   description: z.string(),
   category: z.string(),
   tags: z.array(z.string()),
-  lang: z.enum(["ja", "en"]),
+  lang: lang,
   created_at: z.string().pipe(z.coerce.date()),
   updated_at: z.string().pipe(z.coerce.date()),
 });

@@ -1,6 +1,7 @@
 {
   "incremental": true,
   "typescript": {
+    "module.sortImportDeclarations": "maintain"
   },
   "json": {
   },

@@ -1,3 +1,5 @@
+import { formatDate } from "common/utils";
+
 function generateUuid() {
   // https://github.com/GoogleChrome/chrome-platform-analytics/blob/master/src/internal/identifier.js
   // const FORMAT: string = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
@@ -13,13 +15,6 @@ function generateUuid() {
     }
   }
   return chars.join("");
-}
-
-function formatDate(dt: Date): string {
-  const y = dt.getFullYear();
-  const m = ("00" + (dt.getMonth() + 1)).slice(-2);
-  const d = ("00" + dt.getDate()).slice(-2);
-  return (y + "-" + m + "-" + d);
 }
 
 export function template(): string {
