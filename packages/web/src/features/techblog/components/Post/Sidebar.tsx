@@ -59,7 +59,7 @@ export default function Sidebar({ className, meta, headings }: Props) {
             title="カテゴリ"
             content={
               <Link
-                className="font-medium hover:text-blue-400"
+                className="hover:text-blue-400"
                 href={pagesPath.techblog.categories._category(meta.category)._page(1).$url()}
               >
                 {meta.category}
@@ -68,7 +68,7 @@ export default function Sidebar({ className, meta, headings }: Props) {
             icon={<Category />}
           />
           <SidebarMetaList title="Tag" icon={<TagIcon />}>
-            <div className="flex gap-4 items-center px-2 mt-1">
+            <div className="flex gap-2 items-center mt-2">
               {meta.tags.map((tag, i) => <Tag tag={tag} key={i} />)}
             </div>
           </SidebarMetaList>

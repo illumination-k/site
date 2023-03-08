@@ -16,10 +16,7 @@ type Props = {
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params, locale }) => {
   const dump = await readDump(dumpFile);
 
-  const posts = dump.posts.filter(
-    (p) => p.meta.lang === locale && p.meta.category === params!.category,
-  );
-
+  const posts = dump.posts.filter((p) => p.meta.lang === locale);
   return {
     props: {
       pageInfomation: pager.getPageInformation(posts, Number(params!.page)),
@@ -29,22 +26,16 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params, lo
 
 interface Params extends ParsedUrlQuery {
   page: string;
-  category: string;
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const dump = await readDump(dumpFile);
-  const categories = dump.categories;
 
   const paths = ["ja", "en"].flatMap((lang) => {
-    return categories.flatMap((category) => {
-      const posts = dump.posts.filter(
-        (post) => post.meta.category === category && post.meta.lang === lang,
-      );
+    const posts = dump.posts.filter((post) => post.meta.lang === lang);
 
-      return pager.getPages(posts).map((page) => {
-        return { params: { page: page.toString(), category }, locale: lang };
-      });
+    return pager.getPages(posts).map((page) => {
+      return { params: { page: page.toString() }, locale: lang };
     });
   });
 

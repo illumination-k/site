@@ -1,7 +1,5 @@
 import MdView from "./MdxView";
 
-import { css } from "@twind/core";
-
 import Nav from "@/components/Nav";
 import { Headings, PostMeta } from "common";
 import Footer from "./Footer";
@@ -15,6 +13,11 @@ type Props = {
   meta: PostMeta;
   compiledMarkdown: string;
 };
+
+/*
+lg: sticky-right-sidebar + content + sidebar
+md: sticky-header + content
+*/
 
 export default function Post({ headigns, compiledMarkdown, meta }: Props) {
   return (

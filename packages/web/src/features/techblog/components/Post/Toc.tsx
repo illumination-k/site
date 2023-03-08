@@ -1,5 +1,6 @@
 import { pagesPath } from "@/lib/$path";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import { apply, tw } from "@twind/core";
 import { Headings, PostMeta } from "common";
 import Link from "next/link";
@@ -14,7 +15,9 @@ export default function Toc({ className, headings, meta }: Props) {
   const heading = meta.lang === "ja" ? "目次" : "Contents";
   return (
     <article className={className}>
-      <h1 className="text-lg font-black pb-2">{heading}</h1>
+      <h1 className="text-lg font-black pb-2">
+        <p>{heading}</p>
+      </h1>
       <ul className="list-none">
         {headings.map(({ value, depth }, i) => (
           <li className="mt-2" key={i}>
@@ -37,6 +40,14 @@ export default function Toc({ className, headings, meta }: Props) {
             </Link>
           </li>
         ))}
+
+        <Link
+          href={pagesPath.techblog.post._uuid(meta.uuid).$url()}
+          className="flex gap-2 items-center text-lg font-bold pt-4 hover:text-blue-400"
+        >
+          <ChevronUpIcon className="icon-4" />
+          Page Top
+        </Link>
       </ul>
     </article>
   );

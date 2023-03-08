@@ -11,7 +11,7 @@ export default function Tag({ tag, className }: TagProps) {
   return (
     <span
       className={tw(apply(
-        "rounded-3xl bg-blue-100 text-bold px-4 py-1 text-sans",
+        "rounded-3xl bg-blue-100 font-bold px-4 py-1 font-sans hover:bg-blue-500 hover:text-white",
         className,
       ))}
     >

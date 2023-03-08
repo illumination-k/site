@@ -9,6 +9,9 @@ export const pagesPath = {
     $url: (url?: { hash?: string }) => ({ pathname: '/privacypolicy' as const, hash: url?.hash })
   },
   "techblog": {
+    _page: (page: string | number) => ({
+      $url: (url?: { hash?: string }) => ({ pathname: '/techblog/[page]' as const, query: { page }, hash: url?.hash })
+    }),
     "categories": {
       _category: (category: string | number) => ({
         _page: (page: string | number) => ({

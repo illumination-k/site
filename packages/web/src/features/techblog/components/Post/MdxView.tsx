@@ -21,6 +21,10 @@ const style = css({
 
   "& a": { "@apply": "text-blue-600 underline" },
 
+  "& blockquote": {
+    "@apply": "border-l-4 px-2 py-1 my-2",
+  },
+
   // p: { "@apply": "my-2" },
 
   // rounded table
