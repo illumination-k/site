@@ -9,6 +9,10 @@ export default defineConfig({
    */
   // hash: false,
   presets: [presetAutoprefix(), presetTailwind()],
+  rules: [
+    ["sidebar-card", "px-4 bg-white rounded-lg py-3"],
+    ["icon-", ({ $$ }) => `h-${$$} w-${$$}`],
+  ],
   ignorelist: [
     // md related
     // gfm

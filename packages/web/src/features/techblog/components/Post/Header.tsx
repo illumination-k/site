@@ -10,9 +10,7 @@ type Props = {
 export default function Header({ meta, headings }: Props) {
   return (
     <article className="text-center">
-      <h1 className="text-4xl py-8">{meta.title}</h1>
-      {/* n 年以上前更新なら warning */}
-      {}
+      <h1 className="text-4xl py-8 text-black">{meta.title}</h1>
     </article>
   );
 }

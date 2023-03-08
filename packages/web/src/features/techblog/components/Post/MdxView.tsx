@@ -30,7 +30,7 @@ const style = css({
       "@apply": "text-left px-2",
     },
     "& thead": {
-      "& tr": { "@apply": "rounded-t-lg bg-gray-200" },
+      "& tr": { "@apply": "bg-gray-200", "& th": { "@apply": "py-2" } },
       "& th:first-child": { "@apply": "rounded-tl-lg" },
       "& th:last-child": { "@apply": "rounded-tr-lg" },
     },
@@ -43,6 +43,7 @@ const style = css({
         "@apply": "bg-slate-50",
       },
       "& tr:last-child": {
+        "& td": { "@apply": "py-1" },
         "& td:first-child": { "@apply": "rounded-bl-lg" },
         "& td:last-child": { "@apply": "rounded-br-lg" },
       },
@@ -146,7 +147,7 @@ export default function MdView({ compiledMarkdown, components }: MdViewProps) {
 
   return (
     <article className={style}>
-      <Content components={components} />;
+      <Content components={components} />
     </article>
   );
 }
