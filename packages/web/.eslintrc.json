@@ -21,16 +21,6 @@
 						"pattern": "react",
 						"group": "builtin",
 						"position": "before"
-					},
-					{
-						"pattern": ".*/UI/**",
-						"group": "internal",
-						"position": "before"
-					},
-					{
-						"pattern": "./*.module.css",
-						"group": "index",
-						"position": "after"
 					}
 				],
 				"newlines-between": "always",

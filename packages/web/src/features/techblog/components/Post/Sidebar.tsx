@@ -69,7 +69,7 @@ export default function Sidebar({ className, meta, headings }: Props) {
             icon={<Category />}
           />
           <SidebarMetaList title="Tag" icon={<TagIcon />}>
-            <div className="flex gap-2 items-center mt-2">
+            <div className="flex flex-wrap gap-2 items-center mt-2">
               {meta.tags.map((tag, i) => <Tag tag={tag} key={i} />)}
             </div>
           </SidebarMetaList>

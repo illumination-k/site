@@ -29,12 +29,14 @@ export default function Post({ headigns, compiledMarkdown, meta }: Props) {
         <div className="px-4 md:px-6 lg:px-0 lg:grid lg:grid-cols-14 lg:justify-center">
           {/* dummy cols */}
           <div className="lg:col-span-2"></div>
+
+          {/* Content */}
           <div className="lg:col-span-11">
             <div className="lg:grid lg:grid-cols-6">
               <article className="lg:col-span-4 bg-white rounded-lg px-10 py-5">
                 <MdView compiledMarkdown={compiledMarkdown} components={[]} />
               </article>
-              <div className="hidden lg:block ml-8 sticky top-5 h-screen lg:col-span-2">
+              <div className="hidden lg:block ml-8 sticky top-5 h-screen col-span-2 overflow-y-auto">
                 <Sidebar meta={meta} headings={headigns} />
               </div>
             </div>

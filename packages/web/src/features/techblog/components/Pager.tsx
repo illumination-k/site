@@ -7,6 +7,8 @@ import Link from "next/link";
 import Tag from "./Tag";
 import { PageInfomation } from "../utils/pager";
 
+import Adsense from "@/components/Adsense";
+import Nav from "@/components/Nav";
 import Category from "@/icons/Category";
 import { pagesPath } from "@/lib/$path";
 
@@ -22,13 +24,14 @@ function BlogPostCard({ meta }: { meta: PostMeta }) {
           {meta.title}
         </Link>
       </h2>
+
       <div className="px-3 pt-2 flex gap-2">
         <p className="font-bold">作成</p>
         <p>{formatDate(meta.created_at)}</p>
         <p className="font-bold">更新</p>
         <p>{formatDate(meta.updated_at)}</p>
       </div>
-      <div className="px-3 flex gap-4 items-center">
+      <div className="px-3 md:flex gap-4 items-center">
         <div className="flex gap-2 py-2 items-center font-bold">
           <Category className="icon-5" />
           <Link
@@ -38,8 +41,8 @@ function BlogPostCard({ meta }: { meta: PostMeta }) {
             {meta.category}
           </Link>
         </div>
-        <div className="flex gap-2 py-2 items-center">
-          <TagIcon className="icon-5" />
+        <div className="flex flex-wrap gap-2 py-2 items-center">
+          <TagIcon className="icon-5 hidden md:block" />
           {meta.tags.map((tag, i) => <Tag tag={tag} key={i} />)}
         </div>
       </div>
@@ -113,12 +116,17 @@ export default function Pager({ pageInformation }: Props) {
   const { pagePosts, curPage, pages } = pageInformation;
 
   return (
-    <main className="lg:grid lg:grid-cols-5 bg-slate-100">
-      <div></div>
-      <div className="lg:col-span-3">
-        {pagePosts.map((post, i) => <BlogPostCard meta={post.meta} key={i} />)}
-        <Pagenation curPage={curPage} pages={pages} />
-      </div>
-    </main>
+    <>
+      <Nav />
+      <main className="bg-slate-50">
+        <div className="lg:grid lg:grid-cols-5">
+          <div></div>
+          <div className="lg:col-span-3">
+            {pagePosts.map((post, i) => <BlogPostCard meta={post.meta} key={i} />)}
+            <Pagenation curPage={curPage} pages={pages} />
+          </div>
+        </div>
+      </main>
+    </>
   );
 }
