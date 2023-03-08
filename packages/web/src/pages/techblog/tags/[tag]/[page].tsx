@@ -1,7 +1,8 @@
 import Pager from "@/features/techblog/components/Pager";
-import { dumpFile } from "@/features/techblog/constant";
+import { blogService } from "@/features/techblog/constant";
+
 import pager, { PageInfomation } from "@/features/techblog/utils/pager";
-import { readDump } from "common/io";
+import { Lang } from "common";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { ParsedUrlQuery } from "querystring";
 
@@ -14,11 +15,7 @@ type Props = {
 };
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params, locale }) => {
-  const dump = await readDump(dumpFile);
-
-  const posts = dump.posts.filter(
-    (p) => p.meta.lang === locale && p.meta.tags.includes(params!.tag),
-  );
+  const posts = await blogService.repo.filterPosts(locale as Lang, params!.tag, undefined);
 
   return {
     props: {
@@ -33,18 +30,18 @@ interface Params extends ParsedUrlQuery {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const dump = await readDump(dumpFile);
-  const tags = dump.tags;
+  const tags = await blogService.repo.tags();
+  const langs: Lang[] = ["en", "ja"];
 
-  const paths = ["ja", "en"].flatMap((lang) => {
-    return tags.flatMap((tag) => {
-      const posts = dump.posts.filter((post) => post.meta.tags.includes(tag) && post.meta.lang === lang);
+  const paths = (await Promise.all(langs.flatMap((lang) => {
+    return tags.map(async (tag) => {
+      const posts = await blogService.repo.filterPosts(lang, tag, undefined);
 
       return pager.getPages(posts).map((page) => {
         return { params: { page: page.toString(), tag: tag }, locale: lang };
       });
     });
-  });
+  }))).flat();
 
   return {
     paths,

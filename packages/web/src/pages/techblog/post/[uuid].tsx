@@ -6,6 +6,7 @@ import { readDump } from "common/io";
 
 import Post from "@/features/techblog/components/Post";
 import { dumpFile } from "@/features/techblog/constant";
+import dumpRepository from "@/features/techblog/repository/dump";
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
@@ -24,8 +25,7 @@ type Props = {
 };
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
-  const dump = await readDump(dumpFile);
-  const post = dump.posts.filter((p) => p.meta.uuid === params?.uuid).pop();
+  const post = await dumpRepository.retrive(params!.uuid);
 
   if (!post) {
     throw `${params?.id} is not found`;
@@ -52,9 +52,9 @@ interface Params extends ParsedUrlQuery {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const dump = await readDump(dumpFile);
+  const posts = await dumpRepository.list();
 
-  const paths = dump.posts.map((post) => {
+  const paths = posts.map((post) => {
     return { params: { uuid: post.meta.uuid }, locale: post.meta.lang };
   });
 
