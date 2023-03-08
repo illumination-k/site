@@ -1,12 +1,12 @@
-import MdView from "./MdxView";
-
-import Nav from "@/components/Nav";
 import { Headings, PostMeta } from "common";
+import { NextSeo } from "next-seo";
+
 import Footer from "./Footer";
 import Header from "./Header";
+import MdView from "./MdxView";
 import Sidebar from "./Sidebar";
 
-import { NextSeo } from "next-seo";
+import Nav from "@/components/Nav";
 
 type Props = {
   headigns: Headings;

@@ -1,9 +1,10 @@
-import { pagesPath } from "@/lib/$path";
 import { ChevronRightIcon } from "@heroicons/react/20/solid";
 import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import { apply, tw } from "@twind/core";
 import { Headings, PostMeta } from "common";
 import Link from "next/link";
+
+import { pagesPath } from "@/lib/$path";
 
 type Props = {
   className?: string;

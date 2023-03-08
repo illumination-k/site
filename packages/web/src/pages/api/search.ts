@@ -1,6 +1,6 @@
+import type { NextApiRequest, NextApiResponse } from "next";
 import requestIp from "request-ip";
 
-import type { NextApiRequest, NextApiResponse } from "next";
 
 import { LimitChecker } from "@/server/libs/limitChecker";
 

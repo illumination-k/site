@@ -1,14 +1,14 @@
-import { compile } from "@mdx-js/mdx";
 import { ParsedUrlQuery } from "querystring";
 
+import { compile } from "@mdx-js/mdx";
 import { Headings, PostMeta } from "common";
 import { readDump } from "common/io";
-
-import Post from "@/features/techblog/components/Post";
-import { dumpFile } from "@/features/techblog/constant";
-import dumpRepository from "@/features/techblog/repository/dump";
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+
+import Post from "@/features/techblog/components/Post";
+import { blogService, dumpFile } from "@/features/techblog/constant";
+import dumpRepository from "@/features/techblog/repository/dump";
 
 const TechBlogPost: NextPage<Props> = ({ meta, headings, compiledMarkdown }) => {
   return (
@@ -25,7 +25,7 @@ type Props = {
 };
 
 export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
-  const post = await dumpRepository.retrive(params!.uuid);
+  const post = await blogService.repo.retrive(params!.uuid);
 
   if (!post) {
     throw `${params?.id} is not found`;
@@ -52,7 +52,7 @@ interface Params extends ParsedUrlQuery {
 }
 
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
-  const posts = await dumpRepository.list();
+  const posts = await blogService.repo.list();
 
   const paths = posts.map((post) => {
     return { params: { uuid: post.meta.uuid }, locale: post.meta.lang };

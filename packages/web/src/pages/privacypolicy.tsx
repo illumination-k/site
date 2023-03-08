@@ -1,6 +1,7 @@
-import Nav from "@/components/Nav";
 import type { GetStaticProps, NextPage } from "next";
 import { Fragment } from "react";
+
+import Nav from "@/components/Nav";
 
 type Props = {
   header: string;

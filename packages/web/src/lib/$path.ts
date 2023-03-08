@@ -1,10 +1,4 @@
 export const pagesPath = {
-  "portfolio": {
-    "projects": {
-      $url: (url?: { hash?: string }) => ({ pathname: '/portfolio/projects' as const, hash: url?.hash })
-    },
-    $url: (url?: { hash?: string }) => ({ pathname: '/portfolio' as const, hash: url?.hash })
-  },
   "privacypolicy": {
     $url: (url?: { hash?: string }) => ({ pathname: '/privacypolicy' as const, hash: url?.hash })
   },
@@ -32,8 +26,7 @@ export const pagesPath = {
         })
       }),
       $url: (url?: { hash?: string }) => ({ pathname: '/techblog/tags' as const, hash: url?.hash })
-    },
-    $url: (url?: { hash?: string }) => ({ pathname: '/techblog' as const, hash: url?.hash })
+    }
   },
   "terms_service": {
     $url: (url?: { hash?: string }) => ({ pathname: '/terms_service' as const, hash: url?.hash })

@@ -1,10 +1,12 @@
-import Pager from "@/features/techblog/components/Pager";
-import { blogService } from "@/features/techblog/constant";
+import { ParsedUrlQuery } from "querystring";
 
-import pager, { PageInfomation } from "@/features/techblog/utils/pager";
 import { Lang } from "common";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { ParsedUrlQuery } from "querystring";
+
+import Pager from "@/features/techblog/components/Pager";
+import { blogService } from "@/features/techblog/constant";
+import pager, { PageInfomation } from "@/features/techblog/utils/pager";
+
 
 const TechBlogPage: NextPage<Props> = ({ pageInfomation }) => {
   return <Pager pageInformation={pageInfomation} />;

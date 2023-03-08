@@ -1,5 +1,4 @@
 import LRU from "lru-cache";
-
 import type { NextApiResponse } from "next";
 
 // https://zenn.dev/hasehiro0828/articles/8a5212198840cd

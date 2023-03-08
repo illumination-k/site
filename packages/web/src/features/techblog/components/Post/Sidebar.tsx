@@ -1,14 +1,15 @@
-import { Headings, PostMeta } from "common";
-import Tag from "../Tag";
-import Toc from "./Toc";
-
-import Category from "@/icons/Category";
-import { pagesPath } from "@/lib/$path";
 import { DocumentCheckIcon, DocumentPlusIcon, TagIcon } from "@heroicons/react/24/outline";
 import { apply, tw } from "@twind/core";
+import { Headings, PostMeta } from "common";
 import { formatDate } from "common/utils";
 import Link from "next/link";
 import { cloneElement, PropsWithChildren, ReactElement } from "react";
+
+import Toc from "./Toc";
+import Tag from "../Tag";
+
+import Category from "@/icons/Category";
+import { pagesPath } from "@/lib/$path";
 
 type Props = {
   className?: string;

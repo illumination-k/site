@@ -1,6 +1,7 @@
-import { pagesPath } from "@/lib/$path";
 import { apply, tw } from "@twind/core";
 import Link from "next/link";
+
+import { pagesPath } from "@/lib/$path";
 
 type TagProps = {
   tag: string;

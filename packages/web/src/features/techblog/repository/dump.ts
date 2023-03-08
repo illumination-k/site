@@ -1,6 +1,8 @@
+import type { PathLike } from "fs";
+
 import { Dump, Lang, Post } from "common";
 import { readDump } from "common/io";
-import type { PathLike } from "fs";
+
 import { IBlogRepositoy } from "../irepository";
 
 export default class DumpRepository implements IBlogRepositoy {

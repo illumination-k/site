@@ -1,21 +1,24 @@
-import { dumpFile } from "@/features/techblog/constant";
-import { readDump } from "common/io";
-import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
+
+import { blogService } from "@/features/techblog/constant";
 
 const CategoryPage: NextPage<Props> = ({ categories }) => {
   return <>{JSON.stringify(categories)}</>;
 };
 
 type Props = {
+  locale: string;
   categories: string[];
 };
 
 export const getStaticProps: GetStaticProps<Props> = async ({ locale }) => {
-  const dump = await readDump(dumpFile);
+  const categories = await blogService.repo.categories();
+  if (!locale) throw "locale is undefined";
 
   return {
     props: {
-      categories: dump.categories,
+      categories,
+      locale,
     },
   };
 };
