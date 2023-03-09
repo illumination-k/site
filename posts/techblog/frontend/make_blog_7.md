@@ -33,7 +33,7 @@ Next.jsのPWA対応というと[next-offline](https://github.com/hanford/next-of
 
 とりあえずこのサイトのmanifest.jsonは以下のような感じです。
 
-```json:title=manifest.json
+```json title=manifest.json
 {
     "name": "illumination-k dev",
     "theme_color": "#f69435",
@@ -85,7 +85,7 @@ Next.jsのPWA対応というと[next-offline](https://github.com/hanford/next-of
 
 [examples/amp-first/public/serviceworker.js](https://github.com/vercel/next.js/blob/ebd1434a847bb086d13fe4e6671b3b9f482e32c6/examples/amp-first/public/serviceworker.js)をコピペして`public`に置きます。たぶん、だいたい[amp-sw](https://github.com/ampproject/amp-sw)です。
 
-```js:title=serviceworker.js
+```js title=serviceworker.js
 /* global importScripts, AMP_SW */
 importScripts('https://cdn.ampproject.org/sw/amp-sw.js')
 
@@ -118,7 +118,7 @@ AMP_SW.init({
 
 [examples/amp-first/public/install-serviceworker.html](https://github.com/vercel/next.js/blob/ebd1434a847bb086d13fe4e6671b3b9f482e32c6/examples/amp-first/public/install-serviceworker.html)をコピペしてpublicに置きます。
 
-```html:title=install-serviceworker.html
+```html title=install-serviceworker.html
 <!DOCTYPE html>
 <title>installing service worker</title>
 <script type="text/javascript">
@@ -146,7 +146,7 @@ PWA対応したいコンポーネントのbodyに以下を入れます。
 
 これよくわかってないので後で調べるかもしれませんが、amp-firstの例ではofflineページが準備されています。コピペして置いておきましょう。serviceworkerのofflinePageOptionなんでしょう。
 
-```jsx:title=offline.js
+```jsx title=offline.js
 import Layout from '../components/Layout'
 
 export const config = { amp: true }

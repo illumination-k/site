@@ -32,7 +32,7 @@ updated_at: "2022-05-20T18:42:50+00:00"
 Next.js 12になって、`_document.js`でcssをロードすると怒られるようになってしまった。
 仕方ないので、現状はcssをjsのstringとして保存しておいて、componentでimportし、sytled-jsxで表現している。
 
-```js:title=css.js
+```js title=css.js
 export const css = `
   css
 `
@@ -40,7 +40,7 @@ export const css = `
 
 上のようなファイルを作成しておき
 
-```jsx:title=component.jsx
+```jsx title=component.jsx
 import {css} from "css.js"
 
 export default function Component() {
@@ -60,7 +60,7 @@ componentで読み込んで、そのままsytled-jsxに突っ込むことで、�
 
 webpack5を使っていると`asset modules`を使うことで`raw-loader`の機能が実装できる。まずは`next.config.js`に設定を書く。フルAMPなので、cssをimportすることは想定していない。
 
-```js:title=next.config.js
+```js title=next.config.js
 module.exports = {
   webpack(config, options) {
     config.module.rules.push({
@@ -75,7 +75,7 @@ module.exports = {
 
 これでcssファイルを`raw-loader`のように読み込める。
 
-```js:title=_document.js
+```js title=_document.js
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";
@@ -144,7 +144,7 @@ MyDocument.getInitialProps = async (ctx) => {
 
 ちょっとmaterial-ui成分も入ってしまっているが、`_document.js`は以下の感じ。
 
-```js:title=_document.js
+```js title=_document.js
 import React from "react";
 import Document, { Html, Head, Main, NextScript } from "next/document";
 import { ServerStyleSheets } from "@material-ui/core/styles";

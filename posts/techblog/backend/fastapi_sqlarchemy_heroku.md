@@ -25,7 +25,7 @@ FastAPIはRestfulなAPIをPythonで構築するときに非常に便利なマイ
 
 ORMとして`sqlalchemy`を利用します。また、postgresと接続するために`psycopg2-binary`を使います。個人的に`pipenv`を使っているので、`Pipfile`を用意します。あとはpostのデータには型がついていてほしいので`pydantic`を使います。
 
-```toml:title=Pipfile
+```toml title=Pipfile
 [[source]]
 name = "pypi"
 url = "https://pypi.org/simple"
@@ -54,7 +54,7 @@ pipenv install
 mkdir app
 ```
 
-```python:title=app/main.py
+```python title=app/main.py
 from fastapi import FastAPI
 
 ### Start App ###
@@ -78,7 +78,7 @@ uvicorn app.main:app --reload --host=0.0.0.0 --port=8002
 
 `docker`を使ってローカルでDBに関してもテストできるようにします。
 
-```docker:title=Dockerfile
+```docker title=Dockerfile
 FROM python:3.9.2-slim
 
 ENV LANG C.UTF-8
@@ -94,7 +94,7 @@ RUN pipenv install --system && rm -rf /tmp/*
 WORKDIR /
 ```
 
-```yaml:title=docker-compose.yml
+```yaml title=docker-compose.yml
 version: "3.0"
 
 services:
@@ -127,7 +127,7 @@ services:
 SQLalechemyのためにモデルを定義します。今回はTODOテーブルを作成します。
 テーブルは自動で作成されてほしいので、
 
-```python:title=app/model.py
+```python title=app/model.py
 # Create Table
 metadata = MetaData(Engine)
 Base.metadata.create_all(bind=Engine, checkfirst=True)
@@ -137,7 +137,7 @@ Base.metadata.create_all(bind=Engine, checkfirst=True)
 
 また、`_asdict`メソッドがないので、自前で辞書型に変換する関数を定義しています。
 
-```python:title=app/model.py
+```python title=app/model.py
 from sqlalchemy import Column, create_engine, MetaData
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -181,7 +181,7 @@ def to_dict(model) -> dict:
 
 `TODO`に対する`POST`と`GET`を定義します。`Post`の際に、必ず`title`と`description`をリクエストボディに入れてほしいので、`pydantic`でDataクラスを定義しています。
 
-```python:title=app/main.py
+```python title=app/main.py
 from app.model import db_session, Todo, to_dict
 from fastapi import FastAPI, HTTPException, status
 from fastapi.responses import JSONResponse
@@ -257,7 +257,7 @@ Engine = create_new_engine()
 
 次に`Procfile`を書きます。
 
-```text:title=Procfile
+```text title=Procfile
 web: uvicorn app.main:app --reload --host=0.0.0.0 --port=${PORT:-5000}
 ```
 

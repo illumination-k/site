@@ -26,7 +26,7 @@ SQLAlchemyは素晴らしいORMですが、`django`等と違ってテストや�
 3. テスト
 4. Migration
 
-![github:illumination-k/sqlalchemy-starter](github:illumination-k/sqlalchemy-starter)
+::gh-card[illumination-k/sqlalchemy-starter]
 
 ## Install
 
@@ -40,7 +40,7 @@ poetry add --dev pytest mypy alembic sqlalchemy-utils
 `pyproject.toml`にmypyのsqlalchemy pluginsを追加します。
 以下のようになります。
 
-```toml:title=pyproject.toml
+```toml title=pyproject.toml
 [tool.poetry]
 name = "sqlalchemy-starter"
 version = "0.1.0"
@@ -79,7 +79,7 @@ alembic init migrations
 
 DBも準備します。`postgresql`を使用します。永続化したい場合はvolumeのコメントアウトを解除してください。
 
-```yaml:title=docker-compose.yaml
+```yaml title=docker-compose.yaml
 version: "3.0"
 
 services:
@@ -126,7 +126,7 @@ services:
 まず、全体で使うもの（DBへのURLの取得、`DeclativeMeta`、セッション中のクエリのカウントクラス）を`models/base.py`に置きます。
 クエリのカウントはテストで主に使うかと思うので、場所はここじゃないほうがいいかもしれません。
 
-```python:title=models/base.py
+```python title=models/base.py
 from sqlalchemy import event
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.declarative import declarative_base
@@ -170,7 +170,7 @@ class QueryCounter:
 また、relationが存在する場合、`drop_all`がうまくいかないので、`SET CONSTRAINTS ALL DEFERRED;`で制約を無効にしています。
 mysqlの場合は`SET FOREIGN_KEY_CHECKS=0;`を使ってください。
 
-```python:title=tests/conftest.py
+```python title=tests/conftest.py
 import dataclasses
 from typing import Generator
 
@@ -266,7 +266,7 @@ def test_session(
 Userが複数Postを持っている普通のブログを想定します。
 dialect, relationには型推論が効かないので明記する必要があります。あと`UUID(as_uuid=True)`を設定しないと上手く動かないので現状は機械的につけています。
 
-```python:models/blog.py
+```python title=models/blog.py
 import uuid
 from typing import List
 
@@ -316,7 +316,7 @@ pytest -vv tests/test_blog.py::test_counter
 pytest --capture=tee-sys -vv --echo tests/test_blog.py::test_counter
 ```
 
-```python:title=tests/test_blog.py
+```python title=tests/test_blog.py
 from typing import Optional
 
 from sqlalchemy.orm import scoped_session
@@ -399,7 +399,7 @@ alembicで生成された`migrations/env.py`を編集します。
 
 **Baseを継承したモデルをすべてimportする必要があります**
 
-```python:title=migrations/env.py
+```python title=migrations/env.py
 from models.blog import *
 from models.base import Base, get_postgres_url
 
@@ -437,4 +437,4 @@ main=# \dt
 以上で個人的に使いやすいSQLAlchemyのテスト環境のセットアップは終わりです。
 こうすればもっとよくなる！みたいなものがあれば以下のレポジトリのissueとかで教えてくれると助かります。
 
-![github:illumination-k/sqlalchemy-starter](github:illumination-k/sqlalchemy-starter)
+::gh-card[illumination-k/sqlalchemy-starter]

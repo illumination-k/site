@@ -81,7 +81,7 @@ Pylanceは警告を出さなくなります。補完も効きます。
 
 以下のような設定を作成します。
 
-```json:title=".vscode/settings.json"
+```json title=".vscode/settings.json"
 {
     "python.analysis.extraPaths": ["./app"]
 }

@@ -30,7 +30,7 @@ dotファイルからグラフを作成してくれるサイト
 
 GitHub repositoryへのリンクをいい感じに作成してくれるサイト。以下のような感じのカードが表示される。
 
-![github:illumination-k/blog](github:illumination-k/polars-pandas)
+::gh-card[illumination-k/blog]
 
 ### [SQL Fiddle](http://sqlfiddle.com/)
 

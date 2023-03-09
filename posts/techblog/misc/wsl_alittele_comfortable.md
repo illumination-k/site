@@ -89,7 +89,7 @@ echo "hello" | clip.exe
 
 トリッキーなことをします。`powershell.exe`の引数にPowershellスクリプトを流せば実行してくれます。以下のps1ファイルを適当な名前で作成します。
 
-```powershell:title=imgcopy.ps1
+```powershell title=imgcopy.ps1
 [Reflection.Assembly]::LoadWithPartialName('System.Drawing');
 [Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms');
 

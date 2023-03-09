@@ -156,7 +156,7 @@ JSX内ではこれらのテンプレートは
 
 Next.jsのAPIは、`pages/api/`下に`ts`などのファイルを作ればエンドポイントが作成できます。
 
-```js:title=pages/api/otherarticles.js
+```js title=pages/api/otherarticles.js
 export default function handler(req, res) {
     const articles = {
         title: "test post",

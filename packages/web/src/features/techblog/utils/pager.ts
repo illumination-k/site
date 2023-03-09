@@ -1,4 +1,4 @@
-import { Post } from "common";
+import { Post, PostMeta } from "common";
 
 /**
  * return array until stop from 1
@@ -10,7 +10,7 @@ export function range(stop: number): number[] {
 }
 
 export type PageInfomation = {
-  pagePosts: Post[];
+  pagePostMetas: PostMeta[];
   curPage: number;
   pages: number[];
 };
@@ -47,11 +47,11 @@ export class Pager {
 
     const sortedPost = Pager.sortPost(posts);
 
-    const pagePosts = sortedPost.slice(start, end);
+    const pagePostMetas = sortedPost.slice(start, end).map((post) => post.meta);
     const pages = this.getPages(posts);
 
     return {
-      pagePosts,
+      pagePostMetas,
       curPage: page,
       pages,
     };

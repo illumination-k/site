@@ -7,7 +7,6 @@ import Link from "next/link";
 import Tag from "./Tag";
 import { PageInfomation } from "../utils/pager";
 
-import Adsense from "@/components/Adsense";
 import Nav from "@/components/Nav";
 import Category from "@/icons/Category";
 import { pagesPath } from "@/lib/$path";
@@ -113,7 +112,7 @@ function Pagenation({ curPage, pages }: { curPage: number; pages: number[] }) {
 }
 
 export default function Pager({ pageInformation }: Props) {
-  const { pagePosts, curPage, pages } = pageInformation;
+  const { pagePostMetas, curPage, pages } = pageInformation;
 
   return (
     <>
@@ -122,7 +121,7 @@ export default function Pager({ pageInformation }: Props) {
         <div className="lg:grid lg:grid-cols-5">
           <div></div>
           <div className="lg:col-span-3">
-            {pagePosts.map((post, i) => <BlogPostCard meta={post.meta} key={i} />)}
+            {pagePostMetas.map((meta, i) => <BlogPostCard meta={meta} key={i} />)}
             <Pagenation curPage={curPage} pages={pages} />
           </div>
         </div>

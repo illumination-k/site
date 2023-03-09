@@ -29,7 +29,7 @@ cargo install diesel_cli --no-default-features --features postgres
 
 Postgresqlを立ち上げます。今回は`docker-compose`を使います。
 
-```yaml:title=docker-compose.yaml
+```yaml title=docker-compose.yaml
 version: "3.0"
 
 services:
@@ -67,7 +67,7 @@ diesel generate create_posts
 
 `migrations/${date}_create_posts`というディレクトリの中に`up.sql`と`down.sql`ができているはずです。`up.sql`がmigration runするときに使われるやつで、`down.sql`がmigration redoするときに使われるやつです。これらを以下のように書き換えます。
 
-```sql:title=up.sql
+```sql title=up.sql
 CREATE TABLE posts (
   id SERIAL PRIMARY KEY,
   title VARCHAR NOT NULL,
@@ -76,7 +76,7 @@ CREATE TABLE posts (
 )
 ```
 
-```sql:title=down.sql
+```sql title=down.sql
 DROP TABLE posts
 ```
 
@@ -92,7 +92,7 @@ diesel migration run
 
 今回使うものを入れていきます。ORMとしてDieselを、JSONを扱うためにserde類を、エラーハンドリングにanyhowを使っています。
 
-```toml:title=Cargo.tml
+```toml title=Cargo.tml
 [dependencies]
 actix-web = "3"
 diesel = { version = "^1.1.0", features = ["postgres", "r2d2"] }
@@ -160,7 +160,7 @@ src/
 
 まず、データベースに接続するための設定を書きます。あと型が長いので名前をつけておきます。
 
-```rust:title=database.rs
+```rust title=database.rs
 use anyhow::Result;
 use diesel::pg::PgConnection;
 use diesel::r2d2::{self, ConnectionManager};
@@ -189,7 +189,7 @@ pub fn establish_connection() -> Result<Pool> {
 
 modelを書きます。Getで返すときやPostで受け取るときにJSONにSerialize/Deserializeできる必要があります。Queryとかで使うやつには`Queryable`、Postで使うやつに`Insertable`をつけます。
 
-```rust:title=models.rs
+```rust title=models.rs
 use crate::schema::posts;
 use serde::{Deserialize, Serialize};
 #[derive(Debug, Serialize, Deserialize, Queryable)]
@@ -212,11 +212,11 @@ pub struct NewPost {
 
 とりあえず`mod.rs`類を書きます。
 
-```rust:title=routes/mod.rs
+```rust title=routes/mod.rs
 pub mod posts;
 ```
 
-```rust:title=routes/posts/mod.rs
+```rust title=routes/posts/mod.rs
 pub mod delete;
 pub mod get;
 pub mod post;
@@ -225,7 +225,7 @@ pub mod publish;
 
 あとは`main.rs`に以下を追記します。
 
-```rust:title=main.rs
+```rust title=main.rs
 mod database;
 mod models;
 mod routes;
@@ -236,7 +236,7 @@ mod schema;
 
 すべてのPostsを返します。dieselはtokioをサポートしてないらしいので、`web::lock`を使っています。
 
-```rust:title=routes/posts/get.rs
+```rust title=routes/posts/get.rs
 use crate::database::Pool;
 use crate::models::Post;
 use crate::schema::posts;
@@ -263,7 +263,7 @@ pub async fn index(pool: web::Data<Pool>) -> HttpResponse {
 
 何も入れてないため、GETしても空リストしかもらえないので、POSTも実装します。
 
-```rust:title=routes/posts/post.rs
+```rust title=routes/posts/post.rs
 use crate::database::{Pool, PooledPgConnection};
 use crate::models::NewPost;
 use crate::schema::posts;
@@ -305,7 +305,7 @@ pub async fn index(pool: web::Data<Pool>, form: web::Json<NewPost>) -> HttpRespo
 
 `main.rs`を更新します。Routingの追加とデータベースへの接続を行います。
 
-```rust:title=main.rs
+```rust title=main.rs
 #[macro_use]
 extern crate diesel;
 
@@ -357,7 +357,7 @@ publish状態を変更するPUTを実装します。簡単のため`/posts/publi
 
 `web::Path<T>`は`to_owned`で`T`になります。
 
-```rust:title=routes/posts/publish.rs
+```rust title=routes/posts/publish.rs
 use crate::models::Post;
 use crate::schema::posts;
 use actix_web::{put, web, HttpResponse};
@@ -445,4 +445,4 @@ CRUDの完成です。
 
 実装は以下です。もう少し機能が追加されています。
 
-![github:illumination-k/actix-web-crud](github:illumination-k/actix-web-crud)
+::gh-card[illumination-k/actix-web-crud]

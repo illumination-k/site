@@ -35,7 +35,7 @@ Next.jsをGoogle App Engine (GAE) で動かすまでの記録。CloudflareはAMP
 - [Google App Engineを出来るだけ無料枠で収めるためのオートスケール設定](https://blog.longkey1.net/2020/04/05/google-app-engine-auto-scaling-setting-for-free/)
 - [Next.jsをGAEで動かす（CloudBuildから自動デプロイ）](https://zenn.dev/catnose99/articles/353664a9fe1f0f)
 
-```yaml:title=app.yaml
+```yaml title=app.yaml
 env: standard
 
 runtime: nodejs14
@@ -86,7 +86,7 @@ gcloud app deploy app.yaml --project $PROJECT_ID
 
 ### 設定ファイル
 
-```yaml:title=cloudbuild.yaml
+```yaml title=cloudbuild.yaml
 steps:
   - id: install packages
     name: node:14

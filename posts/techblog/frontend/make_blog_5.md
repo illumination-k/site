@@ -45,7 +45,7 @@ ampのときにformで必要になってくるのは、`target`部分で`_top`�
 
 大まかな流れは、`getAllPostsPath`で全体をとってきて、中身を`gray-matter`でよんで、`filterTocken`でほしいトークンだけとってきて、とってきたトークンを全部wordとして保存しているだけ。
 
-```js:title=makeCache.js
+```js title=makeCache.js
 const fs = require("fs");
 const path = require("path");
 const matter = require("gray-matter");
@@ -126,7 +126,7 @@ makePostsCache();
 
 package.jsonのbuildとかの部分を以下のように変更する。
 
-```json:title=package.json
+```json title=package.json
 "scripts": {
   "dev": "next",
   "build": "next build",

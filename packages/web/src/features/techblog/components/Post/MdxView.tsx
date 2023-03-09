@@ -6,7 +6,7 @@ import * as runtime from "react/jsx-runtime";
 
 const style = css({
   label: "markdown",
-  "& h1,h2,h3,h4,h5,h6": { "@apply": "font-sans px-2 mt-2 mb-2" },
+  "& h1,h2,h3,h4,h5,h6": { "@apply": "font-sans px-2 my-3" },
   "& h1": { "@apply": "font-black text-3xl mt-2 mb-3" },
   "& h2": {
     "@apply": "font-black text-2xl border-b-1 border-gray-200 pb-1",
@@ -16,8 +16,13 @@ const style = css({
   },
 
   "& h4": { "@apply": "font-bold text-xl" },
+  "& h5": { "@apply": "font-semibold text-lg" },
+  "& h6": { "@apply": "font-semibold " },
 
-  "& ul": { "@apply": "list-disc list-inside" },
+  "& ul": { "@apply": "list-disc list-inside my-2" },
+  "& ol": {
+    "@apply": "list-decimal my-2 px-6",
+  },
 
   "& a": { "@apply": "text-blue-600 underline" },
 
@@ -57,6 +62,10 @@ const style = css({
   // code
   "& code": { "@apply": "bg-slate-50 rounded-lg px-2 text-red-600 whitespace-pre-wrap" },
 
+  "& pre": {
+    "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
+  },
+
   // code block
   "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
     "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
@@ -79,6 +88,21 @@ const style = css({
     },
     "& a.github-embed-title": {
       "@apply": "px-4 py-[2px] text-sm text-blue-500 overflow-hidden",
+    },
+  },
+
+  // code-title
+  "& div.code-title-container": {
+    "@apply": "bg-slate-200 rounded-lg m-1 pb-0",
+    "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
+      "@apply": "rounded-t-none",
+      "& span.code-line": {
+        "@apply": "px-4",
+      },
+    },
+
+    "& p.code-title": {
+      "@apply": "px-4 -mb-4 py-1 font-bold",
     },
   },
 

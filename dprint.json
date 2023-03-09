@@ -12,7 +12,8 @@
     "**/node_modules",
     "**/*-lock.json",
     "**/.next",
-    "**/dist"
+    "**/dist",
+    "**/dump"
   ],
   "plugins": [
     "https://plugins.dprint.dev/typescript-0.83.0.wasm",

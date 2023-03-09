@@ -17,7 +17,7 @@ next.jsを使っているとnext.config.jsを使って設定をカスタマイ�
 
 ## 基本
 
-```javascript:title=next.config.js
+```javascript title=next.config.js
 module.exports = {}
 ```
 
@@ -31,7 +31,7 @@ Strict Modeを使用でき、嬉しい。
 
 リダイレクトの設定をかける。`redirects`関数を定義して、設定を書いた配列を返す。
 
-```javascript:title=next.config.js
+```javascript title=next.config.js
 module.exports = {
     async redirects() {
         return [
@@ -49,7 +49,7 @@ module.exports = {
 
 JavaScriptとCSSを読み込む先を変える。DEFAULTでは、`/_next/static/`を読みに行くが、以下の例では、`https://cdn.mydomain.com/_next/static/`を読み込みにいく。
 
-```javascript:title=next.config.js
+```javascript title=next.config.js
 module.exports = {
   // Use the CDN in production and localhost for development.
   assetPrefix: 'https://cdn.mydomain.com',
@@ -65,7 +65,7 @@ module.exports = {
 - publicRuntimeConfig: Server or Client
 - serverRuntimeConfig: Server only
 
-```javascript:title=next.config.js
+```javascript title=next.config.js
 module.exports = {
   serverRuntimeConfig: {
     // Will only be available on the server side
@@ -110,7 +110,7 @@ webpackの`webpack.config.js`的な話ができる。`config`が`webpack`の`con
 `Next.js`のversionを`11.0.0`にすると`webpack5`が基本的に使われるようになる。この辺は`webpack5`に真偽値を入れることで設定できる。
 また、webpack5からエイリアスが自前で設定できるようになっている。
 
-```javascript:title=next.config.js
+```javascript title=next.config.js
 module.export = {
     webpack(config, options) {
       config.resolve.alias['@component'] = path.join(__dirname, "component");

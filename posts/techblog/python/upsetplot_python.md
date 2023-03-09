@@ -15,7 +15,7 @@ updated_at: "2022-05-20T18:42:50+00:00"
 
 集合関係の包含関係を示す際、2つや3つならベン図がわかりやすいですが、集合関係の数が増えてくるとベン図だと理解しにくくなることがあります。そこで便利なのが、Alexander Lexが2014年に提唱したUpSetPlotです。Pythonで利用する場合は以下のパッケージが定期的にメンテされており安心です（2021/8現在）
 
-![github:jnothman/UpSetPlot](github:jnothman/UpSetPlot)
+::gh-card[jnothman/UpSetPlot]
 
 Rでの実装例は[こちらのサイト](https://stats.biopapyrus.jp/r/graph/upset.html)を参考にしてください。
 

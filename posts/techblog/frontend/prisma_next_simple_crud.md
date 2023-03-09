@@ -38,13 +38,13 @@ npx prisma init
 
 `.env`が作成され、その中にDATABASE_URLが設定されています。今回は`sqlite3`を使います。
 
-```env:title=.env
+```env title=.env
 DATABASE_URL="file:./dev.db"
 ```
 
 schemaを書きます。とりあえず、titleとcontentがあれば良さそうです。
 
-```prisma:title=prisma/schema.prisma
+```prisma title=prisma/schema.prisma
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
@@ -113,7 +113,7 @@ volumes:
 
 `.env`のDATABASE_URLを以下のように設定します。portを今回はいじっているのと、パスワード、ユーザーネームが設定されているので注意が必要です。
 
-```env:title=.env
+```env title=.env
 DATABASE_URL="postgresql://postgres:postgres@localhost:15432/main?schema=public"
 ```
 
@@ -141,7 +141,7 @@ export * from "@prisma/client";
 
 まず、Todoを作成する`create-todo`を作成します。
 
-```ts::title=pages/api/create-todo.ts
+```ts: title=pages/api/create-todo.ts
 import type { NextApiHandler } from "next"
 import prisma from "../../libs/prisma"
 
@@ -169,7 +169,7 @@ curl -X POST -H "Content-Type: application/json" -d '{ "title": "test", "content
 
 TODO LISTを取得するEND POINTを作成します。
 
-```ts:title=pages/api/get-todos.ts
+```ts title=pages/api/get-todos.ts
 import type { NextApiHandler } from "next"
 import prisma from "../../libs/prisma"
 
@@ -208,7 +208,7 @@ curl localhost:3000/api/get-todos | jq
 
 UPDATE用のAPIを作ります。
 
-```ts:title=pages/api/update-todo.ts
+```ts title=pages/api/update-todo.ts
 import type { NextApiHandler } from "next"
 import prisma from "../../libs/prisma"
 
@@ -255,7 +255,7 @@ contentとupdatedAtがたしかに更新されています。
 
 最後にDelete部分を実装します。
 
-```ts:title=pages/api/delete-todo.ts
+```ts title=pages/api/delete-todo.ts
 import type { NextApiHandler } from "next"
 import prisma from "../../libs/prisma"
 

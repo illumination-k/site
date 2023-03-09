@@ -15,7 +15,7 @@ updated_at: "2022-05-20T18:42:50+00:00"
 
 `dprint`はMarkdown中のコードを整形してくれる上、Vscodeに対応しています。こちらを使いましょう。
 
-![github:dprint/dprint](github:dprint/dprint)
+::gh-card[dprint/dprint]
 
 ## TL;DR
 
@@ -26,7 +26,7 @@ updated_at: "2022-05-20T18:42:50+00:00"
 
 そこで、今回はMarkdown内のコードを任意のフォーマッターを使って整形して出力するツール**cmfmt**を作ったので宣伝します。
 
-![github:illumination-k/cmfmt](github:illumination-k/cmfmt)
+::gh-card[illumination-k/cmfmt]
 
 ## 使い方
 

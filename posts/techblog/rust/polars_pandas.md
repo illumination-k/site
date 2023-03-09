@@ -25,7 +25,7 @@ rustにも実はpandas likeなcrateがあることを知ったのでpandasとの
 ただ補完や型の推測が効かないので少し困りました。`rust-analyzer`対応もしてみました。補完は効くようになりましたが、やはりVSCodeなどに比べると微妙。\
 サンプルノートブックはこちら。docker-composeで起動できます。
 
-![github:illumination-k/polars-pandas](github:illumination-k/polars-pandas)
+::gh-card[illumination-k/polars-pandas]
 
 ## polars
 
@@ -39,7 +39,7 @@ rustにも実はpandas likeなcrateがあることを知ったのでpandasとの
 
 featureを選ぶことで、日付変換やndarrayへの変換、ランダムサンプリングなどに対応できる。今回はndarrayとランダムサンプリングを試してみる。あとエラーハンドリングにanyhowを入れておく。
 
-```toml:title=Cargo.toml
+```toml title=Cargo.toml
 [dependencies]
 anyhow = "1.0"
 polars = { version = "0.18.0", features = ["ndarray", "random"] }

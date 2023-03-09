@@ -60,7 +60,6 @@ o.getA();
 // Uncaught TypeError: o.getA is not a function
 
 // cloneを使うとメソッドも保存される
-
 const entity_clone = entity.clone();
 
 Object.is(entity_clone, entity);

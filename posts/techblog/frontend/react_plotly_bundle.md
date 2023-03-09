@@ -44,7 +44,7 @@ plotlyはJavascriptだけでなくPythonやRでも使われている非常に利
 
 `react-plotly.js/factory`にある`createPlotlyComponent`を使います。
 
-```jsx:title=Plot.jsx
+```jsx title=Plot.jsx
 import Plotly from "plotly.js-cartesian-dist";
 import createPlotlyComponent from "react-plotly.js/factory";
 

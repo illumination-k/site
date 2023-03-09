@@ -35,7 +35,7 @@ dockerを使ってcross buildしてくれる[cross](https://github.com/rust-embe
 
 releaseを作ったり、uploadしたりするアクションはあるが、バイナリをartifactにアップロードして...みたいな感じで結構長くなるので、[Upload files to a GitHub release](https://github.com/marketplace/actions/upload-files-to-a-github-release)を使う。公式サンプルは以下のような感じで、非常に簡単にrelease作成とバイナリアップロードができる。
 
-```yml:title=simple_example.yml
+```yml title=simple_example.yml
 name: Publish
 
 on:
@@ -69,7 +69,7 @@ jobs:
 
 Windowsを入れる場合は、ubuntu上で普通にビルドできる。ただ出力ファイルに`.exe`が必要なのでそこだけ注意すればいい。
 
-```yml:title=Release.yml
+```yml title=Release.yml
 name: Release
 
 on:

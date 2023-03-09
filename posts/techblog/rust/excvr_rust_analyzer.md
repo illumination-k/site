@@ -19,7 +19,7 @@ excvrを使うことでJupyter上でRustを使うことができるようにな�
 
 `polars`と抱合せですが、以下のレポジトリで動作が確認できます。
 
-![github:illumination-k/polars-pandas](github:illumination-k/polars-pandas)
+::gh-card[illumination-k/polars-pandas]
 
 ## excvr用のimageの作成
 
@@ -28,7 +28,7 @@ evcxr_jupyter自体のインストールは[公式](https://github.com/google/ev
 
 今回はevcxr_jupyterのインストールに加えて、`jupyter-lab`、`jupyter-lsp`、`rust-analyzer`のインストールを行っています。
 
-```docker:title=Dockerfile
+```docker title=Dockerfile
 FROM rust:1.56 as rust
 
 USER root
@@ -65,7 +65,7 @@ CMD [ "jupyter", "lab", "--port", "8888", "--ip=0.0.0.0", "--allow-root" ]
 
 今回は`${HOME}/.jupyter/jupyter_server_config.d/rust-analyzer.json`というように配置します。
 
-```json:title=rust-analyzer.json
+```json title=rust-analyzer.json
 {
   "LanguageServerManager": {
     "language_servers": {
@@ -85,7 +85,7 @@ CMD [ "jupyter", "lab", "--port", "8888", "--ip=0.0.0.0", "--allow-root" ]
 すでに書いたように、rust-analyzer.jsonを`${HOME}/.jupyter/jupyter_server_config.d/rust-analyzer.json`に配置します。
 また、`work`以下をマウントして、ローカルと共有しています。
 
-```yaml:title=docker-compose.yaml
+```yaml title=docker-compose.yaml
 version: "3"
 services:
   jupyter:

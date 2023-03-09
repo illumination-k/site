@@ -77,7 +77,7 @@ Next.jsでmdxを使うメリットとして、Next.jsのmdxに関するレンダ
 
 例えば、以下のような感じで、コードシンタクスとかkatexとかに対応でき、Markdownをレンダリングできます([参考](https://blog.hellorusk.net/posts/20191209))
 
-```js:title=next.config.js
+```js title=next.config.js
 // remark plugins
 const remarkMath = require('remark-math')
 const remarkFrontmatter = require('remark-frontmatter')

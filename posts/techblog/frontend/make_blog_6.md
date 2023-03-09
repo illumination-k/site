@@ -65,7 +65,7 @@ updated_at: "2022-05-20T18:42:50+00:00"
 
 まず型定義は基本的に同じところからexportされている`xxxProps`というものを使う。今回の場合は`FabProps`を`Fab`と一緒にimportする。このbuttonは`on`を必ず使う用途だと考えているのでdefaultpropsの拡張は行っていない。
 
-```tsx:title=AmpFab.tsx
+```tsx title=AmpFab.tsx
 import React from "react";
 
 import Fab, { FabProps } from "@material-ui/core/Fab";
@@ -100,7 +100,7 @@ position: "fixed";
 
 注意が必要なのは、`amp-sidebar`は`<body>`の直下にないとだめなので、`<div>`などで囲ってしまうと、Warningが表示される。なので、Fragmentで囲う必要がある。
 
-```tsx:title=AmpSidebar.tsx
+```tsx title=AmpSidebar.tsx
 import React from "react";
 
 import AmpFab from "./AmpFab";
@@ -155,7 +155,7 @@ export default AmpSidebar;
 
 デフォルトの`_document.js`は以下である。[このサイト](https://reacttricks.com/building-an-amp-website-with-react-and-next/)では、`_document.js`に`ampsidebar`を直接入れる必要がある、とされている。しかし、このpagesの中身が入る部分である`<Main>`はfragmentで囲われたものなので、この中に`amp-sidebar`を入れてもWarningは表示されない。ただし、material-uiの`Container`やもっと単純に`div`などで囲ってしまうとWarningが表示されるので、できるだけ上の方のコンポーネントに`amp-sidebar`を入れる必要がある。
 
-```jsx:title=_document.js
+```jsx title=_document.js
 import Document, { Html, Head, Main, NextScript } from 'next/document'
 
 class MyDocument extends Document {
@@ -182,7 +182,7 @@ export default MyDocument
 
 例えば、以下のようにする。これを標準レイアウトにすればWarningは表示されない。
 
-```tsx:title=Layout.tsx
+```tsx title=Layout.tsx
 import Header from "./Header";
 import Footer from "./Footer";
 import AmpSidebar from "./AmpSidebar"

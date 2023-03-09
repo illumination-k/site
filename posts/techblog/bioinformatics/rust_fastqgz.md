@@ -19,7 +19,7 @@ fastqとかのファイルを処理するときに、Pythonだとサイズが大
 
 ## dependencies
 
-```toml:title=Cargo.toml
+```toml title=Cargo.toml
 bio = "*"
 ```
 
@@ -123,7 +123,7 @@ let mut wtr = fastq::Writer::to_file(path).unwrap()
 
 flate2というgzとかzipとかの圧縮を扱えるcrateを使います。`?`を使いたいので、anyhowというエラーハンドリングクレートを使用しています。
 
-```toml:title=Cargo.toml
+```toml title=Cargo.toml
 bio = "*"
 anyhow = "1.0"
 flate2 = "0.2"

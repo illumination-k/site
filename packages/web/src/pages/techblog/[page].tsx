@@ -7,7 +7,6 @@ import Pager from "@/features/techblog/components/Pager";
 import { dumpFile } from "@/features/techblog/constant";
 import pager, { PageInfomation } from "@/features/techblog/utils/pager";
 
-
 const TechBlogPage: NextPage<Props> = ({ pageInfomation }) => {
   return <Pager pageInformation={pageInfomation} />;
 };
