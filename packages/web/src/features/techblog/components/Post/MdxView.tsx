@@ -36,7 +36,7 @@ const style = css({
 
   // rounded table
   "& table": {
-    "@apply": "my-4 mx-1 w-full",
+    "@apply": "my-4 mx-1 w-full overflow-x-auto whitespace-pre-wrap block",
     "th,td": {
       "@apply": "text-left px-2",
     },
