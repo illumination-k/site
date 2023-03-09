@@ -1,10 +1,15 @@
 import { describe, it } from "vitest";
 
-import { readPost } from "./io";
+import { dumpPost, readPost } from "./io";
 
 describe("test read post", () => {
-  it("sample post", async () => {
+  it("sample read post", async () => {
     const post = await readPost("./test/test1.md");
-    console.log(post);
+  });
+
+  it("dump smaple post", async () => {
+    const post = await readPost("./test/test1.md");
+    const dump = await dumpPost(post, "./test/test1.md", "./test/public/imageDist");
+    console.log(dump);
   });
 });

@@ -1,11 +1,12 @@
-import fs from "fs";
+import fs, { PathLike } from "fs";
 import path from "path";
+import util from "util";
 
-import type { Image, Root } from "mdast";
+import type { Image, Parent, Root } from "mdast";
 
 import axios from "axios";
 import sharp from "sharp";
-import tmpPromise from "tmp-promise";
+import { file } from "tmp-promise";
 import { visit } from "unist-util-visit";
 
 type Size = {
@@ -36,12 +37,42 @@ function parseTitleToSize(title: string | null | undefined): Size | undefined {
   return size;
 }
 
+function replacePathAsPublicRoot(imagePath: string) {
+  const pathElems = path.resolve(imagePath).split(path.sep);
+
+  let startPublic = false;
+
+  // joinするときに先頭に"/"を入れる
+  const newPathElems = [""];
+  for (const pathElem of pathElems) {
+    if (startPublic) {
+      newPathElems.push(pathElem);
+    }
+
+    if (pathElem === "public") {
+      startPublic = true;
+    }
+  }
+
+  if (!startPublic) {
+    throw `${imagePath} is not in public dir`;
+  }
+
+  return newPathElems.join("/");
+}
+
 type Option = {
+  postPath: PathLike;
   imageDist: string;
 };
 
-export default function optimizeImage(option: Option) {
-  return (ast: Root) => {
+const writeAsync = util.promisify(fs.writeFile);
+const copyAsync = util.promisify(fs.copyFile);
+
+const optimizeImage = (option: Option) => {
+  const postDirPath = path.resolve(path.dirname(option.postPath.toString()));
+
+  return (async (ast: Root) => {
     const promises: (() => Promise<void>)[] = [];
     // @ts-ignore
     visit(ast, "image", (node: Image) => {
@@ -54,47 +85,45 @@ export default function optimizeImage(option: Option) {
         const fileNameBase = filename.split(".")[0];
         const ext = path.extname(uri);
 
-        let imagePath: string;
+        let imagePath: string = path.resolve(path.join(postDirPath, uri));
 
         // temporary file for download
-        const { path: tmpPath, cleanup } = await tmpPromise.file({ postfix: ext });
+        const { path: tmpPath, cleanup } = await file({ postfix: ext });
 
-        if (ext === ".svg" || ext === ".gif") {
-          // todo!()
-        } else {
-          if (uri.startsWith("http") || (uri.startsWith("ftp"))) {
-            const buf = await axios.get(uri, { responseType: "arraybuffer" });
+        if (uri.startsWith("http") || (uri.startsWith("ftp"))) {
+          const buf = await (await axios.get(uri, { responseType: "arraybuffer" })).data;
 
-            // @ts-ignore
-            fs.writeFile(tmpPath, buf, (err) => {
-              throw err;
-            });
+          await writeAsync(tmpPath, buf);
 
-            imagePath = tmpPath;
-          } else {
-            imagePath = uri;
-          }
+          imagePath = tmpPath;
+        }
 
+        const sharpExts = [".png", ".jpg", ".webp", ".jepg", ".gif"];
+
+        if (ext === ".svg") {
+          const copyImagePath = path.join(option.imageDist, filename);
+          await copyAsync(imagePath, copyImagePath);
+
+          node.url = replacePathAsPublicRoot(copyImagePath);
+        } else if (sharpExts.includes(ext)) {
           const optimizedImagePath = path.join(option.imageDist, `${fileNameBase}.webp`);
-          node.url = optimizedImagePath;
-          sharp(imagePath).webp({
+
+          await sharp(imagePath).webp({
             quality: 75,
           }).resize(size?.width, size?.height).toFile(
             optimizedImagePath,
-            (err) => {
-              throw err;
-            },
           );
 
-          node.data = { hProperties: size };
+          const newUri = replacePathAsPublicRoot(optimizedImagePath);
+          node.url = newUri;
         }
 
         await cleanup();
       });
     });
-  };
-}
 
-// httpsならDL
-// size調整
-// webp変換
+    await Promise.all(promises.map((f) => f()));
+  });
+};
+
+export default optimizeImage;
