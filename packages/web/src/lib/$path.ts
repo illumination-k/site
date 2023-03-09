@@ -44,6 +44,7 @@ export const staticPath = {
   next_svg: '/next.svg',
   robots_txt: '/robots.txt',
   techblog: {
+    _gitkeep: '/techblog/.gitkeep',
     $1500204713307_webp: '/techblog/1500204713307.webp',
     $2130a_webp: '/techblog/2130a.webp',
     $2130c_webp: '/techblog/2130c.webp',
@@ -79,11 +80,8 @@ export const staticPath = {
     upsetplot_basic_sort_webp: '/techblog/upsetplot_basic_sort.webp',
     upsetplot_category_examples_webp: '/techblog/upsetplot_category_examples.webp',
     upsetplot_ext_python_webp: '/techblog/upsetplot_ext_python.webp',
-    upsetplot_extensions_gif: '/techblog/upsetplot_extensions.gif',
     upsetplot_extensions_webp: '/techblog/upsetplot_extensions.webp',
-    upsetplot_sort_gif: '/techblog/upsetplot_sort.gif',
     upsetplot_sort_webp: '/techblog/upsetplot_sort.webp',
-    upsetplot_venn_gif: '/techblog/upsetplot_venn.gif',
     upsetplot_venn_webp: '/techblog/upsetplot_venn.webp',
     venn_webp: '/techblog/venn.webp'
   },
