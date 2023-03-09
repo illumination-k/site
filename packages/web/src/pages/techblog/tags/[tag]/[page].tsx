@@ -1,0 +1,53 @@
+import { ParsedUrlQuery } from "querystring";
+
+import { Lang } from "common";
+import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
+
+import Pager from "@/features/techblog/components/Pager";
+import { blogService } from "@/features/techblog/constant";
+import pager, { PageInfomation } from "@/features/techblog/utils/pager";
+
+const TechBlogPage: NextPage<Props> = ({ pageInfomation }) => {
+  return <Pager pageInformation={pageInfomation} />;
+};
+
+type Props = {
+  pageInfomation: PageInfomation;
+};
+
+export const getStaticProps: GetStaticProps<Props, Params> = async ({ params, locale }) => {
+  const posts = await blogService.repo.filterPosts(locale as Lang, params!.tag, undefined);
+
+  return {
+    props: {
+      pageInfomation: pager.getPageInformation(posts, Number(params!.page)),
+    },
+  };
+};
+
+interface Params extends ParsedUrlQuery {
+  page: string;
+  tag: string;
+}
+
+export const getStaticPaths: GetStaticPaths<Params> = async () => {
+  const tags = await blogService.repo.tags();
+  const langs: Lang[] = ["en", "ja"];
+
+  const paths = (await Promise.all(langs.flatMap((lang) => {
+    return tags.map(async (tag) => {
+      const posts = await blogService.repo.filterPosts(lang, tag, undefined);
+
+      return pager.getPages(posts).map((page) => {
+        return { params: { page: page.toString(), tag: tag }, locale: lang };
+      });
+    });
+  }))).flat();
+
+  return {
+    paths,
+    fallback: false,
+  };
+};
+
+export default TechBlogPage;

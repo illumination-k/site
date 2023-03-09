@@ -6,18 +6,20 @@ import remarkMath from "remark-math";
 import remarkMdx from "remark-mdx";
 
 import rehypePrism from "./rehype-plugins/rehypePrism";
-import { attachIdToHeadings, embedGithub } from "./remark-plugins";
+import { attachIdToHeadings, codeTitle } from "./remark-plugins";
+import remarkDirectiveEmbedGenerator, { GithubCardTransfomer, GithubTransformer } from "./remark-plugins/embed";
 
 export const REMARK_PLUGINS = [
   remarkGfm,
   remarkMath,
   remarkDirective,
   attachIdToHeadings,
-  embedGithub,
+  codeTitle,
+  remarkDirectiveEmbedGenerator([new GithubTransformer(), new GithubCardTransfomer()]),
   remarkMdx,
 ];
 
-export const REHYPE_PLUGINS = [
+export const REHYPE_PLUGINS = {
   rehypeKatex,
   rehypePrism,
-];
+};

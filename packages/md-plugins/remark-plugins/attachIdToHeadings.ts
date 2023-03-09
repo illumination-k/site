@@ -19,7 +19,7 @@ export default function(option: Option = { depth: 3 }) {
 
       if (!node.data) node.data = {};
 
-      const hast = h(`h${node.depth + 1}`, { id });
+      const hast = h(`h${node.depth}`, { id });
       node.data.hName = hast.tagName;
       node.data.hProperties = hast.properties;
 

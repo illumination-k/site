@@ -1,22 +1,19 @@
 {
   "name": "site",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
+  "description": "",
+  "version": "1.0.0",
+  "author": "",
+  "devDependencies": {
+    "dprint": "^0.34.5",
+    "fixpack": "^4.0.0"
   },
-  "dependencies": {
-    "@types/node": "18.14.6",
-    "@types/react": "18.0.28",
-    "@types/react-dom": "18.0.11",
-    "eslint": "8.35.0",
-    "eslint-config-next": "13.2.3",
-    "next": "13.2.3",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "typescript": "4.9.5"
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "scripts": {
+    "cli": "node ./packages/cli/dist/main.js",
+    "cli:build": "pnpm run --filter cli build",
+    "format": "fixpack && dprint fmt",
+    "test": "echo \"Error: no test specified\" && exit 1"
   }
 }
