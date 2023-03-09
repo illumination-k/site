@@ -6,7 +6,8 @@
   "scripts": {
     "test": "vitest run",
     "watch:test": "vitest watch",
-    "build": "webpack"
+    "build": "webpack",
+    "dev:build": "webpack --config ./webpack.dev.js"
   },
   "keywords": [],
   "author": "",
@@ -40,6 +41,7 @@
     "unified": "^10.1.2",
     "vitest": "^0.29.2",
     "webpack": "^5.76.0",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^5.0.1",
+    "webpack-merge": "^5.8.0"
   }
 }
