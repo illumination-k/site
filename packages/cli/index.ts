@@ -26,12 +26,13 @@ yargs(hideBin(process.argv))
         describe: "",
         alias: ["o"],
       });
+
+      yargs.demandCommand();
     },
     async function(argv) {
-      const rootDir = path.resolve(path.join(__dirname), "../..");
-      const mdDir = path.resolve(path.join(rootDir, argv.mdDir as string));
-      const imageDist = path.resolve(path.join(rootDir, argv.imageDist as string));
-      const output = path.resolve(path.join(rootDir, argv.output as string));
+      const mdDir = argv.mdDir as string;
+      const imageDist = argv.imageDist as string;
+      const output = argv.output as string;
       const dumpPosts = await getDumpPosts(mdDir, imageDist);
       await writeDump(output, dumpPosts);
     },

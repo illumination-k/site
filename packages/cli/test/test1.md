@@ -20,3 +20,9 @@ updated_at: "2022-05-20T18:42:50+00:00"
 ![png_local](./colorbar_sample.png "height=1000")
 
 ![svg_local](./mark-github.svg)
+
+::gh{aaa}
+
+```aaa
+bbb
+```

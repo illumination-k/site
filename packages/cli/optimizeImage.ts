@@ -2,7 +2,9 @@ import fs, { PathLike } from "fs";
 import path from "path";
 import util from "util";
 
-import type { Image, Parent, Root } from "mdast";
+import type { Image, Root } from "mdast";
+
+import sizeOf from "image-size";
 
 import axios from "axios";
 import sharp from "sharp";
@@ -68,6 +70,7 @@ type Option = {
 
 const writeAsync = util.promisify(fs.writeFile);
 const copyAsync = util.promisify(fs.copyFile);
+const sizeOfAsync = util.promisify(sizeOf);
 
 const optimizeImage = (option: Option) => {
   const postDirPath = path.resolve(path.dirname(option.postPath.toString()));
@@ -98,14 +101,14 @@ const optimizeImage = (option: Option) => {
           imagePath = tmpPath;
         }
 
-        const sharpExts = [".png", ".jpg", ".webp", ".jepg", ".gif"];
+        const sharpExts = [".png", ".jpg", ".webp", ".jepg", ".gif", ".tiff"];
 
         if (ext === ".svg") {
           const copyImagePath = path.join(option.imageDist, filename);
           await copyAsync(imagePath, copyImagePath);
 
           node.url = replacePathAsPublicRoot(copyImagePath);
-        } else if (sharpExts.includes(ext)) {
+        } else if (sharpExts.includes(ext.toLowerCase())) {
           const optimizedImagePath = path.join(option.imageDist, `${fileNameBase}.webp`);
 
           await sharp(imagePath).webp({
@@ -115,7 +118,18 @@ const optimizeImage = (option: Option) => {
           );
 
           const newUri = replacePathAsPublicRoot(optimizedImagePath);
+
+          const dim = await sizeOfAsync(optimizedImagePath);
           node.url = newUri;
+
+          if (dim) {
+            node.data = {
+              hProperties: {
+                width: dim.width,
+                height: dim.height,
+              },
+            };
+          }
         }
 
         await cleanup();

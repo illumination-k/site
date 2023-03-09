@@ -4,17 +4,17 @@ import { promisify } from "util";
 import fm, { FrontMatterResult } from "front-matter";
 import { glob } from "glob";
 
+import { compile } from "@mdx-js/mdx";
+import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
+import stripMarkdown from "strip-markdown";
+
 // @ts-ignore
 import tinysegmenter from "tiny-segmenter";
-
-import { remark } from "remark";
-import stripMarkdown from "strip-markdown";
 
 import { Dump, DumpPost, headingsSchema, Post, PostMeta, postMetaSchema } from "common";
 
 import extractHeader from "./extractHeader";
 import optimizeImage from "./optimizeImage";
-import { visit } from "unist-util-visit";
 
 const readFileAsync = promisify(readFile);
 
@@ -39,31 +39,39 @@ export async function dumpPost(post: Post, postPath: PathLike, imageDist: string
 
   // @ts-ignore
   const stripFile = await remark()
+    .use(extractHeader)
     .use(stripMarkdown)
     .process(post.markdown);
 
-  const file = await remark()
-    .use(extractHeader)
-    .use(optimizeImage, { imageDist, postPath })
-    .process(post.markdown);
+  const compiledMarkdown = String(
+    await compile(post.markdown, {
+      outputFormat: "function-body",
+      format: "mdx",
+      development: false,
 
-  post.markdown = String(file);
-
-  console.log(file);
+      // @ts-ignore
+      remarkPlugins: [[optimizeImage, { postPath, imageDist }]].concat(REMARK_PLUGINS),
+      rehypePlugins: [
+        REHYPE_PLUGINS.rehypeKatex,
+        [REHYPE_PLUGINS.rehypePrism, { ignoreMissing: true }],
+      ],
+    }),
+  );
 
   const tokens = segmenter.segment(String(stripFile));
-  const _headings: unknown = file.data.headings;
+  const _headings: unknown = stripFile.data.headings;
   const parsed = headingsSchema.safeParse(_headings);
 
   if (!parsed.success) {
     console.error(_headings);
     throw "Error in extracting headers";
   }
-  return { ...post, tokens, headings: parsed.data };
+  return { ...post, compiledMarkdown, tokens, headings: parsed.data };
 }
 
 export async function getDumpPosts(src: PathLike, imageDist: string): Promise<DumpPost[]> {
   const mdFiles = await glob(`${src}/**/*.md`, { ignore: "node_modules/*" });
+  console.log(mdFiles);
   return Promise.all(mdFiles.map(async (f) => await dumpPost(await readPost(f), f, imageDist)));
 }
 

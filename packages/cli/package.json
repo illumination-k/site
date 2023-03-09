@@ -6,19 +6,20 @@
   "scripts": {
     "test": "vitest run",
     "watch:test": "vitest watch",
-    "build": "webpack",
-    "r": "tsx index.ts"
+    "build": "webpack"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mdx-js/mdx": "^2.3.0",
     "axios": "^1.3.4",
     "common": "workspace:^",
     "front-matter": "^4.0.2",
     "glob": "^9.2.1",
+    "image-size": "^1.0.2",
+    "md-plugins": "workspace:^",
     "mdast-util-to-string": "^3.1.1",
-    "remark": "^14.0.2",
     "sharp": "^0.31.3",
     "strip-markdown": "^5.0.0",
     "tiny-segmenter": "^0.2.0",
@@ -35,7 +36,6 @@
     "@types/yargs": "^17.0.22",
     "node-loader": "^2.0.0",
     "ts-loader": "^9.4.2",
-    "tsx": "^3.12.3",
     "typescript": "4.9.5",
     "unified": "^10.1.2",
     "vitest": "^0.29.2",
