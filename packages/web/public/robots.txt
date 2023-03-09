@@ -1,3 +1,9 @@
+# *
 User-agent: *
-Allow: /*
-Disallow: /api/**
+Allow: /
+
+# Host
+Host: https://www.illumination-k.dev
+
+# Sitemaps
+Sitemap: https://www.illumination-k.dev/sitemap.xml

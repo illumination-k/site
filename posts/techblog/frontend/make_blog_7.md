@@ -165,8 +165,8 @@ export default Home
 
 以上でPWA対応は完了です。当サイトtopの2020/09/30現在のlighthouse performanceです。
 
-![lighthouse-next-blog](/images/lighthouse-nextblog-top.PNG)
+![lighthouse-next-blog](../../public/lighthouse-nextblog-top.PNG)
 
 ちなみにWordpress時代はこんなんなので、非常に成長していると言えるでしょう。all 100は難しいですね...。
 
-![lighthouse-wordpress-top](/images/lighthouse-wordpress-top.PNG)
+![lighthouse-wordpress-top](../../public//lighthouse-wordpress-top.PNG)

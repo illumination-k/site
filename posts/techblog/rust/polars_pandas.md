@@ -20,7 +20,7 @@ rustにも実はpandas likeなcrateがあることを知ったのでpandasとの
 
 [excvr](https://github.com/google/evcxr)を使えばJupyter上で動かせます。Jupyter labを使うとPythonとRustの比較が非常にやりやすくて良かったです。
 
-![jupyter-image](../../public/polars_pandas/jupyter_image.PNG)
+![jupyter-image](../../public/polars_pandas/jupyter_image.png)
 
 ただ補完や型の推測が効かないので少し困りました。`rust-analyzer`対応もしてみました。補完は効くようになりましたが、やはりVSCodeなどに比べると微妙。\
 サンプルノートブックはこちら。docker-composeで起動できます。

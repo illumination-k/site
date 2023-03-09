@@ -20,7 +20,7 @@ type Props = {
 type SidebarMetaListProps = {
   className?: string;
   icon: ReactElement;
-  title: string;
+  title: ReactElement | string;
   content?: ReactElement | string;
 } & PropsWithChildren;
 
@@ -57,7 +57,11 @@ export default function Sidebar({ className, meta, headings }: Props) {
           />
           <SidebarMetaList title="更新" content={formatDate(meta.updated_at)} icon={<DocumentCheckIcon />} />
           <SidebarMetaList
-            title="カテゴリ"
+            title={
+              <Link className="hover:text-blue-400" href={pagesPath.techblog.categories.$url()}>
+                カテゴリ
+              </Link>
+            }
             content={
               <Link
                 className="hover:text-blue-400"
@@ -68,7 +72,14 @@ export default function Sidebar({ className, meta, headings }: Props) {
             }
             icon={<Category />}
           />
-          <SidebarMetaList title="Tag" icon={<TagIcon />}>
+          <SidebarMetaList
+            title={
+              <Link className="hover:text-blue-400" href={pagesPath.techblog.tags.$url()}>
+                タグ
+              </Link>
+            }
+            icon={<TagIcon />}
+          >
             <div className="flex flex-wrap gap-2 items-center mt-2">
               {meta.tags.map((tag, i) => <Tag tag={tag} key={i} />)}
             </div>

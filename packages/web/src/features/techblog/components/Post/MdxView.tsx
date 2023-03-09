@@ -4,6 +4,8 @@ import { runSync } from "@mdx-js/mdx";
 import { css } from "@twind/core";
 import * as runtime from "react/jsx-runtime";
 
+import { Me, P5, P7, S5, S7, Seq, T7 } from "../Seq/Seq";
+
 const style = css({
   label: "markdown",
   "& h1,h2,h3,h4,h5,h6": { "@apply": "font-sans px-2 my-3" },
@@ -30,7 +32,7 @@ const style = css({
     "@apply": "border-l-4 px-2 py-1 my-2",
   },
 
-  // p: { "@apply": "my-2" },
+  "& img": { "@apply": "my-4" },
 
   // rounded table
   "& table": {
@@ -45,6 +47,9 @@ const style = css({
     },
 
     "& tbody": {
+      "& tr": {
+        "& td": { "@apply": "py-2" },
+      },
       "& tr:nth-child(even)": {
         "@apply": "bg-slate-100",
       },
@@ -52,7 +57,7 @@ const style = css({
         "@apply": "bg-slate-50",
       },
       "& tr:last-child": {
-        "& td": { "@apply": "py-1" },
+        "& td": { "@apply": "pb-3" },
         "& td:first-child": { "@apply": "rounded-bl-lg" },
         "& td:last-child": { "@apply": "rounded-br-lg" },
       },
@@ -167,15 +172,14 @@ const style = css({
 
 export type MdViewProps = {
   compiledMarkdown: string;
-  components: JSX.Element[];
 };
 
-export default function MdView({ compiledMarkdown, components }: MdViewProps) {
+export default function MdView({ compiledMarkdown }: MdViewProps) {
   const Content = runSync(compiledMarkdown, runtime).default;
 
   return (
     <article className={style}>
-      <Content components={components} />
+      <Content components={{ Seq, P5, P7, S5, S7, T7, Me }} />
     </article>
   );
 }

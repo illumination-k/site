@@ -4,6 +4,8 @@ import { promisify } from "util";
 import fm, { FrontMatterResult } from "front-matter";
 import { glob } from "glob";
 
+import { remark } from "remark";
+
 import { compile } from "@mdx-js/mdx";
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
 import stripMarkdown from "strip-markdown";
@@ -43,20 +45,27 @@ export async function dumpPost(post: Post, postPath: PathLike, imageDist: string
     .use(stripMarkdown)
     .process(post.markdown);
 
-  const compiledMarkdown = String(
-    await compile(post.markdown, {
-      outputFormat: "function-body",
-      format: "mdx",
-      development: false,
+  let compiledMarkdown: string;
+  try {
+    compiledMarkdown = String(
+      await compile(post.markdown, {
+        outputFormat: "function-body",
+        format: "mdx",
+        development: false,
 
-      // @ts-ignore
-      remarkPlugins: [[optimizeImage, { postPath, imageDist }]].concat(REMARK_PLUGINS),
-      rehypePlugins: [
-        REHYPE_PLUGINS.rehypeKatex,
-        [REHYPE_PLUGINS.rehypePrism, { ignoreMissing: true }],
-      ],
-    }),
-  );
+        // @ts-ignore
+        remarkPlugins: [[optimizeImage, { postPath, imageDist }]].concat(REMARK_PLUGINS),
+        rehypePlugins: [
+          REHYPE_PLUGINS.rehypeKatex,
+          [REHYPE_PLUGINS.rehypePrism, { ignoreMissing: true }],
+        ],
+      }),
+    );
+  } catch (err) {
+    throw `Error in ${postPath}:
+    ${err}
+    `;
+  }
 
   const tokens = segmenter.segment(String(stripFile));
   const _headings: unknown = stripFile.data.headings;
@@ -71,8 +80,10 @@ export async function dumpPost(post: Post, postPath: PathLike, imageDist: string
 
 export async function getDumpPosts(src: PathLike, imageDist: string): Promise<DumpPost[]> {
   const mdFiles = await glob(`${src}/**/*.md`, { ignore: "node_modules/*" });
-  console.log(mdFiles);
-  return Promise.all(mdFiles.map(async (f) => await dumpPost(await readPost(f), f, imageDist)));
+
+  return Promise.all(mdFiles.map(async (f) => {
+    return await dumpPost(await readPost(f), f, imageDist);
+  }));
 }
 
 function getDump(dumpPosts: DumpPost[]): Dump {

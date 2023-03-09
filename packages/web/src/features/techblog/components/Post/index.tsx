@@ -34,7 +34,7 @@ export default function Post({ headigns, compiledMarkdown, meta }: Props) {
           <div className="lg:col-span-11">
             <div className="lg:grid lg:grid-cols-6">
               <article className="lg:col-span-4 bg-white rounded-lg px-10 py-5">
-                <MdView compiledMarkdown={compiledMarkdown} components={[]} />
+                <MdView compiledMarkdown={compiledMarkdown} />
               </article>
               <div className="hidden lg:block ml-8 sticky top-5 h-screen col-span-2 overflow-y-auto">
                 <Sidebar meta={meta} headings={headigns} />

@@ -48,13 +48,6 @@ vdb-config -i
 
 アップロードについてはこちらをご確認ください。
 
-<RecommendPost
-    title="SRAにAsperaを使ってデータをアップロードする"
-    url="/techblog/posts/sra_upload_aspera"
-    category="bioinformatics"
-    description="httpやftpによるSRAへのデータアップロードは遅すぎるので、IBMのaspera connectを使ってデータをアップロードするやり方を使おう。"
-/>
-
 ## SRAファイル
 
 `prefetch`でとってくるファイルです。`.sra`と`.sralite`があります。

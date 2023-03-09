@@ -3,7 +3,7 @@ uuid: dbb49f31-2bca-4a97-857e-a1d7a95b645d
 title: ライブラリ調整とシーケンスの基本について
 description: 次世代シーケンサー(NGS)解析技術の発展に伴い、比較的安価にシーケンスを行うことができるようになってきています。NGS解析を行うにあたって重要なライブラリ調整の原理と、シーケンサーの挙動についてまとめていきます。
 lang: ja
-category: techblog
+category: biology
 tags:
   - biology
   - ngs

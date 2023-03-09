@@ -1,5 +1,6 @@
+import fs from "fs";
+
 import yargs from "yargs";
-import path from "path";
 import { hideBin } from "yargs/helpers";
 import { getDumpPosts, writeDump } from "./io";
 import { template } from "./template";
@@ -24,10 +25,10 @@ yargs(hideBin(process.argv))
       yargs.positional("output", {
         type: "string",
         describe: "",
-        alias: ["o"],
+        alias: ["o", "out"],
       });
 
-      yargs.demandCommand();
+      yargs.demandOption(["mdDir", "imageDist", "output"]);
     },
     async function(argv) {
       const mdDir = argv.mdDir as string;
@@ -37,4 +38,14 @@ yargs(hideBin(process.argv))
       await writeDump(output, dumpPosts);
     },
   )
+  .command("template", "write blog template", (yargs) => {
+    yargs.positional("output", {
+      type: "string",
+      describe: "",
+      alias: ["o", "out"],
+    });
+    yargs.demandOption(["output"]);
+  }, function(argv) {
+    fs.writeFileSync(argv.output as string, template());
+  })
   .help().parse();
