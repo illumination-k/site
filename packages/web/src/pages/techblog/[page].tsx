@@ -8,9 +8,14 @@ import { blogService } from "@/features/techblog/constant";
 import pager, { PageInfomation } from "@/features/techblog/utils/pager";
 import { pagesPath } from "@/lib/$path";
 import { Lang } from "common";
+import Layout from "@/components/Layout";
 
 const TechBlogPage: NextPage<Props> = ({ pageInfomation }) => {
-  return <Pager pageInformation={pageInfomation} pageLinkGenerator={(page) => pagesPath.techblog._page(page).$url()} />;
+  return (
+    <Layout title={`illumination-k.dev techblog page-${pageInfomation.curPage}`} description={"Pager of Techblog"}>
+      <Pager pageInformation={pageInfomation} pageLinkGenerator={(page) => pagesPath.techblog._page(page).$url()} />;
+    </Layout>
+  );
 };
 
 type Props = {

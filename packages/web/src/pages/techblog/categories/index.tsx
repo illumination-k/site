@@ -6,11 +6,11 @@ import Category from "@/icons/Category";
 import Link from "next/link";
 import { pagesPath } from "@/lib/$path";
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import Layout from "@/components/Layout";
 
 const CategoryPage: NextPage<Props> = ({ categories }) => {
   return (
-    <main>
-      <Nav />
+    <Layout title="illumination-k.dev techblog:categories" description="category list of techblog">
       <div className="grid lg:grid-cols-3 justify-center">
         <div></div>
         <div>
@@ -33,7 +33,7 @@ const CategoryPage: NextPage<Props> = ({ categories }) => {
           </ul>
         </div>
       </div>
-    </main>
+    </Layout>
   );
 };
 

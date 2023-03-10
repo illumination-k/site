@@ -7,13 +7,19 @@ import { blogService } from "@/features/techblog/constant";
 import pager, { PageInfomation } from "@/features/techblog/utils/pager";
 import { pagesPath } from "@/lib/$path";
 import { Lang } from "common";
+import Layout from "@/components/Layout";
 
 const TechBlogPage: NextPage<Props> = ({ pageInfomation, category }) => {
   return (
-    <Pager
-      pageInformation={pageInfomation}
-      pageLinkGenerator={(page) => pagesPath.techblog.categories._category(category)._page(page).$url()}
-    />
+    <Layout
+      title={`illumination-k.dev techblog:${category} page-${pageInfomation.curPage}`}
+      description={`Pager of techblog:${category}`}
+    >
+      <Pager
+        pageInformation={pageInfomation}
+        pageLinkGenerator={(page) => pagesPath.techblog.categories._category(category)._page(page).$url()}
+      />
+    </Layout>
   );
 };
 

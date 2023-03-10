@@ -14,6 +14,8 @@ export default defineConfig({
     ["icon-", ({ $$ }) => `h-${$$} w-${$$}`],
   ],
   ignorelist: [
+    // next-font
+    /__className_*/,
     // md related
     // gfm
     "contains-task-list",
@@ -23,6 +25,7 @@ export default defineConfig({
     "github-embed-title",
     "github-embed",
     "gh-card",
+    /code-title*/,
     // prisma
     "line-number",
     "code-highlight",
@@ -33,6 +36,13 @@ export default defineConfig({
     "punctuation",
     "function",
     "operator",
+    "literal-property",
+    "property",
+    "boolean",
+    "comment",
+    "constant",
+    "string-property",
+    "parameter",
     /language-*/,
 
     // katex

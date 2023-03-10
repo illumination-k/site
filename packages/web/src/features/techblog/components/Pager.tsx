@@ -126,17 +126,12 @@ export default function Pager({ pageInformation, pageLinkGenerator }: PagerProps
   const { pagePostMetas, curPage, pages } = pageInformation;
 
   return (
-    <>
-      <Nav />
-      <main className="bg-slate-50">
-        <div className="lg:grid lg:grid-cols-5">
-          <div></div>
-          <div className="lg:col-span-3">
-            {pagePostMetas.map((meta, i) => <BlogPostCard meta={meta} key={i} />)}
-            <Pagenation curPage={curPage} pages={pages} pageLinkGenerator={pageLinkGenerator} />
-          </div>
-        </div>
-      </main>
-    </>
+    <div className="bg-slate-50 lg:grid lg:grid-cols-5">
+      <div></div>
+      <div className="lg:col-span-3">
+        {pagePostMetas.map((meta, i) => <BlogPostCard meta={meta} key={i} />)}
+        <Pagenation curPage={curPage} pages={pages} pageLinkGenerator={pageLinkGenerator} />
+      </div>
+    </div>
   );
 }

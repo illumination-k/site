@@ -1,14 +1,13 @@
 import type { GetStaticProps, NextPage } from "next";
 
 import { blogService } from "@/features/techblog/constant";
-import Nav from "@/components/Nav";
 import { TagIcon } from "@heroicons/react/24/solid";
 import Tag from "@/features/techblog/components/Tag";
+import Layout from "@/components/Layout";
 
 const TagPage: NextPage<Props> = ({ tags }) => {
   return (
-    <main>
-      <Nav />
+    <Layout title="illumination-k.dev techblog:tags" description="tag list of techblog">
       <div className="grid lg:grid-cols-3 justify-center">
         <div></div>
         <div className="px-4 md:px-2 lg:px-0">
@@ -25,7 +24,7 @@ const TagPage: NextPage<Props> = ({ tags }) => {
           </ul>
         </div>
       </div>
-    </main>
+    </Layout>
   );
 };
 
