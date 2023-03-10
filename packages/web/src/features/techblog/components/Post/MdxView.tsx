@@ -130,7 +130,7 @@ const style = css({
   /// prisma tokens
 
   // tomlで変になるので必要。tableクラスか何かが悪さしてる？
-  "& .token.table.class-name": { "@apply": "inline" },
+  "& .token.class-name": { "@apply": "inline" },
   "& .token.namespace": { "@apply": "" },
   [
     `.token.string,

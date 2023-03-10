@@ -45,6 +45,10 @@ export default defineConfig({
     "constant",
     "string-property",
     "parameter",
+    "variable",
+    "class-name",
+    "key",
+    "builtin",
     /^language-*/,
 
     // katex
