@@ -10,6 +10,7 @@ COPY . .
 RUN yarn global add pnpm && \
     pnpm i && \
     pnpm cli:build && \
+    mkdir -p ./packages/web/dump && \
     pnpm cli dump --mdDir ./posts/techblog \
         --imageDist ./packages/web/public/techblog \
         -o ./packages/web/dump/techblog.json && \
