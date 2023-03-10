@@ -8,6 +8,8 @@ import remarkMdx from "remark-mdx";
 import rehypePrism from "./rehype-plugins/rehypePrism";
 import { attachIdToHeadings, codeTitle } from "./remark-plugins";
 import remarkDirectiveEmbedGenerator, { GithubCardTransfomer, GithubTransformer } from "./remark-plugins/embed";
+import { DoiTransformer } from "./remark-plugins/embed/doi";
+import { YouTubeTransformer } from "./remark-plugins/embed/youtube";
 
 export const REMARK_PLUGINS = [
   remarkGfm,
@@ -15,7 +17,12 @@ export const REMARK_PLUGINS = [
   remarkDirective,
   attachIdToHeadings,
   codeTitle,
-  remarkDirectiveEmbedGenerator([new GithubTransformer(), new GithubCardTransfomer()]),
+  remarkDirectiveEmbedGenerator([
+    new GithubTransformer(),
+    new GithubCardTransfomer(),
+    new YouTubeTransformer(),
+    new DoiTransformer(),
+  ]),
   remarkMdx,
 ];
 

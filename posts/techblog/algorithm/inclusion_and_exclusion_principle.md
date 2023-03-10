@@ -163,8 +163,4 @@ $$
 
 #### 参考動画
 
-<amp-youtube
-    data-videoid="oG5z08Hj1NE"
-    layout="fixed"
-    width="320" height="180">
-</amp-youtube>
+::youtube[oG5z08Hj1NE]

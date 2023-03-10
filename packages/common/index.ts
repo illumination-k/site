@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { formatDate } from "./utils";
 
 const lang = z.enum(["ja", "en"]);
 export type Lang = z.infer<typeof lang>;
@@ -10,8 +11,8 @@ export const postMetaSchema = z.object({
   category: z.string(),
   tags: z.array(z.string()),
   lang: lang,
-  created_at: z.string().pipe(z.coerce.date()),
-  updated_at: z.string().pipe(z.coerce.date()),
+  created_at: z.string().pipe(z.coerce.date()).transform((date) => formatDate(date)),
+  updated_at: z.string().pipe(z.coerce.date()).transform((date) => formatDate(date)),
 });
 
 export type PostMeta = z.infer<typeof postMetaSchema>;

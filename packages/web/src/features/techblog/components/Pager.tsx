@@ -11,10 +11,6 @@ import Nav from "@/components/Nav";
 import Category from "@/icons/Category";
 import { pagesPath } from "@/lib/$path";
 
-type Props = {
-  pageInformation: PageInfomation;
-};
-
 function BlogPostCard({ meta }: { meta: PostMeta }) {
   return (
     <article className="px-8 py-2 rounded-lg bg-white my-3 mx-4 border-1">
@@ -26,9 +22,9 @@ function BlogPostCard({ meta }: { meta: PostMeta }) {
 
       <div className="px-3 pt-2 flex gap-2">
         <p className="font-bold">作成</p>
-        <p>{formatDate(meta.created_at)}</p>
+        <p>{meta.created_at}</p>
         <p className="font-bold">更新</p>
-        <p>{formatDate(meta.updated_at)}</p>
+        <p>{meta.updated_at}</p>
       </div>
       <div className="px-3 md:flex gap-4 items-center">
         <div className="flex gap-2 py-2 items-center font-bold">
@@ -53,7 +49,15 @@ function BlogPostCard({ meta }: { meta: PostMeta }) {
 
 type pageItem = number | "...";
 
-function Pagenation({ curPage, pages }: { curPage: number; pages: number[] }) {
+type PagenationProps = {
+  curPage: number;
+  pages: number[];
+  pageLinkGenerator: (
+    page: number,
+  ) => { pathname: string; query: { [key: string]: number | string }; hash: string | undefined };
+};
+
+function Pagenation({ curPage, pages, pageLinkGenerator }: PagenationProps) {
   let pageItems: pageItem[];
   const pageCount = pages.length;
 
@@ -74,7 +78,7 @@ function Pagenation({ curPage, pages }: { curPage: number; pages: number[] }) {
     <nav className="flex gap-3 items-center justify-center pb-2">
       {curPage !== 1
         ? (
-          <Link href={pagesPath.techblog._page(curPage - 1).$url()}>
+          <Link href={pageLinkGenerator(curPage - 1)}>
             <ChevronLeftIcon className="icon-6 hover:text-blue-400" />
           </Link>
         )
@@ -91,7 +95,7 @@ function Pagenation({ curPage, pages }: { curPage: number; pages: number[] }) {
                   "align-bottom hover:text-blue-400 text-2xl font-mono font-thin",
                   pageItem === curPage ? "text-blue-500" : "",
                 ))}
-                href={pagesPath.techblog._page(pageItem).$url()}
+                href={pageLinkGenerator(pageItem)}
               >
                 {pageItem}
               </Link>
@@ -102,7 +106,7 @@ function Pagenation({ curPage, pages }: { curPage: number; pages: number[] }) {
 
       {curPage !== pageCount
         ? (
-          <Link href={pagesPath.techblog._page(curPage + 1).$url()}>
+          <Link href={pageLinkGenerator(curPage + 1)}>
             <ChevronRightIcon className="icon-6 hover:text-blue-400" />
           </Link>
         )
@@ -111,21 +115,23 @@ function Pagenation({ curPage, pages }: { curPage: number; pages: number[] }) {
   );
 }
 
-export default function Pager({ pageInformation }: Props) {
+type PagerProps = {
+  pageInformation: PageInfomation;
+  pageLinkGenerator: (
+    page: number,
+  ) => { pathname: string; query: { [key: string]: number | string }; hash: string | undefined };
+};
+
+export default function Pager({ pageInformation, pageLinkGenerator }: PagerProps) {
   const { pagePostMetas, curPage, pages } = pageInformation;
 
   return (
-    <>
-      <Nav />
-      <main className="bg-slate-50">
-        <div className="lg:grid lg:grid-cols-5">
-          <div></div>
-          <div className="lg:col-span-3">
-            {pagePostMetas.map((meta, i) => <BlogPostCard meta={meta} key={i} />)}
-            <Pagenation curPage={curPage} pages={pages} />
-          </div>
-        </div>
-      </main>
-    </>
+    <div className="bg-slate-50 lg:grid lg:grid-cols-5">
+      <div></div>
+      <div className="lg:col-span-3">
+        {pagePostMetas.map((meta, i) => <BlogPostCard meta={meta} key={i} />)}
+        <Pagenation curPage={curPage} pages={pages} pageLinkGenerator={pageLinkGenerator} />
+      </div>
+    </div>
   );
 }

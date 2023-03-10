@@ -53,9 +53,9 @@ export default function Sidebar({ className, meta, headings }: Props) {
           <SidebarMetaList
             icon={<DocumentPlusIcon />}
             title="作成"
-            content={formatDate(meta.created_at)}
+            content={meta.created_at}
           />
-          <SidebarMetaList title="更新" content={formatDate(meta.updated_at)} icon={<DocumentCheckIcon />} />
+          <SidebarMetaList title="更新" content={meta.updated_at} icon={<DocumentCheckIcon />} />
           <SidebarMetaList
             title={
               <Link className="hover:text-blue-400" href={pagesPath.techblog.categories.$url()}>

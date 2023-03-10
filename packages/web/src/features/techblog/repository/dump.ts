@@ -38,7 +38,10 @@ export default class DumpRepository implements IBlogRepositoy {
 
   async tags() {
     await this.init();
-    return this.dump!.tags;
+    const defaultTags = ["archive", "draft"];
+    const tags = this.dump!.tags.filter((tag) => !defaultTags.includes(tag)).sort();
+
+    return defaultTags.concat(tags);
   }
 
   async filterPosts(lang?: Lang, tag?: string, category?: string) {

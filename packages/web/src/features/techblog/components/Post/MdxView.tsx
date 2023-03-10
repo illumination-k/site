@@ -36,7 +36,7 @@ const style = css({
 
   // rounded table
   "& table": {
-    "@apply": "my-4 mx-1 w-full",
+    "@apply": "my-4 mx-1 w-full overflow-x-auto whitespace-pre-wrap block",
     "th,td": {
       "@apply": "text-left px-2",
     },
@@ -68,7 +68,13 @@ const style = css({
   "& code": { "@apply": "bg-slate-50 rounded-lg px-2 text-red-600 whitespace-pre-wrap" },
 
   "& pre": {
-    "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
+    "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg overflow-x-auto",
+    "& code": {
+      "@apply": "px-0 text-black break-normal whitespace-pre ",
+      "& span.code-line": {
+        "@apply": "px-4",
+      },
+    },
   },
 
   // code block
@@ -121,8 +127,11 @@ const style = css({
     "@apply": "break-normal whitespace-pre overflow-x-auto",
   },
 
-  /// prisma token
-  "token.namespace": { "@apply": "opacity-[.7]" },
+  /// prisma tokens
+
+  // tomlで変になるので必要。tableクラスか何かが悪さしてる？
+  "& .token.table.class-name": { "@apply": "inline" },
+  "& .token.namespace": { "@apply": "" },
   [
     `.token.string,
   .token.attr-value`

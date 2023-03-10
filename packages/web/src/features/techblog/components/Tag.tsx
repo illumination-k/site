@@ -9,10 +9,19 @@ type TagProps = {
 };
 
 export default function Tag({ tag, className }: TagProps) {
+  let tagColor = "bg-blue-100 hover:bg-blue-500";
+
+  if (tag === "archive") {
+    tagColor = "bg-yellow-100 hover:bg-yellow-500";
+  } else if (tag === "draft") {
+    tagColor = "bg-gray-100 hover:bg-gray-500";
+  }
+
   return (
     <span
       className={tw(apply(
-        "rounded-3xl bg-blue-100 font-bold px-4 py-1 font-sans hover:bg-blue-500 hover:text-white",
+        "rounded-3xl font-bold px-4 py-1 font-sans hover:text-white",
+        tagColor,
         className,
       ))}
     >

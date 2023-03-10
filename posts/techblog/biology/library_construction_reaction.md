@@ -61,7 +61,7 @@ RNA-seqのときの最初のステップとして行われる反応です。こ�
 
 cDNAを合成する際に、3'末端にpolyC配列を付加し、それと相補的なpolyG配列を3'末端側にもつDNA oligo (template swithching oligo) を用います。これによって、3'末端を修飾しつつSecond strand synthesisを行うことができます。この反応によって、3'末端側にバーコードやアダプターが付加されます。こういった酵素は高濃度のマグネシウムやマグネシウムイオン存在下で、cDNA合成中、あるいは反応後半に誘導されます。
 
-![md={6}:tso](../../public/library_construction/tso.png)
+![tso](../../public/library_construction/tso.png)
 
 ## Klenow Fragment
 
@@ -77,23 +77,23 @@ cDNAを合成する際に、3'末端にpolyC配列を付加し、それと相補
 
 ligationはDNA同士をつなげる反応で、ライブラリ調製以外にもベクター作成など様々な場所で利用されます。よく使われるのは制限酵素で切断したベクターと、その突出末端を相補的に持つ挿入用のDNAを繋げる方法です。下図にあるように、相補的な突出末端を持つDNA同士を繋げることができます。酵素によっては平滑末端でも繋げられます。平滑末端で処理する場合はリン酸化等を行うのが一般的です([参考](https://lifescience.toyobo.co.jp/upload/upld86/protocol-c/cloning86pc01.pdf))。
 
-![md={6}:ligation](https://media.addgene.org/data/easy-thumbnails/filer_public/cms/filer_public/21/27/212780f6-b140-440b-b414-1ec4353167d6/ligation.gif__900x316_q85_crop_subsampling-2_upscale.png)
+![ligation](https://media.addgene.org/data/easy-thumbnails/filer_public/cms/filer_public/21/27/212780f6-b140-440b-b414-1ec4353167d6/ligation.gif__900x316_q85_crop_subsampling-2_upscale.png)
 
 ## USER
 
 Uracil DNA GlycosylaseとEndonuclease VIIIの両方の活性を持つ酵素です。二本鎖DNAの中のUを除去し、nickを入れることができます。
 
-![md={6}:USER](../../public/library_construction/USER_Mechanism.png)
+![USER](../../public/library_construction/USER_Mechanism.png)
 
 Adaptorの切断やUSER cloningなどに使われることがあります。
 
-![md={6}:adaptor-by-user](https://www.neb.com/-/media/nebus/page-images/newsized-brochure-images/cloning-and-mapping/user_lp_loopadaptorcleavage.png?rev=f6c3b5a51d7f40b093f03133a39934db&hash=861227C19378CCFB0154102618B135CB)
+![adaptor-by-user](https://www.neb.com/-/media/nebus/page-images/newsized-brochure-images/cloning-and-mapping/user_lp_loopadaptorcleavage.png?rev=f6c3b5a51d7f40b093f03133a39934db&hash=861227C19378CCFB0154102618B135CB)
 
 ## Second Strand Synthesis (Gubler and Hoffman Procedure)
 
 cDNAは一本鎖DNAなわけですが、基本的には二本鎖DNAのほうが扱いやすいです。なので、二本鎖DNAにするための方法があります。近年の方法はRNaseH + DNA polymerase Iを使うことが多いです。RNaseHはRNAにnickを入れる反応を起こします。DNA polymerase Iは二本鎖特異的5’→3’ exonuclease活性および一本鎖特異的3’→5’ exonuclease活性を有するDNA合成酵素です。
 
-![md={6}:RNAnicking_doublestrandedcdna](https://www.thermofisher.com/jp/ja/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/rt-education/reverse-transcription-setup/jcr:content/MainParsys/image_a871/foregroundimg.img.320.low.png/1500204713307.png)
+![RNAnicking_doublestrandedcdna](https://www.thermofisher.com/jp/ja/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/rt-education/reverse-transcription-setup/jcr:content/MainParsys/image_a871/foregroundimg.img.320.low.png/1500204713307.png)
 
 まず、RNaseHによってnickが作られます。作られたRNA断片をプライマーとしてDNA polymerase Iが相補的な二本鎖DNAを合成してくれます。
 
@@ -103,11 +103,11 @@ cDNAは一本鎖DNAなわけですが、基本的には二本鎖DNAのほうが�
 
 Transposonの一種であるTn5を用いる反応です。DNAをランダムにフラグメントにします。Tn5にはモザイク配列と呼ばれる活性化配列と、それに繋がったアダプター配列を付加した2本鎖配列がロードされています。
 
-![[md={6}:tn5_dimer](https://teichlab.github.io/scg_lib_structs/data/tn5_dimer.svg)
+![[tn5_dimer](https://teichlab.github.io/scg_lib_structs/data/tn5_dimer.svg)
 
 そして、切断された部分の両端にモザイク配列+アダプター配列を付加できます。そのアダプター配列に相補的な配列を持つプライマーを用いて増幅することでライブラリを作成できます。
 
-![md={6}:tagmentation](https://www.future-science.com/cms/10.2144/000114133/asset/images/medium/figure2.jpg)
+![tagmentation](https://www.future-science.com/cms/10.2144/000114133/asset/images/medium/figure2.jpg)
 
 ## Reference
 

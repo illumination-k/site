@@ -138,10 +138,6 @@ annotation={<> <P5>Illumina P5</P5> <T7>i5</T7> <S5>Next</S5><Me>era Read 1</Me>
 
 ## 参考動画
 
-<amp-youtube
-    data-videoid="fCd6B5HRaZ8"
-    layout="fixed"
-    width="320" height="180">
-</amp-youtube>
+::youtube[fCd6B5HRaZ8]
 
 [^1]: TruseqというよりNEBNextかもしれないが、Nexteraはタグメンテーションするので明確にこれとは違うライブラリ調整法である。

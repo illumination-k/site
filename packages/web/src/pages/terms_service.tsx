@@ -1,3 +1,4 @@
+import Layout from "@/components/Layout";
 import type { GetStaticProps, NextPage } from "next";
 import { Fragment } from "react";
 
@@ -8,7 +9,7 @@ type Props = {
 
 const TermsService: NextPage<Props> = ({ header, texts }: Props) => {
   return (
-    <>
+    <Layout title="免責事項・著作権" description="免責事項・著作権">
       <h1>{header}</h1>
       {Object.entries(texts).map(([k, v], i) => {
         return (
@@ -18,7 +19,7 @@ const TermsService: NextPage<Props> = ({ header, texts }: Props) => {
           </Fragment>
         );
       })}
-    </>
+    </Layout>
   );
 };
 

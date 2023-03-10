@@ -1,7 +1,7 @@
 import type { GetStaticProps, NextPage } from "next";
 import { Fragment } from "react";
 
-import Nav from "@/components/Nav";
+import Layout from "@/components/Layout";
 
 type Props = {
   header: string;
@@ -10,8 +10,7 @@ type Props = {
 
 const PrivacyPolicy: NextPage<Props> = ({ header, texts }: Props) => {
   return (
-    <>
-      <Nav />
+    <Layout title="Privacy Policy" description="Privacy Policy of illumination-k.dev">
       <h1>{header}</h1>
       {Object.entries(texts).map(([k, v], i) => {
         return (
@@ -21,7 +20,7 @@ const PrivacyPolicy: NextPage<Props> = ({ header, texts }: Props) => {
           </Fragment>
         );
       })}
-    </>
+    </Layout>
   );
 };
 
