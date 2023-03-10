@@ -155,7 +155,6 @@ importers:
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
       '@types/request-ip': ^0.0.37
-      babel-plugin-superjson-next: ^0.4.5
       common: workspace:^
       eslint: 8.35.0
       eslint-config-next: 13.2.3
@@ -204,7 +203,6 @@ importers:
       '@types/react': 18.0.28
       '@types/react-dom': 18.0.11
       '@types/request-ip': 0.0.37
-      babel-plugin-superjson-next: 0.4.5_bybiisvvvxj62fig2dzdxxp2ea
       eslint: 8.35.0
       eslint-config-next: 13.2.3_ycpbpc6yetojsgtrx3mwntkhsu
       eslint-plugin-import: 2.27.5_eslint@8.35.0
@@ -2037,6 +2035,7 @@ packages:
       hoist-non-react-statics: 3.3.2
       next: 13.2.3_biqbaboplfbrettd7655fr4n2y
       superjson: 1.12.2
+    dev: false
 
   /babel-preset-current-node-syntax/1.0.1_@babel+core@7.21.0:
     resolution: {integrity: sha512-M7LQ0bxarkxQoN+vz5aJPsLBn77n8QgTFmo8WK0/44auK2xlCXrYcUxHFxgU7qW5Yzw/CjmLRK2uJzaCd7LvqQ==}
@@ -2392,6 +2391,7 @@ packages:
     engines: {node: '>=12.13'}
     dependencies:
       is-what: 4.1.8
+    dev: false
 
   /cross-spawn/6.0.5:
     resolution: {integrity: sha512-eTVLrBSt7fjbDygz805pMnstIs2VTBNkRm0qxZd+M7A5XDdxVRWO5MxGBXZhjY4cqLYLdtrGqRf8mBPmzwSpWQ==}
@@ -3702,6 +3702,7 @@ packages:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
     dependencies:
       react-is: 16.13.1
+    dev: false
 
   /hosted-git-info/2.8.9:
     resolution: {integrity: sha512-mxIDAb9Lsm6DoOJ7xH+5+X4y1LU/4Hi50L9C5sIswK3JzULS4bwk1FvjdBgvYR4bzT4tuUQiC15FE2f5HbLvYw==}
@@ -4023,6 +4024,7 @@ packages:
   /is-what/4.1.8:
     resolution: {integrity: sha512-yq8gMao5upkPoGEU9LsB2P+K3Kt8Q3fQFCGyNCWOAnJAMzEXVV9drYb0TXr42TTliLLhKIBvulgAXgtLLnwzGA==}
     engines: {node: '>=12.13'}
+    dev: false
 
   /is-wsl/2.2.0:
     resolution: {integrity: sha512-fKzAra0rGJUUBwGBgNkHZuToZcn+TtXHpeCgmkMJMMYx1sQDYaCSyjJBSCa2nH1DGm7s3n1oBnohoVTBaN7Lww==}
@@ -6614,6 +6616,7 @@ packages:
     engines: {node: '>=10'}
     dependencies:
       copy-anything: 3.0.3
+    dev: false
 
   /supports-color/5.5.0:
     resolution: {integrity: sha512-QjVjwdXIt408MIiAqCX4oUKsgU2EqAGzs2Ppkm4aQYbjm+ZEWEcW4SfFNTr4uMNZma0ey4f5lgLrkB0aX0QMow==}

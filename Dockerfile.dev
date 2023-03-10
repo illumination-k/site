@@ -1,0 +1,13 @@
+FROM node:16-alpine AS base
+
+FROM base AS builder
+RUN apk add --no-cache libc6-compat vips fftw
+
+WORKDIR /app
+
+COPY . .
+
+RUN yarn global add pnpm && \
+    pnpm i
+
+ENTRYPOINT [ "pnpm", "run", "--filter", "web", "dev" ]

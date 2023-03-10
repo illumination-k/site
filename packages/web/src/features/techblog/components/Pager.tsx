@@ -22,9 +22,9 @@ function BlogPostCard({ meta }: { meta: PostMeta }) {
 
       <div className="px-3 pt-2 flex gap-2">
         <p className="font-bold">作成</p>
-        <p>{formatDate(meta.created_at)}</p>
+        <p>{meta.created_at}</p>
         <p className="font-bold">更新</p>
-        <p>{formatDate(meta.updated_at)}</p>
+        <p>{meta.updated_at}</p>
       </div>
       <div className="px-3 md:flex gap-4 items-center">
         <div className="flex gap-2 py-2 items-center font-bold">

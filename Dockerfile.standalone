@@ -26,11 +26,17 @@ ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
-COPY --from=builder /app/packages/web/public ./packages/web/public
-COPY --from=builder /app/packages/web/next.config.js ./packages/web/next.config.js
+
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing
+
+## public and next.config.js copy is required
+COPY --from=builder --chown=nextjs:nodejs \
+    /app/packages/web/public ./packages/web/public
+COPY --from=builder --chown=nextjs:nodejs \
+    /app/packages/web/next.config.js ./packages/web/next.config.js
+
 COPY --from=builder --chown=nextjs:nodejs \
     /app/packages/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs \
@@ -42,4 +48,4 @@ EXPOSE 3000
 
 ENV PORT 3000
 
-CMD ["node", "server.js"]
+CMD ["node", "./packages/web/server.js"]
