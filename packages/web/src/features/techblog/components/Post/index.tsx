@@ -7,9 +7,10 @@ import MdView from "./MdxView";
 import Sidebar from "./Sidebar";
 
 import Layout from "@/components/Layout";
-import { TwetterIntent, TwitterIcon } from "./TwetterShare";
+import { TwetterIntent } from "./TwetterShare";
 import GithubIcon from "@/icons/GithubIcon";
 import { BugAntIcon, ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
+import TwitterIcon from "@/icons/TwitterIcon";
 
 type Props = {
   headigns: Headings;

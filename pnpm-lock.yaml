@@ -6,9 +6,11 @@ importers:
     specifiers:
       dprint: ^0.34.5
       fixpack: ^4.0.0
+      npm-run-all: ^4.1.5
     devDependencies:
       dprint: 0.34.5
       fixpack: 4.0.0
+      npm-run-all: 4.1.5
 
   packages/cli:
     specifiers:
@@ -20,6 +22,7 @@ importers:
       '@types/yargs': ^17.0.22
       axios: ^1.3.4
       common: workspace:^
+      feed: ^4.2.2
       front-matter: ^4.0.2
       glob: ^9.2.1
       image-size: ^1.0.2
@@ -45,6 +48,7 @@ importers:
       '@mdx-js/mdx': 2.3.0
       axios: 1.3.4
       common: link:../common
+      feed: 4.2.2
       front-matter: 4.0.2
       glob: 9.2.1
       image-size: 1.0.2
@@ -3261,6 +3265,13 @@ packages:
       pend: 1.2.0
     dev: true
 
+  /feed/4.2.2:
+    resolution: {integrity: sha512-u5/sxGfiMfZNtJ3OvQpXcvotFpYkL0n9u9mM2vkui2nGo8b4wvDkJ8gAkYqbA8QpGyFCv3RK0Z+Iv+9veCS9bQ==}
+    engines: {node: '>=0.4.0'}
+    dependencies:
+      xml-js: 1.6.11
+    dev: false
+
   /file-entry-cache/6.0.1:
     resolution: {integrity: sha512-7Gps/XWymbLk2QLYK4NzpMOrYjMhdIxXuIvy2QBsLE6ljuodKvdkWs/cpyJJ3CVIVpH0Oi1Hvg1ovbMzLdFBBg==}
     engines: {node: ^10.12.0 || >=12.0.0}
@@ -6233,6 +6244,10 @@ packages:
       is-regex: 1.1.4
     dev: true
 
+  /sax/1.2.4:
+    resolution: {integrity: sha512-NqVDv9TpANUjFm0N8uM5GxL36UgKi9/atZw+x7YFnQ8ckwFGKrl4xX4yWtrey3UJm5nP1kUbnYgLopqWNSRhWw==}
+    dev: false
+
   /scheduler/0.23.0:
     resolution: {integrity: sha512-CtuThmgHNg7zIZWAXi3AsyIzA3n4xx7aNyjwC2VJldO2LMVDhFK+63xGqq6CsJH4rTAt6/M+N4GhZiDYPx9eUw==}
     dependencies:
@@ -7423,6 +7438,13 @@ packages:
       imurmurhash: 0.1.4
       signal-exit: 3.0.7
     dev: true
+
+  /xml-js/1.6.11:
+    resolution: {integrity: sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==}
+    hasBin: true
+    dependencies:
+      sax: 1.2.4
+    dev: false
 
   /y18n/5.0.8:
     resolution: {integrity: sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==}

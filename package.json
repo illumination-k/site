@@ -5,15 +5,21 @@
   "author": "",
   "devDependencies": {
     "dprint": "^0.34.5",
-    "fixpack": "^4.0.0"
+    "fixpack": "^4.0.0",
+    "npm-run-all": "^4.1.5"
   },
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
   "scripts": {
     "cli": "node ./packages/cli/dist/main.js",
+    "cli:dev": "pnpm run --filter cli dev",
     "cli:build": "pnpm run --filter cli build",
-    "format": "fixpack && dprint fmt",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "web-dev": "pnpm run --filter web dev",
+    "web-build:dump": "pnpm run cli dump --mdDir ./posts/techblog  --imageDist ./packages/web/public/techblog --output ./packages/web/dump/techbolog.json",
+    "web-build:rss": "pnpm run cli rss --dump ./packages/web/dump/techblog.json --dst ./packages/web/public/rss",
+    "web-build:web": "pnpm run --filter web build",
+    "web-build": "run-s web-build:dump web-build:rss web-build:web",
+    "format": "fixpack && dprint fmt"
   }
 }
