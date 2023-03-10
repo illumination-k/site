@@ -5,5 +5,10 @@ type Props = {
 };
 
 export default function Footer({ meta }: Props) {
-  return <></>;
+  return (
+    <div className="flex justify-center">
+      <div>
+      </div>
+    </div>
+  );
 }

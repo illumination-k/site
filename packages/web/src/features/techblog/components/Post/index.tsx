@@ -9,6 +9,9 @@ import Sidebar from "./Sidebar";
 import Layout from "@/components/Layout";
 import { TwetterIntent, TwitterIcon } from "./TwetterShare";
 import { pagesPath } from "@/lib/$path";
+import GithubIcon from "@/icons/GithubIcon";
+import { BugAntIcon, ChatBubbleBottomCenterTextIcon, CommandLineIcon } from "@heroicons/react/24/outline";
+import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/solid";
 
 type Props = {
   headigns: Headings;
@@ -45,8 +48,35 @@ export default function Post({ headigns, compiledMarkdown, meta }: Props) {
           {/* Content */}
           <div className="lg:col-span-11">
             <div className="lg:grid lg:grid-cols-6">
-              <article className="lg:col-span-4 bg-white rounded-lg px-10 py-5">
+              <article className="lg:col-span-4 bg-white rounded-lg px-10 py-5 mb-5">
                 <MdView compiledMarkdown={compiledMarkdown} />
+
+                <div className="flex items-center flex-col mt-10">
+                  <p className="flex items-center gap-3 text-lg font-semibold">
+                    <GithubIcon className="icon-5" />
+                    この記事に関するIssueをGithubで作成する
+                  </p>
+                  <ul>
+                    <li>
+                      <a
+                        className="flex items-center gap-2 text-lg"
+                        href="https://github.com/illumination-k/site/issues/new?labels=comment,techblog"
+                      >
+                        <ChatBubbleBottomCenterTextIcon className="icon-5" />
+                        Comment
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        className="flex items-center gap-2 text-lg"
+                        href="https://github.com/illumination-k/site/issues/new?labels=bug,techblog"
+                      >
+                        <BugAntIcon className="icon-5" />
+                        Problem
+                      </a>
+                    </li>
+                  </ul>
+                </div>
               </article>
               <div className="hidden lg:block lg:col-span-2 ml-8 sticky top-5 h-screen overflow-y-auto">
                 <Sidebar meta={meta} headings={headigns} />
