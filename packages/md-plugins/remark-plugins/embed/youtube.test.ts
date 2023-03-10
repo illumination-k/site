@@ -22,7 +22,7 @@ describe("test youtube embed", () => {
     const vile = await processor.process(
       `::youtube[NXTO3m1B_h4]`,
     );
-    console.log(vile);
+
     expect(vile.value).toStrictEqual(
       "<iframe id=\"ytplayer\" class=\"youtube-embed\" src=\"https://www.youtube.com/embed/NXTO3m1B_h4\"></iframe>",
     );

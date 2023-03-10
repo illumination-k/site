@@ -20,24 +20,14 @@ export class YouTubeTransformer implements DirectiveTransformer {
   async transform(node: Directive, index: number | null, parent: Parent) {
     if (!this.video_id) return;
 
-    let style = "apa";
-    if (node.attributes && "id" in node.attributes) {
-      style = node.attributes.id as string;
-    }
-
-    const newNode = {
-      type: "youtube",
-      data: {
-        hName: "iframe",
-        hProperties: {
-          id: "ytplayer",
-          className: "youtube-embed",
-          src: `https://www.youtube.com/embed/${this.video_id}`,
-        },
+    node.children = [];
+    node.data = {
+      hName: "iframe",
+      hProperties: {
+        id: "ytplayer",
+        className: "youtube-embed",
+        src: `https://www.youtube.com/embed/${this.video_id}`,
       },
     };
-
-    // @ts-ignore
-    parent.children[index || 0] = newNode;
   }
 }
