@@ -21,7 +21,13 @@ const style = css({
   "& h5": { "@apply": "font-semibold text-lg" },
   "& h6": { "@apply": "font-semibold " },
 
-  "& ul": { "@apply": "list-disc list-inside my-2" },
+  "& ul": {
+    "@apply": "list-disc list-inside my-2",
+    "& li": {
+      "& ul": { "@apply": "list-[circle] px-4" },
+    },
+  },
+
   "& ol": {
     "@apply": "list-decimal my-2 px-6",
   },

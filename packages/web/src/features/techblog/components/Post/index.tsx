@@ -36,7 +36,7 @@ export default function Post({ headigns, compiledMarkdown, meta }: Props) {
         <PostHeader meta={meta} headings={headigns} />
         <div className="px-4 md:px-6 lg:px-0 lg:grid lg:grid-cols-14 lg:justify-center">
           {/* sticky sidebar */}
-          <div className="hidden lg:block lg:col-span-2 sticky top-10 h-screen">
+          <div className="hidden lg:block lg:col-span-2 sticky top-10 h-screen flex justify-end">
             <div className="flex justify-end mr-4">
               <TwetterIntent text={meta.title} url={`https://illumination-k.dev/techblog/post/${meta.uuid}`}>
                 <TwitterIcon className="rounded-full icon-10" />
