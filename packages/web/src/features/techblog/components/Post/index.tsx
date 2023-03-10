@@ -8,10 +8,8 @@ import Sidebar from "./Sidebar";
 
 import Layout from "@/components/Layout";
 import { TwetterIntent, TwitterIcon } from "./TwetterShare";
-import { pagesPath } from "@/lib/$path";
 import GithubIcon from "@/icons/GithubIcon";
-import { BugAntIcon, ChatBubbleBottomCenterTextIcon, CommandLineIcon } from "@heroicons/react/24/outline";
-import { ChatBubbleBottomCenterIcon } from "@heroicons/react/24/solid";
+import { BugAntIcon, ChatBubbleBottomCenterTextIcon } from "@heroicons/react/24/outline";
 
 type Props = {
   headigns: Headings;
