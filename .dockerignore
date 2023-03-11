@@ -5,3 +5,10 @@ npm-debug.log
 README.md
 .git
 .next
+
+# .gitignore
+dist/
+
+dump/
+# util
+_*
