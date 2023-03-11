@@ -1,39 +1,12 @@
-import install from "@twind/with-next/app";
 import type { AppProps } from "next/app";
 import Script from "next/script";
-import { useCallback, useEffect } from "react";
 
-// @type-ignore
+import install from "@twind/with-next/app";
 import config from "../../twind.config";
 
 const GA_TRACKING_ID = process.env.NODE_ENV === "development" ? "" : "G-5X44HTLX5D";
 
-const useGoogleAdsense = () => {
-  const loadAd = useCallback(() => {
-    // @ts-ignore
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
-  }, []);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const component = window.document.getElementById("__next")?.querySelector(`.adsbygoogle`);
-      if (component) {
-        component.addEventListener("load", loadAd);
-      }
-    }
-    return () => {
-      if (typeof window !== "undefined") {
-        const component = window.document.getElementById("__next")?.querySelector(`.adsbygoogle`);
-        if (component) {
-          component.removeEventListener("load", loadAd);
-        }
-      }
-    };
-  }, [loadAd]);
-};
-
 function App({ Component, pageProps }: AppProps) {
-  useGoogleAdsense();
   return (
     <>
       <Script async strategy="lazyOnload" src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`} />
