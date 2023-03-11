@@ -41,15 +41,15 @@ export default function Toc({ className, headings, meta }: Props) {
             </Link>
           </li>
         ))}
-
-        <Link
-          href={pagesPath.techblog.post._uuid(meta.uuid).$url()}
-          className="flex gap-2 items-center text-lg font-bold pt-4 hover:text-blue-400"
-        >
-          <ChevronUpIcon className="icon-4" />
-          Page Top
-        </Link>
       </ul>
+
+      <Link
+        href={pagesPath.techblog.post._uuid(meta.uuid).$url()}
+        className="flex gap-2 items-center text-lg font-bold pt-4 hover:text-blue-400"
+      >
+        <ChevronUpIcon className="icon-4" />
+        Page Top
+      </Link>
     </article>
   );
 }

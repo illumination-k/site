@@ -29,6 +29,6 @@ categories:
 created_at: ${formatDate(new Date())}
 updated_at: ${formatDate(new Date())}
 ---
-  `;
+`;
   return template;
 }

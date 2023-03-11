@@ -14,6 +14,8 @@ export default defineConfig({
     ["icon-", ({ $$ }) => `h-${$$} w-${$$}`],
   ],
   ignorelist: [
+    // adsense
+    /adsbygoogle*/,
     // next-font
     /^__className_*/,
     // md related
@@ -45,6 +47,10 @@ export default defineConfig({
     "constant",
     "string-property",
     "parameter",
+    "variable",
+    "class-name",
+    "key",
+    "builtin",
     /^language-*/,
 
     // katex

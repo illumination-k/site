@@ -8,10 +8,10 @@ class Document extends NextDocument {
         <Head>
           <script
             async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=YOUR_PUBLISHER_ID"
+            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+            data-ad-client="ca-pub-3483824909024831"
             crossOrigin="anonymous"
           />
-          {/* 省略 */}
         </Head>
         <body>
           <Main />

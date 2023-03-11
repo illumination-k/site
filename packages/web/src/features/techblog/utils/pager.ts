@@ -22,12 +22,12 @@ export class Pager {
   }
 
   static sortPost(
-    posts: Post[],
+    postMetas: PostMeta[],
     sortedBy: "updated_at" | "created_at" = "updated_at",
   ) {
-    return posts.sort(function(a: Post, b: Post) {
-      const a_date = new Date(a.meta[sortedBy]);
-      const b_date = new Date(b.meta[sortedBy]);
+    return postMetas.sort(function(a: PostMeta, b: PostMeta) {
+      const a_date = new Date(a[sortedBy]);
+      const b_date = new Date(b[sortedBy]);
       return b_date.valueOf() - a_date.valueOf();
     });
   }
@@ -36,19 +36,19 @@ export class Pager {
     return Math.ceil(posts.length / this.count_per_page);
   }
 
-  getPages(posts: Post[]): number[] {
-    return range(Math.ceil(posts.length / this.count_per_page));
+  getPages(postMetas: PostMeta[]): number[] {
+    return range(Math.ceil(postMetas.length / this.count_per_page));
   }
 
-  getPageInformation(posts: Post[], page: number): PageInfomation {
+  getPageInformation(postMetas: PostMeta[], page: number): PageInfomation {
     const COUNT_PER_PAGE = this.count_per_page;
     const end = page * COUNT_PER_PAGE;
     const start = end - COUNT_PER_PAGE;
 
-    const sortedPost = Pager.sortPost(posts);
+    const sortedPost = Pager.sortPost(postMetas);
 
-    const pagePostMetas = sortedPost.slice(start, end).map((post) => post.meta);
-    const pages = this.getPages(posts);
+    const pagePostMetas = sortedPost.slice(start, end);
+    const pages = this.getPages(postMetas);
 
     return {
       pagePostMetas,
