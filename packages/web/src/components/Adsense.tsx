@@ -3,19 +3,19 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 
 export default function Adsense({ className }: { className?: string }) {
-  // const { asPath } = useRouter();
+  const { asPath } = useRouter();
 
-  // useEffect(() => {
-  //   try {
-  //     // @ts-ignore
-  //     (window.adsbygoogle = window.adsbygoogle || []).push({});
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }, [asPath]);
+  useEffect(() => {
+    try {
+      // @ts-ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.log(err);
+    }
+  }, [asPath]);
 
   return (
-    <div className={className}>
+    <div key={asPath} className={className}>
       <ins
         className={tw(apply("adsbygoogle block text-center", className))}
         data-ad-client="ca-pub-3483824909024831"

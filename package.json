@@ -8,6 +8,7 @@
     "fixpack": "^4.0.0",
     "npm-run-all": "^4.1.5"
   },
+  "homepage": "https://www.illumination-k.dev",
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
@@ -15,14 +16,15 @@
   "repository": {
     "url": "https://www.github.com/illumination-k/site"
   },
-  "homepage": "https://www.illumination-k.dev",
   "scripts": {
     "cli": "node ./packages/cli/dist/main.js",
     "cli:build": "pnpm run --filter cli build",
     "cli:dev": "pnpm run --filter cli dev",
     "format": "fixpack && dprint fmt",
+    "lint": "fixpack && dprint check",
+    "test": "pnpm run --filter './packages/**' test",
     "web-build": "run-s web-build:dump web-build:rss web-build:web",
-    "web-build:dump": "pnpm run cli dump --mdDir ./posts/techblog  --imageDist ./packages/web/public/techblog --output ./packages/web/dump/techbolog.json",
+    "web-build:dump": "pnpm run cli dump --mdDir ./posts/techblog  --imageDist ./packages/web/public/techblog --output ./packages/web/dump/techblog.json",
     "web-build:rss": "pnpm run cli rss --dump ./packages/web/dump/techblog.json --dst ./packages/web/public/rss",
     "web-build:web": "pnpm run --filter web build",
     "web-dev": "pnpm run --filter web dev",
