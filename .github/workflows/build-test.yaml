@@ -1,4 +1,4 @@
-name: Build docker ocker
+name: Build docker
 
 on:
   push
