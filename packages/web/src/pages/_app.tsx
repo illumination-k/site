@@ -24,7 +24,7 @@ function App({ Component, pageProps }: AppProps) {
         <Script
           id="googleads-id"
           async
-          strategy="afterInteractive"
+          strategy="lazyOnload"
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3483824909024831"
           crossOrigin="anonymous"
         />
