@@ -35,7 +35,7 @@ jobs:
         with:
           context: ./
           file: ./Dockerfile.standalone
-          load: ${{ github.ref != 'refs/heads/main' }}
-          cache-from: type=local,src=/tmp/.buildx-cache
-          cache-to: type=local,dest=/tmp/.buildx-cache
-          tags: ${{ env.TAGS }}
+          # load: ${{ github.ref != 'refs/heads/main' }}
+          # cache-from: type=local,src=/tmp/.buildx-cache
+          # cache-to: type=local,dest=/tmp/.buildx-cache
+          # tags: ${{ env.TAGS }}
