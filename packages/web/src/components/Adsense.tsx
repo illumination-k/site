@@ -1,5 +1,4 @@
 import { apply, tw } from "@twind/core";
-import Script from "next/script";
 import React from "react";
 
 export default function Adsense({ className }: { className?: string }) {
@@ -19,9 +18,9 @@ export default function Adsense({ className }: { className?: string }) {
             data-ad-format="auto"
             data-full-width-responsive="true"
           >
-            <Script id="google-ads" strategy="afterInteractive">
+            <script>
               (adsbygoogle = window.adsbygoogle || []).push({});
-            </Script>
+            </script>
           </ins>
         )}
     </div>
