@@ -1,6 +1,5 @@
 const path = require("path");
 const redirectsData = require("./next.config.redirects");
-const { withSuperjson } = require("next-superjson");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -36,4 +35,4 @@ const nextConfig = {
   },
 };
 
-module.exports = withSuperjson()(nextConfig);
+module.exports = nextConfig;
