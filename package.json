@@ -22,7 +22,7 @@
     "cli:dev": "pnpm run --filter cli dev",
     "format": "fixpack && dprint fmt",
     "web-build": "run-s web-build:dump web-build:rss web-build:web",
-    "web-build:dump": "pnpm run cli dump --mdDir ./posts/techblog  --imageDist ./packages/web/public/techblog --output ./packages/web/dump/techbolog.json",
+    "web-build:dump": "pnpm run cli dump --mdDir ./posts/techblog  --imageDist ./packages/web/public/techblog --output ./packages/web/dump/techblog.json",
     "web-build:rss": "pnpm run cli rss --dump ./packages/web/dump/techblog.json --dst ./packages/web/public/rss",
     "web-build:web": "pnpm run --filter web build",
     "web-dev": "pnpm run --filter web dev",
