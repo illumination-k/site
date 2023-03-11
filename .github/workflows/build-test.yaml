@@ -1,4 +1,4 @@
-name: bedtools CI
+name: Build docker ocker
 
 on:
   push
@@ -25,15 +25,10 @@ jobs:
         shell: bash
         run: |
           SHA=${{ github.sha }}
-          TAG=${{ inputs.username }}/${{ inputs.image_name }}:$(TZ=UTC-9 date '+%Y%m')-${SHA:0:7}
-          if [ "${{ github.ref }}" == "refs/heads/main" ]; then
-            LATEST=${{ inputs.username }}/${{ inputs.image_name }}:latest
-            echo "TAGS=$TAG,$LATEST" >> $GITHUB_ENV
-            echo "TAG=$TAG" >> $GITHUB_ENV
-          else
-            echo "TAGS=$TAG" >> $GITHUB_ENV
-            echo "TAG=$TAG" >> $GITHUB_ENV
-          fi
+          TAG=illumination27/site:$(TZ=UTC-9 date '+%Y%m')-${SHA:0:7}
+          echo "TAGS=$TAG" >> $GITHUB_ENV
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          
           echo TAG $TAG
       - name: Build
         uses: docker/build-push-action@v2
