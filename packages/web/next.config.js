@@ -1,4 +1,5 @@
 const path = require("path");
+const redirectsData = require("./next.config.redirects");
 const { withSuperjson } = require("next-superjson");
 
 /** @type {import('next').NextConfig} */
@@ -18,6 +19,9 @@ const nextConfig = {
   i18n: {
     locales: ["ja", "en"],
     defaultLocale: "ja",
+  },
+  async redirects() {
+    return redirectsData;
   },
   output: "standalone",
   experimental: {

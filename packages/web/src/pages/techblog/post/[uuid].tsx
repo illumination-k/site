@@ -1,34 +1,33 @@
 import { ParsedUrlQuery } from "querystring";
-
-import { Headings, PostMeta } from "common";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
-import Post from "@/features/techblog/components/Post";
+import Post, { PostProps } from "@/features/techblog/components/Post";
 import { blogService } from "@/features/techblog/constant";
 
-const TechBlogPost: NextPage<Props> = ({ meta, headings, compiledMarkdown }) => {
+const TechBlogPost: NextPage<PostProps> = (props) => {
   return (
     <>
-      <Post headigns={headings} meta={meta} compiledMarkdown={compiledMarkdown} />
+      <Post {...props} />
     </>
   );
 };
 
-type Props = {
-  meta: PostMeta;
-  headings: Headings;
-  compiledMarkdown: string;
-};
-
-export const getStaticProps: GetStaticProps<Props, Params> = async ({ params }) => {
+export const getStaticProps: GetStaticProps<PostProps, Params> = async ({ params }) => {
   const post = await blogService.repo.retrive(params!.uuid);
 
   if (!post) {
     throw `${params?.id} is not found`;
   }
 
+  const relatedPostMeta = await blogService.getRelatedPostMeta(post.meta);
+
   return {
-    props: { meta: post.meta, headings: post.headings, compiledMarkdown: post.compiledMarkdown },
+    props: {
+      meta: post.meta,
+      headings: post.headings,
+      relatedPostMeta,
+      compiledMarkdown: post.compiledMarkdown,
+    },
   };
 };
 

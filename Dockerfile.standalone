@@ -11,10 +11,7 @@ RUN yarn global add pnpm && \
     pnpm i && \
     pnpm cli:build && \
     mkdir -p ./packages/web/dump && \
-    pnpm cli dump --mdDir ./posts/techblog \
-        --imageDist ./packages/web/public/techblog \
-        -o ./packages/web/dump/techblog.json && \
-    pnpm run --filter web build
+    pnpm run web-build
 
 # Production image, copy all the files and run next
 FROM base AS runner

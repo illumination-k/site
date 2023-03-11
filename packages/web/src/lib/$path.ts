@@ -43,6 +43,13 @@ export const staticPath = {
   },
   next_svg: '/next.svg',
   robots_txt: '/robots.txt',
+  rss: {
+    atom_xml: '/rss/atom.xml',
+    feed_json: '/rss/feed.json',
+    feed_xml: '/rss/feed.xml'
+  },
+  sitemap_0_xml: '/sitemap-0.xml',
+  sitemap_xml: '/sitemap.xml',
   techblog: {
     _gitkeep: '/techblog/.gitkeep',
     $1500204713307_webp: '/techblog/1500204713307.webp',

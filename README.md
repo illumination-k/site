@@ -3,7 +3,7 @@
 ## Web
 
 ```bash
-pnpm run web:build && pnpm run web:start
+pnpm run web-build
 ```
 
 ## Blog Posts
@@ -30,6 +30,12 @@ pnpm run cli dump --mdFiles ./posts/techblog  --imageDist ./packages/web/public/
   - md-pluginsのtransformを実行
 - ヘッダー情報、token情報の取得
 - imageのresize, webp変換, size propertyの追加
+
+### Generate RSS
+
+```bash
+pnpm run cli rss --dump ./packages/web/dump/techblog.json --dst ./packages/web/public/rss
+```
 
 ### Check outdated
 
