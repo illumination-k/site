@@ -20,9 +20,14 @@ export default class BlogService {
   }
 
   async getRelatedPostMeta(meta: PostMeta): Promise<PostMeta[]> {
-    // langが一致かつuuidが違うポスト
+    // langが一致かつuuidが違う、tagがarchive, draftでない
     const restPostMetas = (shuffle(await this.repo.list())).filter(
-      (post) => (post.meta.uuid !== meta.uuid && post.meta.lang === meta.lang),
+      (post) => (
+        post.meta.uuid !== meta.uuid
+        && post.meta.lang === meta.lang
+        && !post.meta.tags.includes("archive")
+        && !post.meta.tags.includes("draft")
+      ),
     ).map((post) => post.meta);
 
     // tagが一致しているポスト

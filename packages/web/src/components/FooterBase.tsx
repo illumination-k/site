@@ -13,10 +13,10 @@ export type FooterBaseProps = {
 
 export default function FooterBase({ className, children }: FooterBaseProps) {
   return (
-    <footer className={tw(apply("mt-auto", className))}>
+    <footer className={tw(apply("mt-auto bg-gray-50", className))}>
       {children}
       <div
-        className={`text-center md:(flex justify-center) bg-gray-50 font-bold text-sm py-1 ${font.className}`}
+        className={`text-center md:(flex justify-center) font-bold text-sm py-1 ${font.className}`}
       >
         <p className="mx-2 italic">Copyright © illumination-k 2020 - {(new Date()).getFullYear()}</p>
         <Link className="text-blue-400 italic mx-2" href={pagesPath.privacypolicy.$url()}>privacy policy</Link>

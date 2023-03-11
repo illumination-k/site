@@ -12,7 +12,7 @@ import Layout from "@/components/Layout";
 const TechBlogPage: NextPage<Props> = ({ pageInfomation }) => {
   return (
     <Layout title={`illumination-k.dev techblog page-${pageInfomation.curPage}`} description={"Pager of Techblog"}>
-      <Pager pageInformation={pageInfomation} pageLinkGenerator={(page) => pagesPath.techblog._page(page).$url()} />;
+      <Pager pageInformation={pageInfomation} pageLinkGenerator={(page) => pagesPath.techblog._page(page).$url()} />
     </Layout>
   );
 };
