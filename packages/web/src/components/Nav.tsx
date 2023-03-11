@@ -17,7 +17,7 @@ export default function Nav({}) {
       </Link>
 
       <div>
-        <Link href={pagesPath.techblog._page(1).$url()} className="hidden md:block text-(xl white) font-black">
+        <Link href={pagesPath.techblog._page(1).$url()} className="block text-(xl white) font-black">
           Blog
         </Link>
       </div>

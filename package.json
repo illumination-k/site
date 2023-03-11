@@ -11,15 +11,21 @@
   "keywords": [],
   "license": "ISC",
   "main": "index.js",
+  "private": "true",
+  "repository": {
+    "url": "https://www.github.com/illumination-k/site"
+  },
+  "homepage": "https://www.illumination-k.dev",
   "scripts": {
     "cli": "node ./packages/cli/dist/main.js",
-    "cli:dev": "pnpm run --filter cli dev",
     "cli:build": "pnpm run --filter cli build",
-    "web-dev": "pnpm run --filter web dev",
+    "cli:dev": "pnpm run --filter cli dev",
+    "format": "fixpack && dprint fmt",
+    "web-build": "run-s web-build:dump web-build:rss web-build:web",
     "web-build:dump": "pnpm run cli dump --mdDir ./posts/techblog  --imageDist ./packages/web/public/techblog --output ./packages/web/dump/techbolog.json",
     "web-build:rss": "pnpm run cli rss --dump ./packages/web/dump/techblog.json --dst ./packages/web/public/rss",
     "web-build:web": "pnpm run --filter web build",
-    "web-build": "run-s web-build:dump web-build:rss web-build:web",
-    "format": "fixpack && dprint fmt"
+    "web-dev": "pnpm run --filter web dev",
+    "web-start": "pnpm run --filter web start"
   }
 }
