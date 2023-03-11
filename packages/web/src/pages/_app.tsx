@@ -1,9 +1,7 @@
-import install from "@twind/with-next/app";
 import type { AppProps } from "next/app";
 import Script from "next/script";
-import { useCallback, useEffect } from "react";
 
-// @type-ignore
+import install from "@twind/with-next/app";
 import config from "../../twind.config";
 
 const GA_TRACKING_ID = process.env.NODE_ENV === "development" ? "" : "G-5X44HTLX5D";
