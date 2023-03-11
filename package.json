@@ -21,6 +21,8 @@
     "cli:build": "pnpm run --filter cli build",
     "cli:dev": "pnpm run --filter cli dev",
     "format": "fixpack && dprint fmt",
+    "lint": "fixpack && dprint check",
+    "test": "pnpm run --filter './packages/**' test",
     "web-build": "run-s web-build:dump web-build:rss web-build:web",
     "web-build:dump": "pnpm run cli dump --mdDir ./posts/techblog  --imageDist ./packages/web/public/techblog --output ./packages/web/dump/techblog.json",
     "web-build:rss": "pnpm run cli rss --dump ./packages/web/dump/techblog.json --dst ./packages/web/public/rss",
