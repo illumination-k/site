@@ -14,6 +14,8 @@ export default defineConfig({
     ["icon-", ({ $$ }) => `h-${$$} w-${$$}`],
   ],
   ignorelist: [
+    // adsense
+    /adsbygoogle*/,
     // next-font
     /^__className_*/,
     // md related

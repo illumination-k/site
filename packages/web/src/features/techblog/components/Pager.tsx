@@ -1,3 +1,4 @@
+import Adsense from "@/components/Adsense";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { apply, tw } from "@twind/core";
 import Link from "next/link";
@@ -90,6 +91,7 @@ export default function Pager({ pageInformation, pageLinkGenerator }: PagerProps
       <div className="lg:col-span-3">
         {pagePostMetas.map((meta, i) => <PostCard meta={meta} key={i} />)}
         <Pagenation curPage={curPage} pages={pages} pageLinkGenerator={pageLinkGenerator} />
+        <Adsense className="mx-4" />
       </div>
     </div>
   );
