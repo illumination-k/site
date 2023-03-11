@@ -34,7 +34,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params, lo
   return {
     props: {
       category: params!.category,
-      pageInfomation: pager.getPageInformation(posts, Number(params!.page)),
+      pageInfomation: pager.getPageInformation(posts.map((p) => p.meta), Number(params!.page)),
     },
   };
 };
@@ -52,7 +52,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
     return categories.map(async (category) => {
       const posts = await blogService.repo.filterPosts(lang, undefined, category);
 
-      return pager.getPages(posts).map((page) => {
+      return pager.getPages(posts.map((p) => p.meta)).map((page) => {
         return { params: { page: page.toString(), category }, locale: lang };
       });
     });

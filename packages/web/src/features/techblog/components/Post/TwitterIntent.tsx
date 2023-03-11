@@ -9,8 +9,8 @@ type TwitterIntentProps = {
   in_reply_to?: string;
 } & Omit<JSX.IntrinsicElements["a"], "href" | "target" | "rel">;
 
-export const TwetterIntent = forwardRef<HTMLAnchorElement, TwitterIntentProps>(
-  function TwetterIntent({ text, url, hashtags, via, related, in_reply_to, ...props }, ref) {
+export const TwitterIntent = forwardRef<HTMLAnchorElement, TwitterIntentProps>(
+  function TwitterIntent({ text, url, hashtags, via, related, in_reply_to, ...props }, ref) {
     const href = new URL("https://twitter.com/intent/tweet");
 
     const setSearchParams = (key: string, params: string | string[] | undefined) => {

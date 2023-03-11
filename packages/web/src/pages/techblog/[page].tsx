@@ -1,6 +1,5 @@
 import { ParsedUrlQuery } from "querystring";
 
-import { readDump } from "common/io";
 import type { GetStaticPaths, GetStaticProps, NextPage } from "next";
 
 import Pager from "@/features/techblog/components/Pager";
@@ -27,7 +26,7 @@ export const getStaticProps: GetStaticProps<Props, Params> = async ({ params, lo
 
   return {
     props: {
-      pageInfomation: pager.getPageInformation(posts, Number(params!.page)),
+      pageInfomation: pager.getPageInformation(posts.map((p) => p.meta), Number(params!.page)),
     },
   };
 };
@@ -42,7 +41,7 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const paths = (await Promise.all(langs.map(async (lang) => {
     const posts = await blogService.repo.filterPosts(lang);
 
-    return pager.getPages(posts).map((page) => {
+    return pager.getPages(posts.map((p) => p.meta)).map((page) => {
       return { params: { page: page.toString() }, locale: lang };
     });
   }))).flat();
