@@ -6,12 +6,14 @@ class Document extends NextDocument {
     return (
       <Html lang="ja">
         <Head>
-          <script
-            async
-            src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
-            data-ad-client="ca-pub-3483824909024831"
-            crossOrigin="anonymous"
-          />
+          {process.env.NEXT_PUBLIC_IS_LOCALHOST ? null : (
+            <script
+              async
+              src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"
+              data-ad-client="ca-pub-3483824909024831"
+              crossOrigin="anonymous"
+            />
+          )}
         </Head>
         <body>
           <Main />

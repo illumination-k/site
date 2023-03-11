@@ -183,6 +183,7 @@ importers:
       ts-jest: ^29.0.5
       typescript: 4.9.5
       webpack: ^5.75.0
+      zod: ^3.21.4
     dependencies:
       '@headlessui/react': 1.7.13_biqbaboplfbrettd7655fr4n2y
       '@heroicons/react': 2.0.16_react@18.2.0
@@ -200,6 +201,7 @@ importers:
       request-ip: 3.3.0
       superjson: 1.12.2
       swr: 2.1.0_react@18.2.0
+      zod: 3.21.4
     devDependencies:
       '@next/env': 13.2.3
       '@twind/core': 1.1.3_typescript@4.9.5
