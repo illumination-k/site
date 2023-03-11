@@ -13,7 +13,7 @@ export default function Adsense({ className }: { className?: string }) {
       // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }, [asPath]);
 

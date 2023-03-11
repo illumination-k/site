@@ -10,12 +10,12 @@ const caveat = Caveat({ subsets: ["latin"] });
 
 export default function Nav({}) {
   return (
-    <nav className={`flex px-4 md:px-10 py-2 items-center justify-between bg-black `}>
+    <nav className={`flex px-4 md:px-10 py-2 items-center justify-between bg-black`}>
       <Link href={"/"}>
         <span className={`hidden md:block text-(3xl white hover:blue-200) font-black ${caveat.className}`}>
           illumination-k.dev
         </span>
-        <HomeIcon aria-hidden="true" className="icon-8 text-white md:hidden" />
+        <HomeIcon aria-hidden="true" className="icon-6 text-white md:hidden" />
       </Link>
 
       <div className="flex gap-5 items-center py-1">
