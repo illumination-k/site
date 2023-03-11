@@ -8,6 +8,7 @@ import RightSidebar from "./RightSidebar";
 import Layout from "@/components/Layout";
 import LeftSidebar from "./LeftSidebar";
 import PostCard from "../PostCard";
+import Adsense from "@/components/Adsense";
 
 export type PostProps = {
   headings: Headings;
@@ -30,7 +31,7 @@ export default function Post({ headings, compiledMarkdown, meta, relatedPostMeta
         description={meta.description}
       >
         <h1 className="py-8 text-(4xl center) font-bold">{meta.title}</h1>
-        <div className="lg:hidden flex justify-between"></div>
+        <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
         <div className="px-4 md:px-6 lg:(px-0 grid grid-cols-15 justify-center)">
           <LeftSidebar className="hidden lg:(block col-span-2 sticky top-10 h-screen flex justify-end)" meta={meta} />
           <article id="post-content" className="bg-white rounded-lg px-10 py-5 mb-5 lg:col-span-9">
@@ -56,6 +57,8 @@ export default function Post({ headings, compiledMarkdown, meta, relatedPostMeta
             </nav>
           </div>
         </div>
+
+        <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
       </Layout>
     </>
   );
