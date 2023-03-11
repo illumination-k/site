@@ -1,8 +1,20 @@
 import { apply, tw } from "@twind/core";
 import Script from "next/script";
-import React from "react";
+import React, { useEffect } from "react";
 
 export default function Adsense({ className }: { className?: string }) {
+  useEffect(() => {
+    if (process.env.NEXT_PUBLIC_IS_LOCALHOST) {
+      return;
+    }
+
+    try {
+      // @ts-ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error(err);
+    }
+  }, []);
   return (
     <div className={className}>
       {process.env.NEXT_PUBLIC_IS_LOCALHOST
@@ -19,9 +31,6 @@ export default function Adsense({ className }: { className?: string }) {
             data-ad-format="auto"
             data-full-width-responsive="true"
           >
-            <Script id="google-ads" strategy="afterInteractive">
-              (adsbygoogle = window.adsbygoogle || []).push({});
-            </Script>
           </ins>
         )}
     </div>
