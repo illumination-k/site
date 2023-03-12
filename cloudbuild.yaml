@@ -9,9 +9,9 @@ steps:
       - '-f'
       - Dockerfile.standalone
       - '--build-arg'
-      - MEILISEARCH_API_KEY=$$MEILISEARCH_API_KEY
+      - 'MEILISEARCH_API_KEY=$$MEILISEARCH_API_KEY'
       - '--build-arg'
-      - MEILISEARCH_URL=$$MEILISEARCH_URL
+      - 'MEILISEARCH_URL=$$MEILISEARCH_URL'
     id: Build
   - name: gcr.io/cloud-builders/docker
     args:
@@ -36,9 +36,9 @@ images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
 availableSecrets:
   secretManager:
-    - versionName: projects/1074354016515/secrets/MEILISEARCH_API_KEY/versions/latest
+    - versionName: projects/$PROJECT_ID/secrets/MEILISEARCH_API_KEY/versions/latest
       env: MEILISEARCH_API_KEY
-    - versionName: projects/1074354016515/secrets/MEILISEARCH_URL/versions/latest
+    - versionName: projects/$PROJECT_ID/secrets/MEILISEARCH_URL/versions/latest
       env: MEILISEARCH_URL
 tags:
   - gcp-cloud-build-deploy-cloud-run
