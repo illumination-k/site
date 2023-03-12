@@ -12,3 +12,6 @@ dist/
 dump/
 # util
 _*
+
+meilisearch
+data.ms/

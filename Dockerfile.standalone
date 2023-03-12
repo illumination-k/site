@@ -1,6 +1,13 @@
 FROM node:16-alpine AS base
 
 FROM base AS builder
+
+ARG MEILISEARCH_URL
+ARG MEILISEARCH_API_KEY
+
+ENV MEILISEARCH_API_KEY ${MEILISEARCH_API_KEY}
+ENV MEILISEARCH_URL ${MEILISEARCH_URL}
+
 RUN apk add --no-cache libc6-compat vips fftw
 
 WORKDIR /app
@@ -23,8 +30,6 @@ ENV NODE_ENV production
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
-
-
 
 # Automatically leverage output traces to reduce image size
 # https://nextjs.org/docs/advanced-features/output-file-tracing

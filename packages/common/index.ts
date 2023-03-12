@@ -40,9 +40,9 @@ export const headingsSchema = z.array(
 );
 export type Headings = z.infer<typeof headingsSchema>;
 
-export const dumpPostSchema = postSchema.extend({
-  tokens: z.array(z.string()),
+export const dumpPostSchema = postSchema.omit({ markdown: true }).extend({
   headings: headingsSchema,
+  stripMarkdown: z.string(),
   compiledMarkdown: z.string(),
 });
 export type DumpPost = z.infer<typeof dumpPostSchema>;

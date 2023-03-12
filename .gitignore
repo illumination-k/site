@@ -42,3 +42,6 @@ dump/
 _*
 
 /packages/web/src/lib/$path.ts
+
+meilisearch
+data.ms/

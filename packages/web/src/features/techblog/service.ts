@@ -1,4 +1,4 @@
-import { PostMeta } from "common";
+import { Lang, PostMeta } from "common";
 import { IBlogRepositoy } from "./irepository";
 
 function shuffle<T>(array: T[]): T[] {
