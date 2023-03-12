@@ -15,6 +15,10 @@ const client = new MeiliSearch({
 const meiliSearchIndex = client.index<SearchRecord>(indexName);
 
 export async function registerBlogPosts(repo: IBlogRepositoy) {
+  if (process.env.REGISTER_SKIP) {
+    return;
+  }
+
   const posts = await repo.list();
   await meiliSearchIndex.deleteAllDocuments();
 

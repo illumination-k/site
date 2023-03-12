@@ -25,6 +25,7 @@ jobs:
           file: ./Dockerfile.standalone
           build-args: |
             MEILISEARCH_URL="host.docker.internal:7700"
+            REGISTER_SKIP="true"
+          # internalが動くようになったらテストする
           # add-hosts: |
           #   host.docker.internal:host-gateway
-
