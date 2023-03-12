@@ -1,16 +1,6 @@
 version: "3.8"
 
 services:
-  # web:
-  #   build:
-  #     context: "."
-  #     dockerfile: "Dockerfile.standalone"
-  #     network: container:meilisearch
-  #     args:
-  #       MEILISEARCH_URL: "meilisearch:7700"
-  #   depends_on:
-  #     meilisearch:
-  #       condition: service_completed_successfully
   meilisearch:
     image: getmeili/meilisearch
     healthcheck:
@@ -18,3 +8,5 @@ services:
       interval: 10s
       timeout: 10s
       retries: 3
+    ports:
+      - 7700:7700

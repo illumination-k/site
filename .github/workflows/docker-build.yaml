@@ -25,6 +25,6 @@ jobs:
           file: ./Dockerfile.standalone
           build-args: |
             MEILISEARCH_URL="host.docker.internal:7700"
-          add-hosts: |
-            host.docker.internal:host-gateway
+          # add-hosts: |
+          #   host.docker.internal:host-gateway
 
