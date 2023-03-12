@@ -36,9 +36,9 @@ images:
   - '$_GCR_HOSTNAME/$PROJECT_ID/$REPO_NAME/$_SERVICE_NAME:$COMMIT_SHA'
 availableSecrets:
   secretManager:
-    - versionName: projects/$PROJECT_ID/secrets/MEILISEARCH_API_KEY/versions/latest
+    - versionName: projects/site/secrets/MEILISEARCH_API_KEY/versions/latest
       env: MEILISEARCH_API_KEY
-    - versionName: projects/$PROJECT_ID/secrets/MEILISEARCH_URL/versions/latest
+    - versionName: projects/site/secrets/MEILISEARCH_URL/versions/latest
       env: MEILISEARCH_URL
 tags:
   - gcp-cloud-build-deploy-cloud-run
