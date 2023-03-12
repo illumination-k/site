@@ -8,10 +8,10 @@ steps:
       - .
       - '-f'
       - Dockerfile.standalone
-      - '--build-arg'
-      - 'MEILISEARCH_API_KEY=$$MEILISEARCH_API_KEY'
-      - '--build-arg'
-      - 'MEILISEARCH_URL=$$MEILISEARCH_URL'
+      # - '--build-arg'
+      # - 'MEILISEARCH_API_KEY=$$MEILISEARCH_API_KEY'
+      # - '--build-arg'
+      # - 'MEILISEARCH_URL=$$MEILISEARCH_URL'
     id: Build
   - name: gcr.io/cloud-builders/docker
     args:
