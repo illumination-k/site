@@ -20,16 +20,13 @@ function App({ Component, pageProps }: AppProps) {
           });
         `}
       </Script>
-      {process.env.NEXT_PUBLIC_IS_LOCALHOST ? null : (
-        <Script
-          id="googleads-id"
-          async
-          strategy="afterInteractive"
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3483824909024831"
-          crossOrigin="anonymous"
-        />
-      )}
-
+      <Script
+        id="googleads-id"
+        async
+        strategy="lazyOnload"
+        src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3483824909024831"
+        crossOrigin="anonymous"
+      />
       <Component {...pageProps} />
     </>
   );
