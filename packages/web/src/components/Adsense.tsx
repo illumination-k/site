@@ -1,6 +1,5 @@
 import { apply, tw } from "@twind/core";
 import { useRouter } from "next/router";
-import Script from "next/script";
 import React, { useEffect } from "react";
 
 export default function Adsense({ className }: { className?: string }) {
@@ -12,8 +11,12 @@ export default function Adsense({ className }: { className?: string }) {
     : {};
 
   useEffect(() => {
-    // @ts-ignore
-    (window.adsbygoogle = window.adsbygoogle || []).push({});
+    try {
+      // @ts-ignore
+      (window.adsbygoogle = window.adsbygoogle || []).push({});
+    } catch (err) {
+      console.error(err);
+    }
   }, [asPath]);
 
   return (
