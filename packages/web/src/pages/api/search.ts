@@ -35,8 +35,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return;
   }
 
-  console.log(q);
-
   const postMetas: PostMeta[] = await (await index.search(q, {})).hits.map((hit) => {
     const { id: uuid, title, lang, description, tags, category, created_at, updated_at } = hit;
 
