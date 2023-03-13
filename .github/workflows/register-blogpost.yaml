@@ -8,7 +8,8 @@ on:
 jobs: 
   RegisterBlogPost:
     runs-on: "ubuntu-latest"
-
+    environment:
+      name: "REGISTER_POST"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -17,4 +18,9 @@ jobs:
       - run: npm install -g pnpm
       - run: pnpm i
       - run: pnpm run cli:build
-      - run: pnpm run register-posts
+
+      - name: Register blog posts into meilisearch cloud
+        run: pnpm run register-posts
+        env:
+          MEILISEARCH_API_KEY: ${{secrets.MEILISEARCH_API_KEY}}
+          MEILISEARCH_URL: ${{secrets.MEILISEARCH_URL}}
