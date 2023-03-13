@@ -1,9 +1,7 @@
 name: Register Blog Post
 
 on:
-  push:
-    branches:
-      - "main"
+  push
 
 jobs: 
   RegisterBlogPost:
