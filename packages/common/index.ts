@@ -24,7 +24,7 @@ export const postMetaSchema = z.object({
 });
 
 export type PostMeta = z.infer<typeof postMetaSchema>;
-
+export const postMetasSchema = z.array(postMetaSchema);
 export const postSchema = z.object({
   meta: postMetaSchema,
   markdown: z.string(),
@@ -40,8 +40,8 @@ export const headingsSchema = z.array(
 );
 export type Headings = z.infer<typeof headingsSchema>;
 
-export const dumpPostSchema = postSchema.extend({
-  tokens: z.array(z.string()),
+export const dumpPostSchema = postSchema.omit({ markdown: true }).extend({
+  rawMarkdown: z.string(),
   headings: headingsSchema,
   compiledMarkdown: z.string(),
 });

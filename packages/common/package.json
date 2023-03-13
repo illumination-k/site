@@ -2,12 +2,12 @@
   "name": "common",
   "version": "1.0.0",
   "description": "",
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "meilisearch": "^0.31.1",
     "zod": "^3.20.6"
   },
   "devDependencies": {
