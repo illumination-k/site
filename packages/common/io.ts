@@ -33,7 +33,7 @@ export function initTechblogMeiliSearchIndex(): Index<PostSearchRecord> {
     throw envParse.error;
   }
 
-  const host = envParse.data.MEILISEARCH_API_KEY || "localhost:7700";
+  const host = envParse.data.MEILISEARCH_URL || "localhost:7700";
   const apiKey = envParse.data.MEILISEARCH_API_KEY;
 
   const client = new MeiliSearch({ host, apiKey });
