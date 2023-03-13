@@ -16,5 +16,11 @@ jobs:
       - run: npm install -g pnpm
       - run: pnpm i
       - run: pnpm run cli:build
-      - run: pnpm run register-posts
+
+      - name: Set MEILISEARCH_URL
+        run: export MEILISEARCH_URL=${{secrets.MEILISEARCH_URL}}
+      - name: Set MEILISEARCH_API_KEY
+        run: export MEILISEARCH_API_KEY=${{secrets.MEILISEARCH_API_KEY}}
+      - name: Register blog posts into meilisearch cloud
+        run: pnpm run register-posts
         
