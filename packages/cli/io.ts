@@ -8,10 +8,6 @@ import { remark } from "remark";
 
 import { compile } from "@mdx-js/mdx";
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
-import stripMarkdown from "strip-markdown";
-
-// @ts-ignore
-import tinysegmenter from "tiny-segmenter";
 
 import { Dump, DumpPost, headingsSchema, Post, PostMeta, postMetaSchema } from "common";
 
@@ -37,12 +33,9 @@ export async function readPost(path: PathLike): Promise<Post> {
 }
 
 export async function dumpPost(post: Post, postPath: PathLike, imageDist: string): Promise<DumpPost> {
-  const segmenter = new tinysegmenter();
-
   // @ts-ignore
   const stripFile = await remark()
     .use(extractHeader)
-    .use(stripMarkdown)
     .process(post.markdown);
 
   let compiledMarkdown: string;
@@ -67,7 +60,6 @@ export async function dumpPost(post: Post, postPath: PathLike, imageDist: string
     `;
   }
 
-  const tokens = segmenter.segment(String(stripFile));
   const _headings: unknown = stripFile.data.headings;
   const parsed = headingsSchema.safeParse(_headings);
 
@@ -75,7 +67,9 @@ export async function dumpPost(post: Post, postPath: PathLike, imageDist: string
     console.error(_headings);
     throw "Error in extracting headers";
   }
-  return { ...post, compiledMarkdown, tokens, headings: parsed.data };
+
+  const { markdown: _, ...meta } = post;
+  return { ...meta, compiledMarkdown, rawMarkdown: String(stripFile), headings: parsed.data };
 }
 
 export async function getDumpPosts(src: PathLike, imageDist: string): Promise<DumpPost[]> {

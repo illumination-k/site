@@ -1,10 +1,12 @@
-name: node CI
+name: Register Blog Post
 
 on:
-  push
+  push:
+    branches:
+      - "main"
 
 jobs: 
-  NodeCI:
+  RegisterBlogPost:
     runs-on: "ubuntu-latest"
 
     steps:
@@ -14,5 +16,5 @@ jobs:
           node-version: 16
       - run: npm install -g pnpm
       - run: pnpm i
-      - run: pnpm lint
-      - run: pnpm test
+      - run: pnpm run cli:build
+      - run: pnpm run register-posts
