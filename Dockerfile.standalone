@@ -10,7 +10,6 @@ COPY . .
 RUN yarn global add pnpm && \
     pnpm i && \
     pnpm cli:build && \
-    mkdir -p ./packages/web/dump && \
     pnpm run web-build
 
 # Production image, copy all the files and run next
