@@ -1,6 +1,6 @@
 import type { PathLike } from "fs";
 
-import { Dump, Lang, Post } from "common";
+import { Dump, DumpPost, Lang } from "common";
 import { readDump } from "common/io";
 
 import { IBlogRepositoy } from "../irepository";
@@ -47,7 +47,7 @@ export default class DumpRepository implements IBlogRepositoy {
   async filterPosts(lang?: Lang, tag?: string, category?: string) {
     await this.init();
 
-    const checkPost = (post: Post, lang?: Lang, tag?: string, category?: string) => {
+    const checkPost = (post: DumpPost, lang?: Lang, tag?: string, category?: string) => {
       let ok = true;
       if (lang) ok = lang === post.meta.lang;
       if (tag) ok = post.meta.tags.includes(tag);

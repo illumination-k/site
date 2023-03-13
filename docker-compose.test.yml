@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  meilisearch:
+    image: getmeili/meilisearch
+    healthcheck:
+      test: "curl -X GET 'http://localhost:7700/health' || exit 1"
+      interval: 10s
+      timeout: 10s
+      retries: 3
+    ports:
+      - 7700:7700
