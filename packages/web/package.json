@@ -6,6 +6,7 @@
     "@heroicons/react": "^2.0.16",
     "@mdx-js/mdx": "^2.3.0",
     "common": "workspace:^",
+    "encoding": "^0.1.13",
     "katex": "^0.16.4",
     "lru-cache": "^7.18.3",
     "next": "13.2.3",

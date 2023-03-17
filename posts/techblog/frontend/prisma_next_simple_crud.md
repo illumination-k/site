@@ -90,8 +90,7 @@ CREATE TABLE IF NOT EXISTS "Todo" (
 );
 ```
 
-<details>
-<summary>Postgresの場合</summary>
+:::details[>Postgresの場合]
 
 herokuかなんかにデプロイする気がするので、postgresを使用する場合についても書いておきます。まず、postgresをdockerで用意しておきます。頻繁にpostgresのdockerを使っているので、使用するportは15432です。
 
@@ -117,7 +116,7 @@ volumes:
 DATABASE_URL="postgresql://postgres:postgres@localhost:15432/main?schema=public"
 ```
 
-</details>
+:::
 
 ### prisma clientの設定
 

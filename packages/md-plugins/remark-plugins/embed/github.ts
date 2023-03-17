@@ -1,5 +1,5 @@
 import axios from "axios";
-import type { Code, HTML, Link, Parent } from "mdast";
+import type { Code, Link, Parent } from "mdast";
 
 import type { Directive } from "mdast-util-directive";
 import { URL } from "url";

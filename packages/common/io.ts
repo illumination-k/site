@@ -1,6 +1,6 @@
 import { PathLike, readFile } from "fs";
 import { promisify } from "util";
-import { Dump, DumpPost, dumpSchema, Lang, PostMeta } from ".";
+import { Dump, dumpSchema, PostMeta } from ".";
 
 import { Index, MeiliSearch } from "meilisearch";
 import { z } from "zod";
@@ -38,23 +38,4 @@ export function initTechblogMeiliSearchIndex(): Index<PostSearchRecord> {
 
   const client = new MeiliSearch({ host, apiKey });
   return client.index(indexName);
-}
-
-export async function searchBlogPost(q: string): Promise<PostMeta[]> {
-  const index = initTechblogMeiliSearchIndex();
-
-  return await (await index.search(q, {})).hits.map((hit) => {
-    const { id: uuid, title, lang, description, tags, category, created_at, updated_at } = hit;
-
-    return {
-      uuid,
-      title,
-      lang: lang as Lang,
-      description,
-      tags: tags.split(" "),
-      category,
-      created_at,
-      updated_at,
-    };
-  });
 }

@@ -31,8 +31,7 @@ RにはGO Enrichmentの結果をいい感じに図示してくれるライブラ
 - name: Go Termの名前。ラベルに使う。
 - cluster: 適当なクラスターの名前
 
-<details>
-<summary>CSV data</summary>
+:::details[CSV data]
 
 `example.csv`
 
@@ -66,7 +65,7 @@ GO:0002239,2.42790703640653,70,response to oomycetes,C7
 GO:0045764,1.9573492416484901,263,positive regulation of cellular amino acid metabolic process,C7
 ```
 
-</details>
+:::
 
 ## Import & 設定
 
@@ -96,8 +95,7 @@ sns.set_context("paper")
 
 ![barplot](../../public/go_python_plot/barplot.png)
 
-<details>
-<summary>Code</summary>
+:::details[Code]
 
 ```python
 # y軸にGO Termの名前を置きたいので、余白を多めにとる
@@ -140,14 +138,13 @@ mpl.colorbar.Colorbar(
 plt.show()
 ```
 
-</details>
+:::
 
 ### dotplot
 
 ![dotplot](../../public/go_python_plot/dotplot.png)
 
-<details>
-<summary>Code</summary>
+:::details[Code]
 
 ```python
 # y軸にGO Termの名前を置きたいので、余白を多めにとる
@@ -208,14 +205,13 @@ mpl.colorbar.Colorbar(
 plt.show()
 ```
 
-</details>
+:::
 
 ### グループごとのdotplot
 
 ![dotplot-cluster](../../public/go_python_plot/dotplot_cluster.png)
 
-<details>
-<summary>Code</summary>
+:::details[Code]
 
 ```python
 # seabornの設定はお好みで
@@ -271,7 +267,7 @@ fig.tight_layout()
 plt.show()
 ```
 
-</details>
+:::
 
 ## Similarityを利用したプロット
 
