@@ -79,8 +79,7 @@ print(pd.__version__)
 
 非常に長いので畳んである。ChunkedArrayは大抵の演算ができる。Seriesの比較は条件による行選択の際に必要なので見ておくとよいです。
 
-<details>
-<summary>numberとSeries</summary>
+:::details[numberとSeries]
 
 | 演算名 | vs number |
 | ------ | --------- |
@@ -89,10 +88,9 @@ print(pd.__version__)
 | `div`  | `s / 1`   |
 | `mul`  | `s * 1`   |
 
-</details>
+:::
 
-<details>
-<summary>SeriesとSeries</summary>
+:::details[SeriesとSeries]
 
 | 演算名 | 操作                  |
 | ------ | --------------------- |
@@ -103,10 +101,9 @@ print(pd.__version__)
 | `mod`  | `&s1 % &s2`           |
 | `eq`   | `s1.series_equal(s2)` |
 
-</details>
+:::
 
-<details>
-<summary>DataFrameとSeries</summary>
+:::details[DataFrameとSeries]
 
 | 演算名 | 操作       |
 | ------ | ---------- |
@@ -116,10 +113,9 @@ print(pd.__version__)
 | `mul`  | `&df * &s` |
 | `mod`  | `&df % &s` |
 
-</details>
+:::
 
-<details>
-<summary>Seriesの演算</summary>
+:::details[Seriesの演算]
 
 | 演算名 | 操作          |
 | ------ | ------------- |
@@ -128,10 +124,9 @@ print(pd.__version__)
 | min    | `s.min<T>()`  |
 | mean   | `s.mean<T>()` |
 
-</details>
+:::
 
-<details>
-<summary>Seriesの比較</summary>
+:::details[Seriesの比較]
 
 Series同士、Seriesとnumberを比較できる
 
@@ -144,10 +139,9 @@ Series同士、Seriesとnumberを比較できる
 | `<`  | `s1.lt(s2)`        | `s1.lt(1)`        |
 | `<=` | `s1.lt_eq(s2)`     | `s1.lt_eq(1)`     |
 
-</details>
+:::
 
-<details>
-<summary>DataFrameの演算</summary>
+:::details[DataFrameの演算]
 
 | 演算名 | 操作          |
 | ------ | ------------- |
@@ -159,10 +153,10 @@ Series同士、Seriesとnumberを比較できる
 | var    | `df.var()`    |
 | std    | `df.std()`    |
 
-</details>
+:::
 
-<details>
-<summary>ChunckedArrayの演算</summary>
+:::details[ChunckedArrayの演算]
+
 基本的に殆どの演算ができます。できる演算子は
 
 - \+
@@ -194,7 +188,7 @@ c1.lt(c2);
 
 default featureのtemporalがあれば、時間のパースもできます。
 
-</details>
+:::
 
 ## Seriesの作成
 

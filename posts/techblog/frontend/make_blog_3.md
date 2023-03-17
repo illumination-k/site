@@ -55,8 +55,7 @@ export default function Component() {
 
 componentで読み込んで、そのままsytled-jsxに突っ込むことで、一応対応できている。
 
-<details>
-<summary>2021/07/01改稿 Next.js v11</summary>
+:::details[2021/07/01改稿 Next.js v11]
 
 webpack5を使っていると`asset modules`を使うことで`raw-loader`の機能が実装できる。まずは`next.config.js`に設定を書く。フルAMPなので、cssをimportすることは想定していない。
 
@@ -136,10 +135,10 @@ MyDocument.getInitialProps = async (ctx) => {
 };
 ```
 
-</details>
+:::
 
-<details>
-  <summary>2020/9/7 raw-loaderを使った実装</summary>
+:::details[2020/9/7 raw-loaderを使った実装]
+
 そのあと、raw-loaderを使ってcssを_app.tsxでimportして、直接埋め込む。できるならMarkdownのページだけで読み込みたいが...
 
 ちょっとmaterial-ui成分も入ってしまっているが、`_document.js`は以下の感じ。
@@ -205,7 +204,7 @@ MyDocument.getInitialProps = async (ctx) => {
 };
 ```
 
-</details>
+:::
 
 custom loaderで[refactor](https://github.com/wooorm/refractor)を使ってcodeをTokenに落とす作業をしておけばAMPでもコードがハイライトされる。順番の関係か、prismjsはダーク系のテーマにしたのに黒くならなかったので、`github-markdown-css`側で背景を黒にしておいた。
 
