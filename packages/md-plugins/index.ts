@@ -17,7 +17,7 @@ export const REMARK_PLUGINS = [
   remarkDirective,
   attachIdToHeadings,
   codeTitle,
-  DetailsDirectvie,
+  DetailsDirective,
   remarkDirectiveEmbedGenerator([
     new GithubTransformer(),
     new GithubCardTransfomer(),

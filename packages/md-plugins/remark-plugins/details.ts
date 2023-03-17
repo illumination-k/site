@@ -1,15 +1,12 @@
-import { Parent, Root } from "mdast";
+import { Root } from "mdast";
 import { visit } from "unist-util-visit";
 import { toString } from "mdast-util-to-string";
+import { ContainerDirective } from "mdast-util-directive";
 
 export default function DetailsDirective() {
   return (ast: Root) => {
     // @ts-ignore
-    visit(ast, (node: Parent) => {
-      if (node.type !== "containerDirective") {
-        return;
-      }
-
+    visit(ast, "containerDirective", (node: ContainerDirective) => {
       if (node.name !== "details") {
         return;
       }
@@ -26,6 +23,8 @@ export default function DetailsDirective() {
       };
 
       node.data = { hName: "details", ...node.data };
+
+      // @ts-ignore
       node.children = [summaryNode].concat(content);
     });
   };
