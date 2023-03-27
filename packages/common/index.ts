@@ -4,6 +4,12 @@ import { formatDate } from "./utils";
 const lang = z.enum(["ja", "en"]);
 export type Lang = z.infer<typeof lang>;
 
+const dateSchema = z.union([z.string(), z.date()]).pipe(
+  z.coerce.date(),
+).transform(
+  (date) => formatDate(date),
+);
+
 export const postMetaSchema = z.object({
   uuid: z.string().uuid(),
   title: z.string(),
@@ -11,16 +17,8 @@ export const postMetaSchema = z.object({
   category: z.string(),
   tags: z.array(z.string()),
   lang: lang,
-  created_at: z.string().pipe(
-    z.coerce.date(),
-  ).transform(
-    (date) => formatDate(date),
-  ),
-  updated_at: z.string().pipe(
-    z.coerce.date(),
-  ).transform(
-    (date) => formatDate(date),
-  ),
+  created_at: dateSchema,
+  updated_at: dateSchema,
 });
 
 export type PostMeta = z.infer<typeof postMetaSchema>;
