@@ -63,13 +63,13 @@ updated_at: 2023-03-27
 - twind
 - meilisearch
 
-以下採用理由です。
+#### 採用理由
 
 1. Google Cloud Run
 
 今回は、Docker内のマルチステージビルドを利用して必要な記事をSSGして、Nextjsのstandaloneモードでデプロイをしたいと考えていました。そのため、DockerをそのままデプロイできるGoogle Cloud Runを利用しました。また、もともとGoogle App Engineを利用していたことから、カスタムドメインの移行が簡単なのも良かったです。
 
-2. pnpm / monorepo
+2. monorepo
 
 ブログ記事の前処理をCLIを使って、Frontmatterから取得したメタデータと、記事自体のMDXへコンパイルしたデータをJSON形式で保存し、そのファイルをNextjsのSSGの際に利用することにしました。
 
@@ -95,13 +95,13 @@ Pluginを自作するとやりたい放題できるので好きです。やり�
 
 5. twind
 
-denoで使われているイメージが強いCSS in JSです。`tailwind CSS`と同じような感じでStylingできたり、`lg:(text-xl font-bold)`みたいなことができて見通しが良い、`postcss`などがいらないなどメリットが大きいと感じています。
+denoで使われているイメージが強いCSS in JSです。`tailwind CSS`と同じような感じでスタイリングできるのですが、`lg:(text-xl font-bold)`みたいなグルーピングができて見通しが良い、`postcss`などがいらず、ビルド時にコンパイルされるなどのメリットが大きいと感じています。
 
-6. meilisearch
+1. meilisearch
 
 Rustで書かれたOSSの全文検索サーバーです。JSONを投げたら記事の登録ができ、クエリを投げれば記事の一覧が返ってくるので、簡単に検索サービスが実装できます。クラウドも無料で10000リクエストまで検索できるので、実装が簡単に終わります。
 
-採用しなかった技術として以下があります。
+### 採用しなかった技術
 
 1. AMP
 

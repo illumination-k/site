@@ -10,14 +10,4 @@ module.exports = merge(common, {
     removeEmptyChunks: false,
     splitChunks: false,
   },
-  module: {
-    rules: [
-      {
-        test: /\.ts$/,
-        use: ["ts-loader"],
-        exclude: /node_modules/,
-      },
-      { test: /\.node$/, use: "node-loader" },
-    ],
-  },
 });
