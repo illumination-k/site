@@ -24,7 +24,7 @@
     "cli:rss": "pnpm cli rss --dump ./packages/web/dump/techblog.json --dst ./packages/web/public/rss",
     "dump": "run-s cli:mkdumpdir cli:dump",
     "format": "dprint fmt",
-    "lint": "print check",
+    "lint": "dprint check",
     "register-posts": "run-s dump cli:register-posts",
     "test": "pnpm run --filter './packages/**' test",
     "web-build": "run-s dump cli:rss web-build:web",
