@@ -4,8 +4,6 @@
   "version": "1.0.0",
   "author": "",
   "devDependencies": {
-    "dprint": "^0.34.5",
-    "fixpack": "^4.0.0",
     "npm-run-all": "^4.1.5"
   },
   "homepage": "https://www.illumination-k.dev",
@@ -25,8 +23,8 @@
     "cli:register-posts": "pnpm cli registerMeilisearch --dump ./packages/web/dump/techblog.json",
     "cli:rss": "pnpm cli rss --dump ./packages/web/dump/techblog.json --dst ./packages/web/public/rss",
     "dump": "run-s cli:mkdumpdir cli:dump",
-    "format": "fixpack && dprint fmt",
-    "lint": "fixpack && dprint check",
+    "format": "dprint fmt",
+    "lint": "dprint check",
     "register-posts": "run-s dump cli:register-posts",
     "test": "pnpm run --filter './packages/**' test",
     "web-build": "run-s dump cli:rss web-build:web",

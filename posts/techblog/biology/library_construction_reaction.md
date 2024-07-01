@@ -107,8 +107,6 @@ Transposonの一種であるTn5を用いる反応です。DNAをランダムに�
 
 そして、切断された部分の両端にモザイク配列+アダプター配列を付加できます。そのアダプター配列に相補的な配列を持つプライマーを用いて増幅することでライブラリを作成できます。
 
-![tagmentation](https://www.future-science.com/cms/10.2144/000114133/asset/images/medium/figure2.jpg)
-
 ## Reference
 
 - [逆転写反応のセットアップ：重要な7つの注意点](https://www.thermofisher.com/jp/ja/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/rt-education/reverse-transcription-setup.html)
