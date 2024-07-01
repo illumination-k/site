@@ -86,18 +86,6 @@ export default function Sidebar({ className, meta, headings }: Props) {
         </ul>
       </article>
 
-      <form action="/techblog/search" method="get" className="mb-5 bg-white p-2 rounded-xl flex items-center">
-        <button aria-label="search">
-          <MagnifyingGlassCircleIcon className="icon-10 bg-white rounded-l-xl" />
-        </button>
-        <input
-          placeholder="search..."
-          className="bg-white rounded-r-xl h-10 px-3 py-2 w-full focus:outline-none"
-          id="q"
-          name="q"
-        />
-      </form>
-
       <Toc meta={meta} headings={headings} className="sidebar-card" />
     </aside>
   );
