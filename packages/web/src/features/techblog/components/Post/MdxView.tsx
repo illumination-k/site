@@ -1,6 +1,6 @@
 import "katex/dist/katex.min.css";
 
-import { runSync } from "@mdx-js/mdx";
+import { RunOptions, runSync } from "@mdx-js/mdx";
 import { css } from "@twind/core";
 import * as runtime from "react/jsx-runtime";
 
@@ -190,7 +190,10 @@ export type MdViewProps = {
 };
 
 export default function MdView({ compiledMarkdown }: MdViewProps) {
-  const Content = runSync(compiledMarkdown, runtime).default;
+  // https://github.com/mdx-js/mdx/issues/2463
+  // @ts-expect-error
+  const runOptions: RunOptions = { ...runtime };
+  const Content = runSync(compiledMarkdown, runOptions).default;
 
   return (
     <article className={style}>

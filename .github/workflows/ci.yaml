@@ -20,6 +20,6 @@ jobs:
       - name: add dprint to PATH
         run: echo "$HOME/.dprint/bin" >> "$GITHUB_PATH"
 
-      - run: pnpm i
+      - run: pnpm i --no-frozen-lockfile
       - run: pnpm lint
       - run: pnpm test
