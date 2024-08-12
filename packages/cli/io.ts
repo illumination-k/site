@@ -24,10 +24,12 @@ export async function readPost(path: PathLike): Promise<Post> {
     ...fmResult.attributes,
   });
 
+
   if (!meta.success) {
     console.error(meta.error);
     throw new Error(`${path}: ${JSON.stringify(meta.error, null, 2)}`);
   }
+
 
   return { meta: meta.data, markdown: fmResult.body };
 }
