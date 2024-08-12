@@ -221,9 +221,6 @@ importers:
       katex:
         specifier: ^0.16.11
         version: 0.16.11
-      lru-cache:
-        specifier: ^11.0.0
-        version: 11.0.0
       next:
         specifier: 14.2.5
         version: 14.2.5(@babel/core@7.24.7)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
@@ -242,9 +239,6 @@ importers:
       remeda:
         specifier: ^2.10.1
         version: 2.10.1
-      request-ip:
-        specifier: ^3.3.0
-        version: 3.3.0
       swr:
         specifier: ^2.2.5
         version: 2.2.5(react@18.3.1)
@@ -3670,9 +3664,6 @@ packages:
 
   remeda@2.10.1:
     resolution: {integrity: sha512-LSMUFASk6lu3E+lr0ErNMeTpUPdTPSR0wBQbOC13CSnh1f9y76fzF7T1uRKcl1lR4rPx5QO06sRvF9cD5oQBPg==}
-
-  request-ip@3.3.0:
-    resolution: {integrity: sha512-cA6Xh6e0fDBBBwH77SLJaJPBmD3nWVAcF9/XAcsrIHdjhFzFiB5aNQFytdjCGPezU3ROwrR11IddKAM08vohxA==}
 
   require-directory@2.1.1:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
@@ -8696,8 +8687,6 @@ snapshots:
   remeda@2.10.1:
     dependencies:
       type-fest: 4.24.0
-
-  request-ip@3.3.0: {}
 
   require-directory@2.1.1: {}
 
