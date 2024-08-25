@@ -77,11 +77,11 @@ export const Seq = ({ fchain, rchain, annotation }: SeqProps) => {
       </pre>
       <style jsx>
         {`
-        span {
-          display: inline-block;
-          width: 2.2em;
-        }
-      `}
+          span {
+            display: inline-block;
+            width: 2.2em;
+          }
+        `}
       </style>
     </>
   );

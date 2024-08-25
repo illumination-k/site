@@ -1,5 +1,5 @@
 import { PostMeta } from "common";
-import { IBlogRepositoy } from "./irepository";
+import { IBlogRepository } from "./repository";
 
 function shuffle<T>(array: T[]): T[] {
   for (let i = array.length; i > 1; i--) {
@@ -13,22 +13,23 @@ function shuffle<T>(array: T[]): T[] {
 }
 
 export default class BlogService {
-  repo: IBlogRepositoy;
+  repo: IBlogRepository;
 
-  constructor(repo: IBlogRepositoy) {
+  constructor(repo: IBlogRepository) {
     this.repo = repo;
   }
 
   async getRelatedPostMeta(meta: PostMeta): Promise<PostMeta[]> {
     // langが一致かつuuidが違う、tagがarchive, draftでない
-    const restPostMetas = (shuffle(await this.repo.list())).filter(
-      (post) => (
-        post.meta.uuid !== meta.uuid
-        && post.meta.lang === meta.lang
-        && !post.meta.tags.includes("archive")
-        && !post.meta.tags.includes("draft")
-      ),
-    ).map((post) => post.meta);
+    const restPostMetas = shuffle(await this.repo.list())
+      .filter(
+        (post) =>
+          post.meta.uuid !== meta.uuid
+          && post.meta.lang === meta.lang
+          && !post.meta.tags.includes("archive")
+          && !post.meta.tags.includes("draft"),
+      )
+      .map((post) => post.meta);
 
     // tagが一致しているポスト
     let relatedPostMetas = restPostMetas.filter((restMeta) => {
@@ -48,7 +49,7 @@ export default class BlogService {
 
       while (restCount !== 0) {
         const curPostMeta = restPostMetas[postMetaIndex];
-        if (!(relatedPostMetaUuids.includes(curPostMeta.uuid))) {
+        if (!relatedPostMetaUuids.includes(curPostMeta.uuid)) {
           relatedPostMetas.push(curPostMeta);
           relatedPostMetaUuids.push(curPostMeta.uuid);
           restCount -= 1;

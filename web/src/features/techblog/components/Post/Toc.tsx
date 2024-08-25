@@ -29,14 +29,11 @@ export default function Toc({ className, headings, meta }: Props) {
                   depth === 3 ? "px-4 text-gray-800" : "px-2 font-medium",
                 ),
               )}
-              href={pagesPath
-                .techblog.post
+              href={pagesPath.techblog.post
                 ._uuid(meta.uuid)
                 .$url({ hash: i.toString() })}
             >
-              {depth === 3
-                ? <ChevronRightIcon aria-hidden="true" className="h-4 w-4" />
-                : null}
+              {depth === 3 ? <ChevronRightIcon aria-hidden="true" className="h-4 w-4" /> : null}
               {value}
             </Link>
           </li>

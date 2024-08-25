@@ -10,10 +10,16 @@ type TwitterIntentProps = {
 } & Omit<JSX.IntrinsicElements["a"], "href" | "target" | "rel">;
 
 export const TwitterIntent = forwardRef<HTMLAnchorElement, TwitterIntentProps>(
-  function TwitterIntent({ text, url, hashtags, via, related, in_reply_to, ...props }, ref) {
+  function TwitterIntent(
+    { text, url, hashtags, via, related, in_reply_to, ...props },
+    ref,
+  ) {
     const href = new URL("https://twitter.com/intent/tweet");
 
-    const setSearchParams = (key: string, params: string | string[] | undefined) => {
+    const setSearchParams = (
+      key: string,
+      params: string | string[] | undefined,
+    ) => {
       if (!params) return;
 
       if (typeof params === "string") {

@@ -15,9 +15,15 @@ export type LayoutProps = {
   footerProps?: FooterBaseProps;
 } & PropsWithChildren;
 
-export default function Layout(
-  { className, title, description, nextSeoProps, headerProps, children, footerProps }: LayoutProps,
-) {
+export default function Layout({
+  className,
+  title,
+  description,
+  nextSeoProps,
+  headerProps,
+  children,
+  footerProps,
+}: LayoutProps) {
   return (
     <div className="flex flex-col h-screen">
       <Head {...headerProps}>

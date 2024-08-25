@@ -22,7 +22,12 @@ lg: sticky-right-sidebar + content + sticky-left-sidebar
 md: sticky-header + content
 */
 
-export default function Post({ headings, compiledMarkdown, meta, relatedPostMeta }: PostProps) {
+export default function Post({
+  headings,
+  compiledMarkdown,
+  meta,
+  relatedPostMeta,
+}: PostProps) {
   return (
     <>
       <Layout
@@ -33,8 +38,14 @@ export default function Post({ headings, compiledMarkdown, meta, relatedPostMeta
         <h1 className="py-8 text-(4xl center) font-bold">{meta.title}</h1>
         <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
         <div className="px-4 md:px-6 lg:(px-0 grid grid-cols-15 justify-center)">
-          <LeftSidebar className="hidden lg:(block col-span-2 sticky top-10 h-screen flex justify-end)" meta={meta} />
-          <article id="post-content" className="bg-white rounded-lg px-10 py-5 mb-5 lg:col-span-9">
+          <LeftSidebar
+            className="hidden lg:(block col-span-2 sticky top-10 h-screen flex justify-end)"
+            meta={meta}
+          />
+          <article
+            id="post-content"
+            className="bg-white rounded-lg px-10 py-5 mb-5 lg:col-span-9"
+          >
             <PostHeader meta={meta} />
             <MdView compiledMarkdown={compiledMarkdown} />
             <PostFooter meta={meta} />
@@ -51,9 +62,7 @@ export default function Post({ headings, compiledMarkdown, meta, relatedPostMeta
           <div className="lg:col-span-10">
             <h2 className="text-(3xl center) font-bold">Read Next</h2>
             <nav className="lg:(grid grid-cols-2)">
-              {relatedPostMeta.map(
-                (relatedMeta, i) => <PostCard meta={relatedMeta} key={i} />,
-              )}
+              {relatedPostMeta.map((relatedMeta, i) => <PostCard meta={relatedMeta} key={i} />)}
             </nav>
           </div>
         </div>

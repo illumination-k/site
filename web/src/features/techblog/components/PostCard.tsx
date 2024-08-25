@@ -5,35 +5,45 @@ import Link from "next/link";
 import Tag from "./Tag";
 
 import Category from "@/icons/Category";
-import { pagesPath } from "@/lib/$path";
+import { css } from "@/styled-system/css";
+import { flex } from "@/styled-system/patterns";
 
 export default function PostCard({ meta }: { meta: PostMeta }) {
   return (
-    <article className="px-8 py-2 rounded-lg bg-white my-3 mx-4 border-1">
-      <h2 className="font-bold text-2xl flex justify-between hover:text-blue-400">
-        <Link className="border-b-2 hover:border-blue-300 px-2" href={pagesPath.techblog.post._uuid(meta.uuid).$url()}>
+    <article className={css({ px: 8, py: 2, rounded: "lg", bg: "white", my: 3, mx: 4, borderWidth: 1 })}>
+      <Link
+        href={"/"}
+      >
+        <h2
+          className={flex({
+            fontWeight: "bold",
+            fontSize: "2xl",
+            justifyContent: "space-between",
+            _hover: { color: "blue.400", textDecoration: "underline" },
+          })}
+        >
           {meta.title}
-        </Link>
-      </h2>
+        </h2>
+      </Link>
 
-      <div className="px-3 pt-2 flex gap-2">
-        <p className="font-bold">作成</p>
+      <div className={flex({ px: 1, py: 2, fontFamily: "semibold", gap: 4 })}>
+        <p className={css({ fontWeight: "bold" })}>作成</p>
         <p>{meta.created_at}</p>
-        <p className="font-bold">更新</p>
+        <p className={css({ fontWeight: "bold" })}>更新</p>
         <p>{meta.updated_at}</p>
       </div>
-      <div className="px-3 md:flex gap-4 items-center">
-        <div className="flex gap-2 py-2 items-center font-bold">
-          <Category className="icon-5" />
+      <div className={css({ md: { "flex": "1" } })}>
+        <div className={flex({ gap: 2, alignItems: "center" })}>
+          <Category className={css({ h: 5, w: 5 })} />
           <Link
-            className="hover:text-blue-400"
-            href={pagesPath.techblog.categories._category(meta.category)._page(1).$url()}
+            className={css({ fontWeight: "bold", _hover: { color: "blue.400" } })}
+            href={"/"}
           >
             {meta.category}
           </Link>
         </div>
-        <div className="flex flex-wrap gap-2 py-2 items-center">
-          <TagIcon className="icon-5 hidden md:block" />
+        <div className={flex({ gap: 2, py: 2, alignItems: "center" })}>
+          <TagIcon className={css({ h: 5, w: 5, hideBelow: "md" })} />
           {meta.tags.map((tag, i) => <Tag tag={tag} key={i} />)}
         </div>
       </div>

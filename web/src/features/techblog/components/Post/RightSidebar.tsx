@@ -23,7 +23,13 @@ type SidebarMetaListProps = {
   content?: ReactElement | string;
 } & PropsWithChildren;
 
-function SidebarMetaList({ className, icon, title, content, children }: SidebarMetaListProps) {
+function SidebarMetaList({
+  className,
+  icon,
+  title,
+  content,
+  children,
+}: SidebarMetaListProps) {
   const iconInner = cloneElement(icon, {
     className: "icon-4",
     "aria-hidden": true,
@@ -54,17 +60,27 @@ export default function Sidebar({ className, meta, headings }: Props) {
             title="作成"
             content={meta.created_at}
           />
-          <SidebarMetaList title="更新" content={meta.updated_at} icon={<DocumentCheckIcon />} />
+          <SidebarMetaList
+            title="更新"
+            content={meta.updated_at}
+            icon={<DocumentCheckIcon />}
+          />
           <SidebarMetaList
             title={
-              <Link className="hover:text-blue-400" href={pagesPath.techblog.categories.$url()}>
+              <Link
+                className="hover:text-blue-400"
+                href={pagesPath.techblog.categories.$url()}
+              >
                 カテゴリ
               </Link>
             }
             content={
               <Link
                 className="hover:text-blue-400"
-                href={pagesPath.techblog.categories._category(meta.category)._page(1).$url()}
+                href={pagesPath.techblog.categories
+                  ._category(meta.category)
+                  ._page(1)
+                  .$url()}
               >
                 {meta.category}
               </Link>
@@ -73,7 +89,10 @@ export default function Sidebar({ className, meta, headings }: Props) {
           />
           <SidebarMetaList
             title={
-              <Link className="hover:text-blue-400" href={pagesPath.techblog.tags.$url()}>
+              <Link
+                className="hover:text-blue-400"
+                href={pagesPath.techblog.tags.$url()}
+              >
                 タグ
               </Link>
             }

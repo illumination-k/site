@@ -1,34 +1,50 @@
-import { pagesPath } from "@/lib/$path";
 import { HomeIcon } from "@heroicons/react/24/solid";
 import Link from "next/link";
 
-import { Caveat } from "next/font/google";
 import TwitterIcon from "@/icons/TwitterIcon";
 import GithubIcon from "@/icons/GithubIcon";
 
-const caveat = Caveat({ subsets: ["latin"] });
+import { css, cx } from "@/styled-system/css";
+import { circle, grid, gridItem } from "@/styled-system/patterns";
 
 export default function Nav({}) {
   return (
-    <nav className={`flex px-4 md:px-10 py-2 items-center justify-between bg-black`}>
-      <Link href={"/"}>
-        <span className={`hidden md:block text-(3xl white hover:blue-200) font-black ${caveat.className}`}>
+    <nav
+      className={grid({ gap: "1", columns: 12, px: 4, bg: "black", py: 2, alignItems: "center" })}
+    >
+      <Link href={"/"} className={gridItem({ colStart: 1, colEnd: 5 })}>
+        <span
+          className={css({
+            fontSize: "3xl",
+            color: "white",
+            _hover: { color: "blue.500" },
+            fontWeight: "black",
+            hideBelow: "md",
+          })}
+        >
           illumination-k.dev
         </span>
-        <HomeIcon aria-hidden="true" className="icon-6 text-white md:hidden" />
+        <HomeIcon aria-hidden="true" className={css({ h: 6, w: 6, hideFrom: "md", color: "white" })} />
       </Link>
 
-      <div className="flex gap-5 items-center py-1">
-        <Link href={pagesPath.techblog._page(1).$url()} className="block text-(xl white) font-black">
+      <div className={cx(gridItem({ colStart: 11, colEnd: 13, alignItems: "center", py: 1 }), grid({ columns: 3 }))}>
+        <Link
+          href={"/"}
+          className={gridItem({ color: "white", fontSize: "xl", _hover: { color: "blue.500" } })}
+        >
           Blog
         </Link>
 
-        <a href="https://twitter.com/illuminationK" className="bg-white rounded-full" aria-label="twitter">
-          <TwitterIcon aria-hidden="true" className="icon-8" />
+        <a
+          href="https://twitter.com/illuminationK"
+          className={cx(gridItem({ rounded: "full" }), circle({ size: 8, bg: "white" }))}
+          aria-label="twitter"
+        >
+          <TwitterIcon aria-hidden="true" className={css({ h: 8, w: 8 })} />
         </a>
 
         <a href="https://www.github.com/illumination-k" aria-label="github">
-          <GithubIcon aria-hidden="true" className="icon-8" fill="white" />
+          <GithubIcon aria-hidden="true" className={gridItem({ h: 8, w: 8 })} fill="white" />
         </a>
       </div>
     </nav>

@@ -10,15 +10,7 @@ const nextConfig = {
   },
   transpilePackages: [
     "md-plugins",
-    "@twind/core",
-    "@twind/preset-autoprefix",
-    "@twind/preset-tailwind",
-    "@twind/with-next",
   ],
-  i18n: {
-    locales: ["ja", "en"],
-    defaultLocale: "ja",
-  },
   async redirects() {
     return redirectsData;
   },
@@ -32,6 +24,7 @@ const nextConfig = {
     // @link {https://github.com/vercel/next.js/pull/22867|Original PR}
     // @link {https://github.com/vercel/next.js/discussions/26420|Discussion}
     externalDir: true,
+    typedRoutes: true,
   },
 };
 

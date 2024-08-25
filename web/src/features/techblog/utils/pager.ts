@@ -9,7 +9,7 @@ export function range(stop: number): number[] {
   return Array.from({ length: stop }, (_, i) => i + 1);
 }
 
-export type PageInfomation = {
+export type PageInformation = {
   pagePostMetas: PostMeta[];
   curPage: number;
   pages: number[];
@@ -40,7 +40,7 @@ export class Pager {
     return range(Math.ceil(postMetas.length / this.count_per_page));
   }
 
-  getPageInformation(postMetas: PostMeta[], page: number): PageInfomation {
+  getPageInformation(postMetas: PostMeta[], page: number): PageInformation {
     const COUNT_PER_PAGE = this.count_per_page;
     const end = page * COUNT_PER_PAGE;
     const start = end - COUNT_PER_PAGE;
