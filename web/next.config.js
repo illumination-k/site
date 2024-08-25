@@ -26,7 +26,7 @@ const nextConfig = {
   experimental: {
     // @link https://nextjs.org/docs/advanced-features/output-file-tracing#caveats
     // outputFileTracingRoot: undefined, // ,path.join(__dirname, '../../'),
-    outputFileTracingRoot: path.join(__dirname, "../../"),
+    outputFileTracingRoot: path.join(__dirname, "../"),
 
     // Experimental monorepo support
     // @link {https://github.com/vercel/next.js/pull/22867|Original PR}
