@@ -4,15 +4,22 @@ import Link from "next/link";
 import TwitterIcon from "@/icons/TwitterIcon";
 import GithubIcon from "@/icons/GithubIcon";
 
-import { css, cx } from "@/styled-system/css";
-import { circle, grid, gridItem } from "@/styled-system/patterns";
+import { css } from "@/styled-system/css";
+import { circle } from "@/styled-system/patterns";
 
 export default function Nav({}) {
   return (
     <nav
-      className={grid({ gap: "1", columns: 12, px: 4, bg: "black", py: 2, alignItems: "center" })}
+      className={css({
+        bg: "black",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        px: 4,
+        py: 2,
+      })}
     >
-      <Link href={"/"} className={gridItem({ colStart: 1, colEnd: 5 })}>
+      <Link href={"/"}>
         <span
           className={css({
             fontSize: "3xl",
@@ -27,24 +34,24 @@ export default function Nav({}) {
         <HomeIcon aria-hidden="true" className={css({ h: 6, w: 6, hideFrom: "md", color: "white" })} />
       </Link>
 
-      <div className={cx(gridItem({ colStart: 11, colEnd: 13, alignItems: "center", py: 1 }), grid({ columns: 3 }))}>
+      <div className={css({ display: "flex", gap: "3" })}>
         <Link
           href={"/"}
-          className={gridItem({ color: "white", fontSize: "xl", _hover: { color: "blue.500" } })}
+          className={css({ color: "white", fontSize: "xl", _hover: { color: "blue.500" } })}
         >
           Blog
         </Link>
 
         <a
           href="https://twitter.com/illuminationK"
-          className={cx(gridItem({ rounded: "full" }), circle({ size: 8, bg: "white" }))}
+          className={circle({ size: 8, bg: "white" })}
           aria-label="twitter"
         >
           <TwitterIcon aria-hidden="true" className={css({ h: 8, w: 8 })} />
         </a>
 
         <a href="https://www.github.com/illumination-k" aria-label="github">
-          <GithubIcon aria-hidden="true" className={gridItem({ h: 8, w: 8 })} fill="white" />
+          <GithubIcon aria-hidden="true" className={css({ h: 8, w: 8 })} fill="white" />
         </a>
       </div>
     </nav>

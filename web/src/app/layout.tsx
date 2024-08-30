@@ -14,8 +14,10 @@ export default function RootLayout({
   return (
     <html lang="ja">
       <body className={inter.className}>
-        <Nav />
-        {children}
+        <header>
+          <Nav />
+        </header>
+        <main>{children}</main>
         <AdsScripts />
       </body>
     </html>

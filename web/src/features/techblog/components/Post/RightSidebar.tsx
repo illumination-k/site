@@ -1,14 +1,15 @@
-import { DocumentCheckIcon, DocumentPlusIcon, MagnifyingGlassCircleIcon, TagIcon } from "@heroicons/react/24/outline";
-import { apply, tw } from "@twind/core";
+import { DocumentCheckIcon, DocumentPlusIcon, TagIcon } from "@heroicons/react/24/outline";
 import { Headings, PostMeta } from "common";
 import Link from "next/link";
 import { cloneElement, PropsWithChildren, ReactElement } from "react";
+
+import { css } from "@/styled-system/css";
 
 import Toc from "./Toc";
 import Tag from "../Tag";
 
 import Category from "@/icons/Category";
-import { pagesPath } from "@/lib/$path";
+import { Route } from "next";
 
 type Props = {
   className?: string;
@@ -31,19 +32,19 @@ function SidebarMetaList({
   children,
 }: SidebarMetaListProps) {
   const iconInner = cloneElement(icon, {
-    className: "icon-4",
+    className: css({ h: 4, w: 4 }),
     "aria-hidden": true,
   });
 
   return (
-    <li className={tw(apply("py-2 px-2", className))}>
-      <div className="flex items-center justify-between">
-        <span className="flex gap-2 items-center">
+    <li className={css({ p: 2 })}>
+      <div className={css({ display: "flex", justifyContent: "space-between", alignItems: "center" })}>
+        <span className={css({ display: "flex", gap: 2, alignItems: "center" })}>
           {iconInner}
-          <p className="font-bold text-lg">{title}</p>
+          <p className={css({ fontWeight: "bold", fontSize: "lg" })}>{title}</p>
         </span>
 
-        {content ? <p className="px-5">{content}</p> : null}
+        {content ? <p className={css({ px: 5 })}>{content}</p> : null}
       </div>
       {children}
     </li>
@@ -68,19 +69,16 @@ export default function Sidebar({ className, meta, headings }: Props) {
           <SidebarMetaList
             title={
               <Link
-                className="hover:text-blue-400"
-                href={pagesPath.techblog.categories.$url()}
+                className={css({ _hover: { color: "blue.500" } })}
+                href={"/"}
               >
                 カテゴリ
               </Link>
             }
             content={
               <Link
-                className="hover:text-blue-400"
-                href={pagesPath.techblog.categories
-                  ._category(meta.category)
-                  ._page(1)
-                  .$url()}
+                className={css({ _hover: { color: "blue.500" } })}
+                href={"/"}
               >
                 {meta.category}
               </Link>
@@ -90,15 +88,15 @@ export default function Sidebar({ className, meta, headings }: Props) {
           <SidebarMetaList
             title={
               <Link
-                className="hover:text-blue-400"
-                href={pagesPath.techblog.tags.$url()}
+                className={css({ _hover: { color: "blue.500" } })}
+                href={`/techblog/posts/${meta.uuid}` as Route}
               >
                 タグ
               </Link>
             }
             icon={<TagIcon />}
           >
-            <div className="flex flex-wrap gap-2 items-center mt-2">
+            <div className={css({ display: "flex", flexWrap: "wrap", gap: 2, alignItems: "center", mt: 2 })}>
               {meta.tags.map((tag, i) => <Tag tag={tag} key={i} />)}
             </div>
           </SidebarMetaList>

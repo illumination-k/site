@@ -1,7 +1,7 @@
 import Adsense from "@/components/Adsense";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { css } from "@/styled-system/css";
-import { flex } from "@/styled-system/patterns";
+import { flex, gridItem } from "@/styled-system/patterns";
 import Link from "next/link";
 import type { Route } from "next";
 
@@ -66,23 +66,16 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
             return (
               <Link
                 key={i}
-                className={
-                  css(
-                    {
-                      alignItems: "baseline",
-                      _hover: { color: "blue.400" },
-                      fontSize: "2xl",
-                      fontFamily: "mono",
-                      fontWeight: "thin",
-                    },
-                    pageItem === curPage ? { color: "blue.500" } : {},
-                  )
-                  // tw(
-                  // apply(
-                  //   "align-bottom hover:text-blue-400 text-2xl font-mono font-thin",
-                  //   pageItem === curPage ? "text-blue-500" : "",
-                  // ),
-                }
+                className={css(
+                  {
+                    alignItems: "baseline",
+                    _hover: { color: "blue.400" },
+                    fontSize: "2xl",
+                    fontFamily: "mono",
+                    fontWeight: "thin",
+                  },
+                  pageItem === curPage ? { color: "blue.500" } : {},
+                )}
                 href={pageLinkGenerator(pageItem)}
               >
                 {pageItem}
@@ -106,26 +99,24 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
 type PagerProps = {
   pageInformation: PageInformation;
   pageLinkGenerator: (page: number) => Route;
+  className?: string;
 };
 
 export default function Pager({
   pageInformation,
   pageLinkGenerator,
+  className,
 }: PagerProps) {
   const { pagePostMetas, curPage, pages } = pageInformation;
 
   return (
-    <div className="bg-slate-50 lg:grid lg:grid-cols-5">
-      <div></div>
-      <div className="lg:col-span-3">
-        {pagePostMetas.map((meta, i) => <PostCard meta={meta} key={i} />)}
-        <Pagination
-          curPage={curPage}
-          pages={pages}
-          pageLinkGenerator={pageLinkGenerator}
-        />
-        <Adsense className="mx-4" />
-      </div>
+    <div className={className}>
+      {pagePostMetas.map((meta, i) => <PostCard meta={meta} key={i} />)}
+      <Pagination
+        curPage={curPage}
+        pages={pages}
+        pageLinkGenerator={pageLinkGenerator}
+      />
     </div>
   );
 }

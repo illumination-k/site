@@ -5,7 +5,7 @@ import PostHeader from "./Header";
 import MdView from "./MdxView";
 import RightSidebar from "./RightSidebar";
 
-import Layout from "@/components/Layout";
+import { css } from "@/styled-system/css";
 import LeftSidebar from "./LeftSidebar";
 import PostCard from "../PostCard";
 import Adsense from "@/components/Adsense";
@@ -29,46 +29,67 @@ export default function Post({
   relatedPostMeta,
 }: PostProps) {
   return (
-    <>
-      <Layout
-        className="bg-gray-50"
-        title={meta.title}
-        description={meta.description}
+    <article className={css({bg: "slate.50"})}>
+      <h1
+        className={css({
+          px: "10",
+          py: "5",
+          mb: "5",
+        })}
       >
-        <h1 className="py-8 text-(4xl center) font-bold">{meta.title}</h1>
-        <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
-        <div className="px-4 md:px-6 lg:(px-0 grid grid-cols-15 justify-center)">
-          <LeftSidebar
-            className="hidden lg:(block col-span-2 sticky top-10 h-screen flex justify-end)"
-            meta={meta}
-          />
-          <article
-            id="post-content"
-            className="bg-white rounded-lg px-10 py-5 mb-5 lg:col-span-9"
-          >
-            <PostHeader meta={meta} />
-            <MdView compiledMarkdown={compiledMarkdown} />
-            <PostFooter meta={meta} />
-          </article>
+        {meta.title}
+      </h1>
+      <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
+      <div
+        className={css({
+          px: 4,
+          lg: { px: 0, display: "grid", gridTemplateColumns: "12", gap: 1, justifyContent: "center" },
+        })}
+      >
+        <LeftSidebar
+          className={css({
+            hideBelow: "md",
+            lg: {
+              display: "flex",
+              gridColumnStart: 2,
+              gridColumnEnd: 3,
+              position: "sticky",
+              top: 10,
+              justifyContent: "end",
+              h: "screen",
+            },
+          })}
+          meta={meta}
+        />
+        <article
+          id="post-content"
+          className={css({ bg: "white", px: 10, py: 5, mb: 5, lg: { gridColumnStart: 3, gridColumnEnd: 10 } })}
+        >
+          <PostHeader meta={meta} />
+          <MdView compiledMarkdown={compiledMarkdown} />
+          <PostFooter meta={meta} />
+        </article>
 
-          <RightSidebar
-            meta={meta}
-            headings={headings}
-            className="hidden lg:(block col-span-3 ml-8 sticky top-5 h-screen overflow-y-auto)"
-          />
+        <RightSidebar
+          meta={meta}
+          headings={headings}
+          className={css({
+            hideBelow: "md",
+            lg: { position: "sticky", gridColumnStart: 10, gridColumnEnd: -1, top: 5, overflowY: "auto", h: "screen" },
+          })}
+        />
+      </div>
+      <div className="lg:(grid grid-cols-12)">
+        <div></div>
+        <div className="lg:col-span-10">
+          <h2 className={css({ fontSize: "2xl", textAlign: "center", fontWeight: "bold" })}>Read Next</h2>
+          <nav className="lg:(grid grid-cols-2)">
+            {relatedPostMeta.map((relatedMeta, i) => <PostCard meta={relatedMeta} key={i} />)}
+          </nav>
         </div>
-        <div className="lg:(grid grid-cols-12)">
-          <div></div>
-          <div className="lg:col-span-10">
-            <h2 className="text-(3xl center) font-bold">Read Next</h2>
-            <nav className="lg:(grid grid-cols-2)">
-              {relatedPostMeta.map((relatedMeta, i) => <PostCard meta={relatedMeta} key={i} />)}
-            </nav>
-          </div>
-        </div>
+      </div>
 
-        <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
-      </Layout>
-    </>
+      <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
+    </article>
   );
 }

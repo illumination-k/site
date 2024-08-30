@@ -1,6 +1,4 @@
-import { apply, tw } from "@twind/core";
 import { Headings, PostMeta } from "common";
-import { useState } from "react";
 
 type Props = {
   className?: string;

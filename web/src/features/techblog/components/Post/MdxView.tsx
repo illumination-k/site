@@ -1,4 +1,5 @@
 import "katex/dist/katex.min.css";
+import "./prisma-tokens.css";
 
 import { RunOptions, runSync } from "@mdx-js/mdx";
 import { css } from "@/styled-system/css";
@@ -58,7 +59,6 @@ const style = css({
 
   // rounded table
   "& table": {
-    // "@apply": "my-4 mx-1 w-full overflow-x-auto whitespace-pre-wrap block",
     my: 4,
     mx: 1,
     w: "full",
@@ -95,7 +95,6 @@ const style = css({
 
   // code
   "& code": {
-    // "@apply": "bg-slate-50 rounded-lg px-2 text-red-600 whitespace-pre-wrap",
     bg: "slate.50",
     rounded: "lg",
     px: 2,
@@ -104,9 +103,21 @@ const style = css({
   },
 
   "& pre": {
-    // "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg overflow-x-auto",
+    my: 4,
+    py: 1,
+    px: 0,
+    bg: "slate.50",
+    fontFamily: "mono",
+    rounded: "lg",
+    overflowX: "auto",
+    wordBreak: "normal",
+    overflowWrap: "normal",
     "& code": {
-      // "@apply": "px-0 text-black break-normal whitespace-pre ",
+      px: 0,
+      color: "black",
+      whiteSpace: "pre",
+      wordBreak: "normal",
+      overflowWrap: "normal",
       "& span.code-line": {
         px: 4,
       },
@@ -116,31 +127,53 @@ const style = css({
   // code block
   "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
     // "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
+
     "& span.code-line": {
       // "@apply": "px-4",
+      px: 4,
     },
   },
 
   // embed
   "& div.github-embed": {
     // "@apply": "bg-slate-200 rounded-lg border-slate-200 border-1 m-1",
+    bg: "slate.200",
+    rounded: "lg",
+    borderColor: "slate.200",
+    borderWidth: "1",
+    m: 1,
     "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
       // "@apply": "rounded-t-none",
+      roundedTop: "none",
       "& span.code-line": {
         // "@apply": "px-10",
+        px: 10,
       },
       "& span.line-number::before": {
         // "@apply": "-ml-9 content-[attr(line)] mr-4 text-right text-slate-400",
+        ml: -9,
+        content: "attr(line)",
+        mr: 4,
+        textAlign: "right",
+        color: "slate.400",
       },
     },
     "& a.github-embed-title": {
       // "@apply": "px-4 py-[2px] text-sm text-blue-500 overflow-hidden",
+      px: 4,
+      py: 1,
+      fontSize: "sm",
+      color: "blue.500",
+      overflow: "hidden",
     },
   },
 
   // code-title
   "& div.code-title-container": {
-    // "@apply": "bg-slate-200 rounded-lg m-1 pb-0",
+    bg: "slate.200",
+    rounded: "lg",
+    m: 1,
+    pb: 0,
     "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
       roundedTop: "none",
       "& span.code-line": {
@@ -149,7 +182,10 @@ const style = css({
     },
 
     "& p.code-title": {
-      // "@apply": "px-4 -mb-4 py-1 font-bold",
+      px: 4,
+      mb: -4,
+      py: 1,
+      fontWeight: "bold",
     },
   },
 
@@ -160,72 +196,10 @@ const style = css({
 
   // math
   "& div.math-display": {
-    // "@apply": "break-normal whitespace-pre overflow-x-auto",
-  },
-
-  /// prisma tokens
-
-  // tomlで変になるので必要。tableクラスか何かが悪さしてる？
-  "& .token.class-name": {
-    // "@apply": "inline"
-  },
-  "& .token.namespace": {},
-  [
-    `& .token.string,
-  .token.attr-value`
-  ]: {
-    // "@apply": "text-[#e3116c]"
-  },
-  [
-    `& .token.comment,
-    .token.prolog,
-    .token.doctype,
-    .token.cdata`
-  ]: {
-    // "@apply": "text-[#999988] italic"
-  },
-  [
-    `& .token.entity,
-    .token.url,
-    .token.symbol,
-    .token.number,
-    .token.boolean,
-    .token.variable,
-    .token.constant,
-    .token.property,
-    .token.regex,
-    .token.inserted`
-  ]: {
-    // "@apply": "text-[#36acaa]"
-  },
-  [
-    `&.token.atrule,
-    .token.keyword,
-    .token.attr-name,
-    .language-autohotkey .token.selector`
-  ]: {
-    // "@apply": "text-[#00a4db]",
-  },
-  [
-    `& .token.function,
-  .token.deleted,
-  .language-autohotkey .token.tag`
-  ]: {
-    // "@apply": "text-[#9a050f]"
-  },
-  [
-    `& .token.tag,
-  .token.selector,
-  .language-autohotkey .token.keyword`
-  ]: {
-    // "@apply": "text-[#00009f]"
-  },
-  [
-    `& .token.important,
-  .token.function,
-  .token.bold`
-  ]: {
-    fontWeight: "medium",
+    wordBreak: "normal",
+    overflowWrap: "normal",
+    whiteSpace: "pre",
+    overflowX: "auto",
   },
 });
 
@@ -241,7 +215,8 @@ export default function MdView({ compiledMarkdown }: MdViewProps) {
 
   return (
     <article className={style}>
-      <Content components={{ Seq, P5, P7, S5, S7, T7, Me }} />
+      {/* <Content components={{ Seq, P5, P7, S5, S7, T7, Me }} /> */}
+      <Content />
     </article>
   );
 }
