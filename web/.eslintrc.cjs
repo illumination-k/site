@@ -9,7 +9,7 @@ module.exports = {
     },
   },
   extends: ["next/core-web-vitals", "prettier"],
-  ignorePatterns: ["node_modules", ".next", "public", "out"],
+  ignorePatterns: ["node_modules", ".next", "public", "out", "src/styled-system"],
   rules: {
     // Import sorting.
     // https://eslint.org/docs/rules/sort-imports
