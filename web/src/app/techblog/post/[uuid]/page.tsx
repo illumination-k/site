@@ -15,7 +15,7 @@ export async function generateStaticParams(): Promise<Params[]> {
   return params;
 }
 
-export async function generateMetadata({params}: {params:  Params}, parent: ResolvedMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Params }, parent: ResolvedMetadata): Promise<Metadata> {
   const post = await blogService.repo.retrieve(params.uuid);
   if (!post) {
     throw `${params.uuid} is not found`;

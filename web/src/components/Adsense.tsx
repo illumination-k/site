@@ -36,9 +36,12 @@ function BaseAdsense({ className }: AdsenseProps) {
 
   return (
     <div
-      className={cx(css({
-        minWidth: "10/12",
-      }), className)}
+      className={cx(
+        css({
+          minWidth: "10/12",
+        }),
+        className,
+      )}
       key={`${pathname.replace(/\//g, "-")}-${searchParams.toString()}`}
     >
       <ins
