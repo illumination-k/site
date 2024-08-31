@@ -3,7 +3,7 @@ import { blogService } from "@/features/techblog/constant";
 
 import { withZodPage } from "@/app/_util/withZodPage";
 import { z } from "zod";
-import { Metadata, ResolvedMetadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 
 const paramsSchema = z.object({ uuid: z.string().uuid() });
 
@@ -15,7 +15,7 @@ export async function generateStaticParams(): Promise<Params[]> {
   return params;
 }
 
-export async function generateMetadata({ params }: { params: Params }, parent: ResolvedMetadata): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Params }, parent: ResolvingMetadata): Promise<Metadata> {
   const post = await blogService.repo.retrieve(params.uuid);
   if (!post) {
     throw `${params.uuid} is not found`;
