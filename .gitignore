@@ -38,7 +38,7 @@ next-env.d.ts
 dist/
 
 dump/
-# util
-_*
 
 /packages/web/src/lib/$path.ts
+
+tmp/

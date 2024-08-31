@@ -12,3 +12,5 @@ dist/
 dump/
 # util
 _*
+
+tmp/

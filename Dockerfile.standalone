@@ -16,7 +16,7 @@ RUN yarn global add pnpm && \
 FROM base AS runner
 WORKDIR /app
 
-ENV NODE_ENV production
+ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 # ENV NEXT_TELEMETRY_DISABLED 1
 
@@ -30,19 +30,19 @@ RUN adduser --system --uid 1001 nextjs
 
 ## public and next.config.js copy is required
 COPY --from=builder --chown=nextjs:nodejs \
-    /app/packages/web/public ./packages/web/public
+    /app/web/public ./web/public
 COPY --from=builder --chown=nextjs:nodejs \
-    /app/packages/web/next.config.js ./packages/web/next.config.js
+    /app/web/next.config.js ./web/next.config.js
 
 COPY --from=builder --chown=nextjs:nodejs \
-    /app/packages/web/.next/standalone ./
+    /app/web/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs \
-    /app/packages/web/.next/static ./packages/web/.next/static
+    /app/web/.next/static ./web/.next/static
 
 USER nextjs
 
 EXPOSE 3000
 
-ENV PORT 3000
+ENV PORT=3000
 
-CMD ["node", "./packages/web/server.js"]
+CMD ["node", "./web/server.js"]

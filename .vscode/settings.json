@@ -26,5 +26,9 @@
     "editor.wordWrap": "on",
     "editor.defaultFormatter": "dprint.dprint",
     "editor.formatOnSave": true
-  }
+  },
+  "cSpell.words": [
+    "adsbygoogle",
+    "Adsense"
+  ]
 }

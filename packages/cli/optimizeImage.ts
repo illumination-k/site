@@ -109,9 +109,9 @@ const optimizeImage = (option: Option) => {
 
           node.url = replacePathAsPublicRoot(copyImagePath);
         } else if (sharpExts.includes(ext.toLowerCase())) {
-          const optimizedImagePath = path.join(option.imageDist, `${fileNameBase}.webp`);
+          const optimizedImagePath = path.join(option.imageDist, `${fileNameBase}.avif`);
 
-          await sharp(imagePath).webp({
+          await sharp(imagePath).avif({
             quality: 75,
           }).resize(size?.width, size?.height).toFile(
             optimizedImagePath,
