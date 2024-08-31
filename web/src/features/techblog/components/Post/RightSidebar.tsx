@@ -4,11 +4,9 @@ import Link from "next/link";
 import { cloneElement, PropsWithChildren, ReactElement } from "react";
 
 import { css } from "@/styled-system/css";
-
 import Toc from "./Toc";
 import Tag from "../Tag";
 
-import Category from "@/icons/Category";
 import { Route } from "next";
 
 type Props = {
@@ -70,25 +68,6 @@ export default function Sidebar({ className, meta, headings }: Props) {
             title={
               <Link
                 className={css({ _hover: { color: "blue.500" } })}
-                href={"/"}
-              >
-                カテゴリ
-              </Link>
-            }
-            content={
-              <Link
-                className={css({ _hover: { color: "blue.500" } })}
-                href={"/"}
-              >
-                {meta.category}
-              </Link>
-            }
-            icon={<Category />}
-          />
-          <SidebarMetaList
-            title={
-              <Link
-                className={css({ _hover: { color: "blue.500" } })}
                 href={`/techblog/posts/${meta.uuid}` as Route}
               >
                 タグ
@@ -97,13 +76,13 @@ export default function Sidebar({ className, meta, headings }: Props) {
             icon={<TagIcon />}
           >
             <div className={css({ display: "flex", flexWrap: "wrap", gap: 2, alignItems: "center", mt: 2 })}>
-              {meta.tags.map((tag, i) => <Tag tag={tag} key={i} />)}
+              {meta.tags.map((tag, i) => <Tag prefix="techblog" tag={tag} key={i} />)}
             </div>
           </SidebarMetaList>
         </ul>
       </article>
 
-      <Toc meta={meta} headings={headings} className="sidebar-card" />
+      <Toc meta={meta} headings={headings} className={css({ bg: "white", rounded: "lg", p: 2 })} />
     </aside>
   );
 }

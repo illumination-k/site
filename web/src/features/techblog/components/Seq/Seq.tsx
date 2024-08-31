@@ -1,51 +1,28 @@
 import { PropsWithChildren } from "react";
+import { css } from "@/styled-system/css";
 
 export const P5 = ({ children }: PropsWithChildren) => {
-  return (
-    <>
-      <span style={{ color: "#08519c" }}>{children}</span>
-    </>
-  );
+  return <span className={css({ color: "#08519c" })}>{children}</span>;
 };
 
 export const T7 = ({ children }: PropsWithChildren) => {
-  return (
-    <>
-      <span style={{ color: "blue" }}>{children}</span>
-    </>
-  );
+  return <span className={css({ color: "blue.500" })}>{children}</span>;
 };
 
 export const S5 = ({ children }: PropsWithChildren) => {
-  return (
-    <>
-      <span style={{ color: "#6baed6" }}>{children}</span>
-    </>
-  );
+  return <span className={css({ color: "#6baed6" })}>{children}</span>;
 };
 
 export const P7 = ({ children }: PropsWithChildren) => {
-  return (
-    <>
-      <span style={{ color: "#a50f15" }}>{children}</span>
-    </>
-  );
+  return <span className={css({ color: "#a50f15" })}>{children}</span>;
 };
 
 export const S7 = ({ children }: PropsWithChildren) => {
-  return (
-    <>
-      <span style={{ color: "#fc9272" }}>{children}</span>
-    </>
-  );
+  return <span className={css({ color: "#fc9272" })}>{children}</span>;
 };
 
 export const Me = ({ children }: PropsWithChildren) => {
-  return (
-    <>
-      <span style={{ color: "#969696" }}>{children}</span>
-    </>
-  );
+  return <span className={css({ color: "#969696" })}>{children}</span>;
 };
 
 type SeqProps = {
@@ -56,16 +33,16 @@ type SeqProps = {
 
 export const Seq = ({ fchain, rchain, annotation }: SeqProps) => {
   return (
-    <>
-      <pre
-        style={{
-          backgroundColor: "#fffff0",
-          color: "#000000",
-          overflowX: "scroll",
-          whiteSpace: "pre",
-          maxWidth: "80em",
-        }}
-      >
+    <pre
+      className={css({
+        bg: "#fffff0",
+        color: "#000000",
+        overflowX: "auto",
+        whiteSpace: "pre",
+        overflowWrap: "normal",
+        wordBreak: "normal",
+      })}
+    >
         <span>5&apos;- </span>
         {fchain} - 3&apos;
         <br />
@@ -74,15 +51,6 @@ export const Seq = ({ fchain, rchain, annotation }: SeqProps) => {
         <br />
         <span></span>
         {annotation} <br />
-      </pre>
-      <style jsx>
-        {`
-          span {
-            display: inline-block;
-            width: 2.2em;
-          }
-        `}
-      </style>
-    </>
+    </pre>
   );
 };

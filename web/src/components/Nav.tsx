@@ -1,11 +1,16 @@
 import { HomeIcon } from "@heroicons/react/24/solid";
-import Link from "next/link";
 
 import TwitterIcon from "@/icons/TwitterIcon";
 import GithubIcon from "@/icons/GithubIcon";
 
-import { css } from "@/styled-system/css";
+import { Caveat } from "next/font/google";
+
+import { css, cx } from "@/styled-system/css";
 import { circle } from "@/styled-system/patterns";
+import { Route } from "next";
+import Link from "next/link";
+
+const caveat = Caveat({ subsets: ["latin"] });
 
 export default function Nav({}) {
   return (
@@ -21,25 +26,27 @@ export default function Nav({}) {
     >
       <Link href={"/"}>
         <span
-          className={css({
-            fontSize: "3xl",
-            color: "white",
-            _hover: { color: "blue.500" },
-            fontWeight: "black",
-            hideBelow: "md",
-          })}
+          className={cx(
+            css({
+              fontSize: "3xl",
+              color: "white",
+              fontWeight: "black",
+              hideBelow: "md",
+            }),
+            caveat.className,
+          )}
         >
           illumination-k.dev
         </span>
         <HomeIcon aria-hidden="true" className={css({ h: 6, w: 6, hideFrom: "md", color: "white" })} />
       </Link>
 
-      <div className={css({ display: "flex", gap: "3" })}>
+      <div className={css({ display: "flex", gap: 5 })}>
         <Link
-          href={"/"}
-          className={css({ color: "white", fontSize: "xl", _hover: { color: "blue.500" } })}
+          href={"/techblog/1" as Route}
+          className={cx(css({ color: "white", fontSize: "xl" }), caveat.className)}
         >
-          Blog
+          TechBlog
         </Link>
 
         <a
@@ -47,7 +54,7 @@ export default function Nav({}) {
           className={circle({ size: 8, bg: "white" })}
           aria-label="twitter"
         >
-          <TwitterIcon aria-hidden="true" className={css({ h: 8, w: 8 })} />
+          <TwitterIcon aria-hidden="true" className={css({ h: 8, w: 8, fill: "blue.400" })} />
         </a>
 
         <a href="https://www.github.com/illumination-k" aria-label="github">

@@ -3,6 +3,7 @@ import "./globals.css";
 import AdsScripts from "./ads-scripts";
 import { Inter } from "next/font/google";
 import Nav from "@/components/Nav";
+import FooterBase from "@/components/FooterBase";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -18,6 +19,7 @@ export default function RootLayout({
           <Nav />
         </header>
         <main>{children}</main>
+        <FooterBase />
         <AdsScripts />
       </body>
     </html>

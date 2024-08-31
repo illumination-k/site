@@ -1,4 +1,4 @@
-import { defineConfig } from "@pandacss/dev";
+import { defineConfig, defineTextStyles } from "@pandacss/dev";
 
 export default defineConfig({
   // Whether to use css reset
@@ -11,9 +11,25 @@ export default defineConfig({
   // Files to exclude
   exclude: [],
 
+  utilities: {
+    extend: {
+      icon: {
+        shorthand: "i",
+        transform(value, { token }) {
+          return {
+            h: value,
+            w: value,
+          };
+        },
+      },
+    },
+  },
+
   // Useful for theme customization
   theme: {
-    extend: {},
+    extend: {
+      textStyles: {},
+    },
   },
 
   // The output directory for your css system

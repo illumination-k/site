@@ -1,4 +1,4 @@
-import Adsense from "@/components/Adsense";
+// import Adsense from "@/components/Adsense";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { css } from "@/styled-system/css";
 import { flex, gridItem } from "@/styled-system/patterns";
@@ -97,12 +97,14 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
 }
 
 type PagerProps = {
+  prefix: string;
   pageInformation: PageInformation;
   pageLinkGenerator: (page: number) => Route;
   className?: string;
 };
 
 export default function Pager({
+  prefix,
   pageInformation,
   pageLinkGenerator,
   className,
@@ -111,7 +113,7 @@ export default function Pager({
 
   return (
     <div className={className}>
-      {pagePostMetas.map((meta, i) => <PostCard meta={meta} key={i} />)}
+      {pagePostMetas.map((meta, i) => <PostCard prefix={prefix} meta={meta} key={i} />)}
       <Pagination
         curPage={curPage}
         pages={pages}

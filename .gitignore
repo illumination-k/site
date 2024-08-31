@@ -40,3 +40,5 @@ dist/
 dump/
 
 /packages/web/src/lib/$path.ts
+
+tmp/

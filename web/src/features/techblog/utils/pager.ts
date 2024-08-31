@@ -32,7 +32,7 @@ export class Pager {
     });
   }
 
-  getTotalPage(posts: Post[]): number {
+  getTotalPage(posts: unknown[]): number {
     return Math.ceil(posts.length / this.count_per_page);
   }
 

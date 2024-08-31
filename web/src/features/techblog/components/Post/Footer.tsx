@@ -11,9 +11,8 @@ const iconClassName = css({ h: 5, w: 5 });
 
 export default function Footer({ meta }: Props) {
   return (
-    <div className={css({display: "flex", alignItems: "center", flexDirection: "column", mt: 10})}
-    >
-      <p className={css({display: "flex", alignItems: "center", gap: 3, fontSize: "lg", fontWeight: "semibold"})}>
+    <div className={css({ display: "flex", alignItems: "center", flexDirection: "column", mt: 10 })}>
+      <p className={css({ display: "flex", alignItems: "center", gap: 3, fontSize: "lg", fontWeight: "semibold" })}>
         <GithubIcon className={iconClassName} />
         {meta.lang === "ja"
           ? "この記事に関するIssueをGithubで作成する"
@@ -22,7 +21,7 @@ export default function Footer({ meta }: Props) {
       <ul>
         <li>
           <a
-            className={css({display: "flex", alignItems: "center", gap: 2, fontSize: "lg"})}
+            className={css({ display: "flex", alignItems: "center", gap: 2, fontSize: "lg" })}
             href="https://github.com/illumination-k/site/issues/new?labels=comment,techblog"
           >
             <ChatBubbleBottomCenterIcon className={iconClassName} />
@@ -31,7 +30,7 @@ export default function Footer({ meta }: Props) {
         </li>
         <li>
           <a
-            className={css({display: "flex", alignItems: "center", gap: 2, fontSize: "lg"})}
+            className={css({ display: "flex", alignItems: "center", gap: 2, fontSize: "lg" })}
             href="https://github.com/illumination-k/site/issues/new?labels=bug,techblog"
           >
             <BugAntIcon className={iconClassName} />

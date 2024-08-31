@@ -1,12 +1,14 @@
 import { css, cx } from "@/styled-system/css";
+import { Route } from "next";
 import Link from "next/link";
 
 type TagProps = {
   tag: string;
+  prefix: string;
   className?: string;
 };
 
-export default function Tag({ tag, className }: TagProps) {
+export default function Tag({ tag, prefix, className }: TagProps) {
   let tagColor = { bg: "blue.100", _hover: { bg: "blue.500" } };
 
   if (tag === "archive") {
@@ -29,7 +31,7 @@ export default function Tag({ tag, className }: TagProps) {
         className,
       )}
     >
-      <Link href={`/techblog/${tag}`}>
+      <Link href={`/${prefix}/${tag}` as Route}>
         {tag}
       </Link>
     </span>

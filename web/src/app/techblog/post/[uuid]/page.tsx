@@ -4,11 +4,17 @@ import { blogService } from "@/features/techblog/constant";
 import { withZodPage } from "@/app/_util/withZodPage";
 import { z } from "zod";
 
-const schema = {
-  params: z.object({ uuid: z.string() }),
-};
+const paramsSchema = z.object({ uuid: z.string().uuid() });
 
-const TechBlogPost = withZodPage(schema, async ({ params }) => {
+type Params = z.input<typeof paramsSchema>;
+
+export async function generateStaticParams(): Promise<Params[]> {
+  const posts = await blogService.repo.filterPosts("ja");
+  const params = posts.map((post) => ({ uuid: post.meta.uuid }));
+  return params;
+}
+
+const TechBlogPost = withZodPage({ params: paramsSchema }, async ({ params }) => {
   const post = await blogService.repo.retrieve(params.uuid);
 
   if (!post) {

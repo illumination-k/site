@@ -1,6 +1,7 @@
 public/*.xml
 public/rss
 public/techblog/*.webp
+public/**/*.avif
 
 .env
 

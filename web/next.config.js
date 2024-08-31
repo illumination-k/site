@@ -4,10 +4,6 @@ const redirectsData = require("./next.config.redirects");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  webpack(config, options) {
-    config.resolve.alias["@"] = path.join(__dirname, "src");
-    return config;
-  },
   transpilePackages: [
     "md-plugins",
   ],
@@ -17,7 +13,6 @@ const nextConfig = {
   output: "standalone",
   experimental: {
     // @link https://nextjs.org/docs/advanced-features/output-file-tracing#caveats
-    // outputFileTracingRoot: undefined, // ,path.join(__dirname, '../../'),
     outputFileTracingRoot: path.join(__dirname, "../"),
 
     // Experimental monorepo support

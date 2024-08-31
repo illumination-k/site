@@ -17,7 +17,6 @@ const style = css({
     borderBottomWidth: "thin",
     borderBottomColor: "gray.200",
     pb: 1,
-    // "font-black text-2xl border-b-1 border-gray-200 pb-1",
   },
   "& h3": {
     fontWeight: "bold",
@@ -104,9 +103,9 @@ const style = css({
 
   "& pre": {
     my: 4,
-    py: 1,
+    py: 2,
     px: 0,
-    bg: "slate.50",
+    bg: "slate.100",
     fontFamily: "mono",
     rounded: "lg",
     overflowX: "auto",
@@ -114,6 +113,7 @@ const style = css({
     overflowWrap: "normal",
     "& code": {
       px: 0,
+      bg: "slate.100",
       color: "black",
       whiteSpace: "pre",
       wordBreak: "normal",
@@ -215,8 +215,7 @@ export default function MdView({ compiledMarkdown }: MdViewProps) {
 
   return (
     <article className={style}>
-      {/* <Content components={{ Seq, P5, P7, S5, S7, T7, Me }} /> */}
-      <Content />
+      <Content components={{ Seq, P5, P7, S5, S7, T7, Me }} />
     </article>
   );
 }

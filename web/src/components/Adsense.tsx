@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useSearchParams } from "next/navigation";
-import React, { useEffect } from "react";
+import React, { Suspense, useEffect } from "react";
 
 declare global {
   interface Window {
@@ -9,13 +9,16 @@ declare global {
   }
 }
 
-export default function Adsense({ className }: { className?: string }) {
+type AdsenseProps = {
+  className?: string;
+};
+
+function BaseAdsense({ className }: AdsenseProps) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
     try {
-      // @ts-ignore
       (window.adsbygoogle = window.adsbygoogle || []).push({});
     } catch (err) {
       console.error(err);
@@ -36,5 +39,13 @@ export default function Adsense({ className }: { className?: string }) {
       >
       </ins>
     </div>
+  );
+}
+
+export default function Adsense(props: AdsenseProps) {
+  return (
+    <Suspense fallback={null}>
+      <BaseAdsense {...props} />
+    </Suspense>
   );
 }

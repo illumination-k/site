@@ -3,7 +3,6 @@ import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import { Headings, PostMeta } from "common";
 import Link from "next/link";
 
-import { pagesPath } from "@/lib/$path";
 import { css, cx } from "@/styled-system/css";
 import { Route } from "next";
 

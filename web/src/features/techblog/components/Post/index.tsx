@@ -29,21 +29,24 @@ export default function Post({
   relatedPostMeta,
 }: PostProps) {
   return (
-    <article className={css({bg: "slate.50"})}>
+    <article className={css({ bg: "slate.50" })}>
       <h1
         className={css({
           px: "10",
           py: "5",
           mb: "5",
+          fontSize: "4xl",
+          fontWeight: "black",
+          textAlign: "center",
         })}
       >
         {meta.title}
       </h1>
-      <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
+      <Adsense className={css({py: 5, px: 2, md: {px: 5}, lg: { px: 10}})} />
       <div
         className={css({
           px: 4,
-          lg: { px: 0, display: "grid", gridTemplateColumns: "12", gap: 1, justifyContent: "center" },
+          lg: { px: 0, display: "grid", gridTemplateColumns: "12", gap: 2, justifyContent: "center" },
         })}
       >
         <LeftSidebar
@@ -53,6 +56,7 @@ export default function Post({
               display: "flex",
               gridColumnStart: 2,
               gridColumnEnd: 3,
+              gridRow: 1,
               position: "sticky",
               top: 10,
               justifyContent: "end",
@@ -63,7 +67,13 @@ export default function Post({
         />
         <article
           id="post-content"
-          className={css({ bg: "white", px: 10, py: 5, mb: 5, lg: { gridColumnStart: 3, gridColumnEnd: 10 } })}
+          className={css({
+            bg: "white",
+            px: 10,
+            py: 5,
+            mb: 5,
+            lg: { gridColumnStart: 3, gridColumnEnd: 10, gridRow: 1 },
+          })}
         >
           <PostHeader meta={meta} />
           <MdView compiledMarkdown={compiledMarkdown} />
@@ -75,21 +85,18 @@ export default function Post({
           headings={headings}
           className={css({
             hideBelow: "md",
+            gridRow: 1,
             lg: { position: "sticky", gridColumnStart: 10, gridColumnEnd: -1, top: 5, overflowY: "auto", h: "screen" },
           })}
         />
       </div>
-      <div className="lg:(grid grid-cols-12)">
-        <div></div>
-        <div className="lg:col-span-10">
-          <h2 className={css({ fontSize: "2xl", textAlign: "center", fontWeight: "bold" })}>Read Next</h2>
-          <nav className="lg:(grid grid-cols-2)">
-            {relatedPostMeta.map((relatedMeta, i) => <PostCard meta={relatedMeta} key={i} />)}
-          </nav>
-        </div>
-      </div>
 
-      <Adsense className="pb-5 px-2 md:px-5 lg:px-20" />
+      <h2 className={css({ fontSize: "2xl", textAlign: "center", fontWeight: "bold" })}>Read Next</h2>
+      <nav className={css({ lg: { display: "grid", gridTemplateColumns: 2 } })}>
+        {relatedPostMeta.map((relatedMeta, i) => <PostCard prefix="techblog" meta={relatedMeta} key={i} />)}
+      </nav>
+
+      <Adsense className={css({py: 5, px: 2, md: {px: 5}, lg: { px: 10}})} />
     </article>
   );
 }
