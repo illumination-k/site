@@ -22,20 +22,21 @@ export default function Tag({ tag, prefix, className }: TagProps) {
   return (
     <span
       className={cx(
-        css({
-          borderRadius: "3xl",
-          fontWeight: "bold",
-          px: 4,
-          py: 1,
-          fontFamily: "sans",
-          _hover: { color: "white" },
-        }, tagColor),
+        css(
+          {
+            borderRadius: "3xl",
+            fontWeight: "bold",
+            px: 4,
+            py: 1,
+            fontFamily: "sans",
+            _hover: { color: "white" },
+          },
+          tagColor,
+        ),
         className,
       )}
     >
-      <Link href={`/${prefix}/${tag}` as Route}>
-        {tag}
-      </Link>
+      <Link href={`/${prefix}/${tag}` as Route}>{tag}</Link>
     </span>
   );
 }

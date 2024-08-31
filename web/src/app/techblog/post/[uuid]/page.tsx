@@ -15,7 +15,10 @@ export async function generateStaticParams(): Promise<Params[]> {
   return params;
 }
 
-export async function generateMetadata({ params }: { params: Params }, _parent: ResolvingMetadata): Promise<Metadata> {
+export async function generateMetadata(
+  { params }: { params: Params },
+  _parent: ResolvingMetadata,
+): Promise<Metadata> {
   const post = await blogService.repo.retrieve(params.uuid);
   if (!post) {
     throw `${params.uuid} is not found`; // eslint-disable-line @typescript-eslint/only-throw-error
@@ -27,23 +30,26 @@ export async function generateMetadata({ params }: { params: Params }, _parent: 
   };
 }
 
-const TechBlogPost = withZodPage({ params: paramsSchema }, async ({ params }) => {
-  const post = await blogService.repo.retrieve(params.uuid);
+const TechBlogPost = withZodPage(
+  { params: paramsSchema },
+  async ({ params }) => {
+    const post = await blogService.repo.retrieve(params.uuid);
 
-  if (!post) {
-    throw `${params.uuid} is not found`; // eslint-disable-line @typescript-eslint/only-throw-error
-  }
+    if (!post) {
+      throw `${params.uuid} is not found`; // eslint-disable-line @typescript-eslint/only-throw-error
+    }
 
-  const relatedPostMeta = await blogService.getRelatedPostMeta(post.meta);
+    const relatedPostMeta = await blogService.getRelatedPostMeta(post.meta);
 
-  return (
-    <Post
-      meta={post.meta}
-      headings={post.headings}
-      relatedPostMeta={relatedPostMeta}
-      compiledMarkdown={post.compiledMarkdown}
-    />
-  );
-});
+    return (
+      <Post
+        meta={post.meta}
+        headings={post.headings}
+        relatedPostMeta={relatedPostMeta}
+        compiledMarkdown={post.compiledMarkdown}
+      />
+    );
+  },
+);
 
 export default TechBlogPost;

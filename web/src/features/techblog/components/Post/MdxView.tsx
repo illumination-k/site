@@ -3,7 +3,7 @@ import "./prisma-tokens.css";
 
 import { css } from "@/styled-system/css";
 
-import type { RunOptions} from "@mdx-js/mdx";
+import type { RunOptions } from "@mdx-js/mdx";
 import { runSync } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 
@@ -127,7 +127,7 @@ const style = css({
   },
 
   // code block
-  "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
+  '& code[class*="language-"], & pre[class*="language-"]': {
     // "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
 
     "& span.code-line": {
@@ -144,7 +144,7 @@ const style = css({
     borderColor: "slate.200",
     borderWidth: "1",
     m: 1,
-    "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
+    '& code[class*="language-"], & pre[class*="language-"]': {
       // "@apply": "rounded-t-none",
       roundedTop: "none",
       "& span.code-line": {
@@ -176,7 +176,7 @@ const style = css({
     rounded: "lg",
     m: 1,
     pb: 0,
-    "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
+    '& code[class*="language-"], & pre[class*="language-"]': {
       roundedTop: "none",
       "& span.code-line": {
         px: 4,

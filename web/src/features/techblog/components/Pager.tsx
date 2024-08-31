@@ -50,14 +50,22 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
   }
 
   return (
-    <nav className={flex({ gap: 4, alignItems: "center", justifyContent: "center" })}>
-      {curPage !== 1
-        ? (
-          <Link href={pageLinkGenerator(curPage - 1)}>
-            <ChevronLeftIcon className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })} />
-          </Link>
-        )
-        : <ChevronLeftIcon className={css({ h: 6, w: 6 })} />}
+    <nav
+      className={flex({
+        gap: 4,
+        alignItems: "center",
+        justifyContent: "center",
+      })}
+    >
+      {curPage !== 1 ? (
+        <Link href={pageLinkGenerator(curPage - 1)}>
+          <ChevronLeftIcon
+            className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })}
+          />
+        </Link>
+      ) : (
+        <ChevronLeftIcon className={css({ h: 6, w: 6 })} />
+      )}
       <div className={flex({ gap: 2, alignItems: "center" })}>
         {pageItems.map((pageItem, i) => {
           if (pageItem === "...") {
@@ -85,13 +93,15 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
         })}
       </div>
 
-      {curPage !== pageCount
-        ? (
-          <Link href={pageLinkGenerator(curPage + 1)}>
-            <ChevronRightIcon className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })} />
-          </Link>
-        )
-        : <ChevronRightIcon className={css({ h: 6, w: 6 })} />}
+      {curPage !== pageCount ? (
+        <Link href={pageLinkGenerator(curPage + 1)}>
+          <ChevronRightIcon
+            className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })}
+          />
+        </Link>
+      ) : (
+        <ChevronRightIcon className={css({ h: 6, w: 6 })} />
+      )}
     </nav>
   );
 }
@@ -113,7 +123,9 @@ export default function Pager({
 
   return (
     <div className={className}>
-      {pagePostMetas.map((meta, i) => <PostCard prefix={prefix} meta={meta} key={i} />)}
+      {pagePostMetas.map((meta, i) => (
+        <PostCard prefix={prefix} meta={meta} key={i} />
+      ))}
       <Pagination
         curPage={curPage}
         pages={pages}

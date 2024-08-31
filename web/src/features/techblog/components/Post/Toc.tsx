@@ -36,7 +36,12 @@ export default function Toc({ className, headings, meta }: Props) {
               // depth === 3 ? "px-4 text-gray-800" : "px-2 font-medium"}
               href={`/techblog/post/${meta.uuid}#${i}`}
             >
-              {depth === 3 ? <ChevronRightIcon aria-hidden="true" className={iconClassName} /> : null}
+              {depth === 3 ? (
+                <ChevronRightIcon
+                  aria-hidden="true"
+                  className={iconClassName}
+                />
+              ) : null}
               {value}
             </Link>
           </li>
@@ -45,7 +50,13 @@ export default function Toc({ className, headings, meta }: Props) {
 
       <Link
         href={`/techblog/post/${meta.uuid}` as Route}
-        className={css({ display: "flex", gap: 2, alignItems: "center", pt: 4, _hover: { color: "blue.500" } })}
+        className={css({
+          display: "flex",
+          gap: 2,
+          alignItems: "center",
+          pt: 4,
+          _hover: { color: "blue.500" },
+        })}
         // "flex gap-2 items-center text-lg font-bold pt-4 hover:text-blue-400"
       >
         <ChevronUpIcon className={iconClassName} />

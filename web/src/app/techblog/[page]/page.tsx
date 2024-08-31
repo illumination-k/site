@@ -10,7 +10,10 @@ import pager from "@/features/techblog/utils/pager";
 
 const schema = {
   params: z.object({
-    page: z.string().transform((v) => Number(v)).pipe(z.number()),
+    page: z
+      .string()
+      .transform((v) => Number(v))
+      .pipe(z.number()),
   }),
 };
 
@@ -23,10 +26,19 @@ export async function generateStaticParams() {
 const TechBlogPage = withZodPage(schema, async ({ params }) => {
   const { page } = params;
   const posts = await blogService.repo.filterPosts("ja");
-  const pageInformation = pager.getPageInformation(posts.map((p) => p.meta), page);
+  const pageInformation = pager.getPageInformation(
+    posts.map((p) => p.meta),
+    page,
+  );
 
   return (
-    <div className={css({ bg: "slate.50", display: "grid", gridTemplateColumns: "12" })}>
+    <div
+      className={css({
+        bg: "slate.50",
+        display: "grid",
+        gridTemplateColumns: "12",
+      })}
+    >
       <Pager
         className={css({
           gridColumnStart: "1",

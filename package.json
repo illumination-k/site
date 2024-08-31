@@ -22,7 +22,7 @@
     "cli:mkdumpdir": "mkdir -p ./web/dump",
     "cli:rss": "pnpm cli rss --dump ./web/dump/techblog.json --dst ./web/public/rss",
     "dump": "run-s cli:mkdumpdir cli:dump",
-    "format": "dprint fmt && pnpm run --filter 'web' lint --fix",
+    "format": "dprint fmt && pnpm run --filter 'web' fmt",
     "lint": "dprint check && pnpm run --filter 'web' lint",
     "register-posts": "run-s dump cli:register-posts",
     "test": "pnpm run --filter './packages/**' test",

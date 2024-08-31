@@ -50,8 +50,7 @@ function BaseAdsense({ className }: AdsenseProps) {
         data-ad-slot="9343059166"
         data-ad-format="auto"
         data-full-width-responsive="true"
-      >
-      </ins>
+      ></ins>
     </div>
   );
 }

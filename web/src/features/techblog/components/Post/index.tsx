@@ -43,11 +43,19 @@ export default function Post({
       >
         {meta.title}
       </h1>
-      <Adsense className={css({ py: 5, px: 2, md: { px: 5 }, lg: { px: 10 } })} />
+      <Adsense
+        className={css({ py: 5, px: 2, md: { px: 5 }, lg: { px: 10 } })}
+      />
       <div
         className={css({
           px: 4,
-          lg: { px: 0, display: "grid", gridTemplateColumns: "12", gap: 2, justifyContent: "center" },
+          lg: {
+            px: 0,
+            display: "grid",
+            gridTemplateColumns: "12",
+            gap: 2,
+            justifyContent: "center",
+          },
         })}
       >
         <LeftSidebar
@@ -87,17 +95,36 @@ export default function Post({
           className={css({
             hideBelow: "md",
             gridRow: 1,
-            lg: { position: "sticky", gridColumnStart: 10, gridColumnEnd: -1, top: 5, overflowY: "auto", h: "screen" },
+            lg: {
+              position: "sticky",
+              gridColumnStart: 10,
+              gridColumnEnd: -1,
+              top: 5,
+              overflowY: "auto",
+              h: "screen",
+            },
           })}
         />
       </div>
 
-      <h2 className={css({ fontSize: "2xl", textAlign: "center", fontWeight: "bold" })}>Read Next</h2>
+      <h2
+        className={css({
+          fontSize: "2xl",
+          textAlign: "center",
+          fontWeight: "bold",
+        })}
+      >
+        Read Next
+      </h2>
       <nav className={css({ lg: { display: "grid", gridTemplateColumns: 2 } })}>
-        {relatedPostMeta.map((relatedMeta, i) => <PostCard prefix="techblog" meta={relatedMeta} key={i} />)}
+        {relatedPostMeta.map((relatedMeta, i) => (
+          <PostCard prefix="techblog" meta={relatedMeta} key={i} />
+        ))}
       </nav>
 
-      <Adsense className={css({ py: 5, px: 2, md: { px: 5 }, lg: { px: 10 } })} />
+      <Adsense
+        className={css({ py: 5, px: 2, md: { px: 5 }, lg: { px: 10 } })}
+      />
     </article>
   );
 }

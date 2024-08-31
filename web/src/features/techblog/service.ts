@@ -25,10 +25,10 @@ export default class BlogService {
     const restPostMetas = shuffle(await this.repo.list())
       .filter(
         (post) =>
-          post.meta.uuid !== meta.uuid
-          && post.meta.lang === meta.lang
-          && !post.meta.tags.includes("archive")
-          && !post.meta.tags.includes("draft"),
+          post.meta.uuid !== meta.uuid &&
+          post.meta.lang === meta.lang &&
+          !post.meta.tags.includes("archive") &&
+          !post.meta.tags.includes("draft"),
       )
       .map((post) => post.meta);
 

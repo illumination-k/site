@@ -44,14 +44,14 @@ export const Seq = ({ fchain, rchain, annotation }: SeqProps) => {
         wordBreak: "normal",
       })}
     >
-        <span>5&apos;- </span>
-        {fchain} - 3&apos;
-        <br />
-        <span>3&apos;- </span>
-        {rchain} - 5&apos;
-        <br />
-        <span></span>
-        {annotation} <br />
+      <span>5&apos;- </span>
+      {fchain} - 3&apos;
+      <br />
+      <span>3&apos;- </span>
+      {rchain} - 5&apos;
+      <br />
+      <span></span>
+      {annotation} <br />
     </pre>
   );
 };

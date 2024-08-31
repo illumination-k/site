@@ -12,8 +12,7 @@ export default defineConfig({
   exclude: [],
 
   utilities: {
-    extend: {
-    },
+    extend: {},
   },
 
   // Useful for theme customization

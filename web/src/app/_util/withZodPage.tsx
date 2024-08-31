@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import type { ZodError, z} from "zod";
+import type { ZodError, z } from "zod";
 import { ZodSchema } from "zod";
 
 interface InputProps {

@@ -8,7 +8,7 @@ module.exports = {
       jsx: true,
     },
   },
-  extends: ["next/core-web-vitals"],
+  extends: ["next/core-web-vitals", "prettier"],
   ignorePatterns: ["node_modules", ".next", "public", "out"],
   rules: {
     // Import sorting.

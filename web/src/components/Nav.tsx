@@ -38,13 +38,19 @@ export default function Nav({}) {
         >
           illumination-k.dev
         </span>
-        <HomeIcon aria-hidden="true" className={css({ h: 6, w: 6, hideFrom: "md", color: "white" })} />
+        <HomeIcon
+          aria-hidden="true"
+          className={css({ h: 6, w: 6, hideFrom: "md", color: "white" })}
+        />
       </Link>
 
       <div className={css({ display: "flex", gap: 5 })}>
         <Link
           href={"/techblog/1" as Route}
-          className={cx(css({ color: "white", fontSize: "xl" }), caveat.className)}
+          className={cx(
+            css({ color: "white", fontSize: "xl" }),
+            caveat.className,
+          )}
         >
           TechBlog
         </Link>
@@ -54,11 +60,18 @@ export default function Nav({}) {
           className={circle({ size: 8, bg: "white" })}
           aria-label="twitter"
         >
-          <TwitterIcon aria-hidden="true" className={css({ h: 8, w: 8, fill: "blue.400" })} />
+          <TwitterIcon
+            aria-hidden="true"
+            className={css({ h: 8, w: 8, fill: "blue.400" })}
+          />
         </a>
 
         <a href="https://www.github.com/illumination-k" aria-label="github">
-          <GithubIcon aria-hidden="true" className={css({ h: 8, w: 8 })} fill="white" />
+          <GithubIcon
+            aria-hidden="true"
+            className={css({ h: 8, w: 8 })}
+            fill="white"
+          />
         </a>
       </div>
     </nav>

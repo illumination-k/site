@@ -17,7 +17,7 @@ export default class DumpRepository implements IBlogRepository {
     if (!this.dump) {
       const dump = await readDump(this.path);
       this.dump = dump;
-      return dump
+      return dump;
     } else {
       return this.dump;
     }
@@ -41,9 +41,7 @@ export default class DumpRepository implements IBlogRepository {
   async tags() {
     const dump = await this.get_dump();
     const defaultTags = ["archive", "draft"];
-    const tags = dump.tags.filter(
-      (tag) => !defaultTags.includes(tag),
-    ).sort();
+    const tags = dump.tags.filter((tag) => !defaultTags.includes(tag)).sort();
 
     return defaultTags.concat(tags);
   }
