@@ -1,5 +1,6 @@
-import { PostMeta } from "common";
-import { IBlogRepository } from "./repository";
+import type { PostMeta } from "common";
+
+import type { IBlogRepository } from "./repository";
 
 function shuffle<T>(array: T[]): T[] {
   for (let i = array.length; i > 1; i--) {

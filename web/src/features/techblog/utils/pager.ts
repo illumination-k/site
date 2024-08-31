@@ -1,4 +1,4 @@
-import { Post, PostMeta } from "common";
+import type { PostMeta } from "common";
 
 /**
  * return array until stop from 1
@@ -9,11 +9,11 @@ export function range(stop: number): number[] {
   return Array.from({ length: stop }, (_, i) => i + 1);
 }
 
-export type PageInformation = {
+export interface PageInformation {
   pagePostMetas: PostMeta[];
   curPage: number;
   pages: number[];
-};
+}
 
 export class Pager {
   count_per_page: number;

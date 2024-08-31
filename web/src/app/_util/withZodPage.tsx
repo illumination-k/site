@@ -1,10 +1,12 @@
 import { notFound } from "next/navigation";
-import { z, ZodError, ZodSchema } from "zod";
 
-type InputProps = {
+import type { ZodError, z} from "zod";
+import { ZodSchema } from "zod";
+
+interface InputProps {
   params?: unknown;
   searchParams?: unknown;
-};
+}
 
 type Schema = Partial<Record<keyof InputProps, ZodSchema>>;
 type ValidatedProps<S extends Schema> = {
@@ -43,7 +45,7 @@ export function withZodPage<S extends Schema>(
           }
         }
 
-        validatedProps[key] = result.data;
+        validatedProps[key] = result.data; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
       }
     }
 

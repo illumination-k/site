@@ -7,13 +7,13 @@ import { css, cx } from "@/styled-system/css";
 
 declare global {
   interface Window {
-    adsbygoogle: { [key: string]: unknown }[];
+    adsbygoogle: Record<string, unknown>[];
   }
 }
 
-type AdsenseProps = {
+interface AdsenseProps {
   className?: string;
-};
+}
 
 function BaseAdsense({ className }: AdsenseProps) {
   const pathname = usePathname();

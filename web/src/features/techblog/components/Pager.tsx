@@ -1,21 +1,22 @@
 // import Adsense from "@/components/Adsense";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { css } from "@/styled-system/css";
-import { flex, gridItem } from "@/styled-system/patterns";
 import Link from "next/link";
+
+import { css } from "@/styled-system/css";
+import { flex } from "@/styled-system/patterns";
+
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { Route } from "next";
 
-import { PageInformation } from "../utils/pager";
-
 import PostCard from "./PostCard";
+import type { PageInformation } from "../utils/pager";
 
 type pageItem = number | "...";
 
-type PaginationProps = {
+interface PaginationProps {
   curPage: number;
   pages: number[];
   pageLinkGenerator: (page: number) => Route;
-};
+}
 
 function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
   let pageItems: pageItem[];
@@ -24,7 +25,6 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
   if (pageCount <= 10) {
     pageItems = pages;
   } else {
-    throw "TODO!";
     if (curPage < 4) {
       pageItems = [1, 2, 3, 4, 5, "...", pageCount];
     } else if (curPage > pageCount - 4) {
@@ -96,12 +96,12 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
   );
 }
 
-type PagerProps = {
+interface PagerProps {
   prefix: string;
   pageInformation: PageInformation;
   pageLinkGenerator: (page: number) => Route;
   className?: string;
-};
+}
 
 export default function Pager({
   prefix,

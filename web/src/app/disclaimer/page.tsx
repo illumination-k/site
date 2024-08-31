@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+
 import { css } from "@/styled-system/css";
 
 const TermsService = ({}) => {
@@ -31,7 +32,7 @@ const JA_TEXT = {
 当サイトのGithub repositoryにIssueを作成するかillumination-k＠gmail.comまでご連絡ください。`,
 };
 
-const EN_TEXT = {
+const EN_TEXT = { // eslint-disable-line
   [`Disclaimer `]:
     `I am not responsible for any information, services, etc. provided on sites to which you are redirected by links, banners, etc. from this site.
     While I try to provide as much accurate information as possible regarding the contents and information on this site, I cannot guarantee the accuracy or accuracy or safety of the information. Some of information may be out of date.

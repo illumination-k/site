@@ -1,21 +1,22 @@
-import { Headings, PostMeta } from "common";
+import { css } from "@/styled-system/css";
+
+import type { Headings, PostMeta } from "common";
+
+import Adsense from "@/components/Adsense";
 
 import PostFooter from "./Footer";
 import PostHeader from "./Header";
+import LeftSidebar from "./LeftSidebar";
 import MdView from "./MdxView";
 import RightSidebar from "./RightSidebar";
-
-import { css } from "@/styled-system/css";
-import LeftSidebar from "./LeftSidebar";
 import PostCard from "../PostCard";
-import Adsense from "@/components/Adsense";
 
-export type PostProps = {
+export interface PostProps {
   headings: Headings;
   meta: PostMeta;
   relatedPostMeta: PostMeta[];
   compiledMarkdown: string;
-};
+}
 
 /*
 lg: sticky-right-sidebar + content + sticky-left-sidebar

@@ -1,11 +1,11 @@
-import { Headings, PostMeta } from "common";
+import type { PostMeta } from "common";
 
-type Props = {
+interface Props {
   className?: string;
   meta: PostMeta;
-};
+}
 
-export default function Header({ meta, className }: Props) {
+export default function Header({ meta }: Props) {
   return (
     <>
       {meta.tags.includes("archive")

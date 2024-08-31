@@ -1,4 +1,5 @@
 import { Fragment } from "react";
+
 import { css } from "@/styled-system/css";
 
 const PrivacyPolicy = ({}) => {
@@ -32,7 +33,7 @@ const JA_TEXT = {
     `当サイトは、Google AdsenseおよびAmazon.co.jpを宣伝しリンクすることによってサイトが紹介料を獲得できる手段を提供することを目的に設定されたアフィリエイトプログラムである、Amazonアソシエイト・プログラムの参加者です。`,
 };
 
-const EN_TEXT = {
+const EN_TEXT = { // eslint-disable-line
   [`Access Analysis Tools`]:
     `This site uses Google Analytics, an access analysis tool provided by Google. This Google Analytics uses cookies to collect traffic data.
   Traffic data is collected anonymously and does not personally identify you.`,

@@ -1,8 +1,10 @@
 import "katex/dist/katex.min.css";
 import "./prisma-tokens.css";
 
-import { RunOptions, runSync } from "@mdx-js/mdx";
 import { css } from "@/styled-system/css";
+
+import type { RunOptions} from "@mdx-js/mdx";
+import { runSync } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 
 import { Me, P5, P7, S5, S7, Seq, T7 } from "../Seq/Seq";
@@ -203,13 +205,12 @@ const style = css({
   },
 });
 
-export type MdViewProps = {
+export interface MdViewProps {
   compiledMarkdown: string;
-};
+}
 
 export default function MdView({ compiledMarkdown }: MdViewProps) {
-  // https://github.com/mdx-js/mdx/issues/2463
-  // @ts-expect-error
+  // @ts-expect-error see following issue: {@link} https://github.com/mdx-js/mdx/issues/2463
   const runOptions: RunOptions = { ...runtime };
   const Content = runSync(compiledMarkdown, runOptions).default;
 

@@ -1,14 +1,14 @@
-import { HomeIcon } from "@heroicons/react/24/solid";
-
-import TwitterIcon from "@/icons/TwitterIcon";
-import GithubIcon from "@/icons/GithubIcon";
-
 import { Caveat } from "next/font/google";
+import Link from "next/link";
 
 import { css, cx } from "@/styled-system/css";
 import { circle } from "@/styled-system/patterns";
-import { Route } from "next";
-import Link from "next/link";
+
+import { HomeIcon } from "@heroicons/react/24/solid";
+import type { Route } from "next";
+
+import GithubIcon from "@/icons/GithubIcon";
+import TwitterIcon from "@/icons/TwitterIcon";
 
 const caveat = Caveat({ subsets: ["latin"] });
 

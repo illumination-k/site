@@ -1,16 +1,17 @@
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { ChevronUpIcon } from "@heroicons/react/24/outline";
-import { Headings, PostMeta } from "common";
 import Link from "next/link";
 
-import { css, cx } from "@/styled-system/css";
-import { Route } from "next";
+import { css } from "@/styled-system/css";
 
-type Props = {
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { ChevronUpIcon } from "@heroicons/react/24/outline";
+import type { Headings, PostMeta } from "common";
+import type { Route } from "next";
+
+interface Props {
   className?: string;
   meta: PostMeta;
   headings: Headings;
-};
+}
 
 const iconClassName = css({ h: 4, w: 4 });
 

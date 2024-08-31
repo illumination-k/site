@@ -1,11 +1,13 @@
-import GithubIcon from "@/icons/GithubIcon";
-import { BugAntIcon, ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
-import { PostMeta } from "common";
 import { css } from "@/styled-system/css";
 
-type Props = {
+import { BugAntIcon, ChatBubbleBottomCenterIcon } from "@heroicons/react/24/outline";
+import type { PostMeta } from "common";
+
+import GithubIcon from "@/icons/GithubIcon";
+
+interface Props {
   meta: PostMeta;
-};
+}
 
 const iconClassName = css({ h: 5, w: 5 });
 

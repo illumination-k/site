@@ -1,16 +1,17 @@
-import { TagIcon } from "@heroicons/react/24/outline";
-import { PostMeta } from "common";
 import Link from "next/link";
-
-import Tag from "./Tag";
 
 import { css } from "@/styled-system/css";
 import { flex } from "@/styled-system/patterns";
 
-type PostCardProps = {
+import { TagIcon } from "@heroicons/react/24/outline";
+import type { PostMeta } from "common";
+
+import Tag from "./Tag";
+
+interface PostCardProps {
   prefix: string;
   meta: PostMeta;
-};
+}
 
 export default function PostCard({ prefix, meta }: PostCardProps) {
   return (

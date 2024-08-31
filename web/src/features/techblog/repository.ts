@@ -1,4 +1,4 @@
-import { DumpPost, Lang } from "common";
+import type { DumpPost, Lang } from "common";
 
 export interface IBlogRepository {
   retrieve: (uuid: string) => Promise<DumpPost | undefined>;

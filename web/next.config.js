@@ -1,4 +1,5 @@
 const path = require("path");
+
 const redirectsData = require("./next.config.redirects");
 
 /** @type {import('next').NextConfig} */

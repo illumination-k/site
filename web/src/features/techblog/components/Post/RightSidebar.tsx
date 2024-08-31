@@ -1,19 +1,21 @@
-import { DocumentCheckIcon, DocumentPlusIcon, TagIcon } from "@heroicons/react/24/outline";
-import { Headings, PostMeta } from "common";
 import Link from "next/link";
-import { cloneElement, PropsWithChildren, ReactElement } from "react";
+import type { PropsWithChildren, ReactElement } from "react";
+import { cloneElement } from "react";
 
 import { css } from "@/styled-system/css";
+
+import { DocumentCheckIcon, DocumentPlusIcon, TagIcon } from "@heroicons/react/24/outline";
+import type { Headings, PostMeta } from "common";
+import type { Route } from "next";
+
 import Toc from "./Toc";
 import Tag from "../Tag";
 
-import { Route } from "next";
-
-type Props = {
+interface Props {
   className?: string;
   meta: PostMeta;
   headings: Headings;
-};
+}
 
 type SidebarMetaListProps = {
   className?: string;
@@ -23,7 +25,6 @@ type SidebarMetaListProps = {
 } & PropsWithChildren;
 
 function SidebarMetaList({
-  className,
   icon,
   title,
   content,
