@@ -1,7 +1,7 @@
-import { PropsWithChildren } from "react";
-
 import { Baskervville } from "next/font/google";
 import Link from "next/link";
+import type { PropsWithChildren } from "react";
+
 import { css, cx } from "@/styled-system/css";
 
 const font = Baskervville({ subsets: ["latin"], weight: "400" });

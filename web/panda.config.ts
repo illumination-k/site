@@ -1,4 +1,4 @@
-import { defineConfig, defineTextStyles } from "@pandacss/dev";
+import { defineConfig } from "@pandacss/dev";
 
 export default defineConfig({
   // Whether to use css reset
@@ -12,17 +12,7 @@ export default defineConfig({
   exclude: [],
 
   utilities: {
-    extend: {
-      icon: {
-        shorthand: "i",
-        transform(value, { token }) {
-          return {
-            h: value,
-            w: value,
-          };
-        },
-      },
-    },
+    extend: {},
   },
 
   // Useful for theme customization

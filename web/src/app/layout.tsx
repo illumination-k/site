@@ -1,9 +1,11 @@
 import "./globals.css";
 
-import AdsScripts from "./ads-scripts";
 import { Inter } from "next/font/google";
-import Nav from "@/components/Nav";
+
 import FooterBase from "@/components/FooterBase";
+import Nav from "@/components/Nav";
+
+import AdsScripts from "./ads-scripts";
 
 const inter = Inter({ subsets: ["latin"] });
 

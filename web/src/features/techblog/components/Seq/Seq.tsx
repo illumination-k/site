@@ -1,4 +1,5 @@
-import { PropsWithChildren } from "react";
+import type { PropsWithChildren } from "react";
+
 import { css } from "@/styled-system/css";
 
 export const P5 = ({ children }: PropsWithChildren) => {
@@ -25,11 +26,11 @@ export const Me = ({ children }: PropsWithChildren) => {
   return <span className={css({ color: "#969696" })}>{children}</span>;
 };
 
-type SeqProps = {
+interface SeqProps {
   fchain: JSX.Element;
   rchain: JSX.Element;
   annotation: JSX.Element;
-};
+}
 
 export const Seq = ({ fchain, rchain, annotation }: SeqProps) => {
   return (
@@ -43,14 +44,14 @@ export const Seq = ({ fchain, rchain, annotation }: SeqProps) => {
         wordBreak: "normal",
       })}
     >
-        <span>5&apos;- </span>
-        {fchain} - 3&apos;
-        <br />
-        <span>3&apos;- </span>
-        {rchain} - 5&apos;
-        <br />
-        <span></span>
-        {annotation} <br />
+      <span>5&apos;- </span>
+      {fchain} - 3&apos;
+      <br />
+      <span>3&apos;- </span>
+      {rchain} - 5&apos;
+      <br />
+      <span></span>
+      {annotation} <br />
     </pre>
   );
 };

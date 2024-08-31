@@ -1,4 +1,4 @@
-import { Post, PostMeta } from "common";
+import type { PostMeta } from "common";
 
 /**
  * return array until stop from 1
@@ -9,11 +9,11 @@ export function range(stop: number): number[] {
   return Array.from({ length: stop }, (_, i) => i + 1);
 }
 
-export type PageInformation = {
+export interface PageInformation {
   pagePostMetas: PostMeta[];
   curPage: number;
   pages: number[];
-};
+}
 
 export class Pager {
   count_per_page: number;
@@ -25,7 +25,7 @@ export class Pager {
     postMetas: PostMeta[],
     sortedBy: "updated_at" | "created_at" = "updated_at",
   ) {
-    return postMetas.sort(function(a: PostMeta, b: PostMeta) {
+    return postMetas.sort(function (a: PostMeta, b: PostMeta) {
       const a_date = new Date(a[sortedBy]);
       const b_date = new Date(b[sortedBy]);
       return b_date.valueOf() - a_date.valueOf();

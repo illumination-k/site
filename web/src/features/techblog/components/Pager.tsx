@@ -1,21 +1,22 @@
 // import Adsense from "@/components/Adsense";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { css } from "@/styled-system/css";
-import { flex, gridItem } from "@/styled-system/patterns";
 import Link from "next/link";
+
+import { css } from "@/styled-system/css";
+import { flex } from "@/styled-system/patterns";
+
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import type { Route } from "next";
 
-import { PageInformation } from "../utils/pager";
-
 import PostCard from "./PostCard";
+import type { PageInformation } from "../utils/pager";
 
 type pageItem = number | "...";
 
-type PaginationProps = {
+interface PaginationProps {
   curPage: number;
   pages: number[];
   pageLinkGenerator: (page: number) => Route;
-};
+}
 
 function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
   let pageItems: pageItem[];
@@ -24,7 +25,6 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
   if (pageCount <= 10) {
     pageItems = pages;
   } else {
-    throw "TODO!";
     if (curPage < 4) {
       pageItems = [1, 2, 3, 4, 5, "...", pageCount];
     } else if (curPage > pageCount - 4) {
@@ -50,14 +50,22 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
   }
 
   return (
-    <nav className={flex({ gap: 4, alignItems: "center", justifyContent: "center" })}>
-      {curPage !== 1
-        ? (
-          <Link href={pageLinkGenerator(curPage - 1)}>
-            <ChevronLeftIcon className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })} />
-          </Link>
-        )
-        : <ChevronLeftIcon className={css({ h: 6, w: 6 })} />}
+    <nav
+      className={flex({
+        gap: 4,
+        alignItems: "center",
+        justifyContent: "center",
+      })}
+    >
+      {curPage !== 1 ? (
+        <Link href={pageLinkGenerator(curPage - 1)}>
+          <ChevronLeftIcon
+            className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })}
+          />
+        </Link>
+      ) : (
+        <ChevronLeftIcon className={css({ h: 6, w: 6 })} />
+      )}
       <div className={flex({ gap: 2, alignItems: "center" })}>
         {pageItems.map((pageItem, i) => {
           if (pageItem === "...") {
@@ -85,23 +93,25 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
         })}
       </div>
 
-      {curPage !== pageCount
-        ? (
-          <Link href={pageLinkGenerator(curPage + 1)}>
-            <ChevronRightIcon className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })} />
-          </Link>
-        )
-        : <ChevronRightIcon className={css({ h: 6, w: 6 })} />}
+      {curPage !== pageCount ? (
+        <Link href={pageLinkGenerator(curPage + 1)}>
+          <ChevronRightIcon
+            className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })}
+          />
+        </Link>
+      ) : (
+        <ChevronRightIcon className={css({ h: 6, w: 6 })} />
+      )}
     </nav>
   );
 }
 
-type PagerProps = {
+interface PagerProps {
   prefix: string;
   pageInformation: PageInformation;
   pageLinkGenerator: (page: number) => Route;
   className?: string;
-};
+}
 
 export default function Pager({
   prefix,
@@ -113,7 +123,9 @@ export default function Pager({
 
   return (
     <div className={className}>
-      {pagePostMetas.map((meta, i) => <PostCard prefix={prefix} meta={meta} key={i} />)}
+      {pagePostMetas.map((meta, i) => (
+        <PostCard prefix={prefix} meta={meta} key={i} />
+      ))}
       <Pagination
         curPage={curPage}
         pages={pages}

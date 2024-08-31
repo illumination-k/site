@@ -1,13 +1,16 @@
-import TwitterIcon from "@/icons/TwitterIcon";
-import { PostMeta } from "common";
-import { TwitterIntent } from "./TwitterIntent";
 import { css } from "@/styled-system/css";
 import { flex } from "@/styled-system/patterns";
 
-type Props = {
+import type { PostMeta } from "common";
+
+import TwitterIcon from "@/icons/TwitterIcon";
+
+import { TwitterIntent } from "./TwitterIntent";
+
+interface Props {
   className?: string;
   meta: PostMeta;
-};
+}
 
 export default function LeftSidebar({ className, meta }: Props) {
   return (

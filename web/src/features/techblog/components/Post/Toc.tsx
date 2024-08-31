@@ -1,16 +1,17 @@
-import { ChevronRightIcon } from "@heroicons/react/20/solid";
-import { ChevronUpIcon } from "@heroicons/react/24/outline";
-import { Headings, PostMeta } from "common";
 import Link from "next/link";
 
-import { css, cx } from "@/styled-system/css";
-import { Route } from "next";
+import { css } from "@/styled-system/css";
 
-type Props = {
+import { ChevronRightIcon } from "@heroicons/react/20/solid";
+import { ChevronUpIcon } from "@heroicons/react/24/outline";
+import type { Headings, PostMeta } from "common";
+import type { Route } from "next";
+
+interface Props {
   className?: string;
   meta: PostMeta;
   headings: Headings;
-};
+}
 
 const iconClassName = css({ h: 4, w: 4 });
 
@@ -35,7 +36,12 @@ export default function Toc({ className, headings, meta }: Props) {
               // depth === 3 ? "px-4 text-gray-800" : "px-2 font-medium"}
               href={`/techblog/post/${meta.uuid}#${i}`}
             >
-              {depth === 3 ? <ChevronRightIcon aria-hidden="true" className={iconClassName} /> : null}
+              {depth === 3 ? (
+                <ChevronRightIcon
+                  aria-hidden="true"
+                  className={iconClassName}
+                />
+              ) : null}
               {value}
             </Link>
           </li>
@@ -44,7 +50,13 @@ export default function Toc({ className, headings, meta }: Props) {
 
       <Link
         href={`/techblog/post/${meta.uuid}` as Route}
-        className={css({ display: "flex", gap: 2, alignItems: "center", pt: 4, _hover: { color: "blue.500" } })}
+        className={css({
+          display: "flex",
+          gap: 2,
+          alignItems: "center",
+          pt: 4,
+          _hover: { color: "blue.500" },
+        })}
         // "flex gap-2 items-center text-lg font-bold pt-4 hover:text-blue-400"
       >
         <ChevronUpIcon className={iconClassName} />

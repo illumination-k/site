@@ -1,12 +1,11 @@
 const path = require("path");
+
 const redirectsData = require("./next.config.redirects");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  transpilePackages: [
-    "md-plugins",
-  ],
+  transpilePackages: ["md-plugins"],
   async redirects() {
     return redirectsData;
   },

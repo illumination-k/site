@@ -7,13 +7,13 @@ import { css, cx } from "@/styled-system/css";
 
 declare global {
   interface Window {
-    adsbygoogle: { [key: string]: unknown }[];
+    adsbygoogle: Record<string, unknown>[];
   }
 }
 
-type AdsenseProps = {
+interface AdsenseProps {
   className?: string;
-};
+}
 
 function BaseAdsense({ className }: AdsenseProps) {
   const pathname = usePathname();
@@ -31,7 +31,25 @@ function BaseAdsense({ className }: AdsenseProps) {
   }, [pathname, searchParams]);
 
   if (process.env.NODE_ENV === "development") {
-    return null;
+    return (
+      <div
+        className={cx(
+          css({
+            minWidth: "10/12",
+            bg: "pink.200",
+            display: "flex",
+            justifyContent: "center",
+          }),
+          className,
+        )}
+      >
+        <div
+          className={cx(css({ bg: "blue.100", minW: "8/12" }), "adsbygoogle")}
+        >
+          Adsense
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -39,6 +57,8 @@ function BaseAdsense({ className }: AdsenseProps) {
       className={cx(
         css({
           minWidth: "10/12",
+          display: "flex",
+          justifyContent: "center",
         }),
         className,
       )}
@@ -50,8 +70,7 @@ function BaseAdsense({ className }: AdsenseProps) {
         data-ad-slot="9343059166"
         data-ad-format="auto"
         data-full-width-responsive="true"
-      >
-      </ins>
+      ></ins>
     </div>
   );
 }

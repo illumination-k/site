@@ -13,7 +13,8 @@
     "**/*-lock.json",
     "**/.next",
     "**/dist",
-    "**/dump"
+    "**/dump",
+    "web/src/**"
   ],
   "yaml": {},
   "dockerfile": {

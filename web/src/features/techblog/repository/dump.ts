@@ -1,9 +1,9 @@
 import type { PathLike } from "fs";
 
-import { Dump, DumpPost, Lang } from "common";
+import type { Dump, DumpPost, Lang } from "common";
 import { readDump } from "common/io";
 
-import { IBlogRepository as IBlogRepository } from "../repository";
+import type { IBlogRepository as IBlogRepository } from "../repository";
 
 export default class DumpRepository implements IBlogRepository {
   path: PathLike;
@@ -13,39 +13,41 @@ export default class DumpRepository implements IBlogRepository {
     this.path = path;
   }
 
-  private async init() {
+  private async get_dump(): Promise<Dump> {
     if (!this.dump) {
-      this.dump = await readDump(this.path);
+      const dump = await readDump(this.path);
+      this.dump = dump;
+      return dump;
+    } else {
+      return this.dump;
     }
   }
 
   async retrieve(uuid: string) {
-    await this.init();
-    return this.dump!.posts.filter((post) => post.meta.uuid === uuid).pop();
+    const dump = await this.get_dump();
+    return dump.posts.filter((post) => post.meta.uuid === uuid).pop();
   }
 
   async list() {
-    await this.init();
-    return this.dump!.posts;
+    const dump = await this.get_dump();
+    return dump.posts;
   }
 
   async categories() {
-    await this.init();
-    return this.dump!.categories;
+    const dump = await this.get_dump();
+    return dump.categories;
   }
 
   async tags() {
-    await this.init();
+    const dump = await this.get_dump();
     const defaultTags = ["archive", "draft"];
-    const tags = this.dump!.tags.filter(
-      (tag) => !defaultTags.includes(tag),
-    ).sort();
+    const tags = dump.tags.filter((tag) => !defaultTags.includes(tag)).sort();
 
     return defaultTags.concat(tags);
   }
 
   async filterPosts(lang?: Lang, tag?: string, category?: string) {
-    await this.init();
+    const dump = await this.get_dump();
 
     const checkPost = (
       post: DumpPost,
@@ -61,6 +63,6 @@ export default class DumpRepository implements IBlogRepository {
       return ok;
     };
 
-    return this.dump!.posts.filter((post) => checkPost(post, lang, tag, category));
+    return dump.posts.filter((post) => checkPost(post, lang, tag, category));
   }
 }

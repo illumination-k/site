@@ -1,8 +1,10 @@
 import "katex/dist/katex.min.css";
 import "./prisma-tokens.css";
 
-import { RunOptions, runSync } from "@mdx-js/mdx";
 import { css } from "@/styled-system/css";
+
+import type { RunOptions } from "@mdx-js/mdx";
+import { runSync } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 
 import { Me, P5, P7, S5, S7, Seq, T7 } from "../Seq/Seq";
@@ -125,7 +127,7 @@ const style = css({
   },
 
   // code block
-  "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
+  '& code[class*="language-"], & pre[class*="language-"]': {
     // "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
 
     "& span.code-line": {
@@ -142,7 +144,7 @@ const style = css({
     borderColor: "slate.200",
     borderWidth: "1",
     m: 1,
-    "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
+    '& code[class*="language-"], & pre[class*="language-"]': {
       // "@apply": "rounded-t-none",
       roundedTop: "none",
       "& span.code-line": {
@@ -174,7 +176,7 @@ const style = css({
     rounded: "lg",
     m: 1,
     pb: 0,
-    "& code[class*=\"language-\"], & pre[class*=\"language-\"]": {
+    '& code[class*="language-"], & pre[class*="language-"]': {
       roundedTop: "none",
       "& span.code-line": {
         px: 4,
@@ -203,13 +205,12 @@ const style = css({
   },
 });
 
-export type MdViewProps = {
+export interface MdViewProps {
   compiledMarkdown: string;
-};
+}
 
 export default function MdView({ compiledMarkdown }: MdViewProps) {
-  // https://github.com/mdx-js/mdx/issues/2463
-  // @ts-expect-error
+  // @ts-expect-error see following issue: {@link} https://github.com/mdx-js/mdx/issues/2463
   const runOptions: RunOptions = { ...runtime };
   const Content = runSync(compiledMarkdown, runOptions).default;
 
