@@ -42,7 +42,7 @@ export default function Post({
       >
         {meta.title}
       </h1>
-      <Adsense className={css({py: 5, px: 2, md: {px: 5}, lg: { px: 10}})} />
+      <Adsense className={css({ py: 5, px: 2, md: { px: 5 }, lg: { px: 10 } })} />
       <div
         className={css({
           px: 4,
@@ -96,7 +96,7 @@ export default function Post({
         {relatedPostMeta.map((relatedMeta, i) => <PostCard prefix="techblog" meta={relatedMeta} key={i} />)}
       </nav>
 
-      <Adsense className={css({py: 5, px: 2, md: {px: 5}, lg: { px: 10}})} />
+      <Adsense className={css({ py: 5, px: 2, md: { px: 5 }, lg: { px: 10 } })} />
     </article>
   );
 }
