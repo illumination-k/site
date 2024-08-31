@@ -36,7 +36,7 @@ export default function Tag({ tag, prefix, className }: TagProps) {
         className,
       )}
     >
-      <Link href={`/${prefix}/${tag}` as Route}>{tag}</Link>
+      <Link href={`/${prefix}/tag/${tag}/1` as Route}>{tag}</Link>
     </span>
   );
 }

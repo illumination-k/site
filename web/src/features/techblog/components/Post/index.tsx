@@ -123,7 +123,13 @@ export default function Post({
       </nav>
 
       <Adsense
-        className={css({ py: 5, px: 2, md: { px: 5 }, lg: { px: 10 } })}
+        className={css({
+          bg: "gray.200",
+          py: 5,
+          px: 2,
+          md: { px: 5 },
+          lg: { px: 10 },
+        })}
       />
     </article>
   );

@@ -31,7 +31,25 @@ function BaseAdsense({ className }: AdsenseProps) {
   }, [pathname, searchParams]);
 
   if (process.env.NODE_ENV === "development") {
-    return null;
+    return (
+      <div
+        className={cx(
+          css({
+            minWidth: "10/12",
+            bg: "pink.200",
+            display: "flex",
+            justifyContent: "center",
+          }),
+          className,
+        )}
+      >
+        <div
+          className={cx(css({ bg: "blue.100", minW: "8/12" }), "adsbygoogle")}
+        >
+          Adsense
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -39,6 +57,8 @@ function BaseAdsense({ className }: AdsenseProps) {
       className={cx(
         css({
           minWidth: "10/12",
+          display: "flex",
+          justifyContent: "center",
         }),
         className,
       )}
