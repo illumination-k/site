@@ -5,7 +5,6 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import generateFeed from "./feed";
 import { getDumpPosts, writeDump } from "./io";
-import { registerBlogPosts } from "./meilisearch";
 import { generateReidrect } from "./migration";
 import { template } from "./template";
 
@@ -65,13 +64,5 @@ yargs(hideBin(process.argv))
     yargs.demand("src");
   }, async function(argv) {
     console.log(await generateReidrect(argv.src as string));
-  })
-  .command("registerMeilisearch", "register blog posts to meilisearch", (yargs) => {
-    yargs.positional("dump", { type: "string", describe: "dump file" });
-    yargs.demandOption("dump");
-  }, async function(argv) {
-    const dump = await readDump(argv.dump as string);
-
-    await registerBlogPosts(dump.posts);
   })
   .help().parse();

@@ -5,6 +5,7 @@
   "author": "",
   "dependencies": {
     "@mdx-js/mdx": "^3.0.1",
+    "@notionhq/client": "^2.2.15",
     "axios": "^1.7.3",
     "common": "workspace:^",
     "feed": "^4.2.2",
@@ -41,6 +42,7 @@
   "license": "ISC",
   "private": "true",
   "scripts": {
+    "cmd": "node ./dist/main.js",
     "build": "webpack",
     "dev": "webpack --config ./webpack.dev.js --watch",
     "test": "vitest run",
