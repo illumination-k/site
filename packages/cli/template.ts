@@ -1,4 +1,5 @@
 import { formatDate } from "common/utils";
+import { PostMeta } from "common";
 
 function generateUuid() {
   // https://github.com/GoogleChrome/chrome-platform-analytics/blob/master/src/internal/identifier.js
@@ -31,4 +32,16 @@ updated_at: ${formatDate(new Date())}
 ---
 `;
   return template;
+}
+
+export function templateFromPostMeta(postMeta: PostMeta): string {
+  const template = `---
+uuid: ${postMeta.uuid}
+title: ${postMeta.title}
+description: ${postMeta.description}
+lang: ja
+`;
+
+
+return template;
 }

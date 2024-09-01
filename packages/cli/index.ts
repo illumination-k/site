@@ -1,4 +1,3 @@
-import { readDump } from "common/io";
 import fs from "fs";
 
 import yargs from "yargs";
