@@ -2,6 +2,7 @@ import type { PathLike } from "fs";
 
 import type { Dump, DumpPost, Lang } from "common";
 import { readDump } from "common/io";
+import * as R from "remeda";
 
 import type { IBlogRepository as IBlogRepository } from "../repository";
 
@@ -41,9 +42,15 @@ export default class DumpRepository implements IBlogRepository {
   async tags() {
     const dump = await this.get_dump();
     const defaultTags = ["archive", "draft"];
-    const tags = dump.tags.filter((tag) => !defaultTags.includes(tag)).sort();
 
-    return defaultTags.concat(tags);
+    const tags = R.pipe(
+      dump.tags,
+      R.filter((tag) => !defaultTags.includes(tag)),
+      R.unique(),
+      R.sort((a, b) => a.localeCompare(b)),
+    );
+
+    return tags.concat(defaultTags);
   }
 
   async filterPosts(lang?: Lang, tag?: string, category?: string) {

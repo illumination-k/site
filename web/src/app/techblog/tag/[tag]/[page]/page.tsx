@@ -23,11 +23,7 @@ const schema = {
 };
 
 export async function generateStaticParams(): Promise<Params[]> {
-  const posts = await blogService.repo.filterPosts("ja");
-  const tags = new Set<string>();
-  posts.forEach((post) => post.meta.tags.forEach((tag) => tags.add(tag)));
-
-  console.log("tags", tags);
+  const tags = await blogService.repo.tags();
 
   const nestedParams = await Promise.all(
     [...tags].map(async (tag) => {

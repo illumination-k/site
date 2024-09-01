@@ -107,6 +107,16 @@ export default function Post({
         />
       </div>
 
+      <Adsense
+        className={css({
+          m: 1,
+          py: 5,
+          px: 2,
+          md: { px: 5 },
+          lg: { px: 10 },
+        })}
+      />
+
       <h2
         className={css({
           fontSize: "2xl",
@@ -124,7 +134,6 @@ export default function Post({
 
       <Adsense
         className={css({
-          bg: "gray.200",
           py: 5,
           px: 2,
           md: { px: 5 },
