@@ -3,7 +3,7 @@ import { glob } from "glob";
 import path from "path";
 import { readPost } from "./io";
 
-export async function generateReidrect(src: PathLike) {
+export async function generateRedirect(src: PathLike) {
   const mdFiles = await glob(`${src}/**/*.md`);
 
   const redirects = Promise.all(mdFiles.map(async (mdFile) => {

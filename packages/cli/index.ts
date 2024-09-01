@@ -5,8 +5,10 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import generateFeed from "./feed";
 import { getDumpPosts, writeDump } from "./io";
-import { generateReidrect } from "./migration";
+import { generateRedirect } from "./migration";
 import { template } from "./template";
+
+import { exportDatabase, getNotionPages } from "./exportNotion";
 
 yargs(hideBin(process.argv))
   .scriptName("post-utils")
@@ -63,6 +65,19 @@ yargs(hideBin(process.argv))
     yargs.positional("src", { type: "string", describe: "posts src" });
     yargs.demand("src");
   }, async function(argv) {
-    console.log(await generateReidrect(argv.src as string));
+    console.log(await generateRedirect(argv.src as string));
+  })
+  .command("paper-stream", "notion paper stream export", (yargs) => {
+    yargs.positional("databaseId", { type: "string", describe: "database id" });
+    yargs.positional("publicDir", { type: "string", describe: "public dir" });
+    yargs.positional("outputDir", { type: "string", describe: "output dir" });
+  }, async function(argv) {
+    await exportDatabase(
+      argv.databaseId as string,
+      // @ts-expect-error
+      (o) => o.properties["Status"].select.name === "Done",
+      argv.publicDir as string,
+      argv.outputDir as string,
+    );
   })
   .help().parse();
