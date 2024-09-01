@@ -30,42 +30,21 @@ function BaseAdsense({ className }: AdsenseProps) {
     }
   }, [pathname, searchParams]);
 
-  if (process.env.NODE_ENV === "development") {
-    return (
-      <div
-        className={cx(
-          css({
-            minWidth: "10/12",
-            bg: "pink.200",
-            display: "flex",
-            justifyContent: "center",
-          }),
-          className,
-        )}
-      >
-        <div
-          className={cx(css({ bg: "blue.100", minW: "8/12" }), "adsbygoogle")}
-        >
-          Adsense
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div
       className={cx(
         css({
           minWidth: "10/12",
-          display: "flex",
-          justifyContent: "center",
         }),
         className,
       )}
       key={`${pathname.replace(/\//g, "-")}-${searchParams.toString()}`}
     >
       <ins
-        className={cx(css({ display: "block" }), "adsbygoogle")}
+        className={cx(
+          css({ display: "block", textAlign: "center" }),
+          "adsbygoogle",
+        )}
         data-ad-client="ca-pub-3483824909024831"
         data-ad-slot="9343059166"
         data-ad-format="auto"
