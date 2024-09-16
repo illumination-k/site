@@ -42,6 +42,5 @@ description: ${postMeta.description}
 lang: ja
 `;
 
-
-return template;
+  return template;
 }

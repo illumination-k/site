@@ -7,7 +7,15 @@ import { getDumpPosts, writeDump } from "./io";
 import { generateRedirect } from "./migration";
 import { template } from "./template";
 
-import { exportDatabase, getNotionPages } from "./exportNotion";
+import { exportDatabase } from "./exportNotion";
+
+import { zArgs } from "./zArgs";
+import { z } from "zod";
+
+const testSchema = z.object({
+  a: z.string().describe("test a"),
+  b: z.number().describe("test b"),
+});
 
 yargs(hideBin(process.argv))
   .scriptName("post-utils")
@@ -79,4 +87,6 @@ yargs(hideBin(process.argv))
       argv.outputDir as string,
     );
   })
+  .command("test", "test", ...zArgs(testSchema, async (argv) => {
+    console.log(argv);}))
   .help().parse();

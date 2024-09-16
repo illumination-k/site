@@ -29,7 +29,7 @@ export function withZodPage<S extends Schema>(
   return async (input) => {
     const validatedProps: Partial<ValidatedProps<S>> = {};
     for (const key of Object.keys(schema) as (keyof S)[]) {
-      const s = schema[key];
+      const s: unknown = schema[key];
       if (isZodSchema(s)) {
         const result = await s.spa(input[key as keyof InputProps]);
         if (!result.success) {
