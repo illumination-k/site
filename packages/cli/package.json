@@ -20,14 +20,17 @@
     "strip-markdown": "^6.0.0",
     "tmp-promise": "^3.0.3",
     "unist-util-visit": "^5.0.0",
+    "yaml": "^2.5.1",
     "yargs": "^17.7.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.2",
     "@swc/core": "^1.7.10",
     "@types/mdast": "^4.0.4",
     "@types/node": "22.2.0",
     "@types/tmp": "^0.2.6",
+    "@types/unist": "^3.0.3",
     "@types/yargs": "^17.0.33",
     "node-loader": "^2.0.0",
     "swc-loader": "^0.2.6",
@@ -46,6 +49,8 @@
     "build": "webpack",
     "dev": "webpack --config ./webpack.dev.js --watch",
     "test": "vitest run",
+    "format": "biome check --write .",
+    "lint": "biome lint .",
     "watch:test": "vitest watch"
   }
 }

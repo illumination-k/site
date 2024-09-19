@@ -1,82 +1,105 @@
 import { Client } from "@notionhq/client";
-import { NotionToMarkdown } from "notion-to-md";
 import axios from "axios";
+import { NotionToMarkdown } from "notion-to-md";
 
-import { ImageBlockObjectResponse, PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+import type {
+	ImageBlockObjectResponse,
+	PageObjectResponse,
+} from "@notionhq/client/build/src/api-endpoints";
 
-import fs from "fs";
-import path from "path";
-import { promisify } from "util";
+import fs from "node:fs";
+import path from "node:path";
+import { promisify } from "node:util";
+
+import { z } from "zod";
+import { zArgs } from "./zArgs";
 
 const writeFileAsync = promisify(fs.writeFile);
 
 function isPageObjectResponse(obj: unknown): obj is PageObjectResponse {
-  return (obj as PageObjectResponse).object === "page";
+	return (obj as PageObjectResponse).object === "page";
+}
+
+function isImageBlockObjectResponse(
+	obj: unknown,
+): obj is ImageBlockObjectResponse {
+	return (obj as ImageBlockObjectResponse).type === "image";
 }
 
 const notion = new Client({
-  auth: process.env.NOTION_TOKEN,
+	auth: process.env.NOTION_TOKEN,
 });
 
-export async function getNotionPages(pageId: string, publicDir: string, outputDir: string) {
-  const pageMeta = await notion.pages.retrieve({
-    page_id: pageId,
-  });
+export async function getNotionPages(
+	pageId: string,
+	publicDir: string,
+	outputDir: string,
+) {
+	const pageMeta = await notion.pages.retrieve({
+		page_id: pageId,
+	});
 
-  const n2m = new NotionToMarkdown({
-    notionClient: notion,
-  });
+	const n2m = new NotionToMarkdown({
+		notionClient: notion,
+	});
 
-  n2m.setCustomTransformer("image", async (block) => {
-    const imageBlock = block as ImageBlockObjectResponse;
+	n2m.setCustomTransformer("image", async (block) => {
+		if (!isImageBlockObjectResponse(block)) {
+			const msg = `Expected ImageBlockObjectResponse, but got ${block.object}`;
+			throw new Error(msg);
+		}
 
-    let imageUri: string;
+		const imageBlock = block;
 
-    if (imageBlock.image.type === "external") {
-      imageUri = imageBlock.image.external.url;
-    } else if (imageBlock.image.type === "file") {
-      imageUri = imageBlock.image.file.url;
-    } else {
-      throw new Error("Invalid image type");
-    }
+		let imageUri: string;
 
-    const imageResponse = await axios.get(imageUri, {
-      responseType: "arraybuffer",
-    });
+		if (imageBlock.image.type === "external") {
+			imageUri = imageBlock.image.external.url;
+		} else if (imageBlock.image.type === "file") {
+			imageUri = imageBlock.image.file.url;
+		} else {
+			throw new Error("Invalid image type");
+		}
 
-    const imageBuffer = Buffer.from(imageResponse.data, "binary");
+		const imageResponse = await axios.get(imageUri, {
+			responseType: "arraybuffer",
+		});
 
-    const imageFileName = imageBlock.id + ".png";
-    const imagePath = path.join(publicDir.toString(), imageFileName);
-    await writeFileAsync(imagePath, imageBuffer);
+		const imageBuffer = Buffer.from(imageResponse.data, "binary");
 
-    const relativePath = path.relative(outputDir, imagePath);
+		const imageFileName = `${imageBlock.id}.png`;
+		const imagePath = path.join(publicDir.toString(), imageFileName);
+		await writeFileAsync(imagePath, imageBuffer);
 
-    return `![${imageBlock.id}](${relativePath})`;
-  });
+		const relativePath = path.relative(outputDir, imagePath);
 
-  const mdBlocks = await n2m.pageToMarkdown(pageId);
+		return `![${imageBlock.id}](${relativePath})`;
+	});
 
-  const mdString = n2m.toMarkdownString(mdBlocks);
+	const mdBlocks = await n2m.pageToMarkdown(pageId);
 
-  writeFileAsync(path.join(outputDir, `${pageMeta.id}.md`), mdString["parent"]);
+	const mdString = n2m.toMarkdownString(mdBlocks);
+
+	writeFileAsync(path.join(outputDir, `${pageMeta.id}.md`), mdString.parent);
 }
 
 export async function exportDatabase(
-  databaseId: string,
-  filter_func: (o: PageObjectResponse) => boolean,
-  publicDir: string,
-  outputDir: string,
+	databaseId: string,
+	filterFunc: (o: PageObjectResponse) => boolean,
+	publicDir: string,
+	outputDir: string,
 ) {
-  const database = await notion.databases.query({
-    database_id: databaseId,
-  });
+	const database = await notion.databases.query({
+		database_id: databaseId,
+	});
 
-  const pageIds = database.results.filter((o) => {
-    return isPageObjectResponse(o) && filter_func(o);
-  }).map((o) => o.id);
+	const pageIds = database.results
+		.filter((o) => {
+			return isPageObjectResponse(o) && filterFunc(o);
+		})
+		.map((o) => o.id);
 
-  for (const pageId of pageIds) {
-    await getNotionPages(pageId, publicDir, outputDir);
-  }
+	for (const pageId of pageIds) {
+		await getNotionPages(pageId, publicDir, outputDir);
+	}
 }
