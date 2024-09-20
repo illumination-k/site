@@ -1,7 +1,7 @@
-import { PathLike, readFile, writeFile } from "fs";
-import { promisify } from "util";
+import { type PathLike, readFile, writeFile } from "node:fs";
+import { promisify } from "node:util";
 
-import fm, { FrontMatterResult } from "front-matter";
+import fm, { type FrontMatterResult } from "front-matter";
 import { glob } from "glob";
 
 import { remark } from "remark";
@@ -9,7 +9,14 @@ import { remark } from "remark";
 import { compile } from "@mdx-js/mdx";
 import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
 
-import { Dump, DumpPost, headingsSchema, Post, PostMeta, postMetaSchema } from "common";
+import {
+  type Dump,
+  type DumpPost,
+  type Post,
+  type PostMeta,
+  headingsSchema,
+  postMetaSchema,
+} from "common";
 
 import extractHeader from "./extractHeader";
 import optimizeImage from "./optimizeImage";
@@ -32,11 +39,13 @@ export async function readPost(path: PathLike): Promise<Post> {
   return { meta: meta.data, markdown: fmResult.body };
 }
 
-export async function dumpPost(post: Post, postPath: PathLike, imageDist: string): Promise<DumpPost> {
+export async function dumpPost(
+  post: Post,
+  postPath: PathLike,
+  imageDist: string,
+): Promise<DumpPost> {
   // @ts-ignore
-  const stripFile = await remark()
-    .use(extractHeader)
-    .process(post.markdown);
+  const stripFile = await remark().use(extractHeader).process(post.markdown);
 
   let compiledMarkdown: string;
   try {
@@ -47,7 +56,10 @@ export async function dumpPost(post: Post, postPath: PathLike, imageDist: string
         development: false,
 
         // @ts-ignore
-        remarkPlugins: [[optimizeImage, { postPath, imageDist }]].concat(REMARK_PLUGINS),
+        remarkPlugins: [[optimizeImage, { postPath, imageDist }]].concat(
+          // @ts-ignore
+          REMARK_PLUGINS,
+        ),
         rehypePlugins: [
           REHYPE_PLUGINS.rehypeKatex,
           [REHYPE_PLUGINS.rehypePrism, { ignoreMissing: true }],
@@ -69,19 +81,29 @@ export async function dumpPost(post: Post, postPath: PathLike, imageDist: string
   }
 
   const { markdown: _, ...meta } = post;
-  return { ...meta, compiledMarkdown, rawMarkdown: String(stripFile), headings: parsed.data };
+  return {
+    ...meta,
+    compiledMarkdown,
+    rawMarkdown: String(stripFile),
+    headings: parsed.data,
+  };
 }
 
-export async function getDumpPosts(src: PathLike, imageDist: string): Promise<DumpPost[]> {
+export async function getDumpPosts(
+  src: PathLike,
+  imageDist: string,
+): Promise<DumpPost[]> {
   const mdFiles = await glob(`${src}/**/*.md`, { ignore: "node_modules/*" });
 
-  return Promise.all(mdFiles.map(async (f) => {
-    return await dumpPost(await readPost(f), f, imageDist);
-  }));
+  return Promise.all(
+    mdFiles.map(async (f) => {
+      return await dumpPost(await readPost(f), f, imageDist);
+    }),
+  );
 }
 
 function getDump(dumpPosts: DumpPost[]): Dump {
-  const tags = [...new Set(dumpPosts.map((p) => p.meta.tags).flat())];
+  const tags = [...new Set(dumpPosts.flatMap((p) => p.meta.tags))];
   const categories = [...new Set(dumpPosts.map((p) => p.meta.category))];
 
   return {

@@ -19,6 +19,6 @@ module.exports = {
     extensions: [".ts", ".js", ".node"],
   },
   externals: {
-    "sharp": "commonjs sharp",
+    sharp: "commonjs sharp",
   },
 };

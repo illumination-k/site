@@ -9,6 +9,10 @@ describe("test read post", () => {
 
   it("dump smaple post", async () => {
     const post = await readPost("./test/test1.md");
-    const dump = await dumpPost(post, "./test/test1.md", "./test/public/imageDist");
+    const dump = await dumpPost(
+      post,
+      "./test/test1.md",
+      "./test/public/imageDist",
+    );
   });
 });

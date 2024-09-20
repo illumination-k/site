@@ -1,6 +1,6 @@
-import fs, { PathLike } from "fs";
-import path from "path";
-import util from "util";
+import fs, { type PathLike } from "node:fs";
+import path from "node:path";
+import util from "node:util";
 
 import type { Image, Root } from "mdast";
 
@@ -18,12 +18,12 @@ type Size = {
 
 // width=100,height=100,...
 function parseTitleToSize(title: string | null | undefined): Size | undefined {
-  let size: Size = {};
+  const size: Size = {};
   if (!title) {
     return undefined;
   }
 
-  title.split(",").forEach((v) => {
+  for (const v of title.split(",")) {
     const tokens = v.split("=");
     if (tokens.length !== 2) {
       return;
@@ -34,7 +34,7 @@ function parseTitleToSize(title: string | null | undefined): Size | undefined {
     } else if (tokens[0] === "height" || tokens[0] === "h") {
       size.height = Number(tokens[1]);
     }
-  });
+  }
 
   return size;
 }
@@ -75,7 +75,7 @@ const sizeOfAsync = util.promisify(sizeOf);
 const optimizeImage = (option: Option) => {
   const postDirPath = path.resolve(path.dirname(option.postPath.toString()));
 
-  return (async (ast: Root) => {
+  return async (ast: Root) => {
     const promises: (() => Promise<void>)[] = [];
     // @ts-ignore
     visit(ast, "image", (node: Image) => {
@@ -93,8 +93,10 @@ const optimizeImage = (option: Option) => {
         // temporary file for download
         const { path: tmpPath, cleanup } = await file({ postfix: ext });
 
-        if (uri.startsWith("http") || (uri.startsWith("ftp"))) {
-          const buf = await (await axios.get(uri, { responseType: "arraybuffer" })).data;
+        if (uri.startsWith("http") || uri.startsWith("ftp")) {
+          const buf = await (
+            await axios.get(uri, { responseType: "arraybuffer" })
+          ).data;
 
           await writeAsync(tmpPath, buf);
 
@@ -109,13 +111,17 @@ const optimizeImage = (option: Option) => {
 
           node.url = replacePathAsPublicRoot(copyImagePath);
         } else if (sharpExts.includes(ext.toLowerCase())) {
-          const optimizedImagePath = path.join(option.imageDist, `${fileNameBase}.avif`);
-
-          await sharp(imagePath).avif({
-            quality: 75,
-          }).resize(size?.width, size?.height).toFile(
-            optimizedImagePath,
+          const optimizedImagePath = path.join(
+            option.imageDist,
+            `${fileNameBase}.avif`,
           );
+
+          await sharp(imagePath)
+            .avif({
+              quality: 75,
+            })
+            .resize(size?.width, size?.height)
+            .toFile(optimizedImagePath);
 
           const newUri = replacePathAsPublicRoot(optimizedImagePath);
 
@@ -137,7 +143,7 @@ const optimizeImage = (option: Option) => {
     });
 
     await Promise.all(promises.map((f) => f()));
-  });
+  };
 };
 
 export default optimizeImage;

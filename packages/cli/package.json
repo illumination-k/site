@@ -5,6 +5,7 @@
   "author": "",
   "dependencies": {
     "@mdx-js/mdx": "^3.0.1",
+    "@notionhq/client": "^2.2.15",
     "axios": "^1.7.3",
     "common": "workspace:^",
     "feed": "^4.2.2",
@@ -13,20 +14,24 @@
     "image-size": "^1.1.1",
     "md-plugins": "workspace:^",
     "mdast-util-to-string": "^4.0.0",
+    "notion-to-md": "^3.1.1",
     "remark": "^15.0.1",
     "sharp": "^0.33.4",
     "strip-markdown": "^6.0.0",
     "tmp-promise": "^3.0.3",
     "unist-util-visit": "^5.0.0",
+    "uuid": "^10.0.0",
+    "yaml": "^2.5.1",
     "yargs": "^17.7.2",
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@biomejs/biome": "1.9.2",
     "@swc/core": "^1.7.10",
     "@types/mdast": "^4.0.4",
     "@types/node": "22.2.0",
-    "@types/sharp": "^0.32.0",
     "@types/tmp": "^0.2.6",
+    "@types/unist": "^3.0.3",
     "@types/yargs": "^17.0.33",
     "node-loader": "^2.0.0",
     "swc-loader": "^0.2.6",
@@ -41,9 +46,12 @@
   "license": "ISC",
   "private": "true",
   "scripts": {
+    "cmd": "node ./dist/main.js",
     "build": "webpack",
     "dev": "webpack --config ./webpack.dev.js --watch",
     "test": "vitest run",
+    "format": "biome check --write .",
+    "lint": "biome lint .",
     "watch:test": "vitest watch"
   }
 }

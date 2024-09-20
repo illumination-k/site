@@ -1,9 +1,9 @@
-import fs, { PathLike } from "fs";
-import { Author, Feed } from "feed";
+import fs, { type PathLike } from "node:fs";
+import { type Author, Feed } from "feed";
 
+import path from "node:path";
+import { promisify } from "node:util";
 import { readDump } from "common/io";
-import { promisify } from "util";
-import path from "path";
 
 const writeFileAsync = promisify(fs.writeFile);
 const mkdirAsync = promisify(fs.mkdir);
@@ -35,7 +35,7 @@ export default async function generateFeed(dumpPath: PathLike, dst: PathLike) {
 
   const posts = dump.posts;
 
-  posts.forEach((post) => {
+  for (const post of posts) {
     const postUrl = `${url}/techblog/post/${post.meta.uuid}`;
     feed.addItem({
       title: post.meta.title,
@@ -44,7 +44,7 @@ export default async function generateFeed(dumpPath: PathLike, dst: PathLike) {
       link: postUrl,
       date: new Date(post.meta.updated_at),
     });
-  });
+  }
 
   await mkdirAsync(dst, { recursive: true });
 
