@@ -5,6 +5,7 @@ import { flex } from "@/styled-system/patterns";
 
 import { TagIcon } from "@heroicons/react/24/outline";
 import type { PostMeta } from "common";
+import type { Route } from "next";
 
 import Tag from "./Tag";
 
@@ -34,7 +35,7 @@ export default function PostCard({ prefix, meta }: PostCardProps) {
           _hover: { color: "blue.400", textDecoration: "underline" },
         })}
       >
-        <Link href={`/techblog/post/${meta.uuid}`}>{meta.title}</Link>
+        <Link href={`/${prefix}/post/${meta.uuid}` as Route}>{meta.title}</Link>
       </h2>
 
       <p>更新: {meta.updated_at}</p>

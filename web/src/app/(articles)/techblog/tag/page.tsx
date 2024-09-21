@@ -1,6 +1,6 @@
 import { css } from "@/styled-system/css";
 
-import Tag from "@/features/techblog/components/Tag";
+import Tag from "@/features/articles/components/Tag";
 import { blogService } from "@/features/techblog/constant";
 
 export default async function TagPage() {

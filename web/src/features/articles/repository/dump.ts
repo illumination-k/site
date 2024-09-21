@@ -4,7 +4,7 @@ import type { Dump, DumpPost, Lang } from "common";
 import { readDump } from "common/io";
 import * as R from "remeda";
 
-import type { IBlogRepository as IBlogRepository } from "../repository";
+import type { IBlogRepository as IBlogRepository } from "../irepository";
 
 export default class DumpRepository implements IBlogRepository {
   path: PathLike;

@@ -1,6 +1,6 @@
 import type { PostMeta } from "common";
 
-import type { IBlogRepository } from "./repository";
+import type { IBlogRepository } from "./irepository";
 
 function shuffle<T>(array: T[]): T[] {
   for (let i = array.length; i > 1; i--) {
@@ -32,6 +32,12 @@ export default class BlogService {
       )
       .map((post) => post.meta);
 
+    const maxRelPost = 6;
+
+    if (restPostMetas.length < maxRelPost) {
+      return restPostMetas;
+    }
+
     // tagが一致しているポスト
     let relatedPostMetas = restPostMetas.filter((restMeta) => {
       if (meta.tags.filter((tag) => restMeta.tags.includes(tag)).length !== 0) {
@@ -42,8 +48,8 @@ export default class BlogService {
     });
 
     // 関係しているポストが足りなければ、ランダムにポストを加える
-    if (relatedPostMetas.length < 6) {
-      let restCount = 6 - relatedPostMetas.length;
+    if (relatedPostMetas.length < maxRelPost) {
+      let restCount = maxRelPost - relatedPostMetas.length;
       let postMetaIndex = 0;
 
       const relatedPostMetaUuids = relatedPostMetas.map((m) => m.uuid);
@@ -59,7 +65,7 @@ export default class BlogService {
         postMetaIndex += 1;
       }
     } else {
-      relatedPostMetas = relatedPostMetas.slice(0, 6);
+      relatedPostMetas = relatedPostMetas.slice(0, maxRelPost);
     }
 
     return relatedPostMetas;
