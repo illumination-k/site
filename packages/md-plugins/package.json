@@ -1,8 +1,17 @@
 {
   "name": "md-plugins",
-  "description": "",
   "version": "1.0.0",
+  "description": "",
+  "keywords": [],
+  "license": "ISC",
   "author": "",
+  "main": "index.js",
+  "scripts": {
+    "format": "biome check --write .",
+    "lint": "biome lint .",
+    "test": "vitest run",
+    "watch:test": "vitest watch"
+  },
   "dependencies": {
     "axios": "^1.7.3",
     "hastscript": "^9.0.0",
@@ -27,16 +36,6 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
     "unified": "^11.0.5",
-    "unist-util-inspect": "^8.1.0",
-    "vitest": "^2.0.5"
-  },
-  "keywords": [],
-  "license": "ISC",
-  "main": "index.js",
-  "scripts": {
-    "watch:test": "vitest watch",
-    "format": "biome check --write .",
-    "lint": "biome lint .",
-    "test": "vitest run"
+    "unist-util-inspect": "^8.1.0"
   }
 }

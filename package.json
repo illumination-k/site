@@ -1,22 +1,16 @@
 {
   "name": "site",
-  "description": "",
   "version": "1.0.0",
-  "author": "",
-  "devDependencies": {
-    "@biomejs/biome": "1.9.2",
-    "@types/node": "22.2.0",
-    "npm-run-all": "^4.1.5",
-    "typescript": "^5.6.2"
-  },
-  "homepage": "https://www.illumination-k.dev",
-  "keywords": [],
-  "license": "ISC",
-  "main": "index.js",
   "private": "true",
+  "description": "",
+  "keywords": [],
+  "homepage": "https://www.illumination-k.dev",
   "repository": {
     "url": "https://www.github.com/illumination-k/site"
   },
+  "license": "ISC",
+  "author": "",
+  "main": "index.js",
   "scripts": {
     "cli": "node ./packages/cli/dist/main.js",
     "cli:build": "pnpm run --filter cli build",
@@ -28,13 +22,23 @@
     "cli:mkdumpdir": "mkdir -p ./web/dump",
     "cli:rss": "pnpm cli rss --dump ./web/dump/techblog.json --dst ./web/public/rss",
     "dump": "run-s cli:mkdumpdir cli:dump",
-    "format": "dprint fmt && pnpm run --filter '*' format",
-    "lint": "dprint check && pnpm run --filter '*' lint",
+    "format:sort-package-json": "sort-package-json './package.json' 'packages/*/package.json' 'web/package.json'",
+    "format": "dprint fmt && pnpm format:sort-package-json && pnpm run --filter '*' format",
+    "lint:sort-package-json": "pnpm format:sort-package-json --check",
+    "lint": "dprint check && pnpm lint:sort-package-json && pnpm run --filter '*' lint",
     "register-posts": "run-s dump cli:register-posts",
-    "test": "pnpm run --filter './packages/**' test",
+    "test": "pnpm run --filter '*' test",
     "web-build": "run-s dump cli:rss web-build:web",
     "web-build:web": "pnpm run --filter web build",
     "web-dev": "pnpm run --filter web dev",
     "web-start": "pnpm run --filter web start"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.2",
+    "@types/node": "22.2.0",
+    "npm-run-all": "^4.1.5",
+    "sort-package-json": "2.10.1",
+    "typescript": "^5.6.2",
+    "vitest": "^2.0.5"
   }
 }
