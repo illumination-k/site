@@ -6,8 +6,15 @@ import remarkMath from "remark-math";
 import remarkMdx from "remark-mdx";
 
 import rehypePrism from "./rehype-plugins/rehypePrism";
-import { attachIdToHeadings, codeTitle, DetailsDirective } from "./remark-plugins";
-import remarkDirectiveEmbedGenerator, { GithubCardTransfomer, GithubTransformer } from "./remark-plugins/embed";
+import {
+  DetailsDirective,
+  attachIdToHeadings,
+  codeTitle,
+} from "./remark-plugins";
+import remarkDirectiveEmbedGenerator, {
+  GithubCardTransfomer,
+  GithubTransformer,
+} from "./remark-plugins/embed";
 import { DoiTransformer } from "./remark-plugins/embed/doi";
 import { YouTubeTransformer } from "./remark-plugins/embed/youtube";
 

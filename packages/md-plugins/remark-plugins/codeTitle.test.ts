@@ -16,8 +16,8 @@ describe("Test: attachIdToHeading", async () => {
       .process("```js title=test.js\na\n```");
 
     expect(vfile.value).toStrictEqual(
-      "<div class=\"code-title-container\"><p class=\"code-title\">test.js</p><pre><code class=\"language-js\">a\n"
-        + "</code></pre></div>",
+      '<div class="code-title-container"><p class="code-title">test.js</p><pre><code class="language-js">a\n' +
+        "</code></pre></div>",
     );
   });
 });

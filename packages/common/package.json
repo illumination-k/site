@@ -2,15 +2,14 @@
   "name": "common",
   "version": "1.0.0",
   "description": "",
-  "scripts": {},
+  "scripts": {
+    "format": "biome check --write .",
+    "lint": "biome lint ."
+  },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "zod": "^3.23.8"
-  },
-  "devDependencies": {
-    "@types/node": "22.2.0",
-    "typescript": "5.5.4"
   }
 }

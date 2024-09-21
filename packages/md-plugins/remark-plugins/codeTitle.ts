@@ -7,26 +7,30 @@ function extractTitleFromMeta(meta: string | null | undefined) {
     return;
   }
 
-  const title = meta.split(",").map((m) => {
-    const kv = m.split("=");
-    if (kv.length != 2) {
-      return;
-    }
+  const title = meta
+    .split(",")
+    .map((m) => {
+      const kv = m.split("=");
+      if (kv.length !== 2) {
+        return;
+      }
 
-    if (kv[0] !== "title") {
-      return;
-    }
+      if (kv[0] !== "title") {
+        return;
+      }
 
-    return kv[1];
-  }).filter((v) => v).pop();
+      return kv[1];
+    })
+    .filter((v) => v)
+    .pop();
 
   return title;
 }
 
-export default function() {
+export default function () {
   return (ast: Root) => {
-    // @ts-ignore
-    visit(ast, "code", (node: Code, index: number | null, parent: Parent) => {
+    // @ts-expect-error
+    visit(ast, "code", (node: Code, index: number | undefined, parent: Parent) => {
       const title = extractTitleFromMeta(node.meta);
 
       if (!title) {

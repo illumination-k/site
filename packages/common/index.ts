@@ -4,11 +4,10 @@ import { formatDate } from "./utils";
 const lang = z.enum(["ja", "en"]);
 export type Lang = z.infer<typeof lang>;
 
-const dateSchema = z.union([z.string(), z.date()]).pipe(
-  z.coerce.date(),
-).transform(
-  (date) => formatDate(date),
-);
+const dateSchema = z
+  .union([z.string(), z.date()])
+  .pipe(z.coerce.date())
+  .transform((date) => formatDate(date));
 
 export const postMetaSchema = z.object({
   uuid: z.string().uuid(),

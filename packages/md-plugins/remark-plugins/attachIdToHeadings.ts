@@ -7,7 +7,7 @@ type Option = {
   depth: number;
 };
 
-export default function(option: Option = { depth: 3 }) {
+export default function (option: Option = { depth: 3 }) {
   let id = 0;
 
   return (ast: Root) => {

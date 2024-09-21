@@ -1,23 +1,25 @@
-import { Image, Link, Parent } from "mdast";
-import { Directive } from "mdast-util-directive";
-import { toString } from "mdast-util-to-string";
-import { DirectiveTransformer } from ".";
+import type { Image, Link, Parent } from "mdast";
+import type { Directives } from "mdast-util-directive";
+import { toString as mdastToString } from "mdast-util-to-string";
+import type { DirectiveTransformer } from ".";
 
 export default class GithubCardTransformer implements DirectiveTransformer {
   repo?: string;
 
-  constructor() {}
-
-  shouldTransform(node: Directive): boolean {
+  shouldTransform(node: Directives): boolean {
     if (node.type !== "leafDirective") return false;
     if (node.name !== "gh-card") return false;
 
-    this.repo = toString(node);
+    this.repo = mdastToString(node);
 
     return true;
   }
 
-  async transform(node: Directive, index: number | null, parent: Parent) {
+  async transform(
+    node: Directives,
+    index: number | null | undefined,
+    parent: Parent,
+  ) {
     if (!this.repo) return;
 
     const repoUrl = `https://github.com/${this.repo}`;
