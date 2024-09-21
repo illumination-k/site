@@ -8,7 +8,7 @@ import type {
 } from "@notionhq/client/build/src/api-endpoints";
 
 import fs from "node:fs";
-import path, { parse } from "node:path";
+import path from "node:path";
 import { promisify } from "node:util";
 
 import { type PostMeta, postMetaSchema } from "common";
