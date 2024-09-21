@@ -2,13 +2,13 @@
   "name": "common",
   "version": "1.0.0",
   "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "",
   "scripts": {
     "format": "biome check --write .",
     "lint": "biome lint ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "zod": "^3.23.8"
   }
