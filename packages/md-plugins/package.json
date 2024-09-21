@@ -20,14 +20,12 @@
   "devDependencies": {
     "@types/hast": "^3.0.4",
     "@types/mdast": "^4.0.4",
-    "@types/node": "22.2.0",
     "mdast-util-directive": "^3.0.0",
     "mdast-util-mdx-jsx": "^3.1.2",
     "rehype-stringify": "^10.0.0",
     "remark": "^15.0.1",
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.0",
-    "typescript": "5.5.4",
     "unified": "^11.0.5",
     "unist-util-inspect": "^8.1.0",
     "vitest": "^2.0.5"
@@ -37,6 +35,8 @@
   "main": "index.js",
   "scripts": {
     "watch:test": "vitest watch",
+    "format": "biome check --write .",
+    "lint": "biome lint .",
     "test": "vitest run"
   }
 }

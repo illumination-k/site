@@ -1,6 +1,6 @@
-import { PathLike, readFile } from "fs";
-import { promisify } from "util";
-import { Dump, dumpSchema } from ".";
+import { type PathLike, readFile } from "node:fs";
+import { promisify } from "node:util";
+import { type Dump, dumpSchema } from ".";
 
 export async function readDump(path: PathLike): Promise<Dump> {
   const readFileAsync = promisify(readFile);

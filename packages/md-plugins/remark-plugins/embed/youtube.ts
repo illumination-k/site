@@ -1,23 +1,24 @@
-import axios from "axios";
-import { Parent } from "mdast";
-import { Directive } from "mdast-util-directive";
-import { toString } from "mdast-util-to-string";
-import { DirectiveTransformer } from ".";
+import type { Parent } from "mdast";
+import type { Directives } from "mdast-util-directive";
+import { toString as mdastToString } from "mdast-util-to-string";
+import type { DirectiveTransformer } from ".";
 
 export class YouTubeTransformer implements DirectiveTransformer {
   video_id?: string;
 
-  constructor() {}
-
-  shouldTransform(node: Directive): boolean {
+  shouldTransform(node: Directives): boolean {
     if (node.type !== "leafDirective") return false;
     if (node.name !== "youtube") return false;
 
-    this.video_id = toString(node);
+    this.video_id = mdastToString(node);
     return true;
   }
 
-  async transform(node: Directive, index: number | null, parent: Parent) {
+  async transform(
+    node: Directives,
+    index: number | null | undefined,
+    parent: Parent,
+  ) {
     if (!this.video_id) return;
 
     node.children = [];

@@ -19,12 +19,10 @@ const processor = unified()
 
 describe("test youtube embed", () => {
   it("test a line", async () => {
-    const vile = await processor.process(
-      `::youtube[NXTO3m1B_h4]`,
-    );
+    const vile = await processor.process("::youtube[NXTO3m1B_h4]");
 
     expect(vile.value).toStrictEqual(
-      "<iframe id=\"ytplayer\" class=\"youtube-embed\" src=\"https://www.youtube.com/embed/NXTO3m1B_h4\"></iframe>",
+      '<iframe id="ytplayer" class="youtube-embed" src="https://www.youtube.com/embed/NXTO3m1B_h4"></iframe>',
     );
   });
 });

@@ -1,38 +1,53 @@
-import type { Parent, Root } from "mdast";
-import type { Directive } from "mdast-util-directive";
+import type { Node, Parent, Root } from "mdast";
+import type { Directives } from "mdast-util-directive";
 import { visit } from "unist-util-visit";
 
 export { GithubTransformer } from "./github";
 export { default as GithubCardTransfomer } from "./github-card";
 
 export interface DirectiveTransformer {
-  shouldTransform: (node: Directive) => boolean;
-  transform: (node: Directive, index: number | null, parent: Parent) => Promise<void>;
+  shouldTransform: (node: Directives) => boolean;
+  transform: (
+    node: Directives,
+    index: number | null | undefined,
+    parent: Parent,
+  ) => Promise<void>;
 }
 
-export default function remarkDirectiveEmbedGenerator(transformers: DirectiveTransformer[]) {
+function isParent(node?: Node): node is Parent {
+  if (!node) {
+    return false;
+  }
+
+  return "children" in node;
+}
+
+export default function remarkDirectiveEmbedGenerator(
+  transformers: DirectiveTransformer[],
+) {
   return () => {
-    return (async (ast: Root) => {
+    return async (ast: Root) => {
       const promises: (() => Promise<void>)[] = [];
 
-      // @ts-ignore
       visit(ast, (node, index, parent) => {
         if (
-          node.type === "textDirective"
-          || node.type === "leafDirective"
-          || node.type === "containerDirective"
+          node.type === "textDirective" ||
+          node.type === "leafDirective" ||
+          node.type === "containerDirective"
         ) {
-          transformers.forEach((transformer) => {
-            if (!transformer.shouldTransform(node)) {
-              return;
+          for (const transformer of transformers) {
+            if (transformer.shouldTransform(node)) {
+              promises.push(async () => {
+                if (isParent(parent)) {
+                  await transformer.transform(node, index, parent);
+                }
+              });
             }
-
-            promises.push(async () => transformer.transform(node, index, parent));
-          });
+          }
         }
       });
 
       await Promise.all(promises.map((f) => f()));
-    });
+    };
   };
 }

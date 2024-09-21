@@ -4,7 +4,10 @@
   "version": "1.0.0",
   "author": "",
   "devDependencies": {
-    "npm-run-all": "^4.1.5"
+    "@biomejs/biome": "1.9.2",
+    "@types/node": "22.2.0",
+    "npm-run-all": "^4.1.5",
+    "typescript": "^5.6.2"
   },
   "homepage": "https://www.illumination-k.dev",
   "keywords": [],
@@ -25,8 +28,8 @@
     "cli:mkdumpdir": "mkdir -p ./web/dump",
     "cli:rss": "pnpm cli rss --dump ./web/dump/techblog.json --dst ./web/public/rss",
     "dump": "run-s cli:mkdumpdir cli:dump",
-    "format": "dprint fmt && pnpm run --filter 'web' fmt",
-    "lint": "dprint check && pnpm run --filter 'web' lint",
+    "format": "dprint fmt && pnpm run --filter '*' format",
+    "lint": "dprint check && pnpm run --filter '*' lint",
     "register-posts": "run-s dump cli:register-posts",
     "test": "pnpm run --filter './packages/**' test",
     "web-build": "run-s dump cli:rss web-build:web",

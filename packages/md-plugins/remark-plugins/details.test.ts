@@ -1,8 +1,8 @@
 import details from "./details";
 
 import rehypeStringify from "rehype-stringify";
-import remarkParse from "remark-parse";
 import remarkDirective from "remark-directive";
+import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 import { describe, expect, it } from "vitest";
@@ -16,8 +16,7 @@ const prosessor = unified()
 
 describe("Test: attachIdToHeading", async () => {
   it("test simple", async () => {
-    const vfile = await prosessor
-      .process(`:::details[test]
+    const vfile = await prosessor.process(`:::details[test]
 Some details
 :::
 `);
@@ -28,8 +27,7 @@ Some details
   });
 
   it("test title with whitespace", async () => {
-    const vfile = await prosessor
-      .process(`:::details[test a]
+    const vfile = await prosessor.process(`:::details[test a]
 Some details
 :::
 `);
@@ -40,8 +38,7 @@ Some details
   });
 
   it("test no title", async () => {
-    const vfile = await prosessor
-      .process(`:::details
+    const vfile = await prosessor.process(`:::details
 Some details
 :::
 `);

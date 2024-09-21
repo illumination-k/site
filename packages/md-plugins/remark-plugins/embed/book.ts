@@ -1,8 +1,8 @@
 import axios from "axios";
-import { Parent } from "mdast";
-import { Directive } from "mdast-util-directive";
-import { toString } from "mdast-util-to-string";
-import { DirectiveTransformer } from ".";
+import type { Node } from "mdast";
+import type { Directives } from "mdast-util-directive";
+import { toString as mdastToString } from "mdast-util-to-string";
+import type { DirectiveTransformer } from ".";
 
 type BookInfo = {
   title: string;
@@ -30,13 +30,11 @@ export async function getBookInfo(isbn10: string): Promise<BookInfo> {
 export class BookTransformer implements DirectiveTransformer {
   isbn10?: string;
 
-  constructor() {}
-
-  shouldTransform(node: Directive) {
+  shouldTransform(node: Directives) {
     if (node.type !== "leafDirective") return false;
     if (node.name !== "isbn") return false;
 
-    const v = toString(node);
+    const v = mdastToString(node);
 
     if (v.length !== 10) {
       return false;
@@ -46,7 +44,11 @@ export class BookTransformer implements DirectiveTransformer {
     return true;
   }
 
-  async transform(node: Directive, index: number | null, parent: Parent) {
+  async transform(
+    node: Directives,
+    index: number | null | undefined,
+    parent: Node,
+  ) {
     if (!this.isbn10) return;
 
     const bookInfo = await getBookInfo(this.isbn10);

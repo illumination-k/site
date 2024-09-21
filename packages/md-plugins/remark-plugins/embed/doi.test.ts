@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { doiRegExp, DoiTransformer } from "./doi";
+import { DoiTransformer, doiRegExp } from "./doi";
 
 import rehypeStringify from "rehype-stringify";
 import remarkDirective from "remark-directive";
@@ -23,13 +23,11 @@ describe("test doi", () => {
   });
 
   it("test a doi line", async () => {
-    const vile = await processor.process(
-      `::doi[10.1126/science.169.3946.635]`,
-    );
+    const vile = await processor.process("::doi[10.1126/science.169.3946.635]");
 
     expect(vile.value).toStrictEqual(
-      "<p class=\"doi\">Frank, H. S. (1970). The Structure of Ordinary Water. Science, 169(3946), 635–641. https://doi.org/10.1126/science.169.3946.635\n"
-        + "</p>",
+      '<p class="doi">Frank, H. S. (1970). The Structure of Ordinary Water. Science, 169(3946), 635–641. https://doi.org/10.1126/science.169.3946.635\n' +
+        "</p>",
     );
   });
 });
