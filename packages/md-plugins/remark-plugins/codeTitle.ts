@@ -30,30 +30,34 @@ function extractTitleFromMeta(meta: string | null | undefined) {
 export default function () {
   return (ast: Root) => {
     // @ts-expect-error
-    visit(ast, "code", (node: Code, index: number | undefined, parent: Parent) => {
-      const title = extractTitleFromMeta(node.meta);
+    visit(
+      ast,
+      "code",
+      (node: Code, index: number | undefined, parent: Parent) => {
+        const title = extractTitleFromMeta(node.meta);
 
-      if (!title) {
-        return;
-      }
+        if (!title) {
+          return;
+        }
 
-      const titleNode: Paragraph = {
-        type: "paragraph",
-        children: [{ type: "text", value: title }],
-        data: { hProperties: { className: "code-title" } },
-      };
+        const titleNode: Paragraph = {
+          type: "paragraph",
+          children: [{ type: "text", value: title }],
+          data: { hProperties: { className: "code-title" } },
+        };
 
-      const wrapNode = {
-        type: "wrap",
-        children: [titleNode, node],
-        data: {
-          hName: "div",
-          hProperties: { className: "code-title-container" },
-        },
-      };
+        const wrapNode = {
+          type: "wrap",
+          children: [titleNode, node],
+          data: {
+            hName: "div",
+            hProperties: { className: "code-title-container" },
+          },
+        };
 
-      // @ts-ignore
-      parent.children[index || 0] = wrapNode;
-    });
+        // @ts-ignore
+        parent.children[index || 0] = wrapNode;
+      },
+    );
   };
 }
