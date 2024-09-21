@@ -33,7 +33,7 @@ export default class BlogService {
       .map((post) => post.meta);
 
     const maxRelPost = 6;
-    
+
     if (restPostMetas.length < maxRelPost) {
       return restPostMetas;
     }
@@ -46,8 +46,6 @@ export default class BlogService {
 
       return false;
     });
-
-    
 
     // 関係しているポストが足りなければ、ランダムにポストを加える
     if (relatedPostMetas.length < maxRelPost) {
