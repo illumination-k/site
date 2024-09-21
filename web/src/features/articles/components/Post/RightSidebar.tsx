@@ -19,6 +19,7 @@ interface Props {
   className?: string;
   meta: PostMeta;
   headings: Headings;
+  prefix: string;
 }
 
 type SidebarMetaListProps = {
@@ -62,7 +63,7 @@ function SidebarMetaList({
   );
 }
 
-export default function Sidebar({ className, meta, headings }: Props) {
+export default function Sidebar({ className, meta, headings, prefix }: Props) {
   return (
     <aside className={className}>
       <article className="sidebar-card mb-5">
@@ -81,7 +82,7 @@ export default function Sidebar({ className, meta, headings }: Props) {
             title={
               <Link
                 className={css({ _hover: { color: "blue.500" } })}
-                href={`/techblog/posts/${meta.uuid}` as Route}
+                href={`/techblog/post/${meta.uuid}` as Route}
               >
                 タグ
               </Link>
@@ -98,7 +99,7 @@ export default function Sidebar({ className, meta, headings }: Props) {
               })}
             >
               {meta.tags.map((tag, i) => (
-                <Tag prefix="techblog" tag={tag} key={i} />
+                <Tag prefix={prefix} tag={tag} key={i} />
               ))}
             </div>
           </SidebarMetaList>

@@ -14,6 +14,7 @@ import PostCard from "../PostCard";
 export interface PostProps {
   headings: Headings;
   meta: PostMeta;
+  prefix: string;
   relatedPostMeta: PostMeta[];
   compiledMarkdown: string;
 }
@@ -25,6 +26,7 @@ md: sticky-header + content
 
 export default function Post({
   headings,
+  prefix,
   compiledMarkdown,
   meta,
   relatedPostMeta,
@@ -92,6 +94,7 @@ export default function Post({
         <RightSidebar
           meta={meta}
           headings={headings}
+          prefix={prefix}
           className={css({
             hideBelow: "md",
             gridRow: 1,
@@ -128,7 +131,7 @@ export default function Post({
       </h2>
       <nav className={css({ lg: { display: "grid", gridTemplateColumns: 2 } })}>
         {relatedPostMeta.map((relatedMeta, i) => (
-          <PostCard prefix="techblog" meta={relatedMeta} key={i} />
+          <PostCard prefix={prefix} meta={relatedMeta} key={i} />
         ))}
       </nav>
 

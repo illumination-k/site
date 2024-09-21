@@ -46,7 +46,7 @@
     "dev:next": "rm -rf .next && next dev",
     "build": "next build",
     "lint": "next lint",
-    "fmt": "prettier --write ./src && eslint --fix ./src",
+    "format": "prettier --write ./src && eslint --fix ./src",
     "start": "next start"
   }
 }

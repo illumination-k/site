@@ -4,9 +4,9 @@ import type { Route } from "next";
 import { z } from "zod";
 
 import { withZodPage } from "@/app/_util/withZodPage";
-import Pager from "@/features/techblog/components/Pager";
+import Pager from "@/features/articles/components/Pager";
+import pager from "@/features/articles/utils/pager";
 import { blogService } from "@/features/techblog/constant";
-import pager from "@/features/techblog/utils/pager";
 
 const schema = {
   params: z.object({
