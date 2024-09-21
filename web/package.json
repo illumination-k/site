@@ -6,7 +6,7 @@
     "build": "next build",
     "dev": "run-p dev:*",
     "dev:next": "rm -rf .next && next dev",
-    "format": "prettier --write ./src && eslint --fix ./src",
+    "format": "prettier --write ./src ./*.ts && eslint --fix ./src",
     "lint": "next lint",
     "prepare": "panda codegen",
     "start": "next start",
