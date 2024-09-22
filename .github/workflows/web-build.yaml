@@ -3,7 +3,7 @@ name: web build
 on:
   push
 
-jobs: 
+jobs:
   NodeCI:
     runs-on: "ubuntu-latest"
 
