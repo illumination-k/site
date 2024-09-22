@@ -4,7 +4,7 @@ on:
   push
 
 jobs:
-  NodeCI:
+  web-build:
     runs-on: "ubuntu-latest"
 
     steps:
