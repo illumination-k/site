@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "format": "biome check --write .",
-    "lint": "biome lint .",
+    "lint": "biome lint . && tsc --noEmit",
     "test": "vitest run",
     "watch:test": "vitest watch"
   },
