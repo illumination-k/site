@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "web/**"
+  push:
+    branches:
+      - main
 
 jobs:
   web-build:
