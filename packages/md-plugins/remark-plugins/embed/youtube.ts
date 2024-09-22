@@ -1,4 +1,3 @@
-import type { Parent } from "mdast";
 import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
 import type { DirectiveTransformer } from ".";
@@ -14,11 +13,7 @@ export class YouTubeTransformer implements DirectiveTransformer {
     return true;
   }
 
-  async transform(
-    node: Directives,
-    index: number | null | undefined,
-    parent: Parent,
-  ) {
+  async transform(node: Directives) {
     if (!this.video_id) return;
 
     node.children = [];

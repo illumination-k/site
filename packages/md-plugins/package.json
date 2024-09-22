@@ -8,7 +8,7 @@
   "main": "index.js",
   "scripts": {
     "format": "biome check --write .",
-    "lint": "biome lint .",
+    "lint": "biome lint . && tsc --noEmit",
     "test": "vitest run",
     "watch:test": "vitest watch"
   },
@@ -29,6 +29,7 @@
   "devDependencies": {
     "@types/hast": "^3.0.4",
     "@types/mdast": "^4.0.4",
+    "@types/unist": "^3.0.3",
     "mdast-util-directive": "^3.0.0",
     "mdast-util-mdx-jsx": "^3.1.2",
     "rehype-stringify": "^10.0.0",

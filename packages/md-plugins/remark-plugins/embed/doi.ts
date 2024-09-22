@@ -1,7 +1,8 @@
 import axios from "axios";
-import type { Paragraph, Parent } from "mdast";
+import type { Paragraph } from "mdast";
 import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
+import type { Parent } from "unist";
 import type { DirectiveTransformer } from ".";
 
 // https://www.crossref.org/blog/dois-and-matching-regular-expressions/

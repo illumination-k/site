@@ -1,9 +1,10 @@
-import type { Node, Parent, Root } from "mdast";
+import type { Root } from "mdast";
 import type { Directives } from "mdast-util-directive";
+import type { Node, Parent } from "unist";
 import { visit } from "unist-util-visit";
 
 export { GithubTransformer } from "./github";
-export { default as GithubCardTransfomer } from "./github-card";
+export { default as GithubCardTransformer } from "./github-card";
 
 export interface DirectiveTransformer {
   shouldTransform: (node: Directives) => boolean;
