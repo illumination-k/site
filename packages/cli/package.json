@@ -11,7 +11,7 @@
     "cmd": "node ./dist/main.js",
     "dev": "webpack --config ./webpack.dev.js --watch",
     "format": "biome check --write .",
-    "lint": "biome lint .",
+    "lint": "biome lint . && tsc --noEmit",
     "test": "vitest run",
     "watch:test": "vitest watch"
   },

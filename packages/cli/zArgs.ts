@@ -29,11 +29,6 @@ function isZodSchema(obj: unknown): obj is z.ZodSchema {
 }
 
 // biome-ignore lint: lint/suspicious/noExplicitAny
-function isZodEffects(obj: unknown): obj is z.ZodEffects<any, any> {
-  return obj instanceof z.ZodEffects;
-}
-
-// biome-ignore lint: lint/suspicious/noExplicitAny
 export function zArgs<T extends z.ZodObject<any>>(
   schema: T,
   handler: (argv: z.infer<T>) => Promise<void> | void,
