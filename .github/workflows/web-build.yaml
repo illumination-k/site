@@ -3,7 +3,7 @@ name: web build
 on:
   push:
     paths:
-      - "web/**"
+      - "web/**/*"
 
 jobs: 
   NodeCI:
