@@ -1,5 +1,6 @@
 import axios from "axios";
-import type { Code, Link, Parent } from "mdast";
+import type { Code, Link } from "mdast";
+import type { Parent } from "unist";
 
 import { URL } from "node:url";
 import type { Directives } from "mdast-util-directive";
@@ -71,6 +72,7 @@ export class GithubTransformer implements DirectiveTransformer {
   }
 
   async transform(
+    // @ts-ignore
     node: Directives,
     index: number | null | undefined,
     parent: Parent,
@@ -112,7 +114,6 @@ export class GithubTransformer implements DirectiveTransformer {
       data: { hName: "div", hProperties: { className: "github-embed" } },
     };
 
-    // @ts-ignore
     parent.children[index || 0] = githubNode;
   }
 }

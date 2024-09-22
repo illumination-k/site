@@ -1,7 +1,7 @@
 import { h } from "hastscript";
 import { visit } from "unist-util-visit";
 
-import type { Heading, Parent, Root } from "mdast";
+import type { Heading, Root } from "mdast";
 
 type Option = {
   depth: number;

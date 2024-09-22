@@ -8,8 +8,6 @@ import { unified } from "unified";
 import { describe, expect, it } from "vitest";
 import remarkDirectiveEmbedGenerator, { GithubTransformer } from ".";
 
-const embedGithub = remarkDirectiveEmbedGenerator([new GithubTransformer()]);
-
 const processor = unified()
   .use(remarkParse)
   .use(remarkDirective)

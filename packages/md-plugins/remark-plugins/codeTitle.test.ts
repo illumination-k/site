@@ -15,6 +15,8 @@ describe("Test: attachIdToHeading", async () => {
       .use(rehypeStringify)
       .process("```js title=test.js\na\n```");
 
+    console.log(vfile.value);
+
     expect(vfile.value).toStrictEqual(
       '<div class="code-title-container"><p class="code-title">test.js</p><pre><code class="language-js">a\n' +
         "</code></pre></div>",

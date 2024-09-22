@@ -1,6 +1,9 @@
 import { visit } from "unist-util-visit";
 
-import type { Code, Paragraph, Parent, Root } from "mdast";
+import type { Code, Paragraph, Root } from "mdast";
+import type { Node } from "unist";
+
+import { isUnistParentNode } from "./type-guard";
 
 function extractTitleFromMeta(meta: string | null | undefined) {
   if (!meta) {
@@ -29,14 +32,24 @@ function extractTitleFromMeta(meta: string | null | undefined) {
 
 export default function () {
   return (ast: Root) => {
-    // @ts-expect-error
     visit(
       ast,
       "code",
-      (node: Code, index: number | undefined, parent: Parent) => {
+      (node: Code, index: number | null | undefined, parent?: Node) => {
         const title = extractTitleFromMeta(node.meta);
 
         if (!title) {
+          console.warn(`No title found in code meta: ${node.meta}`);
+          return;
+        }
+
+        if (!parent) {
+          console.warn(`No parent found for code node: ${node}`);
+          return;
+        }
+
+        if (!isUnistParentNode(parent)) {
+          console.warn(`Parent is not a parent node: ${parent}`);
           return;
         }
 
@@ -55,7 +68,6 @@ export default function () {
           },
         };
 
-        // @ts-ignore
         parent.children[index || 0] = wrapNode;
       },
     );

@@ -1,5 +1,4 @@
 import axios from "axios";
-import type { Node } from "mdast";
 import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
 import type { DirectiveTransformer } from ".";
@@ -44,15 +43,6 @@ export class BookTransformer implements DirectiveTransformer {
     return true;
   }
 
-  async transform(
-    node: Directives,
-    index: number | null | undefined,
-    parent: Node,
-  ) {
-    if (!this.isbn10) return;
-
-    const bookInfo = await getBookInfo(this.isbn10);
-
-    // todo!
-  }
+  // @ts-ignore
+  async transform(node: Directives) {}
 }

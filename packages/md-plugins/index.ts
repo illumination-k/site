@@ -12,7 +12,7 @@ import {
   codeTitle,
 } from "./remark-plugins";
 import remarkDirectiveEmbedGenerator, {
-  GithubCardTransfomer,
+  GithubCardTransformer,
   GithubTransformer,
 } from "./remark-plugins/embed";
 import { DoiTransformer } from "./remark-plugins/embed/doi";
@@ -27,7 +27,7 @@ export const REMARK_PLUGINS = [
   DetailsDirective,
   remarkDirectiveEmbedGenerator([
     new GithubTransformer(),
-    new GithubCardTransfomer(),
+    new GithubCardTransformer(),
     new YouTubeTransformer(),
     new DoiTransformer(),
   ]),
