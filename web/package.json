@@ -3,7 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "next build",
+    "build": "run-s build:next build:pagefind",
+    "build:next": "next build",
+    "build:pagefind": "pagefind --site out",
+    "dev-pagefind": "pagefind --site out --output-path ./public/pagefind",
     "dev": "run-p dev:*",
     "dev:next": "rm -rf .next && next dev",
     "format": "prettier --write ./src ./*.ts && eslint --fix ./src",
@@ -45,6 +48,7 @@
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-prettier": "^5.2.1",
     "jsdom": "^25.0.0",
+    "pagefind": "^1.1.1",
     "postcss": "^8.4.41",
     "prettier": "^3.3.3",
     "typescript": "5"

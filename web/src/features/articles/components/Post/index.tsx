@@ -87,7 +87,11 @@ export default function Post({
           })}
         >
           <PostHeader meta={meta} />
-          <MdView compiledMarkdown={compiledMarkdown} />
+          <MdView
+            // data-pagefind-body is used as a selector to construct the pagefind search index
+            data-pagefind-body
+            compiledMarkdown={compiledMarkdown}
+          />
           <PostFooter meta={meta} />
         </article>
 
