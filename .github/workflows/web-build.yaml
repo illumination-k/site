@@ -1,7 +1,9 @@
 name: web build
 
 on:
-  push
+  pull_request:
+    paths:
+      - "web/**"
 
 jobs:
   web-build:
@@ -29,6 +31,7 @@ jobs:
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
+        if: github.ref == 'refs/heads/main'
         with:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
