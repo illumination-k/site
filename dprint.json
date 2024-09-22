@@ -4,16 +4,19 @@
   },
   "markdown": {
   },
-  "includes": ["**/*.{ts,tsx,js,jsx,cjs,mjs,json,md}"],
+  "includes": ["**/*.{json,md,yaml,yml}"],
   "excludes": [
     "**/node_modules",
     "**/*-lock.json",
     "**/.next",
     "**/dist",
     "**/dump",
-    "web/src/**"
+    "web/src/**",
+    "pnpm-lock.yaml"
   ],
-  "yaml": {},
+  "yaml": {
+    "associations": ["**/*.yaml", "**/*.yml"]
+  },
   "dockerfile": {
     "associations": ["./Dockerfile*"]
   },

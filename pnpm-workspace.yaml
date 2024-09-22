@@ -1,4 +1,4 @@
 packages:
   # packagesディレクトリ配下はすべてを登録
-  - 'packages/**'
+  - "packages/**"
   - web

@@ -1,0 +1,40 @@
+name: web build
+
+on:
+  pull_request:
+    paths:
+      - "web/**"
+
+jobs:
+  web-build:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: install pnpm
+        run: npm install -g pnpm
+
+      - name: install deps
+        run: pnpm i
+
+      - name: build cli
+        run: pnpm cli:build
+
+      - name: build web
+        run: pnpm web-build
+
+      - name: Publish to Cloudflare Pages
+        uses: cloudflare/pages-action@1
+        if: github.ref == 'refs/heads/main'
+        with:
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          projectName: site
+          directory: "web/out"
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
