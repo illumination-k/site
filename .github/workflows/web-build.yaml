@@ -1,0 +1,30 @@
+name: web build
+
+on:
+  push:
+    paths:
+      - "web/**"
+
+jobs: 
+  NodeCI:
+    runs-on: "ubuntu-latest"
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: install pnpm
+        run: npm install -g pnpm
+
+      - name: install deps
+        run: pnpm i
+
+      - name: build cli
+        run: pnpm cli:build
+
+      - name: build web
+        run: pnpm web-build
