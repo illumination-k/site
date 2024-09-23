@@ -21,11 +21,11 @@ const parsedGithubUrlSchema = z.object({
   startLine: z
     .union([z.string(), z.literal(-1)])
     .transform((v) => Number(v))
-    .pipe(z.number()),
+    .pipe(z.number({ message: "startLine must be a number or -1" })),
   endLine: z
     .union([z.string(), z.literal(-1)])
     .transform((v) => Number(v))
-    .pipe(z.number()),
+    .pipe(z.number({ message: "endLine must be a number or -1" })),
 });
 
 type ParsedGithubUrl = z.infer<typeof parsedGithubUrlSchema>;
