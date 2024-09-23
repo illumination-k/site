@@ -4,24 +4,20 @@ import { toString as mdastToString } from "mdast-util-to-string";
 import type { DirectiveTransformer } from ".";
 
 export default class GithubCardTransformer implements DirectiveTransformer {
-  repo?: string;
-
   shouldTransform(node: Directives): boolean {
     if (node.type !== "leafDirective") return false;
     if (node.name !== "gh-card") return false;
-
-    this.repo = mdastToString(node);
 
     return true;
   }
 
   async transform(node: Directives) {
-    if (!this.repo) return;
+    const repo = mdastToString(node);
 
-    const repoUrl = `https://github.com/${this.repo}`;
-    const svgUrl = `https://gh-card.dev/repos/${this.repo}.svg?fullname=`;
+    const repoUrl = `https://github.com/${repo}`;
+    const svgUrl = `https://gh-card.dev/repos/${repo}.svg?fullname=`;
 
-    const imageNode: Image = { type: "image", url: svgUrl, alt: this.repo };
+    const imageNode: Image = { type: "image", url: svgUrl, alt: repo };
     const linkNode: Link = {
       type: "link",
       url: repoUrl,

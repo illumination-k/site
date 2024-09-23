@@ -9,8 +9,6 @@ import type { DirectiveTransformer } from ".";
 export const doiRegExp = /^10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
 
 export class DoiTransformer implements DirectiveTransformer {
-  url?: string;
-
   shouldTransform(node: Directives): boolean {
     if (node.type !== "leafDirective") return false;
     if (node.name !== "doi") return false;
@@ -21,13 +19,10 @@ export class DoiTransformer implements DirectiveTransformer {
       if (!doiRegExp.test(s.replace("https://doi.org/", ""))) {
         return false;
       }
-      this.url = s;
     } else {
       if (!doiRegExp.test(s)) {
         return false;
       }
-
-      this.url = `https://doi.org/${s}`;
     }
 
     return true;
@@ -38,14 +33,15 @@ export class DoiTransformer implements DirectiveTransformer {
     index: number | null | undefined,
     parent: Parent,
   ) {
-    if (!this.url) return;
+    const doi = mdastToString(node);
+    const url = `https://doi.org/${doi}`;
 
     let style = "apa";
     if (node.attributes && "id" in node.attributes) {
       style = node.attributes.id as string;
     }
 
-    const resp = await axios.get(this.url, {
+    const resp = await axios.get(url, {
       headers: { Accept: "text/x-bibliography", style },
     });
     const citation = resp.data as string;

@@ -77,7 +77,6 @@ const optimizeImage = (option: Option) => {
 
   return async (ast: Root) => {
     const promises: (() => Promise<void>)[] = [];
-    // @ts-ignore
     visit(ast, "image", (node: Image) => {
       promises.push(async () => {
         const size = parseTitleToSize(node.title);

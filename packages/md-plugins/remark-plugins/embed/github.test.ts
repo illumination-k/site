@@ -8,6 +8,45 @@ import { unified } from "unified";
 import { describe, expect, it } from "vitest";
 import remarkDirectiveEmbedGenerator, { GithubTransformer } from ".";
 
+import { parseGithubUrl } from "./github";
+
+describe("test parse github url", () => {
+  it("test parse github main url without line", () => {
+    const url = "https://github.com/illumination-k/site/blob/main/README.md";
+    const parsed = parseGithubUrl(url);
+
+    expect(parsed).toStrictEqual({
+      user: "illumination-k",
+      repository: "site",
+      branch: "main",
+      filePath: "README.md",
+      fileExtension: "md",
+      rawFileUrl:
+        "https://raw.githubusercontent.com/illumination-k/site/main/README.md",
+      startLine: -1,
+      endLine: -1,
+    });
+  });
+
+  it("test parse github url with line", () => {
+    const url =
+      "https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15";
+    const parsed = parseGithubUrl(url);
+
+    expect(parsed).toStrictEqual({
+      user: "illumination-k",
+      repository: "blog-remark",
+      branch: "7855162f655858f2122911c66d6dd80ef327a055",
+      filePath: "src/highlighter.ts",
+      fileExtension: "ts",
+      rawFileUrl:
+        "https://raw.githubusercontent.com/illumination-k/blog-remark/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts",
+      startLine: 11,
+      endLine: 15,
+    });
+  });
+});
+
 const processor = unified()
   .use(remarkParse)
   .use(remarkDirective)
@@ -26,7 +65,6 @@ describe("test github embed", () => {
   it("test url only", async () => {
     const vfile = await processor.process(
       "::gh[https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15]",
-      // "::hr{.red}"
     );
 
     expect(vfile.value).toStrictEqual(
@@ -59,5 +97,19 @@ We should import refractor and register langs as following:
         '</span><span class="code-line line-number" line="15">refractor<span class="token punctuation">.</span><span class="token function">alias</span><span class="token punctuation">(</span><span class="token punctuation">{</span> typescript<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"ts"</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>\n' +
         "</span></code></pre></div>",
     );
+  });
+
+  it("test multiple embed", async () => {
+    const url1 = "https://github.com/illumination-k/site/blob/main/README.md";
+    const url2 =
+      "https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15";
+    const vfile = await processor.process(`
+      ::gh[${url1}]
+      ::gh[${url2}]`);
+
+    expect(
+      vfile.value.toString().includes(url1) &&
+        vfile.value.toString().includes(url2),
+    ).toBeTruthy();
   });
 });

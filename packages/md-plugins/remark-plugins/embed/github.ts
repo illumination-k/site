@@ -9,7 +9,28 @@ import { toString as mdastToString } from "mdast-util-to-string";
 
 import type { DirectiveTransformer } from ".";
 
-function parseGithubUrl(url: string) {
+import { z } from "zod";
+
+const parsedGithubUrlSchema = z.object({
+  user: z.string(),
+  repository: z.string(),
+  branch: z.string(),
+  filePath: z.string(),
+  fileExtension: z.string(),
+  rawFileUrl: z.string(),
+  startLine: z
+    .union([z.string(), z.literal(-1)])
+    .transform((v) => Number(v))
+    .pipe(z.number()),
+  endLine: z
+    .union([z.string(), z.literal(-1)])
+    .transform((v) => Number(v))
+    .pipe(z.number()),
+});
+
+type ParsedGithubUrl = z.infer<typeof parsedGithubUrlSchema>;
+
+export function parseGithubUrl(url: string): ParsedGithubUrl {
   const target = new URL(url);
   const lineSplit = target.hash.split("-");
   const startLine =
@@ -31,7 +52,7 @@ function parseGithubUrl(url: string) {
 
   const rawFileUrl = `https://raw.githubusercontent.com/${user}/${repository}/${branch}/${filePath}`;
 
-  return {
+  return parsedGithubUrlSchema.parse({
     user,
     repository,
     branch,
@@ -40,7 +61,7 @@ function parseGithubUrl(url: string) {
     rawFileUrl,
     startLine,
     endLine,
-  };
+  });
 }
 
 /*
@@ -68,7 +89,6 @@ export class GithubTransformer implements DirectiveTransformer {
   }
 
   async transform(
-    // @ts-ignore
     node: Directives,
     index: number | null | undefined,
     parent: Parent,
@@ -76,7 +96,7 @@ export class GithubTransformer implements DirectiveTransformer {
     const url = mdastToString(node);
     const parsed = parseGithubUrl(url);
 
-    const allValue = (await axios.get(parsed.rawFileUrl)).data;
+    const allValue: unknown = (await axios.get(parsed.rawFileUrl)).data;
 
     let lines: string[] = [];
     if (typeof allValue === "string") {
@@ -85,8 +105,8 @@ export class GithubTransformer implements DirectiveTransformer {
       lines = JSON.stringify(allValue, null, 2).split("\n");
     }
 
-    if (Number(parsed.startLine) > 0) {
-      lines = lines.slice(Number(parsed.startLine) - 1, Number(parsed.endLine));
+    if (parsed.startLine > 0) {
+      lines = lines.slice(parsed.startLine - 1, parsed.endLine);
     }
 
     const newNode: Code = {
