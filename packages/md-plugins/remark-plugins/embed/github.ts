@@ -47,8 +47,6 @@ function parseGithubUrl(url: string) {
 Directive = `::gh[url]` or `::github[url]`
 */
 export class GithubTransformer implements DirectiveTransformer {
-  url?: string;
-
   shouldTransform(node: Directives) {
     if (node.type !== "leafDirective") return false;
 
@@ -66,8 +64,6 @@ export class GithubTransformer implements DirectiveTransformer {
       return false;
     }
 
-    this.url = url;
-
     return true;
   }
 
@@ -77,14 +73,20 @@ export class GithubTransformer implements DirectiveTransformer {
     index: number | null | undefined,
     parent: Parent,
   ) {
-    if (!this.url) return;
-    const parsed = parseGithubUrl(this.url);
+    const url = mdastToString(node);
+    const parsed = parseGithubUrl(url);
 
     const allValue = (await axios.get(parsed.rawFileUrl)).data;
-    let lines = allValue.split("\n");
+
+    let lines: string[] = [];
+    if (typeof allValue === "string") {
+      lines = allValue.split("\n");
+    } else {
+      lines = JSON.stringify(allValue, null, 2).split("\n");
+    }
 
     if (Number(parsed.startLine) > 0) {
-      lines = lines.slice(Number(parsed.startLine) - 1, parsed.endLine);
+      lines = lines.slice(Number(parsed.startLine) - 1, Number(parsed.endLine));
     }
 
     const newNode: Code = {
@@ -96,7 +98,7 @@ export class GithubTransformer implements DirectiveTransformer {
 
     const linkNode: Link = {
       type: "link",
-      url: this.url,
+      url: url,
       children: [
         {
           type: "text",

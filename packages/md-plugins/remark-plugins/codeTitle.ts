@@ -39,7 +39,6 @@ export default function () {
         const title = extractTitleFromMeta(node.meta);
 
         if (!title) {
-          console.warn(`No title found in code meta: ${node.meta}`);
           return;
         }
 
