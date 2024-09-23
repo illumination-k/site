@@ -4,11 +4,15 @@ on:
   pull_request:
     paths:
       - "web/**"
+      - posts/**
+      - ".github/workflows/web-build.yaml"
   push:
     branches:
       - main
     paths:
       - "web/**"
+      - posts/**
+      - ".github/workflows/web-build.yaml"
 
 jobs:
   web-build:

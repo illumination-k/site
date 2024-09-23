@@ -23,9 +23,7 @@ React + Vite + Typescriptでchrome extensionを作成するためのテンプレ
 
 UIを構成する部分はReactを使っています。これらは`popup`以下で管理されます。
 
-
 その他のDOM操作を行うためのContent Scriptsは`content-script`以下で管理し、Service workerを利用するためのコードは`background`以下で管理してあります。
-
 
 これらは`pnpm build`でまとめて`dist`以下にビルドされ、Chrome extensionの開発者モードでアップロードすればすぐに利用できます。
 
