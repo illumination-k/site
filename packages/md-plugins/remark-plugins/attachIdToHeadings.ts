@@ -11,7 +11,6 @@ export default function (option: Option = { depth: 3 }) {
   let id = 0;
 
   return (ast: Root) => {
-    // @ts-ignore
     visit(ast, "heading", (node: Heading) => {
       if (option.depth < node.depth) {
         return;
