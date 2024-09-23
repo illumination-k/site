@@ -23,12 +23,14 @@ refractor.register(ruby);
 
 import python from "refractor/lang/python.js";
 refractor.register(python);
+refractor.alias({ python: ["py"] });
 
 import r from "refractor/lang/r.js";
 refractor.register(r);
 
 import rust from "refractor/lang/rust.js";
 refractor.register(rust);
+refractor.alias({ rust: ["rs"] });
 
 import go from "refractor/lang/go.js";
 refractor.register(go);

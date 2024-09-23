@@ -33,19 +33,19 @@ clone() {
 
 ```js
 class Entity {
-  constructor(a) {
-    this.a = a;
-  }
+	constructor(a) {
+		this.a = a;
+	}
 
-  getA() {
-    return this.a;
-  }
+	getA() {
+		return this.a;
+	}
 
-  clone() {
-    const clone = Object.assign({}, this);
-    Object.setPrototypeOf(clone, Object.getPrototypeOf(this));
-    return clone;
-  }
+	clone() {
+		const clone = Object.assign({}, this);
+		Object.setPrototypeOf(clone, Object.getPrototypeOf(this));
+		return clone;
+	}
 }
 
 const entity = new Entity(1);

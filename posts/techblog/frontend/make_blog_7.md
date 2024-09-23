@@ -136,9 +136,9 @@ PWA対応したいコンポーネントのbodyに以下を入れます。
 
 ```jsx
 <amp-install-serviceworker
-  src="/serviceworker.js"
-  data-iframe-src="/install-serviceworker.html"
-  layout="nodisplay"
+	src="/serviceworker.js"
+	data-iframe-src="/install-serviceworker.html"
+	layout="nodisplay"
 />;
 ```
 

@@ -125,7 +125,7 @@ DATABASE_URL="postgresql://postgres:postgres@localhost:15432/main?schema=public"
 ```ts
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient({
-  log: ["query", "error", "info", "warn"],
+	log: ["query", "error", "info", "warn"],
 });
 export default prisma;
 
