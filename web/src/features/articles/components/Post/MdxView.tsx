@@ -50,7 +50,8 @@ const style = css({
   "& a": { color: "blue.500", textDecoration: "underline" },
 
   "& blockquote": {
-    borderLeft: 4,
+    borderLeftWidth: 4,
+    borderLeftColor: "gray.200",
     px: 2,
     py: 1,
     my: 2,

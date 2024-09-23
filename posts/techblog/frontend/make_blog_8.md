@@ -110,9 +110,7 @@ updated_at: "2022-08-19T11:42:42+00:00"
 JSX内ではこれらのテンプレートは
 
 ```jsx
-<template type="amp-mustache">
-  Hello {"{{world}}"}!
-</template>;
+<template type="amp-mustache">Hello {"{{world}}"}!</template>;
 ```
 
 のように利用できます。
@@ -136,17 +134,17 @@ JSX内ではこれらのテンプレートは
 
 ```jsx
 <amp-list
-  width="auto"
-  height="200"
-  layout="fixed-height"
-  src={`/api/otherarticles`}
-  items="."
+	width="auto"
+	height="200"
+	layout="fixed-height"
+	src={`/api/otherarticles`}
+	items="."
 >
-  {/* @ts-ignore */}
-  <template type="amp-mustache">
-    title={"{{title}}"}
-    url={"{{url}}"}
-  </template>
+	{/* @ts-ignore */}
+	<template type="amp-mustache">
+		title={"{{title}}"}
+		url={"{{url}}"}
+	</template>
 </amp-list>;
 ```
 

@@ -29,15 +29,15 @@ updated_at: "2022-05-20T18:42:50+00:00"
 
 ```typescript
 interface SomeInterface {
-  test: () => string;
+	test: () => string;
 }
 
 class SomeEntity {
-  constructor() {}
+	constructor() {}
 
-  test() {
-    return "test";
-  }
+	test() {
+		return "test";
+	}
 }
 ```
 
@@ -87,13 +87,13 @@ export const SomeContext = createContext<SomeInterface | undefined>(undefined);
 
 ```typescript
 function createCtx<T>() {
-  const ctx = React.createContext<T | undefined>(undefined);
-  function useCtx() {
-    const c = React.useContext(ctx);
-    if (!c) throw new Error("useCtx must be inside a Provider with a value");
-    return c;
-  }
-  return [useCtx, ctx.Provider] as const;
+	const ctx = React.createContext<T | undefined>(undefined);
+	function useCtx() {
+		const c = React.useContext(ctx);
+		if (!c) throw new Error("useCtx must be inside a Provider with a value");
+		return c;
+	}
+	return [useCtx, ctx.Provider] as const;
 }
 ```
 

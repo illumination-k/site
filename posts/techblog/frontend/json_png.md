@@ -85,7 +85,7 @@ import React from "react";
 import SVG from "react-inlinesvg";
 
 const Svg = ({ json_data }) => {
-  return <SVG src={json_data.svg} />;
+	return <SVG src={json_data.svg} />;
 };
 ```
 
@@ -97,11 +97,11 @@ const Svg = ({ json_data }) => {
 import React from "react";
 
 const Png = ({ json_data }) => {
-  const buf = Buffer.from(json_data.png, "base64");
-  const blob = new Blob([buf], { type: "image/png" });
-  const uri = URL.createObjectURL(blob);
+	const buf = Buffer.from(json_data.png, "base64");
+	const blob = new Blob([buf], { type: "image/png" });
+	const uri = URL.createObjectURL(blob);
 
-  return <img src={uri} />;
+	return <img src={uri} />;
 };
 ```
 

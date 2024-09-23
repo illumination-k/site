@@ -32,12 +32,12 @@ console.log(rand);
 ```js
 // [0, max]
 function randInt(max) {
-  return Math.floor(Math.random() * (max + 1));
+	return Math.floor(Math.random() * (max + 1));
 }
 
 // [min, max]
 function randFromRange(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
+	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 ```
 
@@ -47,27 +47,27 @@ seed値が使え、簡単で比較的良い乱数生成アルゴリズムとし�
 
 ```js
 class XorShift {
-  constructor(seed = Date.now()) {
-    this.x = 123456789;
-    this.y = 984328975;
-    this.z = 839047104;
-    this.seed = seed;
-  }
+	constructor(seed = Date.now()) {
+		this.x = 123456789;
+		this.y = 984328975;
+		this.z = 839047104;
+		this.seed = seed;
+	}
 
-  gen() {
-    let t;
+	gen() {
+		let t;
 
-    t = this.x ^ (this.x << 11);
-    this.x = this.y;
-    this.y = this.z;
-    this.z = this.seed;
-    return (this.seed = this.seed ^ (this.seed >>> 19) ^ (t ^ (t >>> 8)));
-  }
+		t = this.x ^ (this.x << 11);
+		this.x = this.y;
+		this.y = this.z;
+		this.z = this.seed;
+		return (this.seed = this.seed ^ (this.seed >>> 19) ^ (t ^ (t >>> 8)));
+	}
 
-  genFromRange(min, max) {
-    const r = Math.abs(this.gen());
-    return min + (r % (max + 1 - min));
-  }
+	genFromRange(min, max) {
+		const r = Math.abs(this.gen());
+		return min + (r % (max + 1 - min));
+	}
 }
 ```
 
@@ -97,8 +97,8 @@ var decimal1 = mt.next(); // 0 以上 1 未満の実数
 `random`はmaxだけ指定して持ってくる感じのものなら何でも使えるようにしました。簡易的には
 
 ```js
-const randomizer = function(max) {
-  return Math.floor(Math.random() * (max + 1));
+const randomizer = function (max) {
+	return Math.floor(Math.random() * (max + 1));
 };
 ```
 
@@ -108,21 +108,21 @@ const randomizer = function(max) {
 
 ```js
 function fisherYatesShuffle(array, randomizer) {
-  let newArray = [];
-  while (array.length > 0) {
-    const n = array.length;
-    const k = randomizer(n - 1);
+	let newArray = [];
+	while (array.length > 0) {
+		const n = array.length;
+		const k = randomizer(n - 1);
 
-    newArray.push(array[k]);
-    array.splice(k, 1);
-  }
+		newArray.push(array[k]);
+		array.splice(k, 1);
+	}
 
-  return newArray;
+	return newArray;
 }
 
-const randomizer = function(max) {
-  const random = new XorShift();
-  return random.genFromRange(0, max);
+const randomizer = function (max) {
+	const random = new XorShift();
+	return random.genFromRange(0, max);
 };
 
 let array = [0, 1, 2, 3, 4];
@@ -138,17 +138,17 @@ console.log(array);
 
 ```js
 function durstenfeldShuffle(array, randomizer) {
-  for (let i = array.length; i > 1; i--) {
-    let j = randomizer(max = i - 1);
-    [array[i], array[j]] = [array[j], array[i]];
-  }
+	for (let i = array.length; i > 1; i--) {
+		let j = randomizer((max = i - 1));
+		[array[i], array[j]] = [array[j], array[i]];
+	}
 
-  return array;
+	return array;
 }
 
-const randomizer = function(max) {
-  const random = new XorShift();
-  return random.genFromRange(0, max);
+const randomizer = function (max) {
+	const random = new XorShift();
+	return random.genFromRange(0, max);
 };
 
 let array = [0, 1, 2, 3, 4];

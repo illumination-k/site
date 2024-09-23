@@ -20,16 +20,16 @@ import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
 
 const Header = () => {
-  return (
-    <div styles={{ flexGrow: 1 }}>
-      <AppBar>
-        <Button>Left Button</Button>
-        <strong>title</strong>
-        <div styles={{ flexGrow: 1 }} />
-        <Button>Right Button</Button>
-      </AppBar>
-    </div>
-  );
+	return (
+		<div styles={{ flexGrow: 1 }}>
+			<AppBar>
+				<Button>Left Button</Button>
+				<strong>title</strong>
+				<div styles={{ flexGrow: 1 }} />
+				<Button>Right Button</Button>
+			</AppBar>
+		</div>
+	);
 };
 ```
 

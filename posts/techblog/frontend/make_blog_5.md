@@ -159,52 +159,50 @@ import Layout from "@components/Layout";
 import Link from "next/link";
 
 const SearchResult = (props) => {
-  const { query, meta } = props;
-  const listitems = meta.map((res, idx) => {
-    const url = `/posts/${res.id}`;
-    return (
-      <li key={idx}>
-        <Link href={url}>{res.title}</Link>
-      </li>
-    );
-  });
-  return (
-    <Layout>
-      <h1>Search Results</h1>
-      <h2>Query: {query}</h2>
-      <ul>
-        {listitems}
-      </ul>
-    </Layout>
-  );
+	const { query, meta } = props;
+	const listitems = meta.map((res, idx) => {
+		const url = `/posts/${res.id}`;
+		return (
+			<li key={idx}>
+				<Link href={url}>{res.title}</Link>
+			</li>
+		);
+	});
+	return (
+		<Layout>
+			<h1>Search Results</h1>
+			<h2>Query: {query}</h2>
+			<ul>{listitems}</ul>
+		</Layout>
+	);
 };
 
 export async function getServerSideProps(ctx) {
-  const { posts } = await require("../../cache/data");
-  const FlexSearch = require("flexsearch");
-  const query = ctx.query.q;
+	const { posts } = await require("../../cache/data");
+	const FlexSearch = require("flexsearch");
+	const query = ctx.query.q;
 
-  let index = new FlexSearch({
-    tokenize: function(str) {
-      return str.split(" ");
-    },
-    doc: {
-      id: "id",
-      field: ["data:words"],
-    },
-  });
+	let index = new FlexSearch({
+		tokenize: function (str) {
+			return str.split(" ");
+		},
+		doc: {
+			id: "id",
+			field: ["data:words"],
+		},
+	});
 
-  await index.add(posts);
+	await index.add(posts);
 
-  const res = await index.search(query);
-  const meta = res.map((r) => ({
-    id: r.id,
-    title: r.data.title,
-  }));
+	const res = await index.search(query);
+	const meta = res.map((r) => ({
+		id: r.id,
+		title: r.data.title,
+	}));
 
-  return {
-    props: { query: query, meta: meta },
-  };
+	return {
+		props: { query: query, meta: meta },
+	};
 }
 
 export default SearchResult;
