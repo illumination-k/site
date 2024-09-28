@@ -32,7 +32,11 @@ export default function Post({
   relatedPostMeta,
 }: PostProps) {
   return (
-    <article className={css({ bg: "slate.50" })}>
+    <article
+      className={css({ bg: "slate.50" })}
+      // data-pagefind-body is used as a selector to construct the pagefind search index
+      data-pagefind-body
+    >
       <h1
         className={css({
           px: "10",
@@ -87,11 +91,7 @@ export default function Post({
           })}
         >
           <PostHeader meta={meta} />
-          <MdView
-            // data-pagefind-body is used as a selector to construct the pagefind search index
-            data-pagefind-body
-            compiledMarkdown={compiledMarkdown}
-          />
+          <MdView compiledMarkdown={compiledMarkdown} />
           <PostFooter meta={meta} />
         </article>
 
