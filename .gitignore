@@ -42,3 +42,4 @@ dump/
 /packages/web/src/lib/$path.ts
 
 tmp/
+tmp*
