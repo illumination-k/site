@@ -12,6 +12,7 @@ import {
 import type { Headings, PostMeta } from "common";
 import type { Route } from "next";
 
+import SearchBar from "./SearchBar";
 import Toc from "./Toc";
 import Tag from "../Tag";
 
@@ -105,6 +106,8 @@ export default function Sidebar({ className, meta, headings, prefix }: Props) {
           </SidebarMetaList>
         </ul>
       </article>
+
+      <SearchBar className={css({ my: 5 })} category={prefix} />
 
       <Toc
         meta={meta}

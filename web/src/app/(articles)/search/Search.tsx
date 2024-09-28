@@ -1,15 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useCallback, useEffect, useState } from "react";
 
 import { css } from "@/styled-system/css";
 
+import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 import type { Route } from "next";
 import { z } from "zod";
 
+import Loading from "@/components/Loading";
+
+const searchParamsSchema = z.object({
+  q: z.string().nullable(),
+  category: z
+    .string()
+    .nullable()
+    .transform((category) => category?.toLowerCase()),
+});
+
 const pagefindResultSchema = z.object({
-  url: z.string().transform((url) => url.replace(".html", "")),
+  url: z.string().transform((url) => url.replace(".html", "").toLowerCase()),
   excerpt: z.string(),
   meta: z.object({
     title: z.string().optional(),
@@ -27,8 +39,46 @@ declare global {
 }
 
 export default function Search() {
-  const [query, setQuery] = useState("");
+  const [loading, setLoading] = useState(false);
+  const rawSearchParams = useSearchParams();
   const [results, setResults] = useState<PagefindResult[]>([]);
+
+  const { q, category } = searchParamsSchema.parse({
+    q: rawSearchParams.get("q"),
+    category: rawSearchParams.get("category"),
+  });
+
+  const [query, setQuery] = useState(q ?? "");
+
+  const handleSearch = useCallback(
+    async ({ q, category }: { q: string; category?: string }) => {
+      if (!window.pagefind) {
+        return;
+      }
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
+      const search = await window.pagefind.search(q);
+
+      const results = await Promise.all(
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
+        search.results.map((r: any) => r.data()),
+      );
+
+      setResults(
+        z
+          .array(pagefindResultSchema)
+          .parse(results)
+          .filter((r) => {
+            if (category) {
+              return r.url.toLowerCase().includes(category);
+            }
+
+            return true;
+          }),
+      );
+    },
+    [],
+  );
 
   useEffect(() => {
     async function loadPagefind() {
@@ -46,23 +96,19 @@ export default function Search() {
         }
       }
     }
-    // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    loadPagefind();
-  }, []);
 
-  async function handleSearch() {
-    if (!window.pagefind) {
-      return;
-    }
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
-    const search = await window.pagefind.search(query);
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
-    const results = await Promise.all(search.results.map((r: any) => r.data()));
-
-    setResults(z.array(pagefindResultSchema).parse(results));
-  }
+    setLoading(true);
+    loadPagefind()
+      .then(async () => {
+        if (q) {
+          await handleSearch({ q, category });
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => setLoading(false));
+  }, [setLoading, handleSearch, q, category]);
 
   return (
     <div
@@ -75,10 +121,21 @@ export default function Search() {
     >
       <div className={css({ gridColumnStart: 3, gridColumnEnd: 11 })}>
         <form
+          className={css({ my: 2, display: "flex" })}
           onSubmit={(e) => {
             e.preventDefault();
-            // eslint-disable-next-line @typescript-eslint/no-misused-promises, @typescript-eslint/no-floating-promises
-            handleSearch();
+            const target = e.target as HTMLFormElement;
+            const inputTarget = target[0] as HTMLInputElement;
+            setLoading(true);
+            handleSearch({
+              q: inputTarget.value,
+              category,
+            })
+              .then()
+              .catch((e) => {
+                console.error(e);
+              })
+              .finally(() => setLoading(false));
           }}
         >
           <input
@@ -89,14 +146,22 @@ export default function Search() {
               bg: "gray.50",
               borderWidth: 1,
               borderColor: "gray.300",
-              rounded: "lg",
+              roundedLeft: "lg",
             })}
             value={query}
             placeholder="Search articles..."
             onChange={(e) => setQuery(e.target.value)}
           />
+          <button
+            type="submit"
+            className={css({ bg: "blue.400", px: 2, roundedRight: "lg" })}
+          >
+            <MagnifyingGlassIcon
+              className={css({ w: 6, h: 6, color: "white" })}
+            />
+          </button>
         </form>
-
+        {loading && <Loading />}
         {results.map((result) => (
           <div
             key={result.url}
