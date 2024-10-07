@@ -4,7 +4,7 @@ title: "PostgresのSerial型のPrimary keyの挙動について"
 description: "PostgreSQLでERROR: duplicate key value violates unique constraintエラーが発生する原因の1つとして、Serial型のPrimary keyに手動で値を割り当てた際にシーケンスが正しく更新されないことがあります。これは、Default値であるnextvalが呼び出されないことによって起こります。この問題を解決するためには、テーブルのPrimary keyの現在の最大値をシーケンスオブジェクトに設定する必要があります。具体的な手順としては、setval関数を使用してシーケンスオブジェクトの値を調整することで、INSERT操作が正しく実行されるようになります。"
 category: "techblog"
 lang: ja
-tags: ["postgresql"]
+tags: ["postgresql", "database"]
 created_at: 2024-09-25
 updated_at: 2024-09-25
 ---

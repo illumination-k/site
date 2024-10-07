@@ -42,6 +42,7 @@
     "@types/mdast": "^4.0.4",
     "@types/tmp": "^0.2.6",
     "@types/unist": "^3.0.3",
+    "@types/uuid": "^10.0.0",
     "@types/yargs": "^17.0.33",
     "node-loader": "^2.0.0",
     "swc-loader": "^0.2.6",

@@ -41,7 +41,7 @@ PCRで特定の配列を増幅させたい場合、増幅したい配列の5'末
 
 下の図の場合は`ACGACGTTCGTCA`という配列が決定されます。現在では技術の進歩によって１日くらいあれば500 bp(base pair)程度のリードを200サンプル近く読むことができます（経験談なので最新機器使えばもっといける可能性があります）。
 
-![fig2](https://www.cosmobio.co.jp/support/technology/image/APB_NGS_Sanger_Sequencing_Illustration.png)
+![fig2](../../public/APB_NGS_Sanger_Sequencing_Illustration.avif)
 
 この方法も十分に画期的であったのですが、近年では次世代シーケンサーと呼ばれる数百万から数十億もの膨大なシーケンシング反応を同時並行して実行できる技術が普及してきました。ここでは、次世代シーケンサーで主に使われているブリッジPCR法とSequencing-by-synthesisという手法に絞って説明します。
 
