@@ -7,7 +7,7 @@ category: techblog
 tags:
   - powershell
 created_at: "2022-05-20T18:42:50+00:00"
-updated_at: "2022-05-20T18:42:50+00:00"
+updated_at: "2024-10-27T18:42:50+00:00"
 ---
 
 ## TL;DR
@@ -29,7 +29,7 @@ choco install peco
 Powershellの入力履歴は`(Get-PSReadlineOption).HistorySavePath`で表示されるパスにあるテキストファイルに保存されています。なので、Powershellで履歴を得るには
 
 ```powershell
-Get-Content (Get-PSReadlineOption).HistorySavePath | Select-Object -Unique
+Get-Content -Path (Get-PSReadlineOption).HistorySavePath | Select-Object -Unique
 ```
 
 のようなことをすればよいです。また、コマンド履歴はユニークであってほしいので、`Select-Object -Unique`を使用しています。
@@ -39,14 +39,14 @@ Get-Content (Get-PSReadlineOption).HistorySavePath | Select-Object -Unique
 得られた出力結果を実行するには`Invoke-Expression`を使います。
 
 ```powershell
-Get-Content (Get-PSReadlineOption).HistorySavePath | Select-Object -Unique | peco | Invoke-Expression
+Get-Content -Path (Get-PSReadlineOption).HistorySavePath | Select-Object -Unique | peco | Invoke-Expression
 ```
 
 ということで、実行する関数は
 
 ```powershell
 function pecoHistory() {
-    Get-Content (Get-PSReadlineOption).HistorySavePath | Select-Object -Unique | peco | Invoke-Expression
+    Get-Content -Path (Get-PSReadlineOption).HistorySavePath | Select-Object -Unique | peco | Invoke-Expression
 }
 ```
 
