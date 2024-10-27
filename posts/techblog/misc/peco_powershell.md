@@ -88,3 +88,7 @@ Set-PSReadLineKeyHandler -Chord Ctrl+r -ScriptBlock {
 - [Windows PowerShell Profiles](https://docs.microsoft.com/en-us/previous-versions//bb613488(v=vs.85)?redirectedfrom=MSDN#understanding-the-profiles)
 - [Set-PSReadLineKeyHandler](https://docs.microsoft.com/ja-jp/powershell/module/psreadline/set-psreadlinekeyhandler?view=powershell-7.1)
 - [peco](https://github.com/peco/peco)
+
+## 修正履歴
+
+- [#65](https://github.com/illumination-k/site/issues/65)に対応しました。
