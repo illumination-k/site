@@ -8,19 +8,10 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
-      - uses: actions/checkout@v4
+      - name: install mise
+        uses: jdx/mise-action@v2
         with:
-          lfs: true
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
-      - run: npm install -g pnpm
-
-      - name: install dprint
-        run: curl -fsSL https://dprint.dev/install.sh | sh
-
-      - name: add dprint to PATH
-        run: echo "$HOME/.dprint/bin" >> "$GITHUB_PATH"
+          experimental: true
 
       - run: pnpm i
       - run: pnpm lint

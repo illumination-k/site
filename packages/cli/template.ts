@@ -1,7 +1,7 @@
 import type { PostMeta } from "common";
 import { formatDate } from "common/utils";
-import YAML from "yaml";
 import * as uuid from "uuid";
+import YAML from "yaml";
 
 const DEFAULT_POST_META: PostMeta = {
   uuid: uuid.v4(),
