@@ -8,10 +8,12 @@ jobs:
     runs-on: "ubuntu-latest"
 
     steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
       - name: install mise
         uses: jdx/mise-action@v2
-        with:
-          experimental: true
 
       - run: pnpm i
       - run: pnpm lint

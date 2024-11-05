@@ -25,8 +25,6 @@ jobs:
 
       - name: install mise
         uses: jdx/mise-action@v2
-        with:
-          experimental: true
 
       - name: install deps
         run: pnpm i
