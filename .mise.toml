@@ -1,0 +1,7 @@
+[tools]
+dprint = "0.47"
+actionlint = "1.7"
+pre-commit = "4"
+
+node = "20"
+pnpm = "9"

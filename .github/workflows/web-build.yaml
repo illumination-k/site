@@ -22,12 +22,9 @@ jobs:
       - uses: actions/checkout@v4
         with:
           lfs: true
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 20
 
-      - name: install pnpm
-        run: npm install -g pnpm
+      - name: install mise
+        uses: jdx/mise-action@v2
 
       - name: install deps
         run: pnpm i
