@@ -20,7 +20,7 @@ updated_at: "2022-05-20T18:42:50+00:00"
 Illumina社のNGS技術は`sequence by synthesis (SBS)`と呼ばれる技術が使われています。`SBS`を使うには、アダプターと呼ばれる認識配列が必要です。
 ライブラリ調整とは、様々な反応を駆使して、読みたいDNAの両端にアダプターをつける反応です。このアダプターとして使われる配列も色々ありますが、2021現在において最もよく使われているのはTruseqのアダプターと、Nexteraのアダプターだと思われます。その他のアダプターなどについては[Illumina adapter sequences document](https://teichlab.github.io/scg_lib_structs/data/illumina-adapter-sequences-1000000002694-14.pdf)を参照してください。
 
-よく使われている反応については、[弊ブログの記事](https://illumination-k.dev/posts/biology/library_construction_reaction)などを参照していただけると幸いです。
+よく使われている反応については、[弊ブログの記事](https://illumination-k.dev/techblog/post/65c054ed-bee1-46df-b849-9a7f92ac6d6c)などを参照していただけると幸いです。
 
 ### ライブラリの構造
 
