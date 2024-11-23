@@ -2,6 +2,8 @@ import type { MetadataRoute } from "next";
 
 import { blogService } from "@/features/techblog/constant";
 
+export const dynamic = 'force-static';
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await blogService.repo.filterPosts("ja");
   const postSitemap: MetadataRoute.Sitemap = posts.map((post) => ({
