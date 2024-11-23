@@ -4,7 +4,7 @@ import { css } from "@/styled-system/css";
 
 import type { NextPage } from "next";
 
-const Home: NextPage = ({}) => {
+const Home: NextPage = () => {
   return (
     <div
       className={css({
