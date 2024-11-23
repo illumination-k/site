@@ -1,0 +1,7 @@
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.2/schema.json",
+  "extends": ["../settings/biome.json"],
+  "files": {
+    "ignore": ["dist/", "node_modules/", "src/ipynb_schema.v4.4.ts"]
+  }
+}
