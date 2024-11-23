@@ -12,7 +12,7 @@ import TwitterIcon from "@/icons/TwitterIcon";
 
 const caveat = Caveat({ subsets: ["latin"] });
 
-export default function Nav({}) {
+export default function Nav() {
   return (
     <nav
       className={css({

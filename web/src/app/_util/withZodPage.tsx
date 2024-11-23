@@ -46,7 +46,7 @@ export function withZodPage<S extends Schema>(
           }
         }
 
-        validatedProps[key] = result.data; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+        validatedProps[key] = result.data;
       }
     }
 

@@ -56,11 +56,10 @@ export default function Search() {
         return;
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-call
       const search = await window.pagefind.search(q);
 
       const results = await Promise.all(
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         search.results.map((r: any) => r.data()),
       );
 
@@ -84,11 +83,10 @@ export default function Search() {
     async function loadPagefind() {
       if (typeof window.pagefind === "undefined") {
         try {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           window.pagefind = await import(
             // @ts-expect-error @types of pagefind are not available
-            // eslint-disable-next-line import/no-unresolved
-            /* webpackIgnore: true */ "/pagefind/pagefind.js"
+
+            /* webpackIgnore: true */ "/pagefind/pagefind.js" // eslint-disable-line import/no-unresolved
           );
         } catch (e) {
           console.error(e);

@@ -2,7 +2,7 @@ import { Fragment } from "react";
 
 import { css } from "@/styled-system/css";
 
-const TermsService = ({}) => {
+const TermsService = () => {
   const header = "免責事項・著作権";
   const texts = JA_TEXT;
   return (

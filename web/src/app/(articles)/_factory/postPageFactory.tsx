@@ -34,7 +34,7 @@ export default class PostPageFactory {
       const _params = await params;
       const post = await this.blogService.repo.retrieve(_params.uuid);
       if (!post) {
-        throw `${_params.uuid} is not found`; // eslint-disable-line @typescript-eslint/only-throw-error
+        throw `${_params.uuid} is not found`;
       }
 
       return {
@@ -49,7 +49,7 @@ export default class PostPageFactory {
       const post = await this.blogService.repo.retrieve(params.uuid);
 
       if (!post) {
-        throw `${params.uuid} is not found`; // eslint-disable-line @typescript-eslint/only-throw-error
+        throw `${params.uuid} is not found`;
       }
 
       const relatedPostMeta = await this.blogService.getRelatedPostMeta(
