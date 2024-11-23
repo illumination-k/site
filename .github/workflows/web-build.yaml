@@ -26,6 +26,9 @@ jobs:
       - name: install mise
         uses: jdx/mise-action@v2
 
+      - name: trust
+        run: mise trust
+
       - name: install deps
         run: pnpm i
 
