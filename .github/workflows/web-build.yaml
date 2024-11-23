@@ -38,6 +38,9 @@ jobs:
       - name: build web
         run: pnpm web-build
 
+      - name: hack
+        run: rm -rf .mise.toml
+
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
         #if: github.ref == 'refs/heads/main'
