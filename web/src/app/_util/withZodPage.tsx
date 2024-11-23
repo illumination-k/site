@@ -4,8 +4,8 @@ import type { ZodError, z } from "zod";
 import { ZodSchema } from "zod";
 
 interface InputProps {
-  params?: unknown;
-  searchParams?: unknown;
+  params?: Promise<unknown>;
+  searchParams?: Promise<unknown>;
 }
 
 type Schema = Partial<Record<keyof InputProps, ZodSchema>>;
@@ -31,7 +31,8 @@ export function withZodPage<S extends Schema>(
     for (const key of Object.keys(schema) as (keyof S)[]) {
       const s: unknown = schema[key];
       if (isZodSchema(s)) {
-        const result = await s.spa(input[key as keyof InputProps]);
+        const inputValue = await input[key as keyof InputProps];
+        const result = await s.spa(inputValue);
         if (!result.success) {
           const errorFunction = errors[key as keyof ErrorFunction];
 

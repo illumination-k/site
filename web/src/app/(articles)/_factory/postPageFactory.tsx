@@ -28,12 +28,13 @@ export default class PostPageFactory {
 
   public createGenerateMetadataFn() {
     return async (
-      { params }: { params: Params },
+      { params }: { params: Promise<Params> },
       _parent: ResolvingMetadata,
     ): Promise<Metadata> => {
-      const post = await this.blogService.repo.retrieve(params.uuid);
+      const _params = await params;
+      const post = await this.blogService.repo.retrieve(_params.uuid);
       if (!post) {
-        throw `${params.uuid} is not found`; // eslint-disable-line @typescript-eslint/only-throw-error
+        throw `${_params.uuid} is not found`; // eslint-disable-line @typescript-eslint/only-throw-error
       }
 
       return {
