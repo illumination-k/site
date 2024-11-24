@@ -155,6 +155,7 @@ const style = css({
       color: "blue.500",
       px: 4,
       textAlign: "right",
+      overflowWrap: "anywhere"
     },
   },
 
