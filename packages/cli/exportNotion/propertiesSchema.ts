@@ -5,6 +5,11 @@ const urlSchema = z.object({
   url: z.string(),
 });
 
+const nullableUrlSchema = z.object({
+  type: z.literal("url"),
+  url: z.string().nullish(),
+});
+
 const multiSelectSchema = z.object({
   id: z.string(),
   type: z.literal("multi_select"),
@@ -39,6 +44,7 @@ const titleSchema = z.object({
 
 export const propertiesSchema = z.object({
   URL: urlSchema,
+  Github: nullableUrlSchema,
   Name: titleSchema,
   AiDesc: richTextSchema,
   Tag: multiSelectSchema,
