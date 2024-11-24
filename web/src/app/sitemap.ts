@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 
+import { paperStreamService } from "@/features/paperStream/constants";
 import { blogService } from "@/features/techblog/constant";
 
 export const dynamic = "force-static";
@@ -11,5 +12,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     lastModified: post.meta.updated_at,
   }));
 
-  return postSitemap;
+  const paperStreamPosts = await paperStreamService.repo.filterPosts("ja");
+
+  const paperStreamSitemap: MetadataRoute.Sitemap = paperStreamPosts.map(
+    (post) => ({
+      url: `https://illumination-k.dev/paperstream/post/${post.meta.uuid}`,
+      lastModified: post.meta.updated_at,
+    }),
+  );
+
+  return [...postSitemap, ...paperStreamSitemap];
 }
