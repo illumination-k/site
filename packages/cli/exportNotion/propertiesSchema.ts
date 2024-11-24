@@ -7,7 +7,7 @@ const urlSchema = z.object({
 
 const nullableUrlSchema = z.object({
   type: z.literal("url"),
-  url: z.string().nullish()
+  url: z.string().nullish(),
 });
 
 const multiSelectSchema = z.object({

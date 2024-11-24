@@ -22,7 +22,7 @@ type HeadingInfo = {
   title: string;
   paperUrl: string;
   githubUrl?: string;
-}
+};
 
 function serializeHeadingInfo(headingInfo: HeadingInfo): string {
   let heading = `元論文: **[${headingInfo.title}](${headingInfo.paperUrl})**\n`;
@@ -121,13 +121,12 @@ export async function exportDatabase(
   outputDir: string,
 ) {
   const database = await notion.databases.query({
-      database_id: databaseId,
-    });
+    database_id: databaseId,
+  });
 
   const filteredPageObjects = database.results.filter(
     (o) => isPageObjectResponse(o) && filterFunc(o),
   );
-
 
   const results = filteredPageObjects.map((o) => {
     const parsed = pageObjectSchema.parse(o);
@@ -164,7 +163,7 @@ export async function exportDatabase(
         paperUrl: parsed.properties.URL.url,
         githubUrl: parsed.properties.Github.url ?? undefined,
       },
-    }
+    };
   });
 
   for (const result of results) {
