@@ -57,6 +57,8 @@ const style = css({
     my: 2,
   },
 
+  "& p": { my: 2, px: 2 },
+
   "& img": { my: 4 },
 
   // rounded table
@@ -127,47 +129,32 @@ const style = css({
     },
   },
 
-  // code block
-  '& code[class*="language-"], & pre[class*="language-"]': {
-    // "@apply": "my-4 px-0 text-black py-1 bg-slate-50 font-mono rounded-lg break-normal whitespace-pre overflow-x-auto",
-
-    "& span.code-line": {
-      // "@apply": "px-4",
-      px: 4,
-    },
-  },
-
   // embed
   "& div.github-embed": {
-    // "@apply": "bg-slate-200 rounded-lg border-slate-200 border-1 m-1",
     bg: "slate.200",
     rounded: "lg",
     borderColor: "slate.200",
     borderWidth: "1",
     m: 1,
     '& code[class*="language-"], & pre[class*="language-"]': {
-      // "@apply": "rounded-t-none",
-      roundedTop: "none",
+      my: 1,
+      rounded: "unset",
       "& span.code-line": {
-        // "@apply": "px-10",
         px: 10,
       },
       "& span.line-number::before": {
-        // "@apply": "-ml-9 content-[attr(line)] mr-4 text-right text-slate-400",
-        ml: -9,
+        ml: -7,
         content: "attr(line)",
         mr: 4,
         textAlign: "right",
-        color: "slate.400",
+        color: "slate.500",
       },
     },
     "& a.github-embed-title": {
-      // "@apply": "px-4 py-[2px] text-sm text-blue-500 overflow-hidden",
-      px: 4,
-      py: 1,
       fontSize: "sm",
       color: "blue.500",
-      overflow: "hidden",
+      px: 4,
+      textAlign: "right",
     },
   },
 
@@ -177,8 +164,8 @@ const style = css({
     rounded: "lg",
     m: 1,
     pb: 0,
-    '& code[class*="language-"], & pre[class*="language-"]': {
-      roundedTop: "none",
+    "& code, & pre": {
+      roundedTop: "unset",
       "& span.code-line": {
         px: 4,
       },
