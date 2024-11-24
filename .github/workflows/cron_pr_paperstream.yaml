@@ -47,4 +47,4 @@ jobs:
             --title "Auto commit of paper-stream at $(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
             --base main \
             --body "This PR was created automatically."
-        if: ${{ steps.check_diff.outputs.exit_code == 1 }}
+        if: ${{ steps.check_diff.outcome == 'failure' }}
