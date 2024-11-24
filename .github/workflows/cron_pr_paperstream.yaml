@@ -4,7 +4,7 @@ on:
   push
 
 jobs:
-  NodeCI:
+  CreatePaperStreamPR:
     runs-on: "ubuntu-latest"
     env:
       GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -38,7 +38,9 @@ jobs:
 
       - name: create PR if diff exists
         run: |
-          git diff --exit-code || \
+          if ! git diff --exit-code; then
             gh pr create \
               --title "Auto commit of paper-stream at $(date -u +'%Y-%m-%dT%H:%M:%SZ')" \
-              --base main
+              --base main \
+              --body "This PR was created automatically."
+          fi
