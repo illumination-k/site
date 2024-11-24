@@ -18,6 +18,22 @@ import { pageObjectSchema } from "./propertiesSchema";
 
 const writeFileAsync = promisify(fs.writeFile);
 
+type HeadingInfo = {
+  title: string;
+  paperUrl: string;
+  githubUrl?: string;
+}
+
+function serializeHeadingInfo(headingInfo: HeadingInfo): string {
+  let heading = `元論文: **[${headingInfo.title}](${headingInfo.paperUrl})**\n`;
+
+  if (headingInfo.githubUrl) {
+    heading += `**[GitHub](${headingInfo.githubUrl})**\n`;
+  }
+
+  return heading;
+}
+
 function isPageObjectResponse(obj: unknown): obj is PageObjectResponse {
   return (obj as PageObjectResponse).object === "page";
 }
@@ -34,6 +50,7 @@ const notion = new Client({
 
 export async function getNotionPages(
   postMeta: PostMeta,
+  headingInfo: HeadingInfo,
   publicDir: string,
   outputDir: string,
 ) {
@@ -87,6 +104,11 @@ export async function getNotionPages(
   const content = `---
 ${YAML.stringify(postMeta).trim()}
 ---
+
+${serializeHeadingInfo(headingInfo)}
+
+**この記事は、元論文を筆者が理解しやすいようにまとめたものであり、論文の内容を正確に反映しているとは限りません。**
+
 ${mdString.parent}`;
 
   writeFileAsync(path.join(outputDir, `${pageMeta.id}.md`), content);
@@ -99,14 +121,15 @@ export async function exportDatabase(
   outputDir: string,
 ) {
   const database = await notion.databases.query({
-    database_id: databaseId,
-  });
+      database_id: databaseId,
+    });
 
   const filteredPageObjects = database.results.filter(
     (o) => isPageObjectResponse(o) && filterFunc(o),
   );
 
-  const postMetas = filteredPageObjects.map((o) => {
+
+  const results = filteredPageObjects.map((o) => {
     const parsed = pageObjectSchema.parse(o);
     const uuid = parsed.id;
     const createdAt = parsed.created_time;
@@ -134,10 +157,18 @@ export async function exportDatabase(
       updated_at: updatedAt,
     };
 
-    return postMetaSchema.parse(obj);
+    return {
+      postMeta: postMetaSchema.parse(obj),
+      headingInfo: {
+        title,
+        paperUrl: parsed.properties.URL.url,
+        githubUrl: parsed.properties.Github.url ?? undefined,
+      },
+    }
   });
 
-  for (const postMeta of postMetas) {
-    await getNotionPages(postMeta, publicDir, outputDir);
+  for (const result of results) {
+    const { postMeta, headingInfo } = result;
+    await getNotionPages(postMeta, headingInfo, publicDir, outputDir);
   }
 }

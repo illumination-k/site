@@ -101,8 +101,16 @@ yargs(hideBin(process.argv))
     async (argv) => {
       await exportDatabase(
         argv.databaseId as string,
-        // @ts-expect-error
-        (o) => o.properties.Status.select.name === "Done",
+
+        (o) => {
+          // @ts-expect-error
+          if (o.properties.Status.select === null) {
+            return false;
+          }
+
+          // @ts-expect-error
+          return o.properties.Status.select.name === "Done";
+        },
         argv.publicDir as string,
         argv.outputDir as string,
       );
