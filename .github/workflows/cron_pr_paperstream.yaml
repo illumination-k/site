@@ -42,6 +42,7 @@ jobs:
       - name: commit and create PR if diff exists
         run: |
           git add .
+          git checkout -b paper-stream-${{ github.run_number }}
           git commit -m "ci: auto commit at $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
           gh pr create \
             --title "Auto commit of paper-stream" \
