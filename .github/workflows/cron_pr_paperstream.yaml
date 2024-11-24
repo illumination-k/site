@@ -1,4 +1,4 @@
-name: node CI
+name: Cron for paper-stream update PR
 
 on:
   push
