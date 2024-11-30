@@ -2,7 +2,7 @@ import { Fragment } from "react";
 
 import { css } from "@/styled-system/css";
 
-const PrivacyPolicy = ({}) => {
+const PrivacyPolicy = () => {
   const header = "プライバシーポリシー";
   const texts = JA_TEXT;
   return (
@@ -15,7 +15,7 @@ const PrivacyPolicy = ({}) => {
       >
         <h1 className={css({ fontSize: "3xl", fontWeight: "black" })}>
           {header}
-        </h1>{" "}
+        </h1>
         {Object.entries(texts).map(([k, v], i) => {
           return (
             <Fragment key={i}>

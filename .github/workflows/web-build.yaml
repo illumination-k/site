@@ -26,6 +26,9 @@ jobs:
       - name: install mise
         uses: jdx/mise-action@v2
 
+      - name: trust
+        run: mise trust -P .mise.toml
+
       - name: install deps
         run: pnpm i
 
@@ -34,6 +37,11 @@ jobs:
 
       - name: build web
         run: pnpm web-build
+
+      # mise trustが必要というエラーが出るが、なんで出るのかわからない
+      # 削除するとmise trustはいらないので、一旦削除
+      - name: hack
+        run: rm -rf .mise.toml
 
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1

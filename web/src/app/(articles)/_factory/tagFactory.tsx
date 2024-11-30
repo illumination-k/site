@@ -97,8 +97,7 @@ export class TagTopPageFactory {
   }
 
   public createPage() {
-    // eslint-disable-next-line react/display-name
-    return async () => {
+    const TagPage = async () => {
       const tags = await this.blogService.repo.tags();
 
       return (
@@ -111,5 +110,7 @@ export class TagTopPageFactory {
         </div>
       );
     };
+
+    return TagPage;
   }
 }
