@@ -46,19 +46,11 @@ a
 ```python
 from matplotlib import pyplot as plt
 
-
-
 fig = plt.figure()
-
 ax = fig.add_subplot(111)
 
-
-
 x = [1, 2, 3, 4, 5]
-
 y = [1, 2, 3, 4, 5]
-
-
 
 ax.plot(x, y)
 ```

@@ -120,7 +120,7 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
         if (typeof cell.source === "string") {
           code += cell.source;
         } else {
-          code += cell.source.join("\n");
+          code += cell.source.join("");
         }
 
         code += "\n```\n";
