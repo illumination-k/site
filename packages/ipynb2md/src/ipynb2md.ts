@@ -45,8 +45,9 @@ export default class IpynbToMdContext {
   contents: string[] = [];
   imageFiles: ImageFile[] = [];
 
-  static imageFileGenerator: (extension: string) => string = (extension: string) =>
-    `${randomUUID()}.${extension}`;
+  static imageFileGenerator: (extension: string) => string = (
+    extension: string,
+  ) => `${randomUUID()}.${extension}`;
 
   private constructor(ipynbFilePath: string, outputDir: string) {
     this.outputDir = outputDir;
@@ -129,7 +130,9 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
           return { outputString: code, imageFiles: [] };
         }
 
-        const { outputString, imageFiles } = this.output2contentWithFile(cell.outputs);
+        const { outputString, imageFiles } = this.output2contentWithFile(
+          cell.outputs,
+        );
 
         return { outputString: `${code}\n${outputString}`, imageFiles };
       }

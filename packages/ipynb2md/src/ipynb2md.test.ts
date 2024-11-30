@@ -11,7 +11,8 @@ const __dirname = path.dirname(__filename);
 const IPYNB_PATH = path.join(__dirname, "../assets/test.ipynb");
 const OUTPUT_DIR = path.join(__dirname, "../assets/output");
 
-IpynbToMdContext.imageFileGenerator = (extension: string) => `test.${extension}`;
+IpynbToMdContext.imageFileGenerator = (extension: string) =>
+  `test.${extension}`;
 
 describe("ipynb2md", () => {
   it("constructor IpynbToMdContext", () => {
