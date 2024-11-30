@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { metadata2summary, readIpynbFile } from "./ipynb2md";
+import IpynbToMdContext from "./ipynb2md";
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -9,24 +9,35 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const IPYNB_PATH = path.join(__dirname, "../assets/test.ipynb");
+const OUTPUT_DIR = path.join(__dirname, "../assets/output");
+
+IpynbToMdContext.imageFileGenerator = (extension: string) => `test.${extension}`;
 
 describe("ipynb2md", () => {
-  it("read ipynb", () => {
-    const ipynb = readIpynbFile(IPYNB_PATH);
+  it("constructor IpynbToMdContext", () => {
+    const context = IpynbToMdContext.from({
+      ipynbFilePath: IPYNB_PATH,
+      outputDir: OUTPUT_DIR,
+    });
 
-    expect(ipynb).toBeDefined();
+    expect(context).toBeDefined();
   });
 
-  it("metadata2string", () => {
-    const ipynb = readIpynbFile(IPYNB_PATH);
+  it("mdFilePath", () => {
+    const context = IpynbToMdContext.from({
+      ipynbFilePath: IPYNB_PATH,
+      outputDir: OUTPUT_DIR,
+    });
 
-    const metadata = ipynb.metadata;
-    const s = metadata2summary(metadata);
+    expect(context.mdFilePath()).toBe(path.join(OUTPUT_DIR, "test.md"));
+  });
 
-    console.log(s);
+  it("writeMdFile", () => {
+    const context = IpynbToMdContext.from({
+      ipynbFilePath: IPYNB_PATH,
+      outputDir: OUTPUT_DIR,
+    });
 
-    expect(s.startsWith("<details>")).toBeTruthy();
-    expect(s.endsWith("</details>\n")).toBeTruthy();
-    expect(s).includes("<summary>Notebook Metadata</summary>");
+    context.writeMdFile();
   });
 });

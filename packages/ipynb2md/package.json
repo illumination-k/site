@@ -6,6 +6,7 @@
   "scripts": {
     "format": "biome check --write .",
     "lint": "biome lint . && tsc --noEmit",
+    "test": "vitest run",
     "gen": "quicktype -s schema ./assets/nbformat.v4.4.schema.json -o ./src/ipynb_schema.v4.4.ts"
   },
   "keywords": [],
@@ -15,6 +16,7 @@
     "quicktype": "^23.0.170"
   },
   "dependencies": {
+    "anser": "^2.3.0",
     "zod": "^3.23.8"
   }
 }

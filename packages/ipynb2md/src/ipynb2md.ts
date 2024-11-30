@@ -1,71 +1,237 @@
-import { type PathLike, readFileSync } from "node:fs";
+import { randomUUID } from "node:crypto";
+import { readFileSync, writeFileSync } from "node:fs";
+import path from "node:path";
 
 import {
   type Cell,
   Convert,
   type IpynbSchemaV44,
-  type IpynbSchemaV44_Metadata,
+  type Output,
+  OutputType,
 } from "./ipynb_schema.v4.4";
 
-export function readIpynbFile(ipynbPath: PathLike): IpynbSchemaV44 {
-  return Convert.toIpynbSchemaV44(readFileSync(ipynbPath, "utf-8"));
-}
+import { ansiToHtml } from "anser";
+import { z } from "zod";
 
-export function metadata2summary(metadata: IpynbSchemaV44_Metadata): string {
-  return `<details>
+const contextInputSchema = z.object({
+  ipynbFilePath: z.string().endsWith(".ipynb"),
+  outputDir: z.string(),
+});
+
+const imageExtensionSchema = z.enum([
+  "png",
+  "jpeg",
+  "gif",
+  "svg",
+  "webp",
+  "avif",
+]);
+
+type ImageFile = {
+  imageFilePath: string;
+  data: Buffer;
+};
+
+type ContentWithFile = {
+  outputString: string;
+  imageFiles: ImageFile[];
+};
+
+export default class IpynbToMdContext {
+  outputDir: string;
+  ipynbFilePath: string;
+  ipynbInput: IpynbSchemaV44;
+
+  contents: string[] = [];
+  imageFiles: ImageFile[] = [];
+
+  static imageFileGenerator: (extension: string) => string = (extension: string) =>
+    `${randomUUID()}.${extension}`;
+
+  private constructor(ipynbFilePath: string, outputDir: string) {
+    this.outputDir = outputDir;
+    this.ipynbFilePath = ipynbFilePath;
+    this.ipynbInput = Convert.toIpynbSchemaV44(
+      readFileSync(ipynbFilePath, "utf-8"),
+    );
+  }
+
+  static from(obj: unknown): IpynbToMdContext {
+    const context = contextInputSchema.parse(obj);
+    return new IpynbToMdContext(context.ipynbFilePath, context.outputDir);
+  }
+
+  mdFilePath(): string {
+    return path.join(
+      this.outputDir,
+      `${path.basename(this.ipynbFilePath, ".ipynb")}.md`,
+    );
+  }
+
+  imageName(imageFilePath: string): string {
+    return path.join(this.outputDir, imageFilePath);
+  }
+
+  writeImageFile(imageFilePath: string, data: Buffer): void {
+    writeFileSync(this.imageName(imageFilePath), data);
+  }
+
+  writeMdFile(): void {
+    this.contents.push(this.metadata2summary());
+
+    for (const cell of this.ipynbInput.cells) {
+      const { outputString, imageFiles } = this.cell2contentWithFile(cell);
+
+      this.contents.push(outputString);
+      this.imageFiles.push(...imageFiles);
+    }
+
+    writeFileSync(this.mdFilePath(), this.contents.join("\n"));
+
+    for (const { imageFilePath, data } of this.imageFiles) {
+      this.writeImageFile(imageFilePath, data);
+    }
+  }
+
+  metadata2summary(): string {
+    return `<details>
 <summary>Notebook Metadata</summary>
+
 \`\`\`json
-${JSON.stringify(metadata, null, 2)}
+${JSON.stringify(this.ipynbInput.metadata, null, 2)}
 \`\`\`
+
 </details>
 `;
-}
+  }
 
-export function cell2string(cell: Cell, language?: string): string {
-  switch (cell.cell_type) {
-    case "markdown":
-      if (typeof cell.source === "string") {
-        return cell.source;
+  cell2contentWithFile(cell: Cell, language?: string): ContentWithFile {
+    switch (cell.cell_type) {
+      case "markdown":
+        if (typeof cell.source === "string") {
+          return { outputString: cell.source, imageFiles: [] };
+        }
+
+        return { outputString: cell.source.join("\n"), imageFiles: [] };
+
+      case "code": {
+        let code = `\`\`\`${language || "python"}\n`;
+
+        if (typeof cell.source === "string") {
+          code += cell.source;
+        } else {
+          code += cell.source.join("\n");
+        }
+
+        code += "\n```\n";
+
+        if (!cell.outputs) {
+          return { outputString: code, imageFiles: [] };
+        }
+
+        const { outputString, imageFiles } = this.output2contentWithFile(cell.outputs);
+
+        return { outputString: `${code}\n${outputString}`, imageFiles };
       }
+      case "raw": {
+        let raw = "```text\n";
+        if (typeof cell.source === "string") {
+          raw += cell.source;
+        } else {
+          raw += cell.source.join("\n");
+        }
 
-      return cell.source.join("\n");
-    case "code": {
-      let code = `\`\`\`${language || "python"}\n`;
+        raw += "\n```";
 
-      if (typeof cell.source === "string") {
-        code += cell.source;
-      } else {
-        code += cell.source.join("\n");
+        return { outputString: raw, imageFiles: [] };
       }
-
-      code += "\n```";
-
-      const output = cell.outputs?.map((o) => {
-        o.data;
-      });
-
-      if (output) {
-        code += "\n\n";
-        code += output.join("\n");
-      }
-
-      return code;
+      default:
+        throw new Error(`Unknown cell type: ${cell.cell_type}`);
     }
-    case "raw": {
-      let raw = "```\n";
-      if (typeof cell.source === "string") {
-        raw += cell.source;
-      } else {
-        raw += cell.source.join("\n");
+  }
+
+  output2contentWithFile(outputs: Output[]): ContentWithFile {
+    const outputContents: string[] = [];
+    const imageFilesLocal: ImageFile[] = [];
+
+    for (const output of outputs) {
+      switch (output.output_type) {
+        case OutputType.DisplayData: {
+          if (output.data) {
+            const { outputString, imageFiles } = this.data2contentWithFile(
+              output.data,
+            );
+            outputContents.push(outputString);
+            imageFilesLocal.push(...imageFiles);
+          }
+          break;
+        }
+        case OutputType.Error: {
+          if (output.traceback) {
+            for (const t of output.traceback) {
+              outputContents.push(`<p>${ansiToHtml(t)}</p>`);
+            }
+          }
+
+          outputContents.push("");
+          break;
+        }
+        case OutputType.ExecuteResult:
+          if (output.data) {
+            const { outputString, imageFiles } = this.data2contentWithFile(
+              output.data,
+            );
+            outputContents.push(outputString);
+            imageFilesLocal.push(...imageFiles);
+          }
+          break;
+        case OutputType.Stream:
+          if (output.text) {
+            if (typeof output.text === "string") {
+              outputContents.push(output.text);
+            } else {
+              outputContents.push(...output.text);
+            }
+          }
+          break;
+        default:
+          throw new Error(`Unknown output type: ${output.output_type}`);
       }
-
-      raw += "\n```";
-
-      return raw;
     }
-    default:
-      throw new Error(`Unknown cell type: ${cell.cell_type}`);
+
+    return {
+      outputString: outputContents.join("\n"),
+      imageFiles: imageFilesLocal,
+    };
+  }
+
+  data2contentWithFile(data: {
+    [key: string]: string[] | string;
+  }): ContentWithFile {
+    const outputContents: string[] = [];
+    const imageFiles: ImageFile[] = [];
+
+    for (const [key, value] of Object.entries(data)) {
+      if (key.startsWith("text")) {
+        if (typeof value === "string") {
+          outputContents.push(`\`${value}\``);
+        } else {
+          outputContents.push(...value.map((v) => `\`${v}\``));
+        }
+      } else if (key.startsWith("image")) {
+        const extension = imageExtensionSchema.parse(key.split("/")[1]);
+        const imageFilePath = IpynbToMdContext.imageFileGenerator(extension);
+
+        if (typeof value === "string") {
+          const buffer = Buffer.from(value, "base64");
+          imageFiles.push({ imageFilePath, data: buffer });
+          outputContents.push(`![${imageFilePath}](./${imageFilePath})`);
+        } else {
+          throw new Error(`Unknown image type: ${typeof value}`);
+        }
+      }
+    }
+
+    return { outputString: outputContents.join("\n"), imageFiles };
   }
 }
-
-export function ipynb2md(ipynb: IpynbSchemaV44): string {}
