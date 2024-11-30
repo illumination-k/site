@@ -12,7 +12,8 @@
     "**/dist",
     "**/dump",
     "web/src/**",
-    "pnpm-lock.yaml"
+    "pnpm-lock.yaml",
+    "packages/ipynb2md/assets/output"
   ],
   "yaml": {
     "associations": ["**/*.yaml", "**/*.yml"]
