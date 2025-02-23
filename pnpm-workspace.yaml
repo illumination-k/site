@@ -2,3 +2,4 @@ packages:
   # packagesディレクトリ配下はすべてを登録
   - "packages/**"
   - web
+  - cli

@@ -12,9 +12,9 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "cli": "node ./packages/cli/dist/main.js",
-    "cli:build": "pnpm run --filter cli build",
-    "cli:dev": "pnpm run --filter cli dev",
+    "cli": "node ./cli/dist/main.js",
+    "cli:build": "pnpm turbo build --filter cli",
+    "cli:dev": "pnpm turbo dev --filter cli",
     "cli:paper-stream": "pnpm cli paper-stream --databaseId 183bd7a1ae484a68b63b66d95b814a4a --outputDir ./posts/paperStream --publicDir ./posts/public/paperStream",
     "cli:dump:techblog": "pnpm cli dump --mdDir ./posts/techblog  --imageDist ./web/public/techblog --output ./web/dump/techblog.json",
     "cli:dump:paper-stream": "pnpm cli dump --mdDir ./posts/paperStream  --imageDist ./web/public/paperStream --output ./web/dump/paperStream.json",
@@ -25,12 +25,12 @@
     "format:sort-package-json": "sort-package-json './package.json' 'packages/*/package.json' 'web/package.json'",
     "format": "dprint fmt && pnpm format:sort-package-json && pnpm run --filter '*' format",
     "lint:sort-package-json": "pnpm format:sort-package-json --check",
-    "lint": "dprint check && pnpm lint:sort-package-json && pnpm run --filter '*' lint",
+    "lint": "dprint check && pnpm lint:sort-package-json && pnpm turbo lint",
     "register-posts": "run-s dump cli:register-posts",
-    "test": "pnpm run --filter '*' test",
+    "test": "pnpm turbo test",
     "web-build": "run-s dump cli:rss web-build:web",
-    "web-build:web": "pnpm run --filter web build",
-    "web-dev": "pnpm run --filter web dev",
+    "web-build:web": "pnpm turbo build --filter web",
+    "web-dev": "pnpm turbo dev --filter web",
     "web-start": "pnpm run --filter web start"
   },
   "devDependencies": {
@@ -38,7 +38,9 @@
     "@types/node": "22.2.0",
     "npm-run-all": "^4.1.5",
     "sort-package-json": "2.10.1",
+    "turbo": "^2.4.2",
     "typescript": "^5.6.2",
     "vitest": "^2.0.5"
-  }
+  },
+  "packageManager": "pnpm@9.12.2"
 }

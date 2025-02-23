@@ -1,6 +1,5 @@
 import { type PathLike, readFile, writeFile } from "node:fs";
 import { promisify } from "node:util";
-
 import fm, { type FrontMatterResult } from "front-matter";
 import { glob } from "glob";
 

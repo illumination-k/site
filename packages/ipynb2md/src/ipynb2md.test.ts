@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import IpynbToMdContext from "./ipynb2md";
+import IpynbToMdContext from ".";
 
 import path from "node:path";
 import { fileURLToPath } from "node:url";

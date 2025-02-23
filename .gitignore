@@ -43,3 +43,5 @@ dump/
 
 tmp/
 tmp*
+
+.turbo/
