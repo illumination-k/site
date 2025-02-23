@@ -24,6 +24,7 @@
     "front-matter": "^4.0.2",
     "glob": "^11.0.0",
     "image-size": "^1.1.1",
+    "ipynb2md": "workspace:^",
     "md-plugins": "workspace:^",
     "mdast-util-to-string": "^4.0.0",
     "notion-to-md": "^3.1.1",
