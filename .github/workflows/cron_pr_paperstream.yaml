@@ -1,0 +1,56 @@
+name: Cron for paper-stream update PR
+
+on:
+  push
+
+jobs:
+  CreatePaperStreamPR:
+    runs-on: "ubuntu-latest"
+    env:
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: install mise
+        uses: jdx/mise-action@v2
+
+      - run: pnpm i
+
+      - name: build cli
+        run: pnpm cli:build
+
+      - name: paper-stream
+        run: pnpm cli:paper-stream
+
+      - name: format markdown
+        run: dprint fmt
+
+      - name: set config
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: check diff
+        id: check_diff
+        run: git diff --exit-code
+        continue-on-error: true
+
+      - name: commit and create PR if diff exists
+        run: |
+          git add .
+          git checkout -b paper-stream-${{ github.run_number }}
+          git commit -m "ci: auto commit at $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          gh pr create \
+            --title "Auto commit of paper-stream" \
+            --base main \
+            --body "This PR was created automatically." \
+            --head $(git rev-parse --abbrev-ref HEAD)
+        if: ${{ steps.check_diff.outcome == 'failure' }}
