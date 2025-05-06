@@ -4,7 +4,7 @@
 ```json
 {
   "kernelspec": {
-    "display_name": "Python 3",
+    "display_name": "3.11.5",
     "name": "python3",
     "language": "python"
   },
@@ -25,23 +25,33 @@
 
 </details>
 
+
 ## test
+
 ```python
 print("test")
 ```
 
-test
+`test
+`
 
 ```python
 a
 ```
 
+<div class='ipynb-error'>
+
 <p><span style="color:rgb(187, 0, 0)">---------------------------------------------------------------------------</span></p>
+
 <p><span style="color:rgb(187, 0, 0)">NameError</span>                                 Traceback (most recent call last)</p>
+
 <p>Cell <span style="color:rgb(0, 187, 0)">In[1], line 1</span>
 <span style="color:rgb(0, 187, 0)">----> 1</span> <span style="background-color:rgb(187, 187, 0)">a</span>
 </p>
+
 <p><span style="color:rgb(187, 0, 0)">NameError</span>: name 'a' is not defined</p>
+
+</div>
 
 ```python
 from matplotlib import pyplot as plt
@@ -56,5 +66,8 @@ ax.plot(x, y)
 ```
 
 `[<matplotlib.lines.Line2D at 0x10784c8d0>]`
+
 ![test.png](./test.png)
+
+
 `<Figure size 640x480 with 1 Axes>`
