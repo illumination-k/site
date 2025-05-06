@@ -45,3 +45,4 @@ tmp/
 tmp*
 
 .turbo/
+.obsidian

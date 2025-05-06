@@ -83,11 +83,15 @@ export default class IpynbToMdContext {
     for (const cell of this.ipynbInput.cells) {
       const { outputString, imageFiles } = this.cell2contentWithFile(cell);
 
-      this.contents.push(outputString);
+      if (outputString.trim()) {
+        this.contents.push(outputString);
+      }
       this.imageFiles.push(...imageFiles);
     }
 
-    writeFileSync(this.mdFilePath(), this.contents.join("\n"));
+    // Join cells with double newlines to ensure proper markdown formatting
+    const contents = this.contents.join("\n\n").replace(/\n{4,}/g, "\n\n\n");
+    writeFileSync(this.mdFilePath(), contents);
 
     for (const { imageFilePath, data } of this.imageFiles) {
       this.writeImageFile(imageFilePath, data);
@@ -113,7 +117,7 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
           return { outputString: cell.source, imageFiles: [] };
         }
 
-        return { outputString: cell.source.join("\n"), imageFiles: [] };
+        return { outputString: cell.source.join(""), imageFiles: [] };
 
       case "code": {
         let code = `\`\`\`${language || "python"}\n`;
@@ -134,14 +138,18 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
           cell.outputs,
         );
 
-        return { outputString: `${code}\n${outputString}`, imageFiles };
+        // Add empty line between code and output if output exists and is not empty
+        if (outputString.trim()) {
+          return { outputString: `${code}\n${outputString}`, imageFiles };
+        }
+        return { outputString: code, imageFiles };
       }
       case "raw": {
         let raw = "```text\n";
         if (typeof cell.source === "string") {
           raw += cell.source;
         } else {
-          raw += cell.source.join("\n");
+          raw += cell.source.join("");
         }
 
         raw += "\n```";
@@ -170,13 +178,13 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
           break;
         }
         case OutputType.Error: {
+          outputContents.push("<div class='ipynb-error'>");
           if (output.traceback) {
             for (const t of output.traceback) {
               outputContents.push(`<p>${ansiToHtml(t)}</p>`);
             }
           }
-
-          outputContents.push("");
+          outputContents.push("</div>");
           break;
         }
         case OutputType.ExecuteResult:
@@ -191,9 +199,9 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
         case OutputType.Stream:
           if (output.text) {
             if (typeof output.text === "string") {
-              outputContents.push(output.text);
+              outputContents.push(`\`${output.text}\``);
             } else {
-              outputContents.push(...output.text);
+              outputContents.push(`\`${output.text.join("")}\``);
             }
           }
           break;
@@ -202,8 +210,9 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
       }
     }
 
+    // Join with double newlines to properly separate output blocks
     return {
-      outputString: outputContents.join("\n"),
+      outputString: outputContents.join("\n\n"),
       imageFiles: imageFilesLocal,
     };
   }
@@ -219,7 +228,7 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
         if (typeof value === "string") {
           outputContents.push(`\`${value}\``);
         } else {
-          outputContents.push(...value.map((v) => `\`${v}\``));
+          outputContents.push(`\`${value.join("")}\``);
         }
       } else if (key.startsWith("image")) {
         const extension = imageExtensionSchema.parse(key.split("/")[1]);
@@ -229,12 +238,16 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
           const buffer = Buffer.from(value, "base64");
           imageFiles.push({ imageFilePath, data: buffer });
           outputContents.push(`![${imageFilePath}](./${imageFilePath})`);
+          outputContents.push("\n")
         } else {
           throw new Error(`Unknown image type: ${typeof value}`);
         }
       }
     }
 
-    return { outputString: outputContents.join("\n"), imageFiles };
+    return {
+      outputString: outputContents.join("\n\n"),
+      imageFiles
+    };
   }
 }
