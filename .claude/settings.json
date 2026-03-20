@@ -18,7 +18,8 @@
       "Bash(mise tasks)",
       "Bash(playwright-cli:*)",
       "Bash(gh run view:*)",
-      "Bash(pnpm lint:*)"
+      "Bash(pnpm lint:*)",
+      "WebFetch(domain:github.com)"
     ],
     "additionalDirectories": [
       "/Users/illumination27/ghq/github.com/illumination-k/site/web/src/styled-system/tokens"

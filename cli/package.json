@@ -22,7 +22,7 @@
     "common": "workspace:^",
     "feed": "^4.2.2",
     "front-matter": "^4.0.2",
-    "glob": "^11.0.0",
+    "glob": "^13.0.6",
     "image-size": "^1.1.1",
     "ipynb2md": "workspace:^",
     "md-plugins": "workspace:^",
