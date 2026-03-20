@@ -38,6 +38,12 @@ jobs:
       - name: build web
         run: pnpm web-build
 
+      - name: install playwright browsers
+        run: cd web && npx playwright install --with-deps chromium
+
+      - name: run e2e tests
+        run: cd web && pnpm test:e2e
+
       # mise trustが必要というエラーが出るが、なんで出るのかわからない
       # 削除するとmise trustはいらないので、一旦削除
       - name: hack
