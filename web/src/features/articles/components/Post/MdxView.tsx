@@ -8,6 +8,7 @@ import { runSync } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 
 import { Me, P5, P7, S5, S7, Seq, T7 } from "../Seq/Seq";
+import { CodeBlock } from "./CodeBlock";
 
 const style = css({
   // label: "markdown",
@@ -222,7 +223,7 @@ export default function MdView({ compiledMarkdown }: MdViewProps) {
 
   return (
     <article className={style}>
-      <Content components={{ Seq, P5, P7, S5, S7, T7, Me }} />
+      <Content components={{ Seq, P5, P7, S5, S7, T7, Me, pre: CodeBlock }} />
     </article>
   );
 }
