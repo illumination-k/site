@@ -50,7 +50,7 @@ export default class PagerFactory {
           className={css({
             bg: "slate.50",
             display: "grid",
-            gridTemplateColumns: "12",
+            gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
           })}
         >
           <Pager

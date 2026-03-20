@@ -7,8 +7,12 @@ function zodTypeToYargsType(
   let _schema: z.ZodType = schema;
 
   // Zod 4: transforms/pipes use _zod.def.type === "pipe" with inner schema at _zod.def.in
-  if ("_zod" in _schema && _schema._zod.def.type === "pipe") {
-    _schema = _schema._zod.def.in;
+  if (
+    "_zod" in _schema &&
+    (_schema._zod.def as unknown as { type: string; in?: z.ZodType }).type ===
+      "pipe"
+  ) {
+    _schema = (_schema._zod.def as unknown as { in: z.ZodType }).in;
   }
 
   if (_schema instanceof ZodString) {

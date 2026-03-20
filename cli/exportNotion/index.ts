@@ -90,7 +90,7 @@ export async function getNotionPages(
 
     const imageFileName = `${imageBlock.id}.png`;
     const imagePath = path.join(publicDir.toString(), imageFileName);
-    await writeFileAsync(imagePath, imageBuffer);
+    await writeFileAsync(imagePath, new Uint8Array(imageBuffer));
 
     const relativePath = path.relative(outputDir, imagePath);
 

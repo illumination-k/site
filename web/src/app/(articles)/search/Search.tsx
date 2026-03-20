@@ -113,7 +113,7 @@ export default function Search() {
       className={css({
         display: "grid",
         gap: 2,
-        gridTemplateColumns: "12",
+        gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
         bg: "gray.50",
       })}
     >
