@@ -1,7 +1,8 @@
 "use client";
 
-import { css } from "@/styled-system/css";
 import { type ComponentProps, useCallback, useRef, useState } from "react";
+
+import { css } from "@/styled-system/css";
 
 const copyButtonStyle = css({
   position: "absolute",
