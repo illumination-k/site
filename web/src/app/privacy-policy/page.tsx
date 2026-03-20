@@ -6,7 +6,14 @@ const PrivacyPolicy = () => {
   const header = "プライバシーポリシー";
   const texts = JA_TEXT;
   return (
-    <div className={css({ lg: { display: "grid", gridTemplateColumns: 12 } })}>
+    <div
+      className={css({
+        lg: {
+          display: "grid",
+          gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+        },
+      })}
+    >
       <div
         className={css({
           textAlign: "center",

@@ -58,7 +58,7 @@ export default function Post({
           lg: {
             px: 0,
             display: "grid",
-            gridTemplateColumns: "12",
+            gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
             gap: 2,
             justifyContent: "center",
           },
@@ -133,7 +133,14 @@ export default function Post({
       >
         Read Next
       </h2>
-      <nav className={css({ lg: { display: "grid", gridTemplateColumns: 2 } })}>
+      <nav
+        className={css({
+          lg: {
+            display: "grid",
+            gridTemplateColumns: "repeat(2, minmax(0, 1fr))",
+          },
+        })}
+      >
         {relatedPostMeta.map((relatedMeta, i) => (
           <PostCard prefix={prefix} meta={relatedMeta} key={i} />
         ))}

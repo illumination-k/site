@@ -6,7 +6,14 @@ const TermsService = () => {
   const header = "免責事項・著作権";
   const texts = JA_TEXT;
   return (
-    <div className={css({ lg: { display: "grid", gridTemplateColumns: 12 } })}>
+    <div
+      className={css({
+        lg: {
+          display: "grid",
+          gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
+        },
+      })}
+    >
       <div
         className={css({
           textAlign: "center",

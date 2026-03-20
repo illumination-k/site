@@ -46,3 +46,4 @@ tmp*
 
 .turbo/
 .obsidian
+.playwright-cli

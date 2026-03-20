@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "anser": "^2.3.0",
-    "zod": "^3.23.8"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "quicktype": "^23.0.170",

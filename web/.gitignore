@@ -13,3 +13,6 @@ styled-system-studio
 
 # pagefind
 public/pagefind
+
+# e2e test
+test-results/

@@ -1,4 +1,4 @@
-import { forwardRef } from "react";
+import React, { forwardRef } from "react";
 
 type TwitterIntentProps = {
   text?: string;
@@ -7,7 +7,7 @@ type TwitterIntentProps = {
   via?: string;
   related?: string[];
   in_reply_to?: string;
-} & Omit<JSX.IntrinsicElements["a"], "href" | "target" | "rel">;
+} & Omit<React.ComponentPropsWithoutRef<"a">, "href" | "target" | "rel">;
 
 export const TwitterIntent = forwardRef<HTMLAnchorElement, TwitterIntentProps>(
   function TwitterIntent(

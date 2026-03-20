@@ -15,7 +15,9 @@
       "Bash(mise run fmt:*)",
       "Bash(mise install:*)",
       "Bash(mise trust:*)",
-      "Bash(mise tasks)"
+      "Bash(mise tasks)",
+      "Bash(playwright-cli:*)",
+      "Bash(gh run view:*)"
     ]
   },
   "hooks": {
