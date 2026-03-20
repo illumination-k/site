@@ -9,22 +9,35 @@ const Home: NextPage = () => {
     <div
       className={css({
         h: "screen",
-        bg: "sky.100",
+        bg: "bg.page",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       })}
     >
       <div>
-        <h1 className={css({ fontWeight: "black", fontSize: "3xl" })}>
+        <h1
+          className={css({
+            fontWeight: "black",
+            fontSize: "3xl",
+            color: "text.primary",
+          })}
+        >
           Web site of illumination-k
         </h1>
-        <p>
+        <p className={css({ color: "text.secondary" })}>
           This is the web site of illumination-k. The site is under
           construction.
         </p>
 
-        <h2 className={css({ fontWeight: "bold", fontSize: "2xl" })}>
+        <h2
+          className={css({
+            fontWeight: "bold",
+            fontSize: "2xl",
+            color: "text.primary",
+            mt: 4,
+          })}
+        >
           Content Links
         </h2>
         <ul className={css({ listStyle: "inside" })}>
@@ -32,7 +45,8 @@ const Home: NextPage = () => {
             <Link
               className={css({
                 textDecoration: "underline",
-                color: "blue.700",
+                color: "accent.primary",
+                _hover: { color: "accent.hover" },
               })}
               href="/techblog/1"
             >

@@ -19,10 +19,17 @@ export default function Toc({ className, headings, meta }: Props) {
   const heading = meta.lang === "ja" ? "目次" : "Contents";
   return (
     <article className={className}>
-      <h1 className={css({ fontSize: "lg", fontWeight: "black", pb: 2 })}>
+      <h1
+        className={css({
+          fontSize: "lg",
+          fontWeight: "black",
+          pb: 2,
+          color: "text.primary",
+        })}
+      >
         <p>{heading}</p>
       </h1>
-      <ul className="list-none">
+      <ul>
         {headings.map(({ value, depth }, i) => (
           <li className={css({ mt: 2 })} key={i}>
             <Link
@@ -30,10 +37,11 @@ export default function Toc({ className, headings, meta }: Props) {
                 display: "flex",
                 alignItems: "center",
                 wordBreak: "break-word",
-                _hover: { color: "blue.500" },
+                color: depth === 3 ? "text.tertiary" : "text.secondary",
+                transition: "colors",
+                transitionDuration: "fast",
+                _hover: { color: "accent.primary" },
               })}
-              // "hover:text-blue-400 focus:text-blue-500 focus:underline flex items-center break-words",
-              // depth === 3 ? "px-4 text-gray-800" : "px-2 font-medium"}
               href={`/techblog/post/${meta.uuid}#${i}`}
             >
               {depth === 3 ? (
@@ -55,9 +63,11 @@ export default function Toc({ className, headings, meta }: Props) {
           gap: 2,
           alignItems: "center",
           pt: 4,
-          _hover: { color: "blue.500" },
+          color: "text.secondary",
+          transition: "colors",
+          transitionDuration: "fast",
+          _hover: { color: "accent.primary" },
         })}
-        // "flex gap-2 items-center text-lg font-bold pt-4 hover:text-blue-400"
       >
         <ChevronUpIcon className={iconClassName} />
         Page Top

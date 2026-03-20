@@ -1,3 +1,5 @@
+import { css } from "@/styled-system/css";
+
 import type { PostMeta } from "common";
 
 interface Props {
@@ -9,13 +11,35 @@ export default function Header({ meta }: Props) {
   return (
     <>
       {meta.tags.includes("archive") ? (
-        <div className="bg-yellow-100 text-lg text-center font-bold rounded-full p-3 mx-2">
+        <div
+          className={css({
+            bg: "warning.bg",
+            color: "warning.text",
+            fontSize: "lg",
+            textAlign: "center",
+            fontWeight: "bold",
+            rounded: "lg",
+            p: 3,
+            mx: 2,
+          })}
+        >
           この記事はArchiveされています。記事の内容が古い可能性が高いです。
         </div>
       ) : null}
 
       {meta.tags.includes("draft") ? (
-        <div className="bg-gray-100 text-lg text-center font-bold rounded-full p-3 mx-2">
+        <div
+          className={css({
+            bg: "draft.bg",
+            color: "draft.text",
+            fontSize: "lg",
+            textAlign: "center",
+            fontWeight: "bold",
+            rounded: "lg",
+            p: 3,
+            mx: 2,
+          })}
+        >
           この記事はドラフト段階です。
         </div>
       ) : null}

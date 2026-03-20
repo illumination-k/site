@@ -33,7 +33,7 @@ export default function Post({
 }: PostProps) {
   return (
     <article
-      className={css({ bg: "slate.50" })}
+      className={css({ bg: "bg.page" })}
       // data-pagefind-body is used as a selector to construct the pagefind search index
       data-pagefind-body
     >
@@ -45,6 +45,7 @@ export default function Post({
           fontSize: "4xl",
           fontWeight: "black",
           textAlign: "center",
+          color: "text.primary",
         })}
       >
         {meta.title}
@@ -83,7 +84,8 @@ export default function Post({
         <article
           id="post-content"
           className={css({
-            bg: "white",
+            bg: "bg.surface",
+            rounded: "xl",
             px: 10,
             py: 5,
             mb: 5,
@@ -106,7 +108,7 @@ export default function Post({
               position: "sticky",
               gridColumnStart: 10,
               gridColumnEnd: -1,
-              top: 5,
+              top: 20,
               overflowY: "auto",
               h: "screen",
             },
@@ -129,6 +131,7 @@ export default function Post({
           fontSize: "2xl",
           textAlign: "center",
           fontWeight: "bold",
+          color: "text.primary",
         })}
       >
         Read Next

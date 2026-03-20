@@ -2,10 +2,10 @@ import * as React from "react";
 import type { SVGProps } from "react";
 
 type GithubIconProps = {
-  fill?: "black" | "white";
+  fill?: string;
 } & SVGProps<SVGSVGElement>;
 
-const GithubIcon = ({ fill = "black", ...props }: GithubIconProps) => (
+const GithubIcon = ({ fill = "currentColor", ...props }: GithubIconProps) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" {...props}>
     <path
       fill={fill}

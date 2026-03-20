@@ -10,18 +10,25 @@ import type { Route } from "next";
 import GithubIcon from "@/icons/GithubIcon";
 import TwitterIcon from "@/icons/TwitterIcon";
 
+import ThemeToggle from "./ThemeToggle";
+
 const caveat = Caveat({ subsets: ["latin"] });
 
 export default function Nav() {
   return (
     <nav
       className={css({
-        bg: "black",
+        bg: "bg.surface",
         display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
         px: 4,
         py: 2,
+        borderBottomWidth: 1,
+        borderBottomColor: "border.default",
+        position: "sticky",
+        top: 0,
+        zIndex: 50,
       })}
     >
       <Link href={"/"}>
@@ -29,7 +36,7 @@ export default function Nav() {
           className={cx(
             css({
               fontSize: "3xl",
-              color: "white",
+              color: "accent.primary",
               fontWeight: "black",
               hideBelow: "md",
             }),
@@ -40,15 +47,32 @@ export default function Nav() {
         </span>
         <HomeIcon
           aria-hidden="true"
-          className={css({ h: 6, w: 6, hideFrom: "md", color: "white" })}
+          className={css({
+            h: 6,
+            w: 6,
+            hideFrom: "md",
+            color: "text.primary",
+          })}
         />
       </Link>
 
-      <div className={css({ display: "flex", gap: 5 })}>
+      <div
+        className={css({
+          display: "flex",
+          gap: 5,
+          alignItems: "center",
+        })}
+      >
         <Link
           href={"/techblog/1" as Route}
           className={cx(
-            css({ color: "white", fontSize: "xl" }),
+            css({
+              color: "text.secondary",
+              fontSize: "xl",
+              transition: "colors",
+              transitionDuration: "fast",
+              _hover: { color: "accent.primary" },
+            }),
             caveat.className,
           )}
         >
@@ -57,22 +81,29 @@ export default function Nav() {
 
         <a
           href="https://twitter.com/illuminationK"
-          className={circle({ size: 8, bg: "white" })}
+          className={circle({ size: 8, bg: "bg.elevated" })}
           aria-label="twitter"
         >
           <TwitterIcon
             aria-hidden="true"
-            className={css({ h: 8, w: 8, fill: "blue.400" })}
+            className={css({ h: 8, w: 8, fill: "accent.primary" })}
           />
         </a>
 
-        <a href="https://www.github.com/illumination-k" aria-label="github">
-          <GithubIcon
-            aria-hidden="true"
-            className={css({ h: 8, w: 8 })}
-            fill="white"
-          />
+        <a
+          href="https://www.github.com/illumination-k"
+          aria-label="github"
+          className={css({
+            color: "text.secondary",
+            transition: "colors",
+            transitionDuration: "fast",
+            _hover: { color: "accent.primary" },
+          })}
+        >
+          <GithubIcon aria-hidden="true" className={css({ h: 8, w: 8 })} />
         </a>
+
+        <ThemeToggle />
       </div>
     </nav>
   );

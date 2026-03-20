@@ -18,13 +18,21 @@ export default function PostCard({ prefix, meta }: PostCardProps) {
   return (
     <article
       className={css({
-        px: 8,
-        py: 2,
-        rounded: "lg",
-        bg: "white",
+        px: 6,
+        py: 4,
+        rounded: "xl",
+        bg: "bg.surface",
         my: 3,
         mx: 4,
         borderWidth: 1,
+        borderColor: "border.default",
+        transition: "all",
+        transitionDuration: "normal",
+        _hover: {
+          borderColor: "accent.primary",
+          transform: "translateY(-2px)",
+          shadow: "0 4px 20px rgba(14, 165, 233, 0.15)",
+        },
       })}
     >
       <h2
@@ -32,13 +40,18 @@ export default function PostCard({ prefix, meta }: PostCardProps) {
           fontWeight: "bold",
           fontSize: "2xl",
           justifyContent: "space-between",
-          _hover: { color: "blue.400", textDecoration: "underline" },
+          color: "text.primary",
+          transition: "colors",
+          transitionDuration: "fast",
+          _hover: { color: "accent.primary" },
         })}
       >
         <Link href={`/${prefix}/post/${meta.uuid}` as Route}>{meta.title}</Link>
       </h2>
 
-      <p>更新: {meta.updated_at}</p>
+      <p className={css({ color: "text.tertiary", fontSize: "sm" })}>
+        更新: {meta.updated_at}
+      </p>
 
       <div
         className={css({
@@ -49,13 +62,22 @@ export default function PostCard({ prefix, meta }: PostCardProps) {
           hideBelow: "md",
         })}
       >
-        <TagIcon className={css({ h: 5, w: 5, hideBelow: "md" })} />
+        <TagIcon
+          className={css({
+            h: 5,
+            w: 5,
+            hideBelow: "md",
+            color: "text.tertiary",
+          })}
+        />
         {meta.tags.map((tag, i) => (
           <Tag prefix={prefix} tag={tag} key={i} />
         ))}
       </div>
 
-      <p className="px-2">{meta.description}</p>
+      <p className={css({ px: 2, color: "text.secondary" })}>
+        {meta.description}
+      </p>
     </article>
   );
 }

@@ -1,1 +1,59 @@
 @layer reset, base, tokens, recipes, utilities;
+
+@layer base {
+  /* Light mode */
+  [data-color-mode="light"] ::selection {
+    background-color: #0ea5e9;
+    color: #ffffff;
+  }
+
+  [data-color-mode="light"] mark {
+    background: #e0f2fe;
+    color: #0f172a;
+  }
+
+  /* Dark mode */
+  [data-color-mode="dark"] ::selection {
+    background-color: #38bdf8;
+    color: #0f172a;
+  }
+
+  [data-color-mode="dark"] mark {
+    background: #0c4a6e;
+    color: #e2e8f0;
+  }
+
+  [data-color-mode="dark"] .katex {
+    color: #e2e8f0;
+  }
+
+  /* Scrollbar - dark mode */
+  [data-color-mode="dark"] ::-webkit-scrollbar {
+    width: 8px;
+  }
+  [data-color-mode="dark"] ::-webkit-scrollbar-track {
+    background: #0f172a;
+  }
+  [data-color-mode="dark"] ::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 4px;
+  }
+  [data-color-mode="dark"] ::-webkit-scrollbar-thumb:hover {
+    background: #475569;
+  }
+
+  /* Scrollbar - light mode */
+  [data-color-mode="light"] ::-webkit-scrollbar {
+    width: 8px;
+  }
+  [data-color-mode="light"] ::-webkit-scrollbar-track {
+    background: #f8fafc;
+  }
+  [data-color-mode="light"] ::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  [data-color-mode="light"] ::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+  }
+}

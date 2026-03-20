@@ -1,58 +1,94 @@
-.token.atrule,
-.token.keyword,
-.token.attr-name,
-.language-autohotkey,
-.token.selector {
-  color: #00a4db;
+/* Light mode syntax colors */
+[data-color-mode="light"] .token.atrule,
+[data-color-mode="light"] .token.keyword,
+[data-color-mode="light"] .token.attr-name,
+[data-color-mode="light"] .language-autohotkey,
+[data-color-mode="light"] .token.selector {
+  color: #0550ae;
 }
 
-.token.entity,
-.token.url,
-.token.symbol,
-.token.number,
-.token.boolean,
-.token.variable,
-.token.constant,
-.token.property,
-.token.regex,
-.token.inserted {
-  color: #36acaa;
+[data-color-mode="light"] .token.entity,
+[data-color-mode="light"] .token.url,
+[data-color-mode="light"] .token.symbol,
+[data-color-mode="light"] .token.number,
+[data-color-mode="light"] .token.boolean,
+[data-color-mode="light"] .token.variable,
+[data-color-mode="light"] .token.constant,
+[data-color-mode="light"] .token.property,
+[data-color-mode="light"] .token.regex,
+[data-color-mode="light"] .token.inserted {
+  color: #0a3069;
 }
 
-.token.comment,
-.token.prolog,
-.token.doctype,
-.token.cdata {
-  color: #999988;
+[data-color-mode="light"] .token.comment,
+[data-color-mode="light"] .token.prolog,
+[data-color-mode="light"] .token.doctype,
+[data-color-mode="light"] .token.cdata {
+  color: #6e7781;
   font-style: italic;
 }
 
+[data-color-mode="light"] .token.function,
+[data-color-mode="light"] .token.deleted,
+[data-color-mode="light"] .language-autohotkey,
+[data-color-mode="light"] .token.tag {
+  color: #953800;
+}
+
+[data-color-mode="light"] .token.string,
+[data-color-mode="light"] .token.attr-value {
+  color: #116329;
+}
+
+/* Dark mode syntax colors (One Dark / Tokyo Night) */
+[data-color-mode="dark"] .token.atrule,
+[data-color-mode="dark"] .token.keyword,
+[data-color-mode="dark"] .token.attr-name,
+[data-color-mode="dark"] .language-autohotkey,
+[data-color-mode="dark"] .token.selector {
+  color: #c678dd;
+}
+
+[data-color-mode="dark"] .token.entity,
+[data-color-mode="dark"] .token.url,
+[data-color-mode="dark"] .token.symbol,
+[data-color-mode="dark"] .token.number,
+[data-color-mode="dark"] .token.boolean,
+[data-color-mode="dark"] .token.variable,
+[data-color-mode="dark"] .token.constant,
+[data-color-mode="dark"] .token.property,
+[data-color-mode="dark"] .token.regex,
+[data-color-mode="dark"] .token.inserted {
+  color: #e5c07b;
+}
+
+[data-color-mode="dark"] .token.comment,
+[data-color-mode="dark"] .token.prolog,
+[data-color-mode="dark"] .token.doctype,
+[data-color-mode="dark"] .token.cdata {
+  color: #5c6370;
+  font-style: italic;
+}
+
+[data-color-mode="dark"] .token.function,
+[data-color-mode="dark"] .token.deleted,
+[data-color-mode="dark"] .language-autohotkey,
+[data-color-mode="dark"] .token.tag {
+  color: #e06c75;
+}
+
+[data-color-mode="dark"] .token.string,
+[data-color-mode="dark"] .token.attr-value {
+  color: #98c379;
+}
+
+/* Shared */
 .token.class-name {
   display: inline;
-}
-
-.token.atrule,
-.token.keyword,
-.token.attr-name,
-.language-autohotkey,
-.token.selector {
-  color: #00a4db;
-}
-
-.token.function,
-.token.deleted,
-.language-autohotkey,
-.token.tag {
-  color: #9a050f;
 }
 
 .token.important,
 .token.function,
 .token.bold {
   font-weight: bold;
-}
-
-.token.string,
-.token.attr-value {
-  color: #e3116c;
 }

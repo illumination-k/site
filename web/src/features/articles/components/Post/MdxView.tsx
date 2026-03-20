@@ -11,13 +11,18 @@ import { Me, P5, P7, S5, S7, Seq, T7 } from "../Seq/Seq";
 
 const style = css({
   // label: "markdown",
-  "& h1,h2,h3,h4,h5,h6": { fontFamily: "sans", px: 2, my: 3 },
+  "& h1,h2,h3,h4,h5,h6": {
+    fontFamily: "sans",
+    px: 2,
+    my: 3,
+    color: "text.primary",
+  },
   "& h1": { fontWeight: "black", fontSize: "3xl", mt: 2, mb: 3 },
   "& h2": {
     fontWeight: "black",
     fontSize: "2xl",
     borderBottomWidth: "thin",
-    borderBottomColor: "gray.200",
+    borderBottomColor: "border.default",
     pb: 1,
   },
   "& h3": {
@@ -47,19 +52,26 @@ const style = css({
     px: 6,
   },
 
-  "& a": { color: "blue.500", textDecoration: "underline" },
+  "& a": {
+    color: "accent.primary",
+    textDecoration: "underline",
+    _hover: { color: "accent.hover" },
+  },
 
   "& blockquote": {
     borderLeftWidth: 4,
-    borderLeftColor: "gray.200",
+    borderLeftColor: "accent.primary",
+    bg: "bg.elevated",
+    rounded: "md",
     px: 2,
     py: 1,
     my: 2,
+    color: "text.secondary",
   },
 
-  "& p": { my: 2, px: 2 },
+  "& p": { my: 2, px: 2, color: "text.primary" },
 
-  "& img": { my: 4 },
+  "& img": { my: 4, rounded: "lg" },
 
   // rounded table
   "& table": {
@@ -74,20 +86,23 @@ const style = css({
       textAlign: "left",
     },
     "& thead": {
-      "& tr": { bg: "gray.400", "& th": { py: 2 } },
+      "& tr": {
+        bg: "table.headerBg",
+        "& th": { py: 2, color: "text.primary" },
+      },
       "& th:first-child": { borderTopLeftRadius: "lg" },
       "& th:last-child": { borderTopRightRadius: "lg" },
     },
 
     "& tbody": {
       "& tr": {
-        "& td": { py: 2 },
+        "& td": { py: 2, color: "text.primary" },
       },
       "& tr:nth-child(even)": {
-        bg: "slate.100",
+        bg: "bg.surface",
       },
       "& tr:nth-child(odd)": {
-        bg: "slate.50",
+        bg: "bg.page",
       },
       "& tr:last-child": {
         "& td": { pb: 3 },
@@ -99,10 +114,10 @@ const style = css({
 
   // code
   "& code": {
-    bg: "slate.50",
-    rounded: "lg",
-    px: 2,
-    color: "red.600",
+    bg: "code.inlineBg",
+    rounded: "md",
+    px: 1.5,
+    color: "code.inlineText",
     whiteSpace: "pre-wrap",
   },
 
@@ -110,16 +125,18 @@ const style = css({
     my: 4,
     py: 2,
     px: 0,
-    bg: "slate.100",
+    bg: "code.blockBg",
     fontFamily: "mono",
-    rounded: "lg",
+    rounded: "xl",
     overflowX: "auto",
     wordBreak: "normal",
     overflowWrap: "normal",
+    borderWidth: 1,
+    borderColor: "border.default",
     "& code": {
       px: 0,
-      bg: "slate.100",
-      color: "black",
+      bg: "code.blockBg",
+      color: "text.primary",
       whiteSpace: "pre",
       wordBreak: "normal",
       overflowWrap: "normal",
@@ -131,9 +148,9 @@ const style = css({
 
   // embed
   "& div.github-embed": {
-    bg: "slate.200",
+    bg: "code.blockBg",
     rounded: "lg",
-    borderColor: "slate.200",
+    borderColor: "border.default",
     borderWidth: "1",
     m: 1,
     '& code[class*="language-"], & pre[class*="language-"]': {
@@ -147,12 +164,12 @@ const style = css({
         content: "attr(line)",
         mr: 4,
         textAlign: "right",
-        color: "slate.500",
+        color: "text.tertiary",
       },
     },
     "& a.github-embed-title": {
       fontSize: "sm",
-      color: "blue.500",
+      color: "accent.primary",
       px: 4,
       textAlign: "right",
       overflowWrap: "anywhere",
@@ -161,7 +178,7 @@ const style = css({
 
   // code-title
   "& div.code-title-container": {
-    bg: "slate.200",
+    bg: "bg.elevated",
     rounded: "lg",
     m: 1,
     pb: 0,
@@ -177,6 +194,7 @@ const style = css({
       mb: -4,
       py: 1,
       fontWeight: "bold",
+      color: "accent.primary",
     },
   },
 

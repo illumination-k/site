@@ -12,7 +12,15 @@ export type FooterBaseProps = {
 
 export default function FooterBase({ children }: FooterBaseProps) {
   return (
-    <footer className={css({ mt: "auto", bg: "gray.50" })}>
+    <footer
+      className={css({
+        mt: "auto",
+        bg: "bg.surface",
+        borderTopWidth: 1,
+        borderTopColor: "border.default",
+        py: 6,
+      })}
+    >
       {children}
       <div
         className={cx(
@@ -25,8 +33,8 @@ export default function FooterBase({ children }: FooterBaseProps) {
             },
             fontWeight: "extrabold",
             fontSize: "md",
+            color: "text.secondary",
           }),
-          font.className,
           font.className,
         )}
       >
@@ -34,13 +42,21 @@ export default function FooterBase({ children }: FooterBaseProps) {
           Copyright © illumination-k 2020 - {new Date().getFullYear()}
         </p>
         <Link
-          className={css({ color: "blue.400", fontStyle: "italic" })}
+          className={css({
+            color: "accent.primary",
+            fontStyle: "italic",
+            _hover: { color: "accent.hover" },
+          })}
           href={"/privacy-policy"}
         >
           privacy policy
         </Link>
         <Link
-          className={css({ color: "blue.400", fontStyle: "italic" })}
+          className={css({
+            color: "accent.primary",
+            fontStyle: "italic",
+            _hover: { color: "accent.hover" },
+          })}
           href={"/disclaimer"}
         >
           disclaimer

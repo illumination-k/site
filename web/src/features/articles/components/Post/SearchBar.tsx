@@ -21,14 +21,23 @@ export default function SearchBar({ className, category }: Props) {
       ) : null}
       <input
         type="text"
-        className={css({ bg: "white", roundedLeft: "lg", px: 2, py: 1 })}
+        className={css({
+          bg: "bg.input",
+          roundedLeft: "lg",
+          px: 2,
+          py: 1,
+          color: "text.primary",
+          borderWidth: 1,
+          borderColor: "border.default",
+          _placeholder: { color: "text.tertiary" },
+        })}
         name="q"
         placeholder="Search articles..."
       />
       <button
         type="submit"
         className={css({
-          bg: "blue.400",
+          bg: "accent.primary",
           color: "white",
           px: 1,
           roundedRight: "lg",
