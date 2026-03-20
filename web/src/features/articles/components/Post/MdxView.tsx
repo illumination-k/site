@@ -199,7 +199,6 @@ export interface MdViewProps {
 }
 
 export default function MdView({ compiledMarkdown }: MdViewProps) {
-  // @ts-expect-error see following issue: {@link} https://github.com/mdx-js/mdx/issues/2463
   const runOptions: RunOptions = { ...runtime };
   const Content = runSync(compiledMarkdown, runOptions).default;
 

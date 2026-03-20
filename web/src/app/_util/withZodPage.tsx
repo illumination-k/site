@@ -47,7 +47,8 @@ export function withZodPage<S extends Schema>(
           }
         }
 
-        validatedProps[key] = result.data;
+        (validatedProps as Record<string, unknown>)[key as string] =
+          result.data;
       }
     }
 

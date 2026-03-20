@@ -36,10 +36,13 @@ function SidebarMetaList({
   content,
   children,
 }: SidebarMetaListProps) {
-  const iconInner = cloneElement(icon, {
-    className: css({ h: 4, w: 4 }),
-    "aria-hidden": true,
-  });
+  const iconInner = cloneElement(
+    icon as ReactElement<Record<string, unknown>>,
+    {
+      className: css({ h: 4, w: 4 }),
+      "aria-hidden": true,
+    },
+  );
 
   return (
     <li className={css({ p: 2 })}>
