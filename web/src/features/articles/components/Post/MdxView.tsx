@@ -73,6 +73,23 @@ const style = css({
 
   "& img": { my: 4, rounded: "lg" },
 
+  "& figure": {
+    my: 4,
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    "& img": {
+      my: 0,
+      rounded: "lg",
+    },
+  },
+  "& figcaption": {
+    mt: 2,
+    fontSize: "sm",
+    color: "text.secondary",
+    textAlign: "center",
+  },
+
   // rounded table
   "& table": {
     my: 4,

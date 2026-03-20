@@ -8,6 +8,7 @@ import remarkMdx from "remark-mdx";
 import rehypePrism from "./rehype-plugins/rehypePrism";
 import {
   DetailsDirective,
+  FigureDirective,
   attachIdToHeadings,
   codeTitle,
 } from "./remark-plugins";
@@ -25,6 +26,7 @@ export const REMARK_PLUGINS = [
   attachIdToHeadings,
   codeTitle,
   DetailsDirective,
+  FigureDirective,
   remarkDirectiveEmbedGenerator([
     new GithubTransformer(),
     new GithubCardTransformer(),
