@@ -55,21 +55,33 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
         gap: 4,
         alignItems: "center",
         justifyContent: "center",
+        py: 4,
       })}
     >
       {curPage !== 1 ? (
         <Link href={pageLinkGenerator(curPage - 1)}>
           <ChevronLeftIcon
-            className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })}
+            className={css({
+              h: 6,
+              w: 6,
+              color: "text.tertiary",
+              _hover: { color: "accent.primary" },
+            })}
           />
         </Link>
       ) : (
-        <ChevronLeftIcon className={css({ h: 6, w: 6 })} />
+        <ChevronLeftIcon
+          className={css({ h: 6, w: 6, color: "text.tertiary" })}
+        />
       )}
       <div className={flex({ gap: 2, alignItems: "center" })}>
         {pageItems.map((pageItem, i) => {
           if (pageItem === "...") {
-            return <span key={i}>{pageItem}</span>;
+            return (
+              <span key={i} className={css({ color: "text.tertiary" })}>
+                {pageItem}
+              </span>
+            );
           } else {
             return (
               <Link
@@ -77,12 +89,17 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
                 className={css(
                   {
                     alignItems: "baseline",
-                    _hover: { color: "blue.400" },
+                    color: "text.secondary",
+                    _hover: { color: "accent.primary" },
                     fontSize: "2xl",
                     fontFamily: "mono",
                     fontWeight: "thin",
+                    transition: "colors",
+                    transitionDuration: "fast",
                   },
-                  pageItem === curPage ? { color: "blue.500" } : {},
+                  pageItem === curPage
+                    ? { color: "accent.primary", fontWeight: "bold" }
+                    : {},
                 )}
                 href={pageLinkGenerator(pageItem)}
               >
@@ -96,11 +113,18 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
       {curPage !== pageCount ? (
         <Link href={pageLinkGenerator(curPage + 1)}>
           <ChevronRightIcon
-            className={css({ h: 6, w: 6, _hover: { color: "blue.500" } })}
+            className={css({
+              h: 6,
+              w: 6,
+              color: "text.tertiary",
+              _hover: { color: "accent.primary" },
+            })}
           />
         </Link>
       ) : (
-        <ChevronRightIcon className={css({ h: 6, w: 6 })} />
+        <ChevronRightIcon
+          className={css({ h: 6, w: 6, color: "text.tertiary" })}
+        />
       )}
     </nav>
   );

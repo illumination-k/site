@@ -114,7 +114,7 @@ export default function Search() {
         display: "grid",
         gap: 2,
         gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
-        bg: "gray.50",
+        bg: "bg.page",
       })}
     >
       <div className={css({ gridColumnStart: 3, gridColumnEnd: 11 })}>
@@ -141,10 +141,12 @@ export default function Search() {
             className={css({
               py: 1,
               px: 2,
-              bg: "gray.50",
+              bg: "bg.input",
               borderWidth: 1,
-              borderColor: "gray.300",
+              borderColor: "border.default",
               roundedLeft: "lg",
+              color: "text.primary",
+              _placeholder: { color: "text.tertiary" },
             })}
             value={query}
             placeholder="Search articles..."
@@ -152,11 +154,14 @@ export default function Search() {
           />
           <button
             type="submit"
-            className={css({ bg: "blue.400", px: 2, roundedRight: "lg" })}
+            className={css({
+              bg: "accent.primary",
+              px: 2,
+              roundedRight: "lg",
+              color: "white",
+            })}
           >
-            <MagnifyingGlassIcon
-              className={css({ w: 6, h: 6, color: "white" })}
-            />
+            <MagnifyingGlassIcon className={css({ w: 6, h: 6 })} />
           </button>
         </form>
         {loading && <Loading />}
@@ -166,9 +171,9 @@ export default function Search() {
             className={css({
               p: 1,
               my: 2,
-              bg: "white",
+              bg: "bg.surface",
               borderWidth: 1,
-              borderColor: "gray.600",
+              borderColor: "border.default",
               rounded: "lg",
             })}
           >
@@ -176,7 +181,8 @@ export default function Search() {
               className={css({
                 fontSize: "xl",
                 px: 3,
-                _hover: { color: "blue.500" },
+                color: "text.primary",
+                _hover: { color: "accent.primary" },
               })}
             >
               <Link href={result.url as Route}>
@@ -184,7 +190,12 @@ export default function Search() {
               </Link>
             </h2>
             <div
-              className={css({ bg: "blue.50", px: 5, rounded: "sm" })}
+              className={css({
+                bg: "accent.muted",
+                px: 5,
+                rounded: "sm",
+                color: "text.primary",
+              })}
               dangerouslySetInnerHTML={{ __html: result.excerpt }}
             />
           </div>

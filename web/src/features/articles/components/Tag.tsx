@@ -11,8 +11,6 @@ interface TagProps {
 }
 
 export default function Tag({ tag, prefix, className }: TagProps) {
-  const tagColor = { bg: "blue.100", _hover: { bg: "blue.500" } };
-
   return (
     <span
       className={cx(
@@ -22,9 +20,12 @@ export default function Tag({ tag, prefix, className }: TagProps) {
           px: 4,
           py: 1,
           fontFamily: "sans",
-          _hover: { color: "white" },
+          bg: "tag.bg",
+          color: "tag.text",
+          transition: "all",
+          transitionDuration: "fast",
+          _hover: { bg: "accent.primary", color: "tag.hoverText" },
         }),
-        css(tagColor),
         className,
       )}
     >

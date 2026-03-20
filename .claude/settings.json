@@ -17,7 +17,11 @@
       "Bash(mise trust:*)",
       "Bash(mise tasks)",
       "Bash(playwright-cli:*)",
-      "Bash(gh run view:*)"
+      "Bash(gh run view:*)",
+      "Bash(pnpm lint:*)"
+    ],
+    "additionalDirectories": [
+      "/Users/illumination27/ghq/github.com/illumination-k/site/web/src/styled-system/tokens"
     ]
   },
   "hooks": {

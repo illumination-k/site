@@ -22,6 +22,7 @@ export default function Footer({ meta }: Props) {
         alignItems: "center",
         flexDirection: "column",
         mt: 10,
+        color: "text.secondary",
       })}
     >
       <p
@@ -46,6 +47,8 @@ export default function Footer({ meta }: Props) {
               alignItems: "center",
               gap: 2,
               fontSize: "lg",
+              color: "accent.primary",
+              _hover: { color: "accent.hover" },
             })}
             href="https://github.com/illumination-k/site/issues/new?labels=comment,techblog"
           >
@@ -60,6 +63,8 @@ export default function Footer({ meta }: Props) {
               alignItems: "center",
               gap: 2,
               fontSize: "lg",
+              color: "accent.primary",
+              _hover: { color: "accent.hover" },
             })}
             href="https://github.com/illumination-k/site/issues/new?labels=bug,techblog"
           >

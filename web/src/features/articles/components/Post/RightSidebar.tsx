@@ -39,13 +39,20 @@ function SidebarMetaList({
   const iconInner = cloneElement(
     icon as ReactElement<Record<string, unknown>>,
     {
-      className: css({ h: 4, w: 4 }),
+      className: css({ h: 4, w: 4, color: "text.tertiary" }),
       "aria-hidden": true,
     },
   );
 
   return (
-    <li className={css({ p: 2 })}>
+    <li
+      className={css({
+        p: 2,
+        borderTopWidth: 1,
+        borderTopColor: "border.default",
+        _first: { borderTopWidth: 0 },
+      })}
+    >
       <div
         className={css({
           display: "flex",
@@ -57,10 +64,20 @@ function SidebarMetaList({
           className={css({ display: "flex", gap: 2, alignItems: "center" })}
         >
           {iconInner}
-          <p className={css({ fontWeight: "bold", fontSize: "lg" })}>{title}</p>
+          <p
+            className={css({
+              fontWeight: "bold",
+              fontSize: "lg",
+              color: "text.secondary",
+            })}
+          >
+            {title}
+          </p>
         </span>
 
-        {content ? <p className={css({ px: 5 })}>{content}</p> : null}
+        {content ? (
+          <p className={css({ px: 5, color: "text.primary" })}>{content}</p>
+        ) : null}
       </div>
       {children}
     </li>
@@ -70,8 +87,17 @@ function SidebarMetaList({
 export default function Sidebar({ className, meta, headings, prefix }: Props) {
   return (
     <aside className={className}>
-      <article className="sidebar-card mb-5">
-        <ul className="divide-y">
+      <article
+        className={css({
+          bg: "bg.surface",
+          rounded: "xl",
+          p: 4,
+          borderWidth: 1,
+          borderColor: "border.default",
+          mb: 5,
+        })}
+      >
+        <ul>
           <SidebarMetaList
             icon={<DocumentPlusIcon />}
             title="作成"
@@ -85,7 +111,7 @@ export default function Sidebar({ className, meta, headings, prefix }: Props) {
           <SidebarMetaList
             title={
               <Link
-                className={css({ _hover: { color: "blue.500" } })}
+                className={css({ _hover: { color: "accent.primary" } })}
                 href={`/techblog/post/${meta.uuid}` as Route}
               >
                 タグ
@@ -115,7 +141,13 @@ export default function Sidebar({ className, meta, headings, prefix }: Props) {
       <Toc
         meta={meta}
         headings={headings}
-        className={css({ bg: "white", rounded: "lg", p: 2 })}
+        className={css({
+          bg: "bg.surface",
+          rounded: "xl",
+          p: 4,
+          borderWidth: 1,
+          borderColor: "border.default",
+        })}
       />
     </aside>
   );
