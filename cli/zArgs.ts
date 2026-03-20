@@ -1,31 +1,32 @@
 import type { ArgumentsCamelCase, Argv } from "yargs";
-import { z } from "zod";
+import { ZodBoolean, ZodNumber, ZodString, ZodType, type z } from "zod";
 
 function zodTypeToYargsType(
-  schema: z.ZodSchema,
+  schema: z.ZodType,
 ): "string" | "number" | "boolean" {
-  let _schema = schema;
+  let _schema: z.ZodType = schema;
 
-  if (schema instanceof z.ZodEffects) {
-    _schema = schema._def.schema;
+  // Zod 4: transforms/pipes use _zod.def.type === "pipe" with inner schema at _zod.def.in
+  if ("_zod" in _schema && _schema._zod.def.type === "pipe") {
+    _schema = _schema._zod.def.in;
   }
 
-  if (_schema instanceof z.ZodString) {
+  if (_schema instanceof ZodString) {
     return "string";
   }
 
-  if (_schema instanceof z.ZodNumber) {
+  if (_schema instanceof ZodNumber) {
     return "number";
   }
 
-  if (_schema instanceof z.ZodBoolean) {
+  if (_schema instanceof ZodBoolean) {
     return "boolean";
   }
 
   throw new Error(`Invalid schema: ${schema}`);
 }
-function isZodSchema(obj: unknown): obj is z.ZodSchema {
-  return obj instanceof z.ZodSchema;
+function isZodType(obj: unknown): obj is z.ZodType {
+  return obj instanceof ZodType;
 }
 
 // biome-ignore lint: lint/suspicious/noExplicitAny
@@ -42,10 +43,10 @@ export function zArgs<T extends z.ZodObject<any>>(
       for (const key of Object.keys(schema.shape)) {
         const s: unknown = schema.shape[key];
 
-        if (isZodSchema(s)) {
+        if (isZodType(s)) {
           yargs.positional(key, {
             type: zodTypeToYargsType(s),
-            describe: s._def.description,
+            describe: s.description,
           });
         } else {
           throw new Error(`Invalid schema: ${s}`);

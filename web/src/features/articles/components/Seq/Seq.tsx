@@ -1,4 +1,4 @@
-import type { PropsWithChildren } from "react";
+import type { PropsWithChildren, ReactNode } from "react";
 
 import { css } from "@/styled-system/css";
 
@@ -27,9 +27,9 @@ export const Me = ({ children }: PropsWithChildren) => {
 };
 
 interface SeqProps {
-  fchain: JSX.Element;
-  rchain: JSX.Element;
-  annotation: JSX.Element;
+  fchain: ReactNode;
+  rchain: ReactNode;
+  annotation: ReactNode;
 }
 
 export const Seq = ({ fchain, rchain, annotation }: SeqProps) => {

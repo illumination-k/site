@@ -74,7 +74,7 @@ export default class IpynbToMdContext {
   }
 
   writeImageFile(imageFilePath: string, data: Buffer): void {
-    writeFileSync(this.imageName(imageFilePath), data);
+    writeFileSync(this.imageName(imageFilePath), new Uint8Array(data));
   }
 
   writeMdFile(): void {
