@@ -1,6 +1,7 @@
+import { css } from "@/styled-system/css";
+
 import type { Metadata } from "next";
 
-import { css } from "@/styled-system/css";
 
 export const metadata: Metadata = {
   title: "プライバシーポリシー | illumination-k.dev",
@@ -70,7 +71,9 @@ export default function PrivacyPolicyPage() {
         Privacy Policy
       </p>
 
-      <div className={css({ display: "flex", flexDirection: "column", gap: 8 })}>
+      <div
+        className={css({ display: "flex", flexDirection: "column", gap: 8 })}
+      >
         {sections.map((section, i) => (
           <section
             key={i}
