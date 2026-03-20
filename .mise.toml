@@ -5,6 +5,7 @@ prek = "latest"
 
 node = "20"
 pnpm = "10"
+"npm:@playwright/cli" = "latest"
 
 [hooks]
 postinstall = ["prek install -f"]
