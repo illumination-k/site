@@ -1,59 +1,243 @@
+import { Caveat } from "next/font/google";
 import Link from "next/link";
 
-import { css } from "@/styled-system/css";
+import { css, cx } from "@/styled-system/css";
 
-import type { NextPage } from "next";
+import { BookOpenIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import type { NextPage, Route } from "next";
+
+import GithubIcon from "@/icons/GithubIcon";
+import TwitterIcon from "@/icons/TwitterIcon";
+
+const caveat = Caveat({ subsets: ["latin"] });
 
 const Home: NextPage = () => {
   return (
     <div
       className={css({
-        h: "screen",
+        minH: "calc(100vh - 120px)",
         bg: "bg.page",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        px: 6,
+        py: 16,
       })}
     >
-      <div>
-        <h1
+      <div
+        className={css({
+          maxW: "lg",
+          w: "full",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 8,
+        })}
+      >
+        {/* Name */}
+        <div
           className={css({
-            fontWeight: "black",
-            fontSize: "3xl",
-            color: "text.primary",
+            textAlign: "center",
+            animation: "fadeInUp 0.6s ease-out",
           })}
         >
-          Web site of illumination-k
-        </h1>
-        <p className={css({ color: "text.secondary" })}>
-          This is the web site of illumination-k. The site is under
-          construction.
-        </p>
-
-        <h2
-          className={css({
-            fontWeight: "bold",
-            fontSize: "2xl",
-            color: "text.primary",
-            mt: 4,
-          })}
-        >
-          Content Links
-        </h2>
-        <ul className={css({ listStyle: "inside" })}>
-          <li>
-            <Link
-              className={css({
-                textDecoration: "underline",
+          <h1
+            className={cx(
+              css({
+                fontSize: { base: "4xl", md: "5xl" },
                 color: "accent.primary",
-                _hover: { color: "accent.hover" },
+                fontWeight: "black",
+                letterSpacing: "-0.02em",
+                lineHeight: "1.1",
+              }),
+              caveat.className,
+            )}
+          >
+            illumination-k
+          </h1>
+          <p
+            className={css({
+              mt: 3,
+              color: "text.secondary",
+              fontSize: { base: "sm", md: "md" },
+              lineHeight: "1.7",
+            })}
+          >
+            Software Engineer / Bioinformatics
+          </p>
+        </div>
+
+        {/* Divider */}
+        <div
+          className={css({
+            w: 12,
+            h: "1px",
+            bg: "border.default",
+            animation: "fadeInUp 0.6s ease-out 0.1s both",
+          })}
+        />
+
+        {/* Social Links */}
+        <div
+          className={css({
+            display: "flex",
+            gap: 5,
+            alignItems: "center",
+            animation: "fadeInUp 0.6s ease-out 0.2s both",
+          })}
+        >
+          <a
+            href="https://www.github.com/illumination-k"
+            aria-label="GitHub"
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              color: "text.secondary",
+              fontSize: "sm",
+              transition: "colors",
+              transitionDuration: "fast",
+              _hover: { color: "accent.primary" },
+            })}
+          >
+            <GithubIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
+            <span>GitHub</span>
+          </a>
+          <a
+            href="https://twitter.com/illuminationK"
+            aria-label="Twitter"
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              color: "text.secondary",
+              fontSize: "sm",
+              transition: "colors",
+              transitionDuration: "fast",
+              _hover: { color: "accent.primary" },
+            })}
+          >
+            <TwitterIcon
+              aria-hidden="true"
+              className={css({ h: 5, w: 5, fill: "currentColor" })}
+            />
+            <span>Twitter</span>
+          </a>
+        </div>
+
+        {/* Content Cards */}
+        <div
+          className={css({
+            display: "grid",
+            gridTemplateColumns: { base: "1fr", sm: "1fr 1fr" },
+            gap: 4,
+            w: "full",
+            mt: 2,
+            animation: "fadeInUp 0.6s ease-out 0.3s both",
+          })}
+        >
+          <Link
+            href={"/techblog/1" as Route}
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              px: 6,
+              py: 5,
+              rounded: "xl",
+              bg: "bg.surface",
+              borderWidth: 1,
+              borderColor: "border.default",
+              transition: "all",
+              transitionDuration: "normal",
+              _hover: {
+                borderColor: "accent.primary",
+                transform: "translateY(-2px)",
+                shadow: "0 4px 20px rgba(14, 165, 233, 0.12)",
+              },
+            })}
+          >
+            <BookOpenIcon
+              className={css({
+                h: 6,
+                w: 6,
+                color: "accent.primary",
+                flexShrink: 0,
               })}
-              href="/techblog/1"
-            >
-              Techblog
-            </Link>
-          </li>
-        </ul>
+            />
+            <div>
+              <span
+                className={css({
+                  fontWeight: "bold",
+                  fontSize: "lg",
+                  color: "text.primary",
+                })}
+              >
+                Tech Blog
+              </span>
+              <p
+                className={css({
+                  color: "text.tertiary",
+                  fontSize: "xs",
+                  mt: 0.5,
+                })}
+              >
+                技術ブログ
+              </p>
+            </div>
+          </Link>
+
+          <Link
+            href={"/paperstream/1" as Route}
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              gap: 4,
+              px: 6,
+              py: 5,
+              rounded: "xl",
+              bg: "bg.surface",
+              borderWidth: 1,
+              borderColor: "border.default",
+              transition: "all",
+              transitionDuration: "normal",
+              _hover: {
+                borderColor: "accent.primary",
+                transform: "translateY(-2px)",
+                shadow: "0 4px 20px rgba(14, 165, 233, 0.12)",
+              },
+            })}
+          >
+            <DocumentTextIcon
+              className={css({
+                h: 6,
+                w: 6,
+                color: "accent.primary",
+                flexShrink: 0,
+              })}
+            />
+            <div>
+              <span
+                className={css({
+                  fontWeight: "bold",
+                  fontSize: "lg",
+                  color: "text.primary",
+                })}
+              >
+                Paper Stream
+              </span>
+              <p
+                className={css({
+                  color: "text.tertiary",
+                  fontSize: "xs",
+                  mt: 0.5,
+                })}
+              >
+                論文メモ
+              </p>
+            </div>
+          </Link>
+        </div>
       </div>
     </div>
   );
