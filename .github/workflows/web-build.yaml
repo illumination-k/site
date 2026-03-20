@@ -93,3 +93,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           command: pages deploy web/out --project-name=site --branch=${{ github.head_ref || github.ref_name }}
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+          packageManager: npx
