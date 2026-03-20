@@ -132,7 +132,7 @@ async fn main() -> Result<()> {
 
 ```bash
 cargo run
-curl http://localhost:8080 
+curl http://localhost:8080
 # Hello, world!
 ```
 
@@ -433,7 +433,7 @@ pub async fn index(pool: web::Data<Pool>, post_id: web::Path<i32>) -> HttpRespon
 Routingを追加して実行します。
 
 ```bash
-curl -X DELETE http://localhost:8080/posts/1 
+curl -X DELETE http://localhost:8080/posts/1
 # Delete: 1
 curl http://localhost:8080/posts
 # []

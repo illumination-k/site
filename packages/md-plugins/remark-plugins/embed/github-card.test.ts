@@ -32,18 +32,18 @@ describe("github-card embed", () => {
   it("part of real post", async () => {
     const vfile = await remark().process(
       `## TL;DR
-      
+
       SQLAlchemyは素晴らしいORMですが、django等と違ってテストや、migrationは自分でセットアップする必要があります。
       ツールは色々あると思いますが、今回は以下の構成で環境を整えます。また、型があると嬉しいのでmypyでチェックします。
-      
+
       * migration -> alembic
       * test -> pytest\n\n実際にやることとしては、以下です。
-      
+
       1. テスト環境のセットアップ
       2. UserとPostモデルを作成
       3. テスト
       4. Migration
-      
+
       ::gh-card[illumination-k/sqlalchemy-starter]\n\n## Install`,
     );
 

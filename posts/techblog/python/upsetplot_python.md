@@ -57,7 +57,7 @@ examples = generate_counts()
 print(examples)
 
 """ 出力
-cat0   cat1   cat2 
+cat0   cat1   cat2
 False  False  False      56
               True      283
        True   False    1279
@@ -77,8 +77,8 @@ Name: value, dtype: int64
 サンプルデータを使ってベン図を作成します。ベン図の作成には、matplotlibのvenn3を使用します。
 
 ```python
-from matplotlib_venn import venn3 
-venn3(subsets=(24, 1279, 429, 28, 90, 5882, 1957), 
+from matplotlib_venn import venn3
+venn3(subsets=(24, 1279, 429, 28, 90, 5882, 1957),
                 set_labels=("cat0", "cat1", "cat2"))
 plt.show()
 ```
@@ -133,7 +133,7 @@ pip install scikit-learn pandas
 ```python
 import pandas as pd
 from sklearn.datasets import load_boston
-import matplotlib.pyplot as plt 
+import matplotlib.pyplot as plt
 from upsetplot import UpSet
 
 boston = load_boston()
@@ -149,7 +149,7 @@ boston_above_avg = boston_above_avg[top_features]
 boston_above_avg = boston_above_avg.rename(columns=lambda x: x + '>')
 
 # True or Falseでとってきたものをmulti indexとして設定
-boston_df = pd.concat((boston_df, boston_above_avg), axis=1) 
+boston_df = pd.concat((boston_df, boston_above_avg), axis=1)
 boston_df = boston_df.set_index(list(boston_above_avg.columns))
 boston_df = boston_df.assign(median_value=boston.target)
 

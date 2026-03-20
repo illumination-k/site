@@ -131,7 +131,7 @@ package.jsonのbuildとかの部分を以下のように変更する。
   "dev": "next",
   "build": "next build",
   "start": "next start",
-  "cache-posts": "node script/makeCache.js" 
+  "cache-posts": "node script/makeCache.js"
 },
 "husky": {
   "hooks": {

@@ -137,7 +137,7 @@ def is_correct_bracket(s: str) -> bool:
             left += 1
         else:
             right += 1
-        
+
         if not (left >= right):
             return False
     return left == right

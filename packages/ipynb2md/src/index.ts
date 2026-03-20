@@ -238,7 +238,7 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
           const buffer = Buffer.from(value, "base64");
           imageFiles.push({ imageFilePath, data: buffer });
           outputContents.push(`![${imageFilePath}](./${imageFilePath})`);
-          outputContents.push("\n")
+          outputContents.push("\n");
         } else {
           throw new Error(`Unknown image type: ${typeof value}`);
         }
@@ -247,7 +247,7 @@ ${JSON.stringify(this.ipynbInput.metadata, null, 2)}
 
     return {
       outputString: outputContents.join("\n\n"),
-      imageFiles
+      imageFiles,
     };
   }
 }

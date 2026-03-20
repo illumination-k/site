@@ -70,7 +70,7 @@ chmod --help
 #   or:  chmod [OPTION]... --reference=RFILE FILE...
 # Change the mode of each FILE to MODE.
 # With --reference, change the mode of each FILE to that of RFILE.
-# 
+#
 #   -c, --changes          like verbose but report only when a change is made
 #   -f, --silent, --quiet  suppress most error messages
 #   -v, --verbose          output a diagnostic for every file processed
@@ -80,9 +80,9 @@ chmod --help
 #   -R, --recursive        change files and directories recursively
 #       --help     display this help and exit
 #       --version  output version information and exit
-# 
+#
 # Each MODE is of the form '[ugoa]*([-+=]([rwxXst]*|[ugo]))+|[-+=][0-7]+'.
-# 
+#
 # GNU coreutils online help: <http://www.gnu.org/software/coreutils/>
 # Full documentation at: <http://www.gnu.org/software/coreutils/chmod>
 # or available locally via: info '(coreutils) chmod invocation'
@@ -170,7 +170,7 @@ chmod -R 755 .
 ```bash
 # dir
 find . -type d | xargs chmod 755
-# file 
+# file
 find . -type f | xargs chmod 755
 # 特定拡張子
 find . -name '*.sh' | xargs chmod 755

@@ -10,8 +10,8 @@ jobs:
   actionlint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - name: install mise
-        uses: jdx/mise-action@v2
+        uses: jdx/mise-action@v3
       - name: Run actionlint
         run: actionlint --color

@@ -123,7 +123,7 @@ d=$(ls | awk -F / 'print $NF')
 ```bash
 filename="test.csv"
 base=${filename%.csv}
-# or 
+# or
 base=${filename%.*}
 echo $base
 # test

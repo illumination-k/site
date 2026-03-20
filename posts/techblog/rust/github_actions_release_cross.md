@@ -116,7 +116,7 @@ jobs:
       - name: Cross build with all features
         uses: actions-rs/cargo@v1
         with:
-          use-cross: true 
+          use-cross: true
           command: build
           args: --release --target ${{ matrix.target }} --all-features --verbose
 

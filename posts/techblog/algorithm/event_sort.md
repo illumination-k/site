@@ -73,7 +73,7 @@ impl<T: Ord> BMultiSet<T> {
         *self.inner_map.entry(x).or_insert(0) += 1;
     }
 
-    /// Decrement count of the value.  
+    /// Decrement count of the value.
     /// If count is zero, remove this value.
     pub fn erase_one(&mut self, x: T) -> Option<T> {
         if let Some(count) = self.inner_map.get_mut(&x) {
