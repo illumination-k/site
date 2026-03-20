@@ -29,8 +29,33 @@ jobs:
       - name: trust
         run: mise trust -P .mise.toml
 
+      - name: cache pnpm store
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ~/.local/share/pnpm/store/v10
+          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            pnpm-${{ runner.os }}-
+
       - name: install deps
         run: pnpm i
+
+      - name: cache turbo
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: node_modules/.cache/turbo
+          key: turbo-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ runner.os }}-
+
+      - name: cache next.js
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: web/.next/cache
+          key: nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('web/**', 'posts/**') }}
+          restore-keys: |
+            nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            nextjs-${{ runner.os }}-
 
       - name: build cli
         run: pnpm cli:build
@@ -38,8 +63,20 @@ jobs:
       - name: build web
         run: pnpm web-build
 
+      - name: cache playwright browsers
+        id: playwright-cache
+        uses: actions/cache@5a3ec84eff668545956fd18022155c47e93e2684 # v4.2.3
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('web/pnpm-lock.yaml', 'web/package.json') }}
+
       - name: install playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
         run: cd web && npx playwright install --with-deps chromium
+
+      - name: install playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: cd web && npx playwright install-deps chromium
 
       - name: run e2e tests
         run: cd web && pnpm test:e2e

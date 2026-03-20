@@ -4,9 +4,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ["md-plugins"],
   output: "export",
-  experimental: {
-    typedRoutes: true,
-  },
+  typedRoutes: true,
 };
 
 module.exports = nextConfig;
