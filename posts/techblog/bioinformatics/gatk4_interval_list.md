@@ -48,7 +48,7 @@ for i in `seq -f '%04g' 0 11`; do
         -R $ref \
         -I ${basename}.bam \
         --known-sites /path/to/known.vcf \
-        -O $outfile & 
+        -O $outfile &
 done
 wait
 
@@ -61,7 +61,7 @@ for i in `seq -f '%04g' 0 11`; do
         -R $ref \
         -I ${basename}.bam \
         -bqsr $bqfile \
-        -O $output & 
+        -O $output &
 done
 wait
 
@@ -74,7 +74,7 @@ for i in `seq -f '%04g' 0 11`; do
         -R $ref \
         -I $infile \
         -ERC GVCF \
-        -O $outfile & 
+        -O $outfile &
 done
 wait
 
@@ -85,7 +85,7 @@ for i in `seq -f '%04g' 0 11`; do
         -L $ref_dir/interval_list_12/${i}-scattered.interval_list \
         -R $ref \
         -V $infile \
-        -O ${basename}_$i.vcf & 
+        -O ${basename}_$i.vcf &
 done
 wait
 

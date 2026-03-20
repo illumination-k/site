@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS users (
 ```
 postgres=# \d
               List of relations
- Schema |     Name     |   Type   |  Owner   
+ Schema |     Name     |   Type   |  Owner
 --------+--------------+----------+----------
  public | users        | table    | postgres
  public | users_id_seq | sequence | postgres
@@ -65,10 +65,10 @@ postgres=# \d
 ```
 postgres=# \d users
                                     Table "public.users"
- Column |          Type          | Collation | Nullable |              Default              
+ Column |          Type          | Collation | Nullable |              Default
 --------+------------------------+-----------+----------+-----------------------------------
  id     | integer                |           | not null | nextval('users_id_seq'::regclass)
- name   | character varying(255) |           | not null | 
+ name   | character varying(255) |           | not null |
 Indexes:
     "users_pkey" PRIMARY KEY, btree (id)
 ```
@@ -134,7 +134,7 @@ SELECT currval('users_id_seq');
 -- ERROR:  currval of sequence "users_id_seq" is not yet defined in this session
 
 SELECT setval(
-    pg_get_serial_sequence('users', 'id'), 
+    pg_get_serial_sequence('users', 'id'),
     (SELECT MAX(id) FROM "users")
 );
 -- 2
@@ -158,7 +158,7 @@ SELECT currval('users_id_seq');
 
 ```sql
 SELECT setval(
-    pg_get_serial_sequence('users', 'id'), 
+    pg_get_serial_sequence('users', 'id'),
     (SELECT MAX(id)+1 FROM "users"),
     false
 );

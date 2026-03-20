@@ -1,7 +1,18 @@
 [tools]
-dprint = "0.47"
-actionlint = "1.7"
-pre-commit = "4"
+dprint = "0.50"
+actionlint = "1.7.10"
+prek = "latest"
 
 node = "20"
 pnpm = "10"
+
+[hooks]
+postinstall = ["prek install -f"]
+
+[tasks.fmt]
+description = "Format code"
+run = ["dprint fmt", "prek run --all-files", "mise fmt", "pnpm run format"]
+
+[tasks.lint]
+description = "Lint code"
+run = ["dprint check", "actionlint", "pnpm run lint"]

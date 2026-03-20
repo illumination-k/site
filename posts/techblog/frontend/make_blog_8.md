@@ -161,7 +161,7 @@ export default function handler(req, res) {
         url: "/posts/test"
     }
 
-    res.status(200).json(articles) 
+    res.status(200).json(articles)
 }
 ```
 

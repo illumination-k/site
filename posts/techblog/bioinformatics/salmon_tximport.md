@@ -177,7 +177,7 @@ res <- results(dds)
 DESeq2の`DESeqDataSetFromTximport`を読むと
 
 ```r
-DESeqDataSetFromTximport <- function(txi, colData, design, ...) 
+DESeqDataSetFromTximport <- function(txi, colData, design, ...)
 {
   stopifnot(is(txi, "list"))
   counts <- round(txi$counts)

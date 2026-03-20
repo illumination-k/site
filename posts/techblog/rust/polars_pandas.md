@@ -219,7 +219,7 @@ df = pd.DataFrame({
 マクロが便利です。
 
 ```rust
-let s = 
+let s =
 let mut df = df!("A" => &["a", "b", "a"],
              "B" => &[1, 3, 5],
              "C" => &[10, 11, 12],
@@ -556,19 +556,19 @@ df2 = pd.DataFrame({
     "Potassium (mg/100g)": [107, 358, 115]})
 
 pd.merge(
-    df1, df2, 
-    left_on="Fruit", right_on="Name", 
+    df1, df2,
+    left_on="Fruit", right_on="Name",
 how="inner")
 
 pd.merge(
-    df1, df2, 
-    left_on=["Fruit", "Origin"], right_on=["Name", "Origin"], 
+    df1, df2,
+    left_on=["Fruit", "Origin"], right_on=["Name", "Origin"],
     how="outer"
 )
 
 pd.merge(
-    df1, df2, 
-    left_on="Origin", right_on="Origin", 
+    df1, df2,
+    left_on="Origin", right_on="Origin",
     how="left"
 )
 ```

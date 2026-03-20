@@ -199,7 +199,7 @@ curl -i 'https://rest.uniprot.org/idmapping/status/6387ece4eb3305097b61ffb3601c1
 ```
 
 ```
-HTTP/2 303 
+HTTP/2 303
 vary: accept,accept-encoding,x-uniprot-release,x-api-deployment-date
 vary: User-Agent
 cache-control: no-cache
