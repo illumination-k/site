@@ -19,7 +19,8 @@
       "Bash(playwright-cli:*)",
       "Bash(gh run view:*)",
       "Bash(pnpm lint:*)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Bash(pnpm test:*)"
     ],
     "additionalDirectories": [
       "/Users/illumination27/ghq/github.com/illumination-k/site/web/src/styled-system/tokens"

@@ -43,6 +43,23 @@ export default function Header({ meta }: Props) {
           この記事はドラフト段階です。
         </div>
       ) : null}
+
+      {meta.tags.includes("ai-generated") ? (
+        <div
+          className={css({
+            bg: "aiGenerated.bg",
+            color: "aiGenerated.text",
+            fontSize: "lg",
+            textAlign: "center",
+            fontWeight: "bold",
+            rounded: "lg",
+            p: 3,
+            mx: 2,
+          })}
+        >
+          この記事はAIによって生成されています。内容の正確性にご注意ください。
+        </div>
+      ) : null}
     </>
   );
 }
