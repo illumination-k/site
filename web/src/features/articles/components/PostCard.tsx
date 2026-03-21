@@ -3,7 +3,7 @@ import Link from "next/link";
 import { css } from "@/styled-system/css";
 import { flex } from "@/styled-system/patterns";
 
-import { TagIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, TagIcon } from "@heroicons/react/24/outline";
 import type { PostMeta } from "common";
 import type { Route } from "next";
 
@@ -18,66 +18,129 @@ export default function PostCard({ prefix, meta }: PostCardProps) {
   return (
     <article
       className={css({
-        px: 6,
-        py: 4,
+        position: "relative",
         rounded: "xl",
         bg: "bg.surface",
         my: 3,
-        mx: 4,
+        mx: { base: 2, md: 4 },
         borderWidth: 1,
         borderColor: "border.default",
+        overflow: "hidden",
         transition: "all",
         transitionDuration: "normal",
+        _before: {
+          content: '""',
+          position: "absolute",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          width: "3px",
+          bg: "accent.primary",
+          opacity: 0.3,
+          transition: "opacity",
+          transitionDuration: "normal",
+        },
         _hover: {
           borderColor: "accent.primary",
           transform: "translateY(-2px)",
-          shadow: "0 4px 20px rgba(14, 165, 233, 0.15)",
+          shadow: "0 8px 30px rgba(14, 165, 233, 0.12)",
+          _before: {
+            opacity: 1,
+          },
         },
       })}
     >
-      <h2
-        className={flex({
-          fontWeight: "bold",
-          fontSize: "2xl",
-          justifyContent: "space-between",
-          color: "text.primary",
-          transition: "colors",
-          transitionDuration: "fast",
-          _hover: { color: "accent.primary" },
-        })}
-      >
-        <Link href={`/${prefix}/post/${meta.uuid}` as Route}>{meta.title}</Link>
-      </h2>
-
-      <p className={css({ color: "text.tertiary", fontSize: "sm" })}>
-        更新: {meta.updated_at}
-      </p>
-
-      <div
-        className={css({
-          display: "flex",
-          gap: 2,
-          py: 2,
-          alignItems: "center",
-          hideBelow: "md",
-        })}
-      >
-        <TagIcon
-          className={css({
-            h: 5,
-            w: 5,
-            hideBelow: "md",
-            color: "text.tertiary",
+      <div className={css({ px: 6, py: 5 })}>
+        {/* Top row: category badge + date */}
+        <div
+          className={flex({
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
           })}
-        />
-        {meta.tags.map((tag, i) => (
-          <Tag prefix={prefix} tag={tag} key={i} />
-        ))}
-      </div>
+        >
+          <span
+            className={css({
+              fontSize: "xs",
+              fontWeight: "semibold",
+              textTransform: "uppercase",
+              letterSpacing: "wide",
+              color: "accent.primary",
+              bg: "accent.muted",
+              px: 3,
+              py: 0.5,
+              rounded: "full",
+            })}
+          >
+            {meta.category}
+          </span>
+          <span
+            className={flex({
+              alignItems: "center",
+              gap: 1,
+              color: "text.tertiary",
+              fontSize: "xs",
+            })}
+          >
+            <CalendarIcon className={css({ h: 3.5, w: 3.5 })} />
+            {meta.updated_at}
+          </span>
+        </div>
 
-      <p className={css({ px: 2, color: "text.secondary" })}>
-        {meta.description}
-      </p>
+        {/* Title */}
+        <h2
+          className={css({
+            fontWeight: "bold",
+            fontSize: { base: "lg", md: "xl" },
+            lineHeight: "tight",
+            color: "text.primary",
+            mb: 2,
+            transition: "colors",
+            transitionDuration: "fast",
+            _hover: { color: "accent.primary" },
+          })}
+        >
+          <Link href={`/${prefix}/post/${meta.uuid}` as Route}>
+            {meta.title}
+          </Link>
+        </h2>
+
+        {/* Description */}
+        <p
+          className={css({
+            color: "text.secondary",
+            fontSize: "sm",
+            lineHeight: "relaxed",
+            mb: 3,
+            lineClamp: 2,
+          })}
+        >
+          {meta.description}
+        </p>
+
+        {/* Tags */}
+        {meta.tags.length > 0 && (
+          <div
+            className={flex({
+              gap: 1.5,
+              alignItems: "center",
+              flexWrap: "wrap",
+            })}
+          >
+            <TagIcon
+              className={css({
+                h: 4,
+                w: 4,
+                color: "text.tertiary",
+                flexShrink: 0,
+              })}
+            />
+            {meta.tags.map((tag, i) => (
+              <Tag prefix={prefix} tag={tag} key={i} />
+            ))}
+          </div>
+        )}
+      </div>
     </article>
   );
 }

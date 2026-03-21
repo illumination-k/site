@@ -15,10 +15,11 @@ export default function Tag({ tag, prefix, className }: TagProps) {
     <span
       className={cx(
         css({
-          borderRadius: "3xl",
-          fontWeight: "bold",
-          px: 4,
-          py: 1,
+          borderRadius: "full",
+          fontWeight: "medium",
+          fontSize: "xs",
+          px: 3,
+          py: 0.5,
           fontFamily: "sans",
           bg: "tag.bg",
           color: "tag.text",
