@@ -75,6 +75,10 @@ export default defineConfig({
             bg: { value: { base: "#f3f4f6", _dark: "#1c1917" } },
             text: { value: { base: "#4b5563", _dark: "#a8a29e" } },
           },
+          aiGenerated: {
+            bg: { value: { base: "#ede9fe", _dark: "#1e1b4b" } },
+            text: { value: { base: "#5b21b6", _dark: "#a78bfa" } },
+          },
         },
       },
     },

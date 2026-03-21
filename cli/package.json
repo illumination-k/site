@@ -7,9 +7,9 @@
   "license": "ISC",
   "author": "",
   "scripts": {
-    "build": "webpack",
+    "build": "tsup",
     "cmd": "node ./dist/main.js",
-    "dev": "webpack --config ./webpack.dev.js --watch",
+    "dev": "tsup --watch",
     "format": "biome check --write .",
     "lint": "biome lint . && tsc --noEmit",
     "test": "vitest run",
@@ -39,17 +39,12 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@swc/core": "^1.7.10",
     "@types/mdast": "^4.0.4",
     "@types/tmp": "^0.2.6",
     "@types/unist": "^3.0.3",
     "@types/uuid": "^10.0.0",
     "@types/yargs": "^17.0.33",
-    "node-loader": "^2.0.0",
-    "swc-loader": "^0.2.6",
-    "unified": "^11.0.5",
-    "webpack": "^5.93.0",
-    "webpack-cli": "^5.1.4",
-    "webpack-merge": "^6.0.1"
+    "tsup": "^8.5.1",
+    "unified": "^11.0.5"
   }
 }

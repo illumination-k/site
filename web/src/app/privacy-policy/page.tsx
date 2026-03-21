@@ -2,7 +2,6 @@ import { css } from "@/styled-system/css";
 
 import type { Metadata } from "next";
 
-
 export const metadata: Metadata = {
   title: "プライバシーポリシー | illumination-k.dev",
   description: "illumination-k.dev のプライバシーポリシー",

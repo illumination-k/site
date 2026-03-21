@@ -43,3 +43,5 @@ fi
 
 mise settings experimental=true
 mise install
+
+pnpm i
