@@ -70,10 +70,17 @@ yargs(hideBin(process.argv))
         describe: "",
         alias: ["o", "out"],
       });
+      yargs.option("tags", {
+        type: "string",
+        array: true,
+        describe: "tags for the post",
+        alias: "t",
+      });
       yargs.demandOption(["output"]);
     },
     (argv) => {
-      fs.writeFileSync(argv.output as string, template());
+      const tags = argv.tags as string[] | undefined;
+      fs.writeFileSync(argv.output as string, template(tags));
     },
   )
   .command(

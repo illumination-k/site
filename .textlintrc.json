@@ -1,0 +1,32 @@
+{
+  "rules": {
+    "preset-ja-technical-writing": {
+      "sentence-length": {
+        "max": 150
+      },
+      "max-comma": {
+        "max": 3
+      },
+      "max-ten": {
+        "max": 3
+      },
+      "no-exclamation-question-mark": false,
+      "ja-no-weak-phrase": false,
+      "ja-no-mixed-period": {
+        "allowPeriodMarks": [":", "…"],
+        "allowEmojiAtEnd": true
+      },
+      "no-doubled-joshi": {
+        "strict": false,
+        "allow": ["か", "が", "に", "で", "と", "も"]
+      }
+    },
+    "preset-ai-writing": true,
+    "preset-ja-spacing": {
+      "ja-space-between-half-and-full-width": {
+        "space": "never"
+      },
+      "ja-space-around-code": false
+    }
+  }
+}

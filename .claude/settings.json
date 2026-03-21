@@ -20,7 +20,8 @@
       "Bash(gh run view:*)",
       "Bash(pnpm lint:*)",
       "WebFetch(domain:github.com)",
-      "Bash(pnpm test:*)"
+      "Bash(pnpm test:*)",
+      "Bash(pnpm cli:build)"
     ],
     "additionalDirectories": [
       "/Users/illumination27/ghq/github.com/illumination-k/site/web/src/styled-system/tokens"

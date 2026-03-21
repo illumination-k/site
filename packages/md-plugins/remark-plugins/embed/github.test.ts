@@ -52,6 +52,7 @@ const processor = unified()
   .use(remarkDirective)
   .use(remarkDirectiveEmbedGenerator([new GithubTransformer()]))
   .use(remarkRehype)
+  // @ts-expect-error rehypePrism type mismatch with unified chain
   .use(rehypePrism)
   .use(rehypeStringify);
 
