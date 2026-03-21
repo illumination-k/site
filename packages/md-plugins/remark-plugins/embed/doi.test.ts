@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { DoiTransformer, doiRegExp } from "./doi";
 
 import rehypeStringify from "rehype-stringify";
@@ -8,6 +8,14 @@ import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
 import remarkDirectiveEmbedGenerator from ".";
+
+vi.mock("axios", () => ({
+  default: {
+    get: vi.fn().mockResolvedValue({
+      data: "Frank, H. S. (1970). The Structure of Ordinary Water. Science, 169(3946), 635–641. https://doi.org/10.1126/science.169.3946.635\n",
+    }),
+  },
+}));
 
 const remarkEmbed = remarkDirectiveEmbedGenerator([new DoiTransformer()]);
 const processor = unified()

@@ -351,7 +351,6 @@ Docker Composeの`command`/`entrypoint`は`startUpCommand`に、`environment`は
 
 Azure CLIの`az webapp sitecontainers convert`コマンドで既存アプリをサイドカーモードに変換できる。デプロイスロットを使えば安全にテストしてから本番に切り替えられる。
 
-
 #### 活用事例
 
 - [Azure App ServiceへDockerコンテナをデプロイし、Webアプリを動かしてみる。-Go言語-](https://zenn.dev/akuru_jp/articles/8574be4f03d03f) — Go言語のDockerコンテナをACR経由でApp Serviceにデプロイする手順

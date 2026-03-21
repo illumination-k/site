@@ -5,10 +5,42 @@ import remarkRehype from "remark-rehype";
 import rehypePrism from "../../rehype-plugins/rehypePrism";
 
 import { unified } from "unified";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import remarkDirectiveEmbedGenerator, { GithubTransformer } from ".";
 
 import { parseGithubUrl } from "./github";
+
+const highlighterFileContent = `import { refractor } from "refractor/lib/core.js";
+import bash from "refractor/lang/bash.js";
+import diff from "refractor/lang/diff.js";
+import json from "refractor/lang/json.js";
+import markdown from "refractor/lang/markdown.js";
+import python from "refractor/lang/python.js";
+import r from "refractor/lang/r.js";
+import rust from "refractor/lang/rust.js";
+import toml from "refractor/lang/toml.js";
+import yaml from "refractor/lang/yaml.js";
+import ts from "refractor/lang/typescript.js";
+import tsx from "refractor/lang/tsx.js";
+refractor.register(ts);
+refractor.register(tsx);
+refractor.alias({ typescript: ["ts"] });`;
+
+const readmeContent = "# site\n\nPersonal blog site";
+
+vi.mock("axios", () => ({
+  default: {
+    get: vi.fn().mockImplementation((url: string) => {
+      if (url.includes("highlighter.ts")) {
+        return Promise.resolve({ data: highlighterFileContent });
+      }
+      if (url.includes("README.md")) {
+        return Promise.resolve({ data: readmeContent });
+      }
+      return Promise.reject(new Error(`Unexpected URL: ${url}`));
+    }),
+  },
+}));
 
 describe("test parse github url", () => {
   it("test parse github main url without line", () => {
@@ -52,7 +84,6 @@ const processor = unified()
   .use(remarkDirective)
   .use(remarkDirectiveEmbedGenerator([new GithubTransformer()]))
   .use(remarkRehype)
-  // @ts-expect-error rehypePrism type mismatch with unified chain
   .use(rehypePrism)
   .use(rehypeStringify);
 
