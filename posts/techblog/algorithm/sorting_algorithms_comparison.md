@@ -21,13 +21,13 @@ updated_at: 2026-03-21
 
 主要5言語の標準ソートアルゴリズムをまとめると以下のようになります。
 
-| 言語 | 安定ソート | 不安定ソート | ベースアルゴリズム | 導入バージョン |
-| --- | --- | --- | --- | --- |
-| Python | Timsort (Powersortマージポリシー) | - | Merge Sort + Insertion Sort | 3.11 (2022) |
-| JavaScript (V8) | Timsort | - | Merge Sort + Insertion Sort | Chrome 70 (2018) |
-| Rust | driftsort | ipnsort | Merge Sort系 / Quicksort系 | 1.81 (2024) |
-| Go | - | pdqsort | Quicksort + Heapsort + Insertion Sort | 1.19 (2022) |
-| R | Radix Sort / Shell Sort | - | 型に応じて自動選択 | R 3.x |
+| 言語            | 安定ソート                        | 不安定ソート | ベースアルゴリズム                    | 導入バージョン   |
+| --------------- | --------------------------------- | ------------ | ------------------------------------- | ---------------- |
+| Python          | Timsort (Powersortマージポリシー) | -            | Merge Sort + Insertion Sort           | 3.11 (2022)      |
+| JavaScript (V8) | Timsort                           | -            | Merge Sort + Insertion Sort           | Chrome 70 (2018) |
+| Rust            | driftsort                         | ipnsort      | Merge Sort系 / Quicksort系            | 1.81 (2024)      |
+| Go              | -                                 | pdqsort      | Quicksort + Heapsort + Insertion Sort | 1.19 (2022)      |
+| R               | Radix Sort / Shell Sort           | -            | 型に応じて自動選択                    | R 3.x            |
 
 近年の共通トレンドとして、既存の秩序（プリソート列）を活用する適応型ソートと、複数アルゴリズムを組み合わせるハイブリッド戦略が主流になっています。
 
@@ -103,9 +103,9 @@ AppleのJavaScriptCoreエンジンもTimsortの変種を採用しています。
 ```javascript
 // ES2019以降、Array.prototype.sort() は安定ソートが仕様上保証される
 const data = [
-  { name: "Alice", age: 30 },
-  { name: "Bob", age: 25 },
-  { name: "Charlie", age: 30 },
+	{ name: "Alice", age: 30 },
+	{ name: "Bob", age: 25 },
+	{ name: "Charlie", age: 30 },
 ];
 data.sort((a, b) => a.age - b.age);
 // Alice(30) は Charlie(30) より前に来ることが保証される
@@ -113,11 +113,11 @@ data.sort((a, b) => a.age - b.age);
 
 ### エンジン間の比較
 
-| エンジン | ブラウザ | アルゴリズム |
-| --- | --- | --- |
-| V8 | Chrome, Edge, Node.js | Timsort |
-| SpiderMonkey | Firefox | Merge Sort |
-| JavaScriptCore | Safari | Timsort変種 |
+| エンジン       | ブラウザ              | アルゴリズム |
+| -------------- | --------------------- | ------------ |
+| V8             | Chrome, Edge, Node.js | Timsort      |
+| SpiderMonkey   | Firefox               | Merge Sort   |
+| JavaScriptCore | Safari                | Timsort変種  |
 
 ## Rust — driftsort（安定）/ ipnsort（不安定）
 
@@ -258,15 +258,15 @@ sort(x, method = "radix")
 
 ### アルゴリズム特性の比較
 
-| 言語 | アルゴリズム | 安定性 | 最良 | 平均 | 最悪 | 導入 |
-| --- | --- | --- | --- | --- | --- | --- |
-| Python | Timsort + Powersort | 安定 | $O(n)$ | $O(n \log n)$ | $O(n \log n)$ | 3.11 (2022) |
-| JS (V8) | Timsort | 安定 | $O(n)$ | $O(n \log n)$ | $O(n \log n)$ | Chrome 70 (2018) |
-| Rust (stable) | driftsort | 安定 | $O(n)$ | $O(n \log n)$ | $O(n \log n)$ | 1.81 (2024) |
-| Rust (unstable) | ipnsort | 不安定 | $O(n)$ | $O(n \log n)$ | $O(n \log n)$ | 1.81 (2024) |
-| Go | pdqsort | 不安定 | $O(n)$ | $O(n \log n)$ | $O(n \log n)$ | 1.19 (2022) |
-| R (数値) | Radix Sort | 安定 | $O(n)$ | $O(n)$ | $O(n)$ | R 3.x |
-| R (汎用) | Shell Sort | 不安定 | $O(n \log n)$ | $O(n^{4/3})$ | $O(n^{4/3})$ | R 1.x |
+| 言語            | アルゴリズム        | 安定性 | 最良          | 平均          | 最悪          | 導入             |
+| --------------- | ------------------- | ------ | ------------- | ------------- | ------------- | ---------------- |
+| Python          | Timsort + Powersort | 安定   | $O(n)$        | $O(n \log n)$ | $O(n \log n)$ | 3.11 (2022)      |
+| JS (V8)         | Timsort             | 安定   | $O(n)$        | $O(n \log n)$ | $O(n \log n)$ | Chrome 70 (2018) |
+| Rust (stable)   | driftsort           | 安定   | $O(n)$        | $O(n \log n)$ | $O(n \log n)$ | 1.81 (2024)      |
+| Rust (unstable) | ipnsort             | 不安定 | $O(n)$        | $O(n \log n)$ | $O(n \log n)$ | 1.81 (2024)      |
+| Go              | pdqsort             | 不安定 | $O(n)$        | $O(n \log n)$ | $O(n \log n)$ | 1.19 (2022)      |
+| R (数値)        | Radix Sort          | 安定   | $O(n)$        | $O(n)$        | $O(n)$        | R 3.x            |
+| R (汎用)        | Shell Sort          | 不安定 | $O(n \log n)$ | $O(n^{4/3})$  | $O(n^{4/3})$  | R 1.x            |
 
 ### 共通トレンド
 
