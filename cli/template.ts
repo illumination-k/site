@@ -14,9 +14,14 @@ const DEFAULT_POST_META: PostMeta = {
   updated_at: formatDate(new Date()),
 };
 
-export function template(): string {
+export function template(tags?: string[]): string {
+  const meta = {
+    ...DEFAULT_POST_META,
+    uuid: uuid.v4(),
+    ...(tags ? { tags } : {}),
+  };
   const template = `---
-${YAML.stringify(DEFAULT_POST_META).trim()}
+${YAML.stringify(meta).trim()}
 ---
 `;
   return template;
