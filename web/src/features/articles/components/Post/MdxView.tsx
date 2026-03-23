@@ -12,6 +12,9 @@ import { Me, P5, P7, S5, S7, Seq, T7 } from "../Seq/Seq";
 
 const style = css({
   // label: "markdown",
+  overflowWrap: "break-word",
+  wordBreak: "break-word",
+  maxWidth: "100%",
   "& h1,h2,h3,h4,h5,h6": {
     fontFamily: "sans",
     px: 2,

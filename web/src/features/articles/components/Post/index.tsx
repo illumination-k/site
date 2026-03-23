@@ -39,10 +39,10 @@ export default function Post({
     >
       <h1
         className={css({
-          px: "10",
+          px: { base: "4", md: "6", lg: "10" },
           py: "5",
           mb: "5",
-          fontSize: "4xl",
+          fontSize: { base: "2xl", md: "3xl", lg: "4xl" },
           fontWeight: "black",
           textAlign: "center",
           color: "text.primary",
@@ -55,7 +55,7 @@ export default function Post({
       />
       <div
         className={css({
-          px: 4,
+          px: { base: 2, md: 4 },
           lg: {
             px: 0,
             display: "grid",
@@ -86,7 +86,7 @@ export default function Post({
           className={css({
             bg: "bg.surface",
             rounded: "xl",
-            px: 10,
+            px: { base: 4, md: 6, lg: 10 },
             py: 5,
             mb: 5,
             lg: { gridColumnStart: 3, gridColumnEnd: 10, gridRow: 1 },
