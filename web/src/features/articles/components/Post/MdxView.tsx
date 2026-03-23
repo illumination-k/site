@@ -43,17 +43,23 @@ const style = css({
 
   "& ul": {
     listStyleType: "disc",
-    listStylePosition: "inside",
+    listStylePosition: "outside",
     my: 2,
+    pl: 6,
     "& li": {
-      "& ul": { listStyleType: "circle", px: 4 },
+      my: 1,
+      "& ul": { listStyleType: "circle", pl: 4 },
     },
   },
 
   "& ol": {
     listStyleType: "decimal",
+    listStylePosition: "outside",
     my: 2,
-    px: 6,
+    pl: 6,
+    "& li": {
+      my: 1,
+    },
   },
 
   "& a": {
@@ -94,17 +100,23 @@ const style = css({
     textAlign: "center",
   },
 
-  // rounded table
-  "& table": {
+  // rounded table with horizontal scroll wrapper
+  "& div.table-wrapper": {
     my: 4,
     mx: 1,
-    w: "full",
     overflowX: "auto",
-    whiteSpace: "pre-wrap",
-    display: "block",
+    rounded: "lg",
+    WebkitOverflowScrolling: "touch",
+  },
+
+  "& table": {
+    w: "full",
+    minW: "fit-content",
+    borderCollapse: "collapse",
     "& th,td": {
-      px: 2,
+      px: 3,
       textAlign: "left",
+      whiteSpace: "nowrap",
     },
     "& thead": {
       "& tr": {
@@ -233,6 +245,14 @@ const style = css({
   },
 });
 
+function TableWrapper(props: React.ComponentProps<"table">) {
+  return (
+    <div className="table-wrapper">
+      <table {...props} />
+    </div>
+  );
+}
+
 export interface MdViewProps {
   compiledMarkdown: string;
 }
@@ -243,7 +263,19 @@ export default function MdView({ compiledMarkdown }: MdViewProps) {
 
   return (
     <article className={style}>
-      <Content components={{ Seq, P5, P7, S5, S7, T7, Me, pre: CodeBlock }} />
+      <Content
+        components={{
+          Seq,
+          P5,
+          P7,
+          S5,
+          S7,
+          T7,
+          Me,
+          pre: CodeBlock,
+          table: TableWrapper,
+        }}
+      />
     </article>
   );
 }
