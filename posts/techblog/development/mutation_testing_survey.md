@@ -25,12 +25,12 @@ updated_at: 2026-03-23
 
 ## ツール一覧と差分実行・並列実行の対応状況
 
-| ツール | 言語 | 差分実行 | 並列実行 |
-| --- | --- | --- | --- |
-| :gh-meta[boxed/mutmut] | Python | ○ 組み込みインクリメンタル + `--paths-to-mutate`で対象指定 | × 逐次実行のみ |
-| :gh-meta[stryker-mutator/stryker-js] | TypeScript | ○ `--incremental`でJSON差分管理 | ○ |
-| :gh-meta[sourcefrog/cargo-mutants] | Rust | ○ `--in-diff`でdiffファイル指定 | ○ `-j`フラグ |
-| :gh-meta[go-gremlins/gremlins] | Go | △ git diffとの組み合わせでワークアラウンド | ○ |
+| ツール                               | 言語       | 差分実行                                                   | 並列実行       |
+| ------------------------------------ | ---------- | ---------------------------------------------------------- | -------------- |
+| :gh-meta[boxed/mutmut]               | Python     | ○ 組み込みインクリメンタル + `--paths-to-mutate`で対象指定 | × 逐次実行のみ |
+| :gh-meta[stryker-mutator/stryker-js] | TypeScript | ○ `--incremental`でJSON差分管理                            | ○              |
+| :gh-meta[sourcefrog/cargo-mutants]   | Rust       | ○ `--in-diff`でdiffファイル指定                            | ○ `-j`フラグ   |
+| :gh-meta[go-gremlins/gremlins]       | Go         | △ git diffとの組み合わせでワークアラウンド                 | ○              |
 
 ## Mutation Testing とは
 
