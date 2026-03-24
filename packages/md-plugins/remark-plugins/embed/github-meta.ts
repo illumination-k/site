@@ -28,7 +28,8 @@ interface GithubRepoMeta {
  */
 export class GithubMetaTransformer implements DirectiveTransformer {
   shouldTransform(node: Directives): boolean {
-    if (node.type !== "leafDirective") return false;
+    if (node.type !== "leafDirective" && node.type !== "textDirective")
+      return false;
     if (node.name !== "gh-meta") return false;
     return true;
   }

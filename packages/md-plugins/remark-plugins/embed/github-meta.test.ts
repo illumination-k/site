@@ -59,6 +59,18 @@ describe("github-meta embed", () => {
     expect(html).toContain('class="gh-meta"');
   });
 
+  it("works inline within text using textDirective", async () => {
+    const vfile = await processor.process(
+      "このライブラリは:gh-meta[owner/repo]を使っています。",
+    );
+    const html = String(vfile.value);
+
+    expect(html).toContain("<p>");
+    expect(html).toContain('class="gh-meta"');
+    expect(html).toContain("owner/repo");
+    expect(html).toContain("1.2k");
+  });
+
   it("ignores invalid repo format", async () => {
     const vfile = await processor.process("::gh-meta[invalid]");
     const html = String(vfile.value);
