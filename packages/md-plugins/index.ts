@@ -14,6 +14,7 @@ import {
 } from "./remark-plugins";
 import remarkDirectiveEmbedGenerator, {
   GithubCardTransformer,
+  GithubMetaTransformer,
   GithubTransformer,
 } from "./remark-plugins/embed";
 import { DoiTransformer } from "./remark-plugins/embed/doi";
@@ -30,6 +31,7 @@ export const REMARK_PLUGINS = [
   remarkDirectiveEmbedGenerator([
     new GithubTransformer(),
     new GithubCardTransformer(),
+    new GithubMetaTransformer(),
     new YouTubeTransformer(),
     new DoiTransformer(),
   ]),
