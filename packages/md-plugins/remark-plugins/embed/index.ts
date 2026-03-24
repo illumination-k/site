@@ -5,6 +5,7 @@ import { visit } from "unist-util-visit";
 
 export { GithubTransformer } from "./github";
 export { default as GithubCardTransformer } from "./github-card";
+export { GithubMetaTransformer } from "./github-meta";
 
 export interface DirectiveTransformer {
   shouldTransform: (node: Directives) => boolean;

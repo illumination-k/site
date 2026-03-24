@@ -236,6 +236,26 @@ const style = css({
     py: 2,
   },
 
+  // gh-meta
+  "& span.gh-meta": {
+    display: "inline-flex",
+    alignItems: "center",
+    gap: 2,
+    fontSize: "sm",
+    flexWrap: "wrap",
+    "& a.gh-meta-repo-name": {
+      fontWeight: "bold",
+      color: "accent.primary",
+    },
+    "& span.gh-meta-stars": {
+      color: "text.secondary",
+    },
+    "& span.gh-meta-updated": {
+      color: "text.tertiary",
+      fontSize: "xs",
+    },
+  },
+
   // math
   "& div.math-display": {
     wordBreak: "normal",
