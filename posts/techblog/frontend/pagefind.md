@@ -19,6 +19,8 @@ pagefindは最近作成されているWeb上で動作する全文検索エンジ
 > (GPT訳) Pagefindは、ユーザーの帯域幅を最小限に抑え、大規模なサイトでも高速に動作する完全な静的検索ライブラリです。特定のインフラをホスティングする必要がなく、Hugo、Eleventy、Jekyll、Next、Astro、SvelteKitなど、ほとんどのウェブサイトフレームワークで動作します。ビルドされた静的ファイルのフォルダを指定するだけで、ほとんどの場合、設定は不要です。
 
 [pagefindのGithub](https://github.com/CloudCannon/pagefind)を見るとわかるように (Webassembly) で書かれています。
+
+::gh-meta[CloudCannon/pagefind]
 stemming -> indexing -> searchあたりはwebassemblyっぽい感じです。
 
 ### 日本語対応
