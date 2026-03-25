@@ -3,6 +3,7 @@ import { css } from "@/styled-system/css";
 import type { Headings, PostMeta } from "common";
 
 import Adsense from "@/components/Adsense";
+import ArticleJsonLd from "@/components/ArticleJsonLd";
 
 import PostFooter from "./Footer";
 import PostHeader from "./Header";
@@ -37,6 +38,7 @@ export default function Post({
       // data-pagefind-body is used as a selector to construct the pagefind search index
       data-pagefind-body
     >
+      <ArticleJsonLd meta={meta} prefix={prefix} />
       <h1
         className={css({
           px: { base: "4", md: "6", lg: "10" },

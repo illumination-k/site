@@ -37,9 +37,26 @@ export default class PostPageFactory {
         throw `${_params.uuid} is not found`;
       }
 
+      const url = `https://www.illumination-k.dev/${this.prefix}/post/${post.meta.uuid}`;
+
       return {
         title: post.meta.title,
         description: post.meta.description,
+        openGraph: {
+          type: "article",
+          title: post.meta.title,
+          description: post.meta.description,
+          url,
+          publishedTime: post.meta.created_at,
+          modifiedTime: post.meta.updated_at,
+          tags: post.meta.tags,
+          locale: post.meta.lang === "ja" ? "ja_JP" : "en_US",
+        },
+        twitter: {
+          card: "summary",
+          title: post.meta.title,
+          description: post.meta.description,
+        },
       };
     };
   }

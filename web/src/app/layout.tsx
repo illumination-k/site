@@ -5,6 +5,7 @@ import { Inter, Noto_Sans_JP } from "next/font/google";
 import { css, cx } from "@/styled-system/css";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
+import type { Metadata } from "next";
 
 import FooterBase from "@/components/FooterBase";
 import Nav from "@/components/Nav";
@@ -19,6 +20,27 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 const GA_TRACKING_ID =
   process.env.NODE_ENV === "production" ? "G-5X44HTLX5D" : "G-mock";
+
+const siteUrl = "https://www.illumination-k.dev";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "illumination-k.dev",
+    template: "%s | illumination-k.dev",
+  },
+  description: "Software Engineer / Bioinformatics",
+  openGraph: {
+    type: "website",
+    locale: "ja_JP",
+    siteName: "illumination-k.dev",
+    url: siteUrl,
+  },
+  twitter: {
+    card: "summary",
+    creator: "@illuminationK",
+  },
+};
 
 export default function RootLayout({
   children,
