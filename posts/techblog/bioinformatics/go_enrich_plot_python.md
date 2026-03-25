@@ -10,7 +10,7 @@ tags:
   - bioinformatics
   - python
 created_at: "2022-05-20T18:42:50+00:00"
-updated_at: "2022-06-12T15:55:39+00:00"
+updated_at: "2026-03-25T00:00:00+00:00"
 ---
 
 ## TL;DR
@@ -287,4 +287,229 @@ GO Termにはsimilarityがあります。[Overview of semantic similarity analys
 - wang
   - Wang, James Z, Zhidian Du, Rapeeporn Payattakool, Philip S Yu, and Chin-Fu Chen. 2007. “A New Method to Measure the Semantic Similarity of GO Terms.” Bioinformatics (Oxford, England) 23 (May): 1274–81. https://doi.org/btm087.
 
-### TODO
+Similarityベースの可視化では、追加で以下のライブラリを使用します。
+
+```bash
+pip install goatools scikit-learn squarify adjustText
+```
+
+### Similarity Matrixの計算
+
+まず、GO Term間のペアワイズなsemantic similarityを計算します。Wang法はグラフ構造のみを利用するため、アノテーションデータが不要で手軽に使えます。IC-based（Resnik, Lin）を使いたい場合は、別途アノテーションコーパスと`TermCounts`の準備が必要です。
+
+:::details[Code]
+
+```python
+from goatools.obo_parser import GODag
+from goatools.semantic import semantic_similarity
+import numpy as np
+import polars as pl
+
+# go-basic.oboをダウンロードしておく
+# curl -L -o go-basic.obo "https://release.geneontology.org/2024-06-17/ontology/go-basic.obo"
+godag = GODag("go-basic.obo")
+
+df = pl.read_csv("example.csv")
+go_terms = df.select("term").to_series().to_list()
+
+n = len(go_terms)
+sim_matrix = np.zeros((n, n))
+
+for i in range(n):
+    for j in range(i, n):
+        if i == j:
+            sim_matrix[i][j] = 1.0
+        else:
+            try:
+                # Wang法（グラフベース）でsimilarityを計算
+                sim = semantic_similarity(go_terms[i], go_terms[j], godag)
+                sim_matrix[i][j] = sim
+                sim_matrix[j][i] = sim
+            except KeyError:
+                # obsoleteなtermなどはスキップ
+                sim_matrix[i][j] = 0.0
+                sim_matrix[j][i] = 0.0
+```
+
+:::
+
+### クラスタリング
+
+Similarity matrixからクラスタを自動生成することもできます。サンプルデータにはすでにcluster列がありますが、実データではsimilarityに基づいてクラスタリングするのが一般的です。`scipy`の階層クラスタリングを利用します。
+
+:::details[Code]
+
+```python
+from scipy.cluster.hierarchy import linkage, fcluster
+
+# similarity → distanceに変換して階層クラスタリング
+Z = linkage(1 - sim_matrix, method="ward")
+
+# 閾値でクラスタを切り出す（閾値は適宜調整）
+clusters = fcluster(Z, t=0.7, criterion="distance")
+df = df.with_columns(pl.Series("cluster", [f"C{c}" for c in clusters]))
+```
+
+:::
+
+### Similarity Heatmap
+
+Similarity matrixをヒートマップとして可視化します。seabornの`clustermap`を使うと、階層クラスタリングの樹形図（デンドログラム）も同時に表示できるので、GO Term間の関係が直感的にわかります。
+
+![similarity-heatmap](../../public/go_python_plot/similarity_heatmap.png)
+
+:::details[Code]
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+names = df.select("name").to_series().to_list()
+
+sns.set(style="white")
+g = sns.clustermap(
+    sim_matrix,
+    xticklabels=names,
+    yticklabels=names,
+    cmap="viridis",
+    figsize=(16, 14),
+    dendrogram_ratio=0.15,
+    cbar_pos=(0.02, 0.8, 0.03, 0.15),
+    linewidths=0.5,
+)
+
+g.ax_heatmap.tick_params(axis="x", labelsize=8)
+g.ax_heatmap.tick_params(axis="y", labelsize=8)
+g.ax_heatmap.set_xticklabels(g.ax_heatmap.get_xticklabels(), rotation=90)
+
+plt.show()
+```
+
+:::
+
+### MDSによるScatter Plot
+
+Similarity matrixをMDS（Multi-Dimensional Scaling）で2次元に圧縮し、散布図として可視化します。Rの`rrvgo`のscatter plotに相当するものです。意味的に近いGO Termが近くに配置されるので、enrichmentの全体像を把握するのに便利です。
+
+![similarity-scatter](../../public/go_python_plot/similarity_scatter.png)
+
+:::details[Code]
+
+```python
+from sklearn.manifold import MDS
+from adjustText import adjust_text
+import matplotlib.pyplot as plt
+
+# similarity → distanceに変換
+dist_matrix = 1 - sim_matrix
+
+mds = MDS(n_components=2, dissimilarity="precomputed", random_state=42, normalized_stress="auto")
+coords = mds.fit_transform(dist_matrix)
+
+df_plot = df.with_columns([
+    pl.Series("x", coords[:, 0]),
+    pl.Series("y", coords[:, 1]),
+])
+
+fig, ax = plt.subplots(figsize=(14, 10))
+
+clusters = sorted(df_plot.select("cluster").to_series().unique().to_list())
+cmap = plt.get_cmap("tab10")
+
+for i, cluster in enumerate(clusters):
+    subset = df_plot.filter(pl.col("cluster") == cluster)
+    ax.scatter(
+        subset.select("x").to_series().to_list(),
+        subset.select("y").to_series().to_list(),
+        # scoreに応じてサイズを変える
+        s=[v * 50 for v in subset.select("score").to_series().to_list()],
+        label=cluster,
+        color=cmap(i),
+        alpha=0.7,
+        edgecolors="white",
+        linewidths=0.5,
+    )
+
+# ラベルの重なりをadjustTextで自動調整
+texts = []
+for row in df_plot.iter_rows(named=True):
+    texts.append(ax.text(
+        row["x"], row["y"], row["name"],
+        fontsize=7, ha="center", va="bottom",
+    ))
+adjust_text(texts, ax=ax)
+
+ax.legend(title="Cluster", fontsize=11, title_fontsize=13, loc="best")
+ax.set_xlabel("MDS1", fontsize=14)
+ax.set_ylabel("MDS2", fontsize=14)
+ax.set_title("GO Term Similarity (MDS)", fontsize=16)
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+MDSの代わりにUMAPを使うこともできます。特にGO Termの数が多い場合はUMAPのほうが適切な場合があります。
+
+```python
+# UMAPを使う場合
+# pip install umap-learn
+from umap import UMAP
+
+reducer = UMAP(metric="precomputed", random_state=42)
+coords = reducer.fit_transform(dist_matrix)
+```
+
+### Treemap
+
+Treemapは各GO Termを矩形として描画し、面積でサイズ（遺伝子数）を、色でクラスタを表現します。Rの`rrvgo`における`treemapPlot`に相当する可視化です。enrichmentされたGO Termの全体的な構成を俯瞰するのに適しています。
+
+![treemap](../../public/go_python_plot/treemap.png)
+
+:::details[Code]
+
+```python
+import squarify
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+
+fig, ax = plt.subplots(figsize=(16, 10))
+
+# クラスターごとにソートしてまとめる
+df_sorted = df.sort("cluster", "score", descending=[False, True])
+
+sizes = df_sorted.select("size").to_series().to_list()
+labels = df_sorted.select("name").to_series().to_list()
+clusters_list = df_sorted.select("cluster").to_series().to_list()
+
+# クラスターごとに色を割り当て
+unique_clusters = sorted(set(clusters_list))
+cmap = plt.get_cmap("tab10")
+color_map = {c: cmap(i) for i, c in enumerate(unique_clusters)}
+colors = [color_map[c] for c in clusters_list]
+
+# sizeが0だとエラーになるので最低値を保証
+sizes_safe = [max(s, 1) for s in sizes]
+
+squarify.plot(
+    sizes=sizes_safe,
+    label=[f"{l}\n({c})" for l, c in zip(labels, clusters_list)],
+    color=colors,
+    alpha=0.8,
+    ax=ax,
+    text_kwargs={"fontsize": 7, "wrap": True},
+)
+
+# legend作成
+handles = [mpatches.Patch(color=color_map[c], label=c) for c in unique_clusters]
+ax.legend(handles=handles, title="Cluster", fontsize=12, title_fontsize=14, loc="upper right")
+
+ax.axis("off")
+ax.set_title("GO Term Treemap", fontsize=18)
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
