@@ -29,6 +29,7 @@
     "mdast-util-to-string": "^4.0.0",
     "notion-to-md": "^3.1.1",
     "remark": "^15.0.1",
+    "satori": "^0.26.0",
     "sharp": "^0.33.4",
     "strip-markdown": "^6.0.0",
     "tmp-promise": "^3.0.3",
@@ -40,6 +41,7 @@
   },
   "devDependencies": {
     "@types/mdast": "^4.0.4",
+    "@types/react": "19.2.14",
     "@types/tmp": "^0.2.6",
     "@types/unist": "^3.0.3",
     "@types/uuid": "^10.0.0",

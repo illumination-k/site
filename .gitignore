@@ -47,3 +47,9 @@ tmp*
 .turbo/
 .obsidian
 .playwright-cli
+
+# OG images (build artifacts)
+web/public/og/
+
+# Downloaded fonts
+cli/fonts/

@@ -37,9 +37,35 @@ export default class PostPageFactory {
         throw `${_params.uuid} is not found`;
       }
 
+      const url = `https://www.illumination-k.dev/${this.prefix}/post/${post.meta.uuid}`;
+
       return {
         title: post.meta.title,
         description: post.meta.description,
+        openGraph: {
+          type: "article",
+          title: post.meta.title,
+          description: post.meta.description,
+          url,
+          publishedTime: post.meta.created_at,
+          modifiedTime: post.meta.updated_at,
+          tags: post.meta.tags,
+          locale: post.meta.lang === "ja" ? "ja_JP" : "en_US",
+          images: [
+            {
+              url: `/og/${this.prefix}/${post.meta.uuid}.png`,
+              width: 1200,
+              height: 630,
+              alt: post.meta.title,
+            },
+          ],
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: post.meta.title,
+          description: post.meta.description,
+          images: [`/og/${this.prefix}/${post.meta.uuid}.png`],
+        },
       };
     };
   }
