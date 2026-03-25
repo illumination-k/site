@@ -1,7 +1,7 @@
 ---
 uuid: 58d811be-4bcd-498f-baaf-f67abe61794d
 title: PythonでGO Enrichmentの結果を図示する
-description: RにはGO Enrichmentの結果をいい感じに図示してくれるライブラリがいくつかありますが、Pythonにはありません。似たような図の作成方法をまとめます。
+description: RにはGO Enrichmentの結果をいい感じに図示してくれるライブラリがいくつかありますが、Pythonにはありません。基本的なプロットからsemantic similarityを利用したheatmap・MDS scatter・ネットワーク・treemapまで、似たような図の作成方法をまとめます。
 lang: ja
 category: techblog
 tags:
@@ -10,7 +10,7 @@ tags:
   - bioinformatics
   - python
 created_at: "2022-05-20T18:42:50+00:00"
-updated_at: "2022-06-12T15:55:39+00:00"
+updated_at: "2026-03-25T00:00:00+00:00"
 ---
 
 ## TL;DR
@@ -287,4 +287,352 @@ GO Termにはsimilarityがあります。[Overview of semantic similarity analys
 - wang
   - Wang, James Z, Zhidian Du, Rapeeporn Payattakool, Philip S Yu, and Chin-Fu Chen. 2007. “A New Method to Measure the Semantic Similarity of GO Terms.” Bioinformatics (Oxford, England) 23 (May): 1274–81. https://doi.org/btm087.
 
-### TODO
+Similarityベースの可視化では、追加で以下のライブラリを使用します。
+
+```bash
+pip install goatools scikit-learn squarify adjustText networkx
+```
+
+### Similarity Matrixの計算
+
+まず、GO Term間のペアワイズなsemantic similarityを計算します。Wang法はグラフ構造のみを利用するため、アノテーションデータが不要で手軽に使えます。IC-based（Resnik, Lin）を使いたい場合は、別途アノテーションコーパスと`TermCounts`の準備が必要です。
+
+:::details[Code]
+
+```python
+from goatools.obo_parser import GODag
+from goatools.semantic import semantic_similarity
+import numpy as np
+import polars as pl
+
+# go-basic.oboをダウンロードしておく
+# curl -L -o go-basic.obo "https://release.geneontology.org/2024-06-17/ontology/go-basic.obo"
+godag = GODag("go-basic.obo")
+
+df = pl.read_csv("example.csv")
+go_terms = df.select("term").to_series().to_list()
+
+n = len(go_terms)
+sim_matrix = np.zeros((n, n))
+
+for i in range(n):
+    for j in range(i, n):
+        if i == j:
+            sim_matrix[i][j] = 1.0
+        else:
+            try:
+                # Wang法（グラフベース）でsimilarityを計算
+                sim = semantic_similarity(go_terms[i], go_terms[j], godag)
+                sim_matrix[i][j] = sim
+                sim_matrix[j][i] = sim
+            except KeyError:
+                # obsoleteなtermなどはスキップ
+                sim_matrix[i][j] = 0.0
+                sim_matrix[j][i] = 0.0
+```
+
+:::
+
+### クラスタリング
+
+Similarity matrixからクラスタを自動生成することもできます。サンプルデータにはすでにcluster列がありますが、実データではsimilarityに基づいてクラスタリングするのが一般的です。`scipy`の階層クラスタリングを利用します。
+
+:::details[Code]
+
+```python
+from scipy.cluster.hierarchy import linkage, fcluster
+
+# similarity → distanceに変換して階層クラスタリング
+Z = linkage(1 - sim_matrix, method="ward")
+
+# 閾値でクラスタを切り出す（閾値は適宜調整）
+clusters = fcluster(Z, t=0.7, criterion="distance")
+df = df.with_columns(pl.Series("cluster", [f"C{c}" for c in clusters]))
+```
+
+:::
+
+### Similarity Heatmap
+
+Similarity matrixをヒートマップとして可視化します。seabornの`clustermap`を使うと、階層クラスタリングの樹形図（デンドログラム）も同時に表示できるので、GO Term間の関係が直感的にわかります。
+
+![similarity-heatmap](../../public/go_python_plot/similarity_heatmap.png)
+
+:::details[Code]
+
+```python
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+names = df.select("name").to_series().to_list()
+
+# Nature style: sans-serif, 7pt
+plt.rcParams.update({
+    "font.family": "sans-serif",
+    "font.sans-serif": ["Arial", "Helvetica", "DejaVu Sans"],
+    "font.size": 7,
+    "axes.labelsize": 8,
+    "figure.dpi": 300,
+    "savefig.dpi": 300,
+    "pdf.fonttype": 42,
+})
+
+# single column: 89mm ≈ 3.5in, double column: 183mm ≈ 7.2in
+COL2 = 183 / 25.4
+
+g = sns.clustermap(
+    sim_matrix,
+    xticklabels=names,
+    yticklabels=names,
+    cmap="viridis",
+    figsize=(COL2, COL2 * 0.85),
+    dendrogram_ratio=(0.12, 0.12),
+    linewidths=0.2,
+    linecolor="white",
+    cbar_kws={"label": "Wang similarity"},
+    method="average",
+)
+
+g.ax_heatmap.tick_params(axis="x", labelsize=5, rotation=90)
+g.ax_heatmap.tick_params(axis="y", labelsize=5)
+
+plt.show()
+```
+
+:::
+
+### MDSによるScatter Plot
+
+Similarity matrixをMDS（Multi-Dimensional Scaling）で2次元に圧縮し、散布図として可視化します。Rの`rrvgo`のscatter plotに相当するものです。意味的に近いGO Termが近くに配置されるので、enrichmentの全体像を把握するのに便利です。
+
+![similarity-scatter](../../public/go_python_plot/similarity_scatter.png)
+
+:::details[Code]
+
+```python
+from sklearn.manifold import MDS
+from adjustText import adjust_text
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# similarity → distanceに変換
+dist_matrix = 1 - sim_matrix
+np.fill_diagonal(dist_matrix, 0)
+dist_matrix = np.clip(dist_matrix, 0, None)
+
+mds = MDS(n_components=2, dissimilarity="precomputed", random_state=42, normalized_stress="auto")
+coords = mds.fit_transform(dist_matrix)
+
+df_plot = df.with_columns([
+    pl.Series("x", coords[:, 0]),
+    pl.Series("y", coords[:, 1]),
+])
+
+# Nature colorblind-safe palette (Wong 2011)
+WONG_COLORS = ["#0072B2", "#E69F00", "#009E73", "#CC79A7",
+               "#56B4E9", "#D55E00", "#F0E442", "#000000"]
+
+COL2 = 183 / 25.4
+fig, ax = plt.subplots(figsize=(COL2, COL2 * 0.65))
+
+clusters = sorted(df_plot.select("cluster").to_series().unique().to_list())
+
+for i, cluster in enumerate(clusters):
+    subset = df_plot.filter(pl.col("cluster") == cluster)
+    ax.scatter(
+        subset.select("x").to_series().to_list(),
+        subset.select("y").to_series().to_list(),
+        s=[v * 25 for v in subset.select("score").to_series().to_list()],
+        label=cluster,
+        color=WONG_COLORS[i % len(WONG_COLORS)],
+        alpha=0.85,
+        edgecolors="white",
+        linewidths=0.3,
+    )
+
+# ラベルの重なりをadjustTextで自動調整
+texts = []
+for row in df_plot.iter_rows(named=True):
+    texts.append(ax.text(
+        row["x"], row["y"], row["name"],
+        fontsize=4.5, ha="center", va="bottom",
+    ))
+adjust_text(texts, ax=ax, arrowprops=dict(arrowstyle="-", color="grey", lw=0.3))
+
+ax.legend(title="Cluster", frameon=True, edgecolor="0.8", fancybox=False)
+ax.set_xlabel("MDS1")
+ax.set_ylabel("MDS2")
+sns.despine(ax=ax)
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+MDSの代わりにUMAPを使うこともできます。特にGO Termの数が多い場合はUMAPのほうが適切な場合があります。
+
+```python
+# UMAPを使う場合
+# pip install umap-learn
+from umap import UMAP
+
+reducer = UMAP(metric="precomputed", random_state=42)
+coords = reducer.fit_transform(dist_matrix)
+```
+
+### Treemap
+
+Treemapは各GO Termを矩形として描画し、面積でサイズ（遺伝子数）を、色でクラスタを表現します。Rの`rrvgo`における`treemapPlot`に相当する可視化です。enrichmentされたGO Termの全体的な構成を俯瞰するのに適しています。
+
+![treemap](../../public/go_python_plot/treemap.png)
+
+:::details[Code]
+
+```python
+import squarify
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+
+WONG_COLORS = ["#0072B2", "#E69F00", "#009E73", "#CC79A7",
+               "#56B4E9", "#D55E00", "#F0E442", "#000000"]
+
+COL2 = 183 / 25.4
+fig, ax = plt.subplots(figsize=(COL2, COL2 * 0.55))
+
+df_sorted = df.sort("cluster", "score", descending=[False, True])
+
+sizes = df_sorted.select("size").to_series().to_list()
+labels = df_sorted.select("name").to_series().to_list()
+clusters_list = df_sorted.select("cluster").to_series().to_list()
+
+unique_clusters = sorted(set(clusters_list))
+color_map = {c: WONG_COLORS[i % len(WONG_COLORS)] for i, c in enumerate(unique_clusters)}
+colors = [color_map[c] for c in clusters_list]
+
+sizes_safe = [max(s, 1) for s in sizes]
+
+squarify.plot(
+    sizes=sizes_safe,
+    label=labels,
+    color=colors,
+    alpha=0.85,
+    ax=ax,
+    text_kwargs={"fontsize": 4.5, "wrap": True},
+    ec="white",
+    linewidth=1,
+)
+
+handles = [mpatches.Patch(color=color_map[c], label=c) for c in unique_clusters]
+ax.legend(handles=handles, title="Cluster", frameon=True,
+          edgecolor="0.8", fancybox=False, loc="lower right", fontsize=5)
+ax.axis("off")
+ax.set_title("GO Term Treemap")
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+### Similarity Network（NetworkX）
+
+`networkx`を使って、GO Term間のsimilarityをネットワークとして可視化することもできます。ノードがGO Term、エッジがsimilarityを表し、類似度が閾値以上のペアのみをエッジとして描画します。ネットワークレイアウトはspring layout（force-directed）を使い、類似度が高いノード同士が近くに配置されます。
+
+![similarity-network](../../public/go_python_plot/similarity_network.png)
+
+:::details[Code]
+
+```python
+import networkx as nx
+import matplotlib.pyplot as plt
+import matplotlib.patches as mpatches
+from adjustText import adjust_text
+
+WONG_COLORS = ["#0072B2", "#E69F00", "#009E73", "#CC79A7",
+               "#56B4E9", "#D55E00", "#F0E442", "#000000"]
+
+df = pl.read_csv("example.csv")
+go_terms = df["term"].to_list()
+names = df["name"].to_list()
+scores = df["score"].to_list()
+sizes = df["size"].to_list()
+clusters = df["cluster"].to_list()
+
+unique_clusters = sorted(set(clusters))
+ccmap = {c: WONG_COLORS[i % len(WONG_COLORS)] for i, c in enumerate(unique_clusters)}
+
+# --- グラフ構築 ---
+threshold = 0.3  # この閾値以上のsimilarityをエッジとして描画
+G = nx.Graph()
+n = len(go_terms)
+
+for i in range(n):
+    G.add_node(i, label=names[i], cluster=clusters[i],
+               score=scores[i], size=sizes[i])
+
+for i in range(n):
+    for j in range(i + 1, n):
+        if sim_matrix[i, j] >= threshold:
+            G.add_edge(i, j, weight=sim_matrix[i, j])
+
+# --- 描画 ---
+COL2 = 183 / 25.4
+fig, ax = plt.subplots(figsize=(COL2, COL2 * 0.75))
+
+# spring layout: weightが大きい（類似度が高い）ノード同士を近くに配置
+pos = nx.spring_layout(G, weight="weight", seed=42, k=1.5)
+
+# エッジ: 類似度に応じて太さと透明度を変える
+edges = list(G.edges(data=True))
+if edges:
+    weights = [d["weight"] for _, _, d in edges]
+    max_w = max(weights)
+    for (u, v, d) in edges:
+        w = d["weight"]
+        alpha = 0.15 + 0.6 * (w / max_w)
+        lw = 0.3 + 1.0 * (w / max_w)
+        ax.plot(
+            [pos[u][0], pos[v][0]], [pos[u][1], pos[v][1]],
+            color="0.6", alpha=alpha, lw=lw, zorder=0,
+        )
+
+# ノード: クラスタで色分け、scoreでサイズ
+node_colors = [ccmap[G.nodes[i]["cluster"]] for i in G.nodes]
+node_sizes = [G.nodes[i]["score"] * 25 for i in G.nodes]
+nx.draw_networkx_nodes(G, pos, ax=ax, node_color=node_colors,
+                       node_size=node_sizes, alpha=0.9,
+                       edgecolors="white", linewidths=0.3)
+
+# ラベル
+texts = []
+for i in G.nodes:
+    short = names[i][:30] + "…" if len(names[i]) > 30 else names[i]
+    texts.append(ax.text(pos[i][0], pos[i][1], short, fontsize=4.5,
+                         ha="center", va="center"))
+adjust_text(texts, ax=ax, arrowprops=dict(arrowstyle="-", color="grey", lw=0.3))
+
+handles = [mpatches.Patch(color=ccmap[c], label=c) for c in unique_clusters]
+ax.legend(handles=handles, title="Cluster", frameon=True,
+          edgecolor="0.8", fancybox=False, loc="upper left")
+ax.set_axis_off()
+ax.set_title(f"GO Term Similarity Network (Wang, threshold ≥ {threshold})")
+
+plt.tight_layout()
+plt.show()
+```
+
+:::
+
+閾値（`threshold`）を変えることでネットワークの密度を調整できます。閾値を高くすると類似度の高いペアのみがエッジとして残り、低くするとより多くの接続が表示されます。
+
+また、エッジの重みを使ったコミュニティ検出（例: Louvainアルゴリズム）も可能です。
+
+```python
+# コミュニティ検出（Louvain法）
+# pip install python-louvain
+import community as community_louvain
+
+partition = community_louvain.best_partition(G, weight="weight")
+# partition: {node_id: community_id, ...}
+```
