@@ -51,11 +51,20 @@ export default class PostPageFactory {
           modifiedTime: post.meta.updated_at,
           tags: post.meta.tags,
           locale: post.meta.lang === "ja" ? "ja_JP" : "en_US",
+          images: [
+            {
+              url: `/og/${this.prefix}/${post.meta.uuid}.png`,
+              width: 1200,
+              height: 630,
+              alt: post.meta.title,
+            },
+          ],
         },
         twitter: {
-          card: "summary",
+          card: "summary_large_image",
           title: post.meta.title,
           description: post.meta.description,
+          images: [`/og/${this.prefix}/${post.meta.uuid}.png`],
         },
       };
     };

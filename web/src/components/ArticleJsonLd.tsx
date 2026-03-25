@@ -21,6 +21,7 @@ export default function ArticleJsonLd({ meta, prefix }: ArticleJsonLdProps) {
       "@type": "WebPage",
       "@id": url,
     },
+    image: `https://www.illumination-k.dev/og/${prefix}/${meta.uuid}.png`,
     author: {
       "@type": "Person",
       name: "illumination-k",
