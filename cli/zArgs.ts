@@ -1,6 +1,8 @@
 import type { ArgumentsCamelCase, Argv } from "yargs";
 import { ZodBoolean, ZodNumber, ZodString, ZodType, type z } from "zod";
 
+import { logger } from "./logger";
+
 function zodTypeToYargsType(
   schema: z.ZodType,
 ): "string" | "number" | "boolean" {
@@ -39,7 +41,7 @@ export function zArgs<T extends z.ZodObject<any>>(
   handler: (argv: z.infer<T>) => Promise<void> | void,
 ): [(yargs: Argv) => void, (argv: ArgumentsCamelCase) => Promise<void> | void] {
   for (const key of Object.keys(schema.shape)) {
-    console.log(key);
+    logger.debug({ key }, "Registering argument");
   }
 
   return [
@@ -60,8 +62,8 @@ export function zArgs<T extends z.ZodObject<any>>(
     async (argv) => {
       const result = await schema.spa(argv);
       if (!result.success) {
-        console.error(result.error);
-        throw "Invalid arguments";
+        logger.error({ validationError: result.error }, "Invalid arguments");
+        throw new Error("Invalid arguments");
       }
 
       return await handler(result.data);

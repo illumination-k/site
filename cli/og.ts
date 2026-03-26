@@ -8,6 +8,8 @@ import type { ReactNode } from "react";
 import satori from "satori";
 import sharp from "sharp";
 
+import { logger } from "./logger";
+
 const mkdirAsync = promisify(fs.mkdir);
 const writeFileAsync = promisify(fs.writeFile);
 const readFileAsync = promisify(fs.readFile);
@@ -177,7 +179,7 @@ export default async function generateOgImages(
     },
   ];
 
-  console.log(`Generating ${dump.posts.length} OG images for ${prefix}...`);
+  logger.info({ count: dump.posts.length, prefix }, "Generating OG images");
 
   for (const post of dump.posts) {
     const markup = buildOgSvgMarkup({
@@ -199,5 +201,8 @@ export default async function generateOgImages(
     await writeFileAsync(outPath, png);
   }
 
-  console.log(`Done: ${dump.posts.length} images written to ${dstStr}`);
+  logger.info(
+    { count: dump.posts.length, dst: dstStr },
+    "OG image generation complete",
+  );
 }

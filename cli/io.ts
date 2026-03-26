@@ -18,6 +18,7 @@ import {
 } from "common";
 
 import extractHeader from "./extractHeader";
+import { logger } from "./logger";
 import optimizeImage from "./optimizeImage";
 
 const readFileAsync = promisify(readFile);
@@ -31,8 +32,11 @@ export async function readPost(path: PathLike): Promise<Post> {
   });
 
   if (!meta.success) {
-    console.error(meta.error);
-    throw new Error(`${path}: ${JSON.stringify(meta.error, null, 2)}`);
+    logger.error(
+      { path: String(path), validationError: meta.error },
+      "Failed to parse post front-matter",
+    );
+    throw new Error(`Failed to parse front-matter: ${path}`);
   }
 
   return { meta: meta.data, markdown: fmResult.body };
@@ -66,17 +70,26 @@ export async function dumpPost(
       }),
     );
   } catch (err) {
-    throw `Error in ${postPath}:
-    ${err}
-    `;
+    logger.error(
+      { postPath: String(postPath), err },
+      "Failed to compile markdown",
+    );
+    throw new Error(`Failed to compile markdown: ${postPath}`);
   }
 
   const _headings: unknown = stripFile.data.headings;
   const parsed = headingsSchema.safeParse(_headings);
 
   if (!parsed.success) {
-    console.error(_headings);
-    throw "Error in extracting headers";
+    logger.error(
+      {
+        postPath: String(postPath),
+        headings: _headings,
+        validationError: parsed.error,
+      },
+      "Failed to extract headers",
+    );
+    throw new Error(`Failed to extract headers: ${postPath}`);
   }
 
   const { markdown: _, ...meta } = post;

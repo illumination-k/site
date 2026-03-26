@@ -57,7 +57,7 @@ function replacePathAsPublicRoot(imagePath: string) {
   }
 
   if (!startPublic) {
-    throw `${imagePath} is not in public dir`;
+    throw new Error(`${imagePath} is not in public dir`);
   }
 
   return newPathElems.join("/");
