@@ -3,3 +3,22 @@ packages:
   - "packages/**"
   - web
   - cli
+
+# Supply chain security settings
+# 公開から24時間未満のバージョンを除外
+minimumReleaseAge: 1440
+
+# ビルドスクリプトの実行を許可するパッケージ
+onlyBuiltDependencies:
+  - "@biomejs/biome"
+  - "@swc/core"
+  - esbuild
+  - sharp
+  - unrs-resolver
+  - workerd
+
+# provenanceの信頼レベルが低下したパッケージのインストールを拒否
+trustPolicy: no-downgrade
+
+# transitive dependencyがgitやtarball URLから解決されることを防止
+blockExoticSubdeps: true
