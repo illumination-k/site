@@ -33,7 +33,7 @@ updated_at: 2026-03-26
 | **lockfile 固定モード**  | `--locked` / `--frozen`   | `--frozen-lockfile`            | `--frozen-lockfile` / `bun ci` | `--frozen` / `--locked`    | `go.sum` + proxy   |
 | **ハッシュ検証**         | ○                         | ○                              | ○                              | ○                          | ○ (sum.golang.org) |
 | **ビルドスクリプト制限** | — (wheel ベース)          | `allowBuilds` (v10 デフォルト) | `trustedDependencies`          | —                          | —                  |
-| **provenance**           | —                         | `trustPolicy`                  | —                              | —                          | —                  |
+| **provenance 検証**      | —                         | `trustPolicy` (**唯一**)       | —                              | —                          | —                  |
 | **脆弱性スキャン**       | `uv-secure` / `pip-audit` | `pnpm audit`                   | `bun audit`                    | `cargo-audit`              | `govulncheck`      |
 | **コード監査**           | —                         | —                              | —                              | `cargo-vet` / `cargo-crev` | —                  |
 
@@ -79,7 +79,7 @@ PyPI がパッケージを検疫・削除
 
 - 悪意あるバージョンの公開から検疫まで**約3時間**。この間にインストールしたユーザーが影響を受けた
 - v1.82.6が最後の安全なバージョン
-- TeamPCPの一連のキャンペーンでは、Trivy、Checkmarx KICS、45以上のnpmパッケージも侵害され、5日間でGitHub Actions、Docker Hub、npm、Open VSX、PyPIにまたがる攻撃が展開された
+- TeamPCPによるTrivy侵害を起点とした一連の攻撃では、Checkmarx KICS、45以上のnpmパッケージも侵害され、5日間でGitHub Actions、Docker Hub、npm、Open VSX、PyPIにまたがる連鎖的な攻撃が展開された
 - LiteLLMの公式Dockerイメージは`requirements.txt`で依存関係を固定していたため影響を受けなかった — **lockfileの固定が有効に機能した実例**
 
 この事件は、**公開直後のパッケージバージョンを無条件にインストールするパッケージマネージャーの動作**がサプライチェーン攻撃を容易にしていることを明確に示した。
@@ -236,7 +236,7 @@ PyPIは **Trusted Publishers**（OIDC）と **PEP 740 attestation** を導入し
 pnpmはJavaScriptエコシステムで最も包括的なサプライチェーン防御を提供している。
 
 - **`blockExoticSubdeps: true`**: 推移的依存関係がgitリポジトリやtarball URLから解決されることを防ぎ、レジストリソースのみを許可する
-- **`trustPolicy: no-downgrade`**: パッケージの信頼レベル（provenance有無）が前バージョンより低下した場合にインストールを拒否する
+- **`trustPolicy: no-downgrade`**: パッケージの信頼レベル（provenance有無）が前バージョンより低下した場合にインストールを拒否する。**この機能は2026年3月時点でpnpm固有のもので、npm・bun・uv・cargo・goのいずれもサポートしていない**。npmは`npm audit signatures`でprovenanceの手動検証が可能だが、バージョン間の信頼レベルの推移を追跡するポリシー機構はない。PyPIはPEP 740でSigstore attestationの公開側インフラを整備中だが、インストール時の検証はまだ実装されていない。業界全体としてprovenanceの「提供」は進んでいるものの、provenanceの「継続性の強制」まで踏み込んでいるのはpnpmのみ
 - **`trustPolicyIgnoreAfter`**（v10.27）: 指定日以前のパッケージに対してtrust policyチェックをスキップ
 
 ### 再現可能ビルド
