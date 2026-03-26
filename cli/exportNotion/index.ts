@@ -1,5 +1,5 @@
 import { Client } from "@notionhq/client";
-import axios from "axios";
+import { fetchWithRetry } from "md-plugins";
 import { NotionToMarkdown } from "notion-to-md";
 
 import type {
@@ -82,7 +82,7 @@ export async function getNotionPages(
       throw new Error("Invalid image type");
     }
 
-    const imageResponse = await axios.get(imageUri, {
+    const imageResponse = await fetchWithRetry(imageUri, {
       responseType: "arraybuffer",
     });
 

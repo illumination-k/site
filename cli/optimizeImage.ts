@@ -6,35 +6,12 @@ import type { Image, Root } from "mdast";
 
 import sizeOf from "image-size";
 
-import axios from "axios";
+import { fetchWithRetry } from "md-plugins";
 import sharp from "sharp";
 import { file } from "tmp-promise";
 import { visit } from "unist-util-visit";
 
 import { logger } from "./logger";
-
-async function fetchWithRetry(uri: string, maxRetries = 3): Promise<Buffer> {
-  for (let attempt = 0; attempt <= maxRetries; attempt++) {
-    try {
-      const res = await axios.get(uri, {
-        responseType: "arraybuffer",
-        timeout: 30_000,
-      });
-      return res.data;
-    } catch (err) {
-      if (attempt === maxRetries) {
-        throw err;
-      }
-      const delay = 1000 * 2 ** attempt;
-      logger.warn(
-        { uri, attempt: attempt + 1, maxRetries, delay },
-        "Retrying image download",
-      );
-      await new Promise((r) => setTimeout(r, delay));
-    }
-  }
-  throw new Error("unreachable");
-}
 
 type Size = {
   width?: number;
@@ -120,9 +97,11 @@ const optimizeImage = (option: Option) => {
         try {
           if (uri.startsWith("http") || uri.startsWith("ftp")) {
             try {
-              const buf = await fetchWithRetry(uri);
+              const resp = await fetchWithRetry(uri, {
+                responseType: "arraybuffer",
+              });
 
-              await writeAsync(tmpPath, buf);
+              await writeAsync(tmpPath, resp.data);
 
               imagePath = tmpPath;
             } catch (err) {
