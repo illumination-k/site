@@ -13,6 +13,7 @@
     "format": "biome check --write .",
     "lint": "biome lint . && tsc --noEmit",
     "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
     "watch:test": "vitest watch"
   },
   "dependencies": {

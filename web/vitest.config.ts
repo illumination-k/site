@@ -7,6 +7,11 @@ export default defineConfig({
     environment: "jsdom",
     exclude: ["e2e/**", "node_modules/**"],
     setupFiles: ["./src/test-setup.ts"],
+    coverage: {
+      provider: "v8",
+      reporter: ["text", "json", "html"],
+      reportsDirectory: "./coverage",
+    },
   },
   resolve: {
     alias: [

@@ -1,0 +1,20 @@
+{
+  "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker/master/packages/core/schema/stryker-core.schema.json",
+  "testRunner": "vitest",
+  "plugins": ["@stryker-mutator/vitest-runner"],
+  "reporters": ["clear-text", "html", "progress"],
+  "htmlReporter": {
+    "fileName": "reports/mutation/index.html"
+  },
+  "mutate": [
+    "packages/md-plugins/**/*.ts",
+    "packages/ipynb2md/src/**/*.ts",
+    "cli/src/**/*.ts",
+    "!**/*.test.ts",
+    "!**/*.spec.ts",
+    "!**/*.d.ts",
+    "!**/vitest.config.ts",
+    "!**/dist/**",
+    "!**/node_modules/**"
+  ]
+}

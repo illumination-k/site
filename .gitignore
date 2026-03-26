@@ -7,6 +7,8 @@ node_modules
 
 # testing
 coverage
+reports
+.stryker-tmp
 
 # next.js
 .next
@@ -34,6 +36,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+vitest.config.d.ts
+vitest.config.d.ts.map
 
 dist/
 
