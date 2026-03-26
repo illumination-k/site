@@ -3,8 +3,8 @@ import path from "node:path";
 import { promisify } from "node:util";
 
 import type { PathLike } from "node:fs";
-import type { ReactNode } from "react";
 import { readDump } from "common/io";
+import type { ReactNode } from "react";
 import satori from "satori";
 import sharp from "sharp";
 
@@ -36,7 +36,8 @@ function buildOgSvgMarkup({ title, category, tags, siteName }: OgImageOptions) {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "60px",
-        background: "linear-gradient(135deg, #0c1222 0%, #1a2744 50%, #0f2040 100%)",
+        background:
+          "linear-gradient(135deg, #0c1222 0%, #1a2744 50%, #0f2040 100%)",
         color: "#ffffff",
         fontFamily: "NotoSansJP",
       },
@@ -137,7 +138,10 @@ function buildOgSvgMarkup({ title, category, tags, siteName }: OgImageOptions) {
 
 async function loadFont(fontPath: string): Promise<ArrayBuffer> {
   const buffer = await readFileAsync(fontPath);
-  return buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength);
+  return buffer.buffer.slice(
+    buffer.byteOffset,
+    buffer.byteOffset + buffer.byteLength,
+  );
 }
 
 export default async function generateOgImages(
@@ -151,12 +155,26 @@ export default async function generateOgImages(
 
   await mkdirAsync(dstStr, { recursive: true });
 
-  const fontRegular = await loadFont(path.join(fontDir.toString(), "NotoSansJP-Regular.ttf"));
-  const fontBold = await loadFont(path.join(fontDir.toString(), "NotoSansJP-Bold.ttf"));
+  const fontRegular = await loadFont(
+    path.join(fontDir.toString(), "NotoSansJP-Regular.ttf"),
+  );
+  const fontBold = await loadFont(
+    path.join(fontDir.toString(), "NotoSansJP-Bold.ttf"),
+  );
 
   const fonts = [
-    { name: "NotoSansJP", data: fontRegular, weight: 400 as const, style: "normal" as const },
-    { name: "NotoSansJP", data: fontBold, weight: 700 as const, style: "normal" as const },
+    {
+      name: "NotoSansJP",
+      data: fontRegular,
+      weight: 400 as const,
+      style: "normal" as const,
+    },
+    {
+      name: "NotoSansJP",
+      data: fontBold,
+      weight: 700 as const,
+      style: "normal" as const,
+    },
   ];
 
   console.log(`Generating ${dump.posts.length} OG images for ${prefix}...`);
