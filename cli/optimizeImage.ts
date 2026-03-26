@@ -13,6 +13,26 @@ import { visit } from "unist-util-visit";
 
 import { logger } from "./logger";
 
+async function fetchWithRetry(
+  uri: string,
+  maxRetries = 3,
+): Promise<Buffer> {
+  for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await axios.get(uri, { responseType: "arraybuffer", timeout: 30_000 });
+      return res.data;
+    } catch (err) {
+      if (attempt === maxRetries) {
+        throw err;
+      }
+      const delay = 1000 * 2 ** attempt;
+      logger.warn({ uri, attempt: attempt + 1, maxRetries, delay }, "Retrying image download");
+      await new Promise((r) => setTimeout(r, delay));
+    }
+  }
+  throw new Error("unreachable");
+}
+
 type Size = {
   width?: number;
   height?: number;
@@ -97,9 +117,7 @@ const optimizeImage = (option: Option) => {
         try {
           if (uri.startsWith("http") || uri.startsWith("ftp")) {
             try {
-              const buf = await (
-                await axios.get(uri, { responseType: "arraybuffer" })
-              ).data;
+              const buf = await fetchWithRetry(uri);
 
               await writeAsync(tmpPath, buf);
 

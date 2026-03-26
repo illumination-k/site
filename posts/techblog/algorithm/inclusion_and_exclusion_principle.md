@@ -127,8 +127,10 @@ $$
 また、一般に、任意の積集合において、
 
 $$
+\begin{gathered}
 |A_{j_1} \cap A_{j_2} \cap ... \cap A_{j_k}| = \frac{n}{p_{j_1}p_{j_2}...p_{j_k}} \\
 (1 \leq j_1 < j_2 < ... < j_k \leq k)
+\end{gathered}
 $$
 
 が成り立つ（ex., 100以下の10の倍数は2の倍数かつ5の倍数なので、100/(2*5)）。
@@ -149,8 +151,7 @@ $$
 \sum_{i=1}^k(-1)^{i-1}\sum_{1\leq j_1\leq j_2 ...\leq j_i \leq k}|A_{j_1} \cap A_{j_2} \cap ... \cap A_{j_i}| \\
 &=\sum_{i=1}^k(-1)^{i-1}\sum_{1\leq j_1\leq j_2 ...\leq j_i \leq k}\frac{n}{p_{j_1}p_{j_2}...p_{j_k}} \\
 &= n\left( 1 - \left( 1 - \frac{1}{p_1}\right)\left( 1 - \frac{1}{p_2}\right)....\left( 1 - \frac{1}{p_k}\right)\right) \\
-&= n - \phi(n) \\ \\
-
+&= n - \phi(n) \\
 &\therefore \phi(n) = n - |A_{j_1} \cup A_{j_2} \cup ... \cup A_{j_k}|
 \end{aligned}
 $$
