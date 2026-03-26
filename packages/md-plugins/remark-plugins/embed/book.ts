@@ -1,7 +1,7 @@
-import axios from "axios";
 import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
 import type { DirectiveTransformer } from ".";
+import { fetchWithRetry } from "../../fetch";
 
 type BookInfo = {
   title: string;
@@ -14,7 +14,7 @@ type BookInfo = {
 export async function getBookInfo(isbn10: string): Promise<BookInfo> {
   const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn10}`;
 
-  const resp = await axios.get(url);
+  const resp = await fetchWithRetry(url);
 
   const book = resp.data.items[0].volumeInfo;
   return {

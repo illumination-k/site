@@ -1,4 +1,3 @@
-import axios from "axios";
 import type { Code, Link } from "mdast";
 import type { Parent } from "unist";
 
@@ -8,6 +7,7 @@ import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
 
 import type { DirectiveTransformer } from ".";
+import { fetchWithRetry } from "../../fetch";
 
 import { z } from "zod";
 
@@ -96,7 +96,16 @@ export class GithubTransformer implements DirectiveTransformer {
     const url = mdastToString(node);
     const parsed = parseGithubUrl(url);
 
-    const allValue: unknown = (await axios.get(parsed.rawFileUrl)).data;
+    let allValue: unknown;
+    try {
+      allValue = (await fetchWithRetry(parsed.rawFileUrl)).data;
+    } catch (e) {
+      console.warn(
+        `[gh-embed] Failed to fetch ${parsed.rawFileUrl}:`,
+        e instanceof Error ? e.message : e,
+      );
+      return;
+    }
 
     let lines: string[] = [];
     if (typeof allValue === "string") {

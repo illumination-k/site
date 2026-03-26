@@ -35,9 +35,11 @@ $$|x| = max(x, -x)$$
 こうすると、マンハッタン距離は
 
 $$
-|x_i - x_j| + |y_i - y_j| = max(x_i - x_j, -x_i + x_j) + max(y_i - y_j, -y_i + y_j) \\
-= max((x_i - x_j) + (y_i - y_j), -(x_i - x_j) + (y_i - y_j), (x_i - x_j) - (y_i - y_j), -(x_i - x_j) + (y_i - y_j)) \\
-= max((x_i + y_i) - (x_j + y_j), -(x_i - y_i) + (x_j - y_j), (x_i - y_i) - (x_j - y_j), -(x_i + y_i) + (x_j + y_j))
+\begin{aligned}
+|x_i - x_j| + |y_i - y_j| &= max(x_i - x_j, -x_i + x_j) + max(y_i - y_j, -y_i + y_j) \\
+&= max((x_i - x_j) + (y_i - y_j), -(x_i - x_j) + (y_i - y_j), (x_i - x_j) - (y_i - y_j), -(x_i - x_j) + (y_i - y_j)) \\
+&= max((x_i + y_i) - (x_j + y_j), -(x_i - y_i) + (x_j - y_j), (x_i - y_i) - (x_j - y_j), -(x_i + y_i) + (x_j + y_j))
+\end{aligned}
 $$
 
 こうすると、1番目と4番目、2番目と3番目に注目すると、そこは絶対値に戻すことができて

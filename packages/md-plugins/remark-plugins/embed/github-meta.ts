@@ -1,9 +1,9 @@
-import axios from "axios";
 import type { Text } from "mdast";
 import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
 import type { Parent } from "unist";
 import type { DirectiveTransformer } from ".";
+import { fetchWithRetry } from "../../fetch";
 
 interface GithubRepoMeta {
   full_name: string;
@@ -57,9 +57,10 @@ export class GithubMetaTransformer implements DirectiveTransformer {
 
     let meta: GithubRepoMeta;
     try {
-      const resp = await axios.get(`https://api.github.com/repos/${repo}`, {
-        headers,
-      });
+      const resp = await fetchWithRetry(
+        `https://api.github.com/repos/${repo}`,
+        { headers },
+      );
       meta = resp.data as GithubRepoMeta;
     } catch (e) {
       console.warn(`[gh-meta] Failed to fetch metadata for ${repo}:`, e);

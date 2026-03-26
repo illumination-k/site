@@ -6,7 +6,7 @@ import type { Image, Root } from "mdast";
 
 import sizeOf from "image-size";
 
-import axios from "axios";
+import { fetchWithRetry } from "md-plugins";
 import sharp from "sharp";
 import { file } from "tmp-promise";
 import { visit } from "unist-util-visit";
@@ -97,11 +97,11 @@ const optimizeImage = (option: Option) => {
         try {
           if (uri.startsWith("http") || uri.startsWith("ftp")) {
             try {
-              const buf = await (
-                await axios.get(uri, { responseType: "arraybuffer" })
-              ).data;
+              const resp = await fetchWithRetry(uri, {
+                responseType: "arraybuffer",
+              });
 
-              await writeAsync(tmpPath, buf);
+              await writeAsync(tmpPath, resp.data);
 
               imagePath = tmpPath;
             } catch (err) {
