@@ -15,6 +15,7 @@ on:
       - ".github/workflows/web-build.yaml"
 
 permissions:
+  contents: read
   pull-requests: write
   deployments: write
 
@@ -64,6 +65,8 @@ jobs:
 
       - name: build web
         run: pnpm web-build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: cache playwright browsers
         id: playwright-cache
