@@ -1,7 +1,8 @@
 "use client";
 
-import { css } from "@/styled-system/css";
 import { useCallback, useEffect, useState } from "react";
+
+import { css } from "@/styled-system/css";
 
 const overlayStyle = css({
   position: "fixed",
@@ -45,6 +46,7 @@ export function ImageZoom(props: React.ComponentProps<"img">) {
   return (
     <>
       {/* biome-ignore lint/a11y/useKeyboardHandler: zoom is supplementary */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         {...props}
         onClick={open}
@@ -54,6 +56,7 @@ export function ImageZoom(props: React.ComponentProps<"img">) {
       {isOpen && (
         // biome-ignore lint/a11y/useKeyboardHandler: handled via useEffect
         <div className={overlayStyle} onClick={close}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src={props.src}
             alt={props.alt ?? ""}
