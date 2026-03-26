@@ -126,11 +126,11 @@ const optimizeImage = (option: Option) => {
 
               imagePath = tmpPath;
             } catch (err) {
-              logger.error(
+              logger.warn(
                 { uri, postPath: String(option.postPath), err },
-                "Failed to download remote image",
+                "Failed to download remote image, keeping original URL",
               );
-              throw new Error(`Failed to download image: ${uri}`);
+              return;
             }
           }
 

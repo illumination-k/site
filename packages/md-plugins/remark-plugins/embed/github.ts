@@ -96,7 +96,16 @@ export class GithubTransformer implements DirectiveTransformer {
     const url = mdastToString(node);
     const parsed = parseGithubUrl(url);
 
-    const allValue: unknown = (await axios.get(parsed.rawFileUrl)).data;
+    let allValue: unknown;
+    try {
+      allValue = (await axios.get(parsed.rawFileUrl)).data;
+    } catch (e) {
+      console.warn(
+        `[gh-embed] Failed to fetch ${parsed.rawFileUrl}:`,
+        e instanceof Error ? e.message : e,
+      );
+      return;
+    }
 
     let lines: string[] = [];
     if (typeof allValue === "string") {
