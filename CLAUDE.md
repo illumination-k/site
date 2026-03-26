@@ -8,13 +8,13 @@ Personal blog/portfolio site (illumination-k.dev) built as a **pnpm + Turbo mono
 
 ## Monorepo Structure
 
-- **web/** — Next.js 15 frontend (App Router, PandaCSS, static export)
-- **cli/** — TypeScript CLI (yargs) for post processing, image optimization, RSS generation
+- **web/** — Next.js 16 frontend (App Router, PandaCSS, static export)
+- **cli/** — TypeScript CLI (yargs) for post processing, image optimization, OG image generation, RSS generation, Notion export
 - **packages/common/** — Shared Zod schemas and types (PostMeta, Post, DumpPost, Headings)
-- **packages/md-plugins/** — Custom remark/rehype plugins (image optimization, header extraction)
+- **packages/md-plugins/** — Custom remark/rehype plugins (image optimization, header extraction, KaTeX, Prism+, GFM, directives)
 - **packages/ipynb2md/** — Jupyter notebook to Markdown converter
-- **packages/settings/** — Configuration utilities
-- **posts/** — Blog content: `techblog/` (categorized by subdirectory), `paperStream/` (Notion exports), `public/` (images)
+- **packages/settings/** — Shared configuration files (biome.json, tsconfig.base.json)
+- **posts/** — Blog content: `techblog/` (categorized by subdirectory), `paperStream/` (Notion exports), `public/` (images + OG images)
 
 ## Commands
 
@@ -28,34 +28,39 @@ pnpm dump                 # Process all markdown posts into JSON (web/dump/)
 pnpm cli:build            # Build CLI tool
 pnpm cli:dev              # CLI watch mode
 
-# Full build (dump → RSS → Next.js static export)
+# Full build (dump → OG images → RSS → Next.js static export)
 pnpm web-build
 
 # Testing & Linting
 pnpm test                 # Run vitest via turbo
+pnpm test:e2e             # Playwright e2e tests (in web/)
 pnpm lint                 # dprint check + sort-package-json check + turbo lint (eslint)
 pnpm format               # dprint fmt + sort-package-json + per-package formatters
 
-# RSS
+# RSS & OG images
 pnpm cli:rss              # Generate RSS/Atom/JSON feeds
+pnpm cli:og               # Generate OG images (satori + sharp)
 
 # Run CLI directly
-pnpm cli <command>        # e.g. pnpm cli dump, pnpm cli rss, pnpm cli template
+pnpm cli <command>        # e.g. pnpm cli dump, pnpm cli rss, pnpm cli og, pnpm cli template, pnpm cli paper-stream
 ```
 
 ## Content Pipeline
 
 1. Posts are Markdown files with YAML front-matter (uuid, title, description, category, lang, tags, created_at, updated_at)
 2. `pnpm dump` runs the CLI which: parses front-matter → compiles MDX with remark/rehype plugins → optimizes images (downloads remote, converts to AVIF via Sharp) → outputs JSON to `web/dump/`
-3. Next.js reads the dump JSON at build time for static page generation
-4. Pagefind indexes the built output for client-side search
+3. `pnpm cli:og` generates OG images using Satori + Sharp
+4. Next.js reads the dump JSON at build time for static page generation
+5. Pagefind indexes the built output for client-side search
+6. `pnpm cli paper-stream` exports posts from Notion (filtered by status="Done")
 
 ## Formatting & Linting
 
-- **dprint** — monorepo-level formatter (JSON, YAML, Markdown, Dockerfile)
+- **dprint** — monorepo-level formatter (JSON, YAML, Markdown, Dockerfile, with Biome and Ruff plugins)
 - **Prettier** — web package formatter
-- **Biome** — CLI package formatter/linter
+- **Biome** — CLI and packages formatter/linter (shared config in `packages/settings/biome.json`)
 - **ESLint 9** (flat config) — web package linting
+- **textlint** — text linting
 - **sort-package-json** — keeps package.json files sorted
 
 ## Key Conventions
