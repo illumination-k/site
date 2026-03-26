@@ -2,13 +2,13 @@ import fs from "node:fs";
 
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+import { exportDatabase } from "./exportNotion";
 import generateFeed from "./feed";
 import { getDumpPosts, writeDump } from "./io";
+import { logger } from "./logger";
 import { generateRedirect } from "./migration";
 import generateOgImages from "./og";
 import { template } from "./template";
-
-import { exportDatabase } from "./exportNotion";
 
 yargs(hideBin(process.argv))
   .scriptName("post-utils")
@@ -39,8 +39,10 @@ yargs(hideBin(process.argv))
       const mdDir = argv.mdDir as string;
       const imageDist = argv.imageDist as string;
       const output = argv.output as string;
+      logger.info({ mdDir, imageDist, output }, "Starting dump");
       const dumpPosts = await getDumpPosts(mdDir, imageDist);
       await writeDump(output, dumpPosts);
+      logger.info({ count: dumpPosts.length, output }, "Dump complete");
     },
   )
   .command(
@@ -59,7 +61,11 @@ yargs(hideBin(process.argv))
       yargs.demandOption(["dump", "dst"]);
     },
     async (argv) => {
-      await generateFeed(argv.dump as string, argv.dst as string);
+      const dump = argv.dump as string;
+      const dst = argv.dst as string;
+      logger.info({ dump, dst }, "Generating RSS feed");
+      await generateFeed(dump, dst);
+      logger.info({ dst }, "RSS feed generation complete");
     },
   )
   .command(
@@ -123,7 +129,8 @@ yargs(hideBin(process.argv))
       yargs.demand("src");
     },
     async (argv) => {
-      console.log(await generateRedirect(argv.src as string));
+      const result = await generateRedirect(argv.src as string);
+      logger.info({ result }, "Migration redirect generated");
     },
   )
   .command(
@@ -155,5 +162,13 @@ yargs(hideBin(process.argv))
       );
     },
   )
+  .fail((msg, err) => {
+    if (err) {
+      logger.fatal({ err }, "Command failed");
+    } else if (msg) {
+      logger.error({ msg }, "Invalid usage");
+    }
+    process.exit(1);
+  })
   .help()
   .parse();

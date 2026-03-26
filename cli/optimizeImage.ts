@@ -11,6 +11,8 @@ import sharp from "sharp";
 import { file } from "tmp-promise";
 import { visit } from "unist-util-visit";
 
+import { logger } from "./logger";
+
 type Size = {
   width?: number;
   height?: number;
@@ -57,7 +59,7 @@ function replacePathAsPublicRoot(imagePath: string) {
   }
 
   if (!startPublic) {
-    throw `${imagePath} is not in public dir`;
+    throw new Error(`${imagePath} is not in public dir`);
   }
 
   return newPathElems.join("/");
@@ -92,52 +94,77 @@ const optimizeImage = (option: Option) => {
         // temporary file for download
         const { path: tmpPath, cleanup } = await file({ postfix: ext });
 
-        if (uri.startsWith("http") || uri.startsWith("ftp")) {
-          const buf = await (
-            await axios.get(uri, { responseType: "arraybuffer" })
-          ).data;
+        try {
+          if (uri.startsWith("http") || uri.startsWith("ftp")) {
+            try {
+              const buf = await (
+                await axios.get(uri, { responseType: "arraybuffer" })
+              ).data;
 
-          await writeAsync(tmpPath, buf);
+              await writeAsync(tmpPath, buf);
 
-          imagePath = tmpPath;
-        }
-
-        const sharpExts = [".png", ".jpg", ".webp", ".jepg", ".gif", ".tiff"];
-
-        if (ext === ".svg") {
-          const copyImagePath = path.join(option.imageDist, filename);
-          await copyAsync(imagePath, copyImagePath);
-
-          node.url = replacePathAsPublicRoot(copyImagePath);
-        } else if (sharpExts.includes(ext.toLowerCase())) {
-          const optimizedImagePath = path.join(
-            option.imageDist,
-            `${fileNameBase}.avif`,
-          );
-
-          await sharp(imagePath)
-            .avif({
-              quality: 75,
-            })
-            .resize(size?.width, size?.height)
-            .toFile(optimizedImagePath);
-
-          const newUri = replacePathAsPublicRoot(optimizedImagePath);
-
-          const dim = await sizeOfAsync(optimizedImagePath);
-          node.url = newUri;
-
-          if (dim) {
-            node.data = {
-              hProperties: {
-                width: dim.width,
-                height: dim.height,
-              },
-            };
+              imagePath = tmpPath;
+            } catch (err) {
+              logger.error(
+                { uri, postPath: String(option.postPath), err },
+                "Failed to download remote image",
+              );
+              throw new Error(`Failed to download image: ${uri}`);
+            }
           }
-        }
 
-        await cleanup();
+          const sharpExts = [".png", ".jpg", ".webp", ".jepg", ".gif", ".tiff"];
+
+          if (ext === ".svg") {
+            const copyImagePath = path.join(option.imageDist, filename);
+            await copyAsync(imagePath, copyImagePath);
+
+            node.url = replacePathAsPublicRoot(copyImagePath);
+          } else if (sharpExts.includes(ext.toLowerCase())) {
+            const optimizedImagePath = path.join(
+              option.imageDist,
+              `${fileNameBase}.avif`,
+            );
+
+            try {
+              await sharp(imagePath)
+                .avif({
+                  quality: 75,
+                })
+                .resize(size?.width, size?.height)
+                .toFile(optimizedImagePath);
+            } catch (err) {
+              logger.error(
+                {
+                  imagePath,
+                  optimizedImagePath,
+                  postPath: String(option.postPath),
+                  err,
+                },
+                "Failed to optimize image with sharp",
+              );
+              throw new Error(
+                `Failed to optimize image: ${imagePath} (post: ${option.postPath})`,
+              );
+            }
+
+            const newUri = replacePathAsPublicRoot(optimizedImagePath);
+
+            const dim = await sizeOfAsync(optimizedImagePath);
+            node.url = newUri;
+
+            if (dim) {
+              node.data = {
+                hProperties: {
+                  width: dim.width,
+                  height: dim.height,
+                },
+              };
+            }
+          }
+        } finally {
+          await cleanup();
+        }
       });
     });
 

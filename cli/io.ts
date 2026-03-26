@@ -18,21 +18,41 @@ import {
 } from "common";
 
 import extractHeader from "./extractHeader";
+import { logger } from "./logger";
 import optimizeImage from "./optimizeImage";
 
 const readFileAsync = promisify(readFile);
 
-export async function readPost(path: PathLike): Promise<Post> {
-  const rawPost = (await readFileAsync(path)).toString();
-  const fmResult: FrontMatterResult<PostMeta> = fm(rawPost);
+export async function readPost(filePath: PathLike): Promise<Post> {
+  let rawPost: string;
+  try {
+    rawPost = (await readFileAsync(filePath)).toString();
+  } catch (err) {
+    logger.error({ path: String(filePath), err }, "Failed to read post file");
+    throw new Error(`Failed to read post file: ${filePath}`);
+  }
+
+  let fmResult: FrontMatterResult<PostMeta>;
+  try {
+    fmResult = fm(rawPost);
+  } catch (err) {
+    logger.error(
+      { path: String(filePath), err },
+      "Failed to parse YAML front-matter",
+    );
+    throw new Error(`Failed to parse YAML front-matter: ${filePath}`);
+  }
 
   const meta = postMetaSchema.safeParse({
     ...fmResult.attributes,
   });
 
   if (!meta.success) {
-    console.error(meta.error);
-    throw new Error(`${path}: ${JSON.stringify(meta.error, null, 2)}`);
+    logger.error(
+      { path: String(filePath), validationError: meta.error },
+      "Front-matter validation failed",
+    );
+    throw new Error(`Front-matter validation failed: ${filePath}`);
   }
 
   return { meta: meta.data, markdown: fmResult.body };
@@ -43,8 +63,17 @@ export async function dumpPost(
   postPath: PathLike,
   imageDist: string,
 ): Promise<DumpPost> {
-  // @ts-ignore
-  const stripFile = await remark().use(extractHeader).process(post.markdown);
+  let stripFile: Awaited<ReturnType<ReturnType<typeof remark>["process"]>>;
+  try {
+    // @ts-ignore
+    stripFile = await remark().use(extractHeader).process(post.markdown);
+  } catch (err) {
+    logger.error(
+      { postPath: String(postPath), err },
+      "Failed to extract headers via remark",
+    );
+    throw new Error(`Failed to extract headers via remark: ${postPath}`);
+  }
 
   let compiledMarkdown: string;
   try {
@@ -66,17 +95,26 @@ export async function dumpPost(
       }),
     );
   } catch (err) {
-    throw `Error in ${postPath}:
-    ${err}
-    `;
+    logger.error(
+      { postPath: String(postPath), err },
+      "Failed to compile markdown",
+    );
+    throw new Error(`Failed to compile markdown: ${postPath}`);
   }
 
   const _headings: unknown = stripFile.data.headings;
   const parsed = headingsSchema.safeParse(_headings);
 
   if (!parsed.success) {
-    console.error(_headings);
-    throw "Error in extracting headers";
+    logger.error(
+      {
+        postPath: String(postPath),
+        headings: _headings,
+        validationError: parsed.error,
+      },
+      "Failed to extract headers",
+    );
+    throw new Error(`Failed to extract headers: ${postPath}`);
   }
 
   const { markdown: _, ...meta } = post;
@@ -94,11 +132,54 @@ export async function getDumpPosts(
 ): Promise<DumpPost[]> {
   const mdFiles = await glob(`${src}/**/*.md`, { ignore: "node_modules/*" });
 
-  return Promise.all(
+  if (mdFiles.length === 0) {
+    logger.warn({ src: String(src) }, "No markdown files found");
+    return [];
+  }
+
+  logger.info(
+    { src: String(src), count: mdFiles.length },
+    "Processing markdown files",
+  );
+
+  const results = await Promise.allSettled(
     mdFiles.map(async (f) => {
       return await dumpPost(await readPost(f), f, imageDist);
     }),
   );
+
+  const succeeded: DumpPost[] = [];
+  const failed: { file: string; reason: unknown }[] = [];
+
+  for (let i = 0; i < results.length; i++) {
+    const result = results[i];
+    if (result.status === "fulfilled") {
+      succeeded.push(result.value);
+    } else {
+      failed.push({ file: mdFiles[i], reason: result.reason });
+    }
+  }
+
+  if (failed.length > 0) {
+    for (const f of failed) {
+      logger.error({ file: f.file, err: f.reason }, "Failed to process post");
+    }
+    logger.error(
+      {
+        total: mdFiles.length,
+        succeeded: succeeded.length,
+        failed: failed.length,
+        failedFiles: failed.map((f) => f.file),
+      },
+      "Some posts failed to process",
+    );
+    throw new Error(
+      `${failed.length}/${mdFiles.length} posts failed to process: ${failed.map((f) => f.file).join(", ")}`,
+    );
+  }
+
+  logger.info({ count: succeeded.length }, "All posts processed successfully");
+  return succeeded;
 }
 
 function getDump(dumpPosts: DumpPost[]): Dump {
