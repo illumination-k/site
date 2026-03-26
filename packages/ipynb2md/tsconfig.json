@@ -1,6 +1,7 @@
 {
   "extends": "../settings/tsconfig.base.json",
   "include": ["**/*.ts"],
+  "exclude": ["vitest.config.ts", "dist"],
   "compilerOptions": {
     "rootDir": "./src",
     "outDir": "./dist",

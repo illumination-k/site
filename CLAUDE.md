@@ -33,6 +33,8 @@ pnpm web-build
 
 # Testing & Linting
 pnpm test                 # Run vitest via turbo
+pnpm test:coverage        # Run vitest with coverage report (v8)
+pnpm test:mutation        # Run Stryker mutation testing
 pnpm test:e2e             # Playwright e2e tests (in web/)
 pnpm lint                 # dprint check + sort-package-json check + turbo lint (eslint)
 pnpm format               # dprint fmt + sort-package-json + per-package formatters
