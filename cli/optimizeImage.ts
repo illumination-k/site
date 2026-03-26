@@ -13,20 +13,23 @@ import { visit } from "unist-util-visit";
 
 import { logger } from "./logger";
 
-async function fetchWithRetry(
-  uri: string,
-  maxRetries = 3,
-): Promise<Buffer> {
+async function fetchWithRetry(uri: string, maxRetries = 3): Promise<Buffer> {
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      const res = await axios.get(uri, { responseType: "arraybuffer", timeout: 30_000 });
+      const res = await axios.get(uri, {
+        responseType: "arraybuffer",
+        timeout: 30_000,
+      });
       return res.data;
     } catch (err) {
       if (attempt === maxRetries) {
         throw err;
       }
       const delay = 1000 * 2 ** attempt;
-      logger.warn({ uri, attempt: attempt + 1, maxRetries, delay }, "Retrying image download");
+      logger.warn(
+        { uri, attempt: attempt + 1, maxRetries, delay },
+        "Retrying image download",
+      );
       await new Promise((r) => setTimeout(r, delay));
     }
   }
