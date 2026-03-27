@@ -9,6 +9,12 @@ import { unified } from "unified";
 import remarkDirectiveEmbedGenerator from ".";
 import { GithubMetaTransformer } from "./github-meta";
 
+vi.mock("../../cache", () => ({
+  getCacheKey: vi.fn().mockReturnValue("test-key"),
+  cacheGet: vi.fn().mockResolvedValue(null),
+  cacheSet: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock("axios", () => ({
   default: {
     get: vi.fn().mockResolvedValue({

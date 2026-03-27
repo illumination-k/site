@@ -2,9 +2,11 @@ import { createHash } from "node:crypto";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 
-const DEFAULT_CACHE_DIR = path.resolve(
-  process.env.EMBED_CACHE_DIR || path.join(process.cwd(), ".cache", "embed"),
-);
+export function getDefaultCacheDir(): string {
+  return path.resolve(
+    process.env.EMBED_CACHE_DIR || path.join(process.cwd(), ".cache", "embed"),
+  );
+}
 
 export function getCacheKey(
   url: string,
@@ -22,7 +24,7 @@ export function getCacheKey(
 
 export async function cacheGet(
   key: string,
-  cacheDir = DEFAULT_CACHE_DIR,
+  cacheDir = getDefaultCacheDir(),
 ): Promise<Buffer | null> {
   try {
     return await readFile(path.join(cacheDir, key));
@@ -34,7 +36,7 @@ export async function cacheGet(
 export async function cacheSet(
   key: string,
   data: Buffer | string,
-  cacheDir = DEFAULT_CACHE_DIR,
+  cacheDir = getDefaultCacheDir(),
 ): Promise<void> {
   await mkdir(cacheDir, { recursive: true });
   await writeFile(path.join(cacheDir, key), data);

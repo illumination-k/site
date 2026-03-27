@@ -10,6 +10,12 @@ import remarkDirectiveEmbedGenerator, { GithubTransformer } from ".";
 
 import { parseGithubUrl } from "./github";
 
+vi.mock("../../cache", () => ({
+  getCacheKey: vi.fn().mockReturnValue("test-key"),
+  cacheGet: vi.fn().mockResolvedValue(null),
+  cacheSet: vi.fn().mockResolvedValue(undefined),
+}));
+
 const highlighterFileContent = `import { refractor } from "refractor/lib/core.js";
 import bash from "refractor/lang/bash.js";
 import diff from "refractor/lang/diff.js";
