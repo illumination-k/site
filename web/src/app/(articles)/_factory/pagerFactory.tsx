@@ -1,5 +1,6 @@
 import { css } from "@/styled-system/css";
 
+import type { Metadata, ResolvingMetadata } from "next";
 import type { Route } from "next";
 import { z } from "zod";
 
@@ -17,6 +18,8 @@ const schema = {
   }),
 };
 
+type Params = z.input<typeof schema.params>;
+
 export default class PagerFactory {
   private blogService: BlogService;
   private prefix: string;
@@ -24,6 +27,30 @@ export default class PagerFactory {
   constructor(prefix: string, blogService: BlogService) {
     this.prefix = prefix;
     this.blogService = blogService;
+  }
+
+  public createGenerateMetadataFn() {
+    return async (
+      { params }: { params: Promise<Params> },
+      _parent: ResolvingMetadata,
+    ): Promise<Metadata> => {
+      const { page } = await params;
+      const title =
+        page === "1"
+          ? `${this.prefix} 記事一覧`
+          : `${this.prefix} 記事一覧 - ページ ${page}`;
+      const description = `illumination-k.dev の${this.prefix}記事一覧（ページ ${page}）`;
+
+      return {
+        title,
+        description,
+        openGraph: {
+          title,
+          description,
+          url: `https://www.illumination-k.dev/${this.prefix}/${page}`,
+        },
+      };
+    };
   }
 
   public createGenerateStaticParamsFn(): () => Promise<{ page: string }[]> {
