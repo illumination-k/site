@@ -88,7 +88,7 @@ function toMathml() {
 
 `image-size`というパッケージで簡単にサイズを取得できる。また、urlからサイズを取ってくるときが少しめんどうで、非同期処理を使えない。使ってしまうとparseが終わった後にやっとwidthとheightがわかる、みたいなことになるっぽい。このあたりしっかり理解しきれていないのだが、`sync-request`という同期処理でrequestするモジュールを使って強引に解決した。
 
-** 注意 **
+**注意**
 ただ`sync-request`は非推奨らしいので([参考](https://designetwork.daichi703n.com/entry/2017/02/21/node-then-request))、使用する場合は自己責任で...。問題になってるのはクライアント側がクラッシュしやすくなるとかなので、buildするときに走るだけだから問題ないと思いたいのだが。`dynamic import`とか始めると問題になるかもしれない。
 
 ```js

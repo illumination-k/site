@@ -74,7 +74,7 @@ PyPI がパッケージを検疫・削除
 ### 発見の経緯
 
 - **Sonatype**の自動マルウェア検出ツールが公開後「数秒以内」にパッケージをブロックしたが、PyPIの検疫完了まで約3時間を要した
-- **FutureSearch**のリサーチャーは、AIコードエディタ**Cursor**内で動作するMCPプラグインが**transitive dependency（推移的な依存関係）**としてlitellmを取得した際に侵害を発見した。被害者は直接`pip install litellm`を実行していない
+- **FutureSearch**のリサーチャーは、AIコードエディタ**Cursor**内で動作するMCPプラグインが **transitive dependency（推移的な依存関係）** としてlitellmを取得した際に侵害を発見した。被害者は直接`pip install litellm`を実行していない
 - コミュニティがGitHub issue #24512で警鐘を鳴らすと、攻撃者は侵害したメンテナアカウントを使い**102秒間に73アカウントから88件のボットコメント**を投稿して問題を隠蔽しようとし、issueを「not planned」としてクローズした
 
 ### 影響と教訓
@@ -163,7 +163,7 @@ cargo +nightly generate-lockfile -Zunstable-options --publish-time "2026-03-20T0
 
 ### Go: MVS（最小バージョン選択）による構造的緩和
 
-Goには最小リリース経過時間に相当する機能はないが、Go Modulesの**Minimum Version Selection（MVS）**が構造的にこの問題を緩和している。
+Goには最小リリース経過時間に相当する機能はないが、Go Modulesの **Minimum Version Selection（MVS）** が構造的にこの問題を緩和している。
 
 MVSは他のパッケージマネージャーとは逆のアプローチを取る。**要件を満たす最も古いバージョン**を選択する。
 

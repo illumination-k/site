@@ -11,6 +11,7 @@ import {
   FigureDirective,
   attachIdToHeadings,
   codeTitle,
+  lintUnrenderedEmphasis,
 } from "./remark-plugins";
 import remarkDirectiveEmbedGenerator, {
   GithubCardTransformer,
@@ -42,6 +43,10 @@ export const REHYPE_PLUGINS = {
   rehypeKatex,
   rehypePrism,
 };
+
+export const REMARK_LINT_PLUGINS = [lintUnrenderedEmphasis];
+
+export { lintUnrenderedEmphasis } from "./remark-plugins";
 
 export { fetchWithRetry } from "./fetch";
 export { cachedFetch } from "./cachedFetch";

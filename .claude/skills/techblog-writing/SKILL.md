@@ -102,6 +102,14 @@ title, description, category, tagsを埋める。descriptionは検索結果やOG
 npx textlint posts/techblog/{category}/{filename}.md
 ```
 
+### 6. cli lint検証（必須）
+
+レンダリングされない強調（`**...**`や`*...*`がテキストのまま残る問題）を検出するため、cli lintを実行する。エラーがあれば修正する。典型的な原因は`**`の前後にスペースが必要なケース。
+
+```bash
+pnpm cli:build && pnpm cli lint --src posts
+```
+
 ### 利用可能なMarkdown機能
 
 - 標準Markdown（見出し、リスト、コードブロック、リンク、画像）
@@ -111,6 +119,6 @@ npx textlint posts/techblog/{category}/{filename}.md
 - 折りたたみ: `:::details` / `:::`
 - コードブロックのタイトル: `` ```lang title=filename ``
 
-### 6. セルフレビュー
+### 7. セルフレビュー
 
 執筆後、`references/writing-checklist.md` のチェックリストで内容を確認する。

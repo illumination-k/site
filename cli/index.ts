@@ -5,6 +5,7 @@ import { hideBin } from "yargs/helpers";
 import { exportDatabase } from "./exportNotion";
 import generateFeed from "./feed";
 import { getDumpPosts, writeDump } from "./io";
+import { lintPosts } from "./lint";
 import { logger } from "./logger";
 import { generateRedirect } from "./migration";
 import generateOgImages from "./og";
@@ -131,6 +132,39 @@ yargs(hideBin(process.argv))
     async (argv) => {
       const result = await generateRedirect(argv.src as string);
       logger.info({ result }, "Migration redirect generated");
+    },
+  )
+  .command(
+    "lint",
+    "Lint markdown posts for common issues",
+    (yargs) => {
+      yargs.positional("src", {
+        type: "string",
+        describe: "Root directory of the markdown files to lint",
+      });
+      yargs.demandOption(["src"]);
+    },
+    async (argv) => {
+      const src = argv.src as string;
+      const errors = await lintPosts(src);
+
+      if (errors.length > 0) {
+        for (const error of errors) {
+          const location =
+            error.line != null ? `:${error.line}:${error.column ?? 1}` : "";
+          logger.error(
+            { file: error.file, rule: error.ruleId },
+            `${error.file}${location}: ${error.message}`,
+          );
+        }
+        logger.error(
+          { count: errors.length },
+          `Found ${errors.length} lint error(s)`,
+        );
+        process.exit(1);
+      }
+
+      logger.info("No lint errors found");
     },
   )
   .command(
