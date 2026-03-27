@@ -44,3 +44,5 @@ export const REHYPE_PLUGINS = {
 };
 
 export { fetchWithRetry } from "./fetch";
+export { cachedFetch } from "./cachedFetch";
+export { getCacheKey, cacheGet, cacheSet, getDefaultCacheDir } from "./cache";

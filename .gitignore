@@ -57,3 +57,6 @@ web/public/og/
 
 # Downloaded fonts
 cli/fonts/
+
+# Embed cache
+.cache/

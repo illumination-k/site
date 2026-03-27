@@ -3,7 +3,7 @@ import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
 import type { Parent } from "unist";
 import type { DirectiveTransformer } from ".";
-import { fetchWithRetry } from "../../fetch";
+import { cachedFetch } from "../../cachedFetch";
 
 // https://www.crossref.org/blog/dois-and-matching-regular-expressions/
 export const doiRegExp = /^10\.\d{4,9}\/[-._;()/:A-Z0-9]+$/i;
@@ -41,9 +41,11 @@ export class DoiTransformer implements DirectiveTransformer {
       style = node.attributes.id as string;
     }
 
-    const resp = await fetchWithRetry(url, {
-      headers: { Accept: "text/x-bibliography", style },
-    });
+    const resp = await cachedFetch(
+      url,
+      { headers: { Accept: "text/x-bibliography", style } },
+      { cacheExtras: { style } },
+    );
     const citation = resp.data as string;
 
     const newNode: Paragraph = {

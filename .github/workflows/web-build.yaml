@@ -60,6 +60,12 @@ jobs:
             nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
             nextjs-${{ runner.os }}-
 
+      - name: cache embedded downloads
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: .cache/embed
+          key: embed-cache-${{ runner.os }}
+
       - name: build cli
         run: pnpm cli:build
 
