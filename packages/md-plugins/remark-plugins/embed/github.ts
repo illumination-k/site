@@ -7,7 +7,7 @@ import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
 
 import type { DirectiveTransformer } from ".";
-import { fetchWithRetry } from "../../fetch";
+import { cachedFetch } from "../../cachedFetch";
 
 import { z } from "zod";
 
@@ -98,7 +98,7 @@ export class GithubTransformer implements DirectiveTransformer {
 
     let allValue: unknown;
     try {
-      allValue = (await fetchWithRetry(parsed.rawFileUrl)).data;
+      allValue = (await cachedFetch(parsed.rawFileUrl)).data;
     } catch (e) {
       console.warn(
         `[gh-embed] Failed to fetch ${parsed.rawFileUrl}:`,

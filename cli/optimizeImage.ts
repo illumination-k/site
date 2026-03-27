@@ -1,4 +1,5 @@
 import fs, { type PathLike } from "node:fs";
+import { readFile } from "node:fs/promises";
 import path from "node:path";
 import util from "node:util";
 
@@ -6,7 +7,7 @@ import type { Image, Root } from "mdast";
 
 import sizeOf from "image-size";
 
-import { fetchWithRetry } from "md-plugins";
+import { cacheGet, cacheSet, fetchWithRetry, getCacheKey } from "md-plugins";
 import sharp from "sharp";
 import { file } from "tmp-promise";
 import { visit } from "unist-util-visit";
@@ -95,32 +96,105 @@ const optimizeImage = (option: Option) => {
         const { path: tmpPath, cleanup } = await file({ postfix: ext });
 
         try {
-          if (uri.startsWith("http") || uri.startsWith("ftp")) {
-            try {
-              const resp = await fetchWithRetry(uri, {
-                responseType: "arraybuffer",
-              });
-
-              await writeAsync(tmpPath, resp.data);
-
-              imagePath = tmpPath;
-            } catch (err) {
-              logger.error(
-                { uri, postPath: String(option.postPath), err },
-                "Failed to download remote image",
-              );
-              throw new Error(`Failed to download image: ${uri}`);
-            }
-          }
-
+          const isRemote = uri.startsWith("http") || uri.startsWith("ftp");
           const sharpExts = [".png", ".jpg", ".webp", ".jepg", ".gif", ".tiff"];
 
-          if (ext === ".svg") {
+          if (isRemote && ext === ".svg") {
+            const cacheKey = getCacheKey(uri, { type: "svg" });
+            const cached = await cacheGet(`${cacheKey}.svg`);
             const copyImagePath = path.join(option.imageDist, filename);
-            await copyAsync(imagePath, copyImagePath);
+
+            if (cached) {
+              await writeAsync(copyImagePath, cached);
+            } else {
+              try {
+                const resp = await fetchWithRetry(uri, {
+                  responseType: "arraybuffer",
+                });
+                await writeAsync(tmpPath, resp.data);
+              } catch (err) {
+                logger.error(
+                  { uri, postPath: String(option.postPath), err },
+                  "Failed to download remote image",
+                );
+                throw new Error(`Failed to download image: ${uri}`);
+              }
+              await copyAsync(tmpPath, copyImagePath);
+              await cacheSet(`${cacheKey}.svg`, await readFile(copyImagePath));
+            }
 
             node.url = replacePathAsPublicRoot(copyImagePath);
-          } else if (sharpExts.includes(ext.toLowerCase())) {
+          } else if (isRemote && sharpExts.includes(ext.toLowerCase())) {
+            const sizeStr = size
+              ? `w=${size.width ?? ""},h=${size.height ?? ""}`
+              : "";
+            const cacheKey = getCacheKey(uri, { type: "avif", size: sizeStr });
+            const cached = await cacheGet(`${cacheKey}.avif`);
+            const optimizedImagePath = path.join(
+              option.imageDist,
+              `${fileNameBase}.avif`,
+            );
+
+            if (cached) {
+              await writeAsync(optimizedImagePath, cached);
+            } else {
+              try {
+                const resp = await fetchWithRetry(uri, {
+                  responseType: "arraybuffer",
+                });
+                await writeAsync(tmpPath, resp.data);
+                imagePath = tmpPath;
+              } catch (err) {
+                logger.error(
+                  { uri, postPath: String(option.postPath), err },
+                  "Failed to download remote image",
+                );
+                throw new Error(`Failed to download image: ${uri}`);
+              }
+
+              try {
+                await sharp(imagePath)
+                  .avif({ quality: 75 })
+                  .resize(size?.width, size?.height)
+                  .toFile(optimizedImagePath);
+              } catch (err) {
+                logger.error(
+                  {
+                    imagePath,
+                    optimizedImagePath,
+                    postPath: String(option.postPath),
+                    err,
+                  },
+                  "Failed to optimize image with sharp",
+                );
+                throw new Error(
+                  `Failed to optimize image: ${imagePath} (post: ${option.postPath})`,
+                );
+              }
+
+              await cacheSet(
+                `${cacheKey}.avif`,
+                await readFile(optimizedImagePath),
+              );
+            }
+
+            const newUri = replacePathAsPublicRoot(optimizedImagePath);
+            const dim = await sizeOfAsync(optimizedImagePath);
+            node.url = newUri;
+
+            if (dim) {
+              node.data = {
+                hProperties: {
+                  width: dim.width,
+                  height: dim.height,
+                },
+              };
+            }
+          } else if (!isRemote && ext === ".svg") {
+            const copyImagePath = path.join(option.imageDist, filename);
+            await copyAsync(imagePath, copyImagePath);
+            node.url = replacePathAsPublicRoot(copyImagePath);
+          } else if (!isRemote && sharpExts.includes(ext.toLowerCase())) {
             const optimizedImagePath = path.join(
               option.imageDist,
               `${fileNameBase}.avif`,
@@ -128,9 +202,7 @@ const optimizeImage = (option: Option) => {
 
             try {
               await sharp(imagePath)
-                .avif({
-                  quality: 75,
-                })
+                .avif({ quality: 75 })
                 .resize(size?.width, size?.height)
                 .toFile(optimizedImagePath);
             } catch (err) {
@@ -149,7 +221,6 @@ const optimizeImage = (option: Option) => {
             }
 
             const newUri = replacePathAsPublicRoot(optimizedImagePath);
-
             const dim = await sizeOfAsync(optimizedImagePath);
             node.url = newUri;
 
