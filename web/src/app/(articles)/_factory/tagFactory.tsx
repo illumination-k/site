@@ -1,6 +1,6 @@
 import { css } from "@/styled-system/css";
 
-import type { Route } from "next";
+import type { Metadata, ResolvingMetadata, Route } from "next";
 import { z } from "zod";
 
 import { withZodPage } from "@/app/_util/withZodPage";
@@ -26,6 +26,30 @@ export class TagPagerFactory {
   constructor(prefix: string, blogService: BlogService) {
     this.prefix = prefix;
     this.blogService = blogService;
+  }
+
+  public createGenerateMetadataFn() {
+    return async (
+      { params }: { params: Promise<{ tag: string; page: string }> },
+      _parent: ResolvingMetadata,
+    ): Promise<Metadata> => {
+      const { tag, page } = await params;
+      const title =
+        page === "1"
+          ? `${tag} タグの記事一覧`
+          : `${tag} タグの記事一覧 - ページ ${page}`;
+      const description = `illumination-k.dev の「${tag}」タグが付いた記事一覧（ページ ${page}）`;
+
+      return {
+        title,
+        description,
+        openGraph: {
+          title,
+          description,
+          url: `https://www.illumination-k.dev/${this.prefix}/tag/${tag}/${page}`,
+        },
+      };
+    };
   }
 
   public createGenerateStaticParamsFn(): () => Promise<
@@ -94,6 +118,18 @@ export class TagTopPageFactory {
   constructor(prefix: string, blogService: BlogService) {
     this.prefix = prefix;
     this.blogService = blogService;
+  }
+
+  public createMetadata(): Metadata {
+    return {
+      title: `${this.prefix} タグ一覧`,
+      description: `illumination-k.dev の${this.prefix}記事に付けられたタグの一覧`,
+      openGraph: {
+        title: `${this.prefix} タグ一覧`,
+        description: `illumination-k.dev の${this.prefix}記事に付けられたタグの一覧`,
+        url: `https://www.illumination-k.dev/${this.prefix}/tag`,
+      },
+    };
   }
 
   public createPage() {
