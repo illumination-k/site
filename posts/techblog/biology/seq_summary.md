@@ -107,7 +107,7 @@ annotation={<> <P5>Illumina P5</P5> <T7>i5</T7> <S5>Next</S5><Me>era Read 1</Me>
 
 ### シングルインデックスかつペアエンドの場合
 
-1. Read1側からinsert-DNAのシーケンスを読みます** (a)** (ex., Truseq Read1, Nextera Read1)。
+1. Read1側からinsert-DNAのシーケンスを読みます **(a)** (ex., Truseq Read1, Nextera Read1)。
 2. Read2側からインデックス配列を読みます **(b)** (ex., Truseq Read2, Nextera Read2)。
 3. ブリッジする。
 4. Read2側からinset-DNAのシーケンスを読みます **(c)**。

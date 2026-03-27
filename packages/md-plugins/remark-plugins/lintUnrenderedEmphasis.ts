@@ -15,15 +15,22 @@ function isLikelyIntendedEmphasis(inner: string): boolean {
   return !(inner.startsWith(" ") && inner.endsWith(" "));
 }
 
+function findMatches(pattern: RegExp, value: string): RegExpExecArray[] {
+  pattern.lastIndex = 0;
+  const matches: RegExpExecArray[] = [];
+  for (let m = pattern.exec(value); m !== null; m = pattern.exec(value)) {
+    matches.push(m);
+  }
+  return matches;
+}
+
 export default function remarkLintUnrenderedEmphasis() {
   return (ast: Root, file: VFile) => {
     visit(ast, "text", (node: Text) => {
       const { value, position } = node;
 
       // Check for unrendered **strong**
-      UNRENDERED_STRONG.lastIndex = 0;
-      let match: RegExpExecArray | null;
-      while ((match = UNRENDERED_STRONG.exec(value)) !== null) {
+      for (const match of findMatches(UNRENDERED_STRONG, value)) {
         file.message(
           `Unrendered emphasis found: "${match[0]}"`,
           position,
@@ -32,8 +39,7 @@ export default function remarkLintUnrenderedEmphasis() {
       }
 
       // Check for unrendered *emphasis* (with false-positive filtering)
-      UNRENDERED_EMPHASIS.lastIndex = 0;
-      while ((match = UNRENDERED_EMPHASIS.exec(value)) !== null) {
+      for (const match of findMatches(UNRENDERED_EMPHASIS, value)) {
         if (!isLikelyIntendedEmphasis(match[1])) {
           continue;
         }
