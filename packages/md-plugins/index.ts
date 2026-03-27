@@ -48,7 +48,6 @@ export const REMARK_LINT_PLUGINS = [lintUnrenderedEmphasis];
 
 export { lintUnrenderedEmphasis } from "./remark-plugins";
 
-
 export { fetchWithRetry } from "./fetch";
 export { cachedFetch } from "./cachedFetch";
 export { getCacheKey, cacheGet, cacheSet, getDefaultCacheDir } from "./cache";
