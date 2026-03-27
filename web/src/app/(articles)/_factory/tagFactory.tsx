@@ -1,7 +1,6 @@
 import { css } from "@/styled-system/css";
 
-import type { Metadata, ResolvingMetadata } from "next";
-import type { Route } from "next";
+import type { Metadata, ResolvingMetadata, Route } from "next";
 import { z } from "zod";
 
 import { withZodPage } from "@/app/_util/withZodPage";

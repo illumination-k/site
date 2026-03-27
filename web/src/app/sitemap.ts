@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
-import { paperStreamService } from "@/features/paperStream/constants";
 import pager from "@/features/articles/utils/pager";
+import { paperStreamService } from "@/features/paperStream/constants";
 import { blogService } from "@/features/techblog/constant";
 
 export const dynamic = "force-static";
@@ -24,9 +24,7 @@ async function generateTagSitemap(
   service: typeof blogService,
 ): Promise<MetadataRoute.Sitemap> {
   const tags = await service.repo.tags();
-  const entries: MetadataRoute.Sitemap = [
-    { url: `${BASE_URL}/${prefix}/tag` },
-  ];
+  const entries: MetadataRoute.Sitemap = [{ url: `${BASE_URL}/${prefix}/tag` }];
 
   for (const tag of tags) {
     const taggedPosts = await service.repo.filterPosts("ja", tag);

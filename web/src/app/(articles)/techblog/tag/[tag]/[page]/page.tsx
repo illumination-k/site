@@ -1,7 +1,6 @@
 import { css } from "@/styled-system/css";
 
-import type { Metadata } from "next";
-import type { Route } from "next";
+import type { Metadata, Route } from "next";
 import { z } from "zod";
 
 import { withZodPage } from "@/app/_util/withZodPage";
@@ -25,7 +24,9 @@ const schema = {
 
 export async function generateMetadata({
   params,
-}: { params: Promise<Params> }): Promise<Metadata> {
+}: {
+  params: Promise<Params>;
+}): Promise<Metadata> {
   const { tag, page } = await params;
   const title =
     page === "1"
