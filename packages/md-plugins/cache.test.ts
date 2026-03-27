@@ -2,12 +2,7 @@ import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { afterAll, afterEach, beforeAll, describe, expect, it } from "vitest";
-import {
-  cacheGet,
-  cacheSet,
-  getCacheKey,
-  getDefaultCacheDir,
-} from "./cache";
+import { cacheGet, cacheSet, getCacheKey, getDefaultCacheDir } from "./cache";
 
 const savedEnv = process.env.EMBED_CACHE_DIR;
 let tmpDir: string;
@@ -80,7 +75,7 @@ describe("cacheGet", () => {
     await cacheSet("existing.txt", "hello", tmpDir);
     const result = await cacheGet("existing.txt", tmpDir);
     expect(result).toBeInstanceOf(Buffer);
-    expect(result!.toString("utf-8")).toBe("hello");
+    expect(result?.toString("utf-8")).toBe("hello");
   });
 });
 
@@ -89,7 +84,7 @@ describe("cacheSet", () => {
     const nestedDir = path.join(tmpDir, "nested", "deep");
     await cacheSet("file.txt", "data", nestedDir);
     const result = await cacheGet("file.txt", nestedDir);
-    expect(result!.toString("utf-8")).toBe("data");
+    expect(result?.toString("utf-8")).toBe("data");
   });
 
   it("round-trips Buffer data", async () => {
@@ -103,14 +98,14 @@ describe("cacheSet", () => {
     const str = '{"key":"value","num":42}';
     await cacheSet("text.json", str, tmpDir);
     const result = await cacheGet("text.json", tmpDir);
-    expect(result!.toString("utf-8")).toBe(str);
+    expect(result?.toString("utf-8")).toBe(str);
   });
 
   it("overwrites existing data", async () => {
     await cacheSet("overwrite.txt", "first", tmpDir);
     await cacheSet("overwrite.txt", "second", tmpDir);
     const result = await cacheGet("overwrite.txt", tmpDir);
-    expect(result!.toString("utf-8")).toBe("second");
+    expect(result?.toString("utf-8")).toBe("second");
   });
 });
 
@@ -125,18 +120,14 @@ describe("getDefaultCacheDir", () => {
   it("falls back to .cache/embed under cwd when env var is not set", () => {
     delete process.env.EMBED_CACHE_DIR;
 
-    const expected = path.resolve(
-      path.join(process.cwd(), ".cache", "embed"),
-    );
+    const expected = path.resolve(path.join(process.cwd(), ".cache", "embed"));
     expect(getDefaultCacheDir()).toBe(expected);
   });
 
   it("ignores empty EMBED_CACHE_DIR", () => {
     process.env.EMBED_CACHE_DIR = "";
 
-    const expected = path.resolve(
-      path.join(process.cwd(), ".cache", "embed"),
-    );
+    const expected = path.resolve(path.join(process.cwd(), ".cache", "embed"));
     expect(getDefaultCacheDir()).toBe(expected);
   });
 });
@@ -148,7 +139,7 @@ describe("default cache directory integration", () => {
 
     await cacheSet("integration.txt", "works");
     const result = await cacheGet("integration.txt");
-    expect(result!.toString("utf-8")).toBe("works");
+    expect(result?.toString("utf-8")).toBe("works");
 
     const stat = await fs.stat(path.join(envDir, "integration.txt"));
     expect(stat.isFile()).toBe(true);
