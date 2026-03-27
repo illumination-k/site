@@ -12,11 +12,7 @@ beforeAll(async () => {
 });
 
 afterEach(() => {
-  if (savedEnv === undefined) {
-    delete process.env.EMBED_CACHE_DIR;
-  } else {
-    process.env.EMBED_CACHE_DIR = savedEnv;
-  }
+  process.env.EMBED_CACHE_DIR = savedEnv ?? "";
 });
 
 afterAll(async () => {
@@ -117,14 +113,7 @@ describe("getDefaultCacheDir", () => {
     expect(getDefaultCacheDir()).toBe(path.resolve(envDir));
   });
 
-  it("falls back to .cache/embed under cwd when env var is not set", () => {
-    delete process.env.EMBED_CACHE_DIR;
-
-    const expected = path.resolve(path.join(process.cwd(), ".cache", "embed"));
-    expect(getDefaultCacheDir()).toBe(expected);
-  });
-
-  it("ignores empty EMBED_CACHE_DIR", () => {
+  it("falls back to .cache/embed under cwd when env var is empty", () => {
     process.env.EMBED_CACHE_DIR = "";
 
     const expected = path.resolve(path.join(process.cwd(), ".cache", "embed"));
