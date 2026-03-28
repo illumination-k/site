@@ -1,8 +1,9 @@
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
 import { css } from "@/styled-system/css";
 
 import type { Metadata } from "next";
-
-import metricsHistory from "@/data/metrics-history.json";
 
 export const metadata: Metadata = {
   title: "Quality Metrics",
@@ -29,7 +30,15 @@ interface MetricsSnapshot {
   };
 }
 
-const history = metricsHistory as MetricsSnapshot[];
+const raw = readFileSync(
+  join(process.cwd(), "src/data/metrics-history.ndjson"),
+  "utf-8",
+);
+const history = raw
+  .trim()
+  .split("\n")
+  .filter(Boolean)
+  .map((line) => JSON.parse(line) as MetricsSnapshot);
 const latest = history[history.length - 1];
 
 function MetricCard({
