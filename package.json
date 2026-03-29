@@ -31,6 +31,7 @@
     "lint:sort-package-json": "pnpm format:sort-package-json --check",
     "lint": "dprint check && pnpm lint:sort-package-json && pnpm turbo lint",
     "register-posts": "run-s dump cli:register-posts",
+    "metrics": "run-s test:coverage test:mutation && npx tsx scripts/collect-metrics.ts",
     "test": "pnpm turbo test",
     "test:coverage": "pnpm turbo test:coverage",
     "test:mutation": "stryker run",
