@@ -7,7 +7,7 @@
  * When --update-history is passed, appends the metrics to web/src/data/metrics-history.json
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -142,23 +142,27 @@ function main() {
 
   if (updateHistory) {
     const historyDir = join(root, "web", "src", "data");
-    const historyPath = join(historyDir, "metrics-history.json");
+    const historyPath = join(historyDir, "metrics-history.ndjson");
 
     if (!existsSync(historyDir)) {
       mkdirSync(historyDir, { recursive: true });
     }
 
-    const history: MetricsSnapshot[] = existsSync(historyPath)
-      ? JSON.parse(readFileSync(historyPath, "utf-8"))
+    const lines = existsSync(historyPath)
+      ? readFileSync(historyPath, "utf-8").trim().split("\n").filter(Boolean)
       : [];
 
     // Deduplicate by date+sha
-    const exists = history.some((h) => h.date === date && h.sha === sha);
+    const exists = lines.some((line) => {
+      const h = JSON.parse(line) as MetricsSnapshot;
+      return h.date === date && h.sha === sha;
+    });
+
     if (!exists) {
-      history.push(snapshot);
+      lines.push(JSON.stringify(snapshot));
       // Keep last 100 entries
-      const trimmed = history.slice(-100);
-      writeFileSync(historyPath, JSON.stringify(trimmed, null, 2) + "\n");
+      const trimmed = lines.slice(-100);
+      writeFileSync(historyPath, trimmed.join("\n") + "\n");
       console.error(`Updated metrics history (${trimmed.length} entries)`);
     } else {
       console.error("Entry already exists, skipping");
