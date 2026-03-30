@@ -28,6 +28,7 @@ interface MutationReport {
 interface MetricsSnapshot {
   date: string;
   sha: string;
+  pr?: number;
   coverage: {
     lines: number;
     statements: number;
@@ -125,14 +126,23 @@ function collectMutation(): MetricsSnapshot["mutation"] {
   return { score, killed, survived, timeout, noCoverage, total };
 }
 
+function parsePrArg(): number | undefined {
+  const idx = process.argv.indexOf("--pr");
+  if (idx === -1 || idx + 1 >= process.argv.length) return undefined;
+  const val = Number(process.argv[idx + 1]);
+  return Number.isNaN(val) ? undefined : val;
+}
+
 function main() {
   const sha = process.env.GITHUB_SHA?.slice(0, 7) ?? "local";
   const date = new Date().toISOString().split("T")[0];
   const updateHistory = process.argv.includes("--update-history");
+  const pr = parsePrArg();
 
   const snapshot: MetricsSnapshot = {
     date,
     sha,
+    ...(pr != null ? { pr } : {}),
     coverage: collectCoverage(),
     mutation: collectMutation(),
   };
@@ -152,20 +162,31 @@ function main() {
       ? readFileSync(historyPath, "utf-8").trim().split("\n").filter(Boolean)
       : [];
 
-    // Deduplicate by date+sha
-    const exists = lines.some((line) => {
-      const h = JSON.parse(line) as MetricsSnapshot;
-      return h.date === date && h.sha === sha;
-    });
-
-    if (!exists) {
-      lines.push(JSON.stringify(snapshot));
-      // Keep last 100 entries
-      const trimmed = lines.slice(-100);
+    if (pr != null) {
+      // Upsert by PR number: replace existing entry for same PR
+      const filtered = lines.filter((line) => {
+        const h = JSON.parse(line) as MetricsSnapshot;
+        return h.pr !== pr;
+      });
+      filtered.push(JSON.stringify(snapshot));
+      const trimmed = filtered.slice(-100);
       writeFileSync(historyPath, trimmed.join("\n") + "\n");
-      console.error(`Updated metrics history (${trimmed.length} entries)`);
+      console.error(`Updated metrics for PR #${pr} (${trimmed.length} entries)`);
     } else {
-      console.error("Entry already exists, skipping");
+      // Legacy: deduplicate by date+sha
+      const exists = lines.some((line) => {
+        const h = JSON.parse(line) as MetricsSnapshot;
+        return h.date === date && h.sha === sha;
+      });
+
+      if (!exists) {
+        lines.push(JSON.stringify(snapshot));
+        const trimmed = lines.slice(-100);
+        writeFileSync(historyPath, trimmed.join("\n") + "\n");
+        console.error(`Updated metrics history (${trimmed.length} entries)`);
+      } else {
+        console.error("Entry already exists, skipping");
+      }
     }
   }
 }
