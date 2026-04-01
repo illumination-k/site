@@ -5,8 +5,8 @@ import { unified } from "unified";
 import { visit } from "unist-util-visit";
 import { describe, expect, it, vi } from "vitest";
 
-import resolveInternalLinks, { type PostMetaMap } from "./resolveInternalLinks";
 import { logger } from "./logger";
+import resolveInternalLinks, { type PostMetaMap } from "./resolveInternalLinks";
 
 function collectLinks(ast: Root): Link[] {
   const links: Link[] = [];
@@ -161,7 +161,6 @@ describe("resolveInternalLinks", () => {
     expect(links).toHaveLength(1);
     expect(links[0].url).toBe("#file.md");
   });
-
 
   it("does not resolve non-.md links even if path exists in map", () => {
     const ast = processMarkdown("[img](./photo.png)");
