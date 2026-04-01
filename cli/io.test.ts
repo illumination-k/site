@@ -21,13 +21,14 @@ describe("internal links", () => {
       (p) => p.meta.uuid === "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
     );
     expect(test2).toBeDefined();
+    expect(test2?.compiledMarkdown).toBeDefined();
 
     // The compiled markdown should contain the resolved internal link
-    expect(test2!.compiledMarkdown).toContain(
+    expect(test2?.compiledMarkdown).toContain(
       "/test/post/61427e60-48c8-480b-bdbf-b5f846149c3a",
     );
     // Fragment link should also be resolved
-    expect(test2!.compiledMarkdown).toContain(
+    expect(test2?.compiledMarkdown).toContain(
       "/test/post/61427e60-48c8-480b-bdbf-b5f846149c3a#heading2",
     );
   });
