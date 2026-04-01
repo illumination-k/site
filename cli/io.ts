@@ -90,7 +90,12 @@ export async function dumpPost(
         remarkPlugins: [
           [optimizeImage, { postPath, imageDist }],
           ...(postMetaMap
-            ? [[resolveInternalLinks, { postPath: String(postPath), postMetaMap }]]
+            ? [
+                [
+                  resolveInternalLinks,
+                  { postPath: String(postPath), postMetaMap },
+                ],
+              ]
             : []),
         ].concat(
           // @ts-ignore
