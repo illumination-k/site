@@ -1,4 +1,5 @@
 import { type PathLike, readFile, writeFile } from "node:fs";
+import path from "node:path";
 import { promisify } from "node:util";
 import fm, { type FrontMatterResult } from "front-matter";
 import { glob } from "glob";
@@ -20,6 +21,7 @@ import {
 import extractHeader from "./extractHeader";
 import { logger } from "./logger";
 import optimizeImage from "./optimizeImage";
+import resolveInternalLinks, { type PostMetaMap } from "./resolveInternalLinks";
 
 const readFileAsync = promisify(readFile);
 
@@ -62,6 +64,7 @@ export async function dumpPost(
   post: Post,
   postPath: PathLike,
   imageDist: string,
+  postMetaMap?: PostMetaMap,
 ): Promise<DumpPost> {
   let stripFile: Awaited<ReturnType<ReturnType<typeof remark>["process"]>>;
   try {
@@ -84,7 +87,12 @@ export async function dumpPost(
         development: false,
 
         // @ts-ignore
-        remarkPlugins: [[optimizeImage, { postPath, imageDist }]].concat(
+        remarkPlugins: [
+          [optimizeImage, { postPath, imageDist }],
+          ...(postMetaMap
+            ? [[resolveInternalLinks, { postPath: String(postPath), postMetaMap }]]
+            : []),
+        ].concat(
           // @ts-ignore
           REMARK_PLUGINS,
         ),
@@ -142,21 +150,48 @@ export async function getDumpPosts(
     "Processing markdown files",
   );
 
-  const results = await Promise.allSettled(
-    mdFiles.map(async (f) => {
-      return await dumpPost(await readPost(f), f, imageDist);
+  // Phase 1: Read all posts to build the metadata map
+  const readResults = await Promise.allSettled(
+    mdFiles.map(async (f) => ({ filePath: f, post: await readPost(f) })),
+  );
+
+  const postMetaMap: PostMetaMap = new Map();
+  const readSucceeded: { filePath: string; post: Post }[] = [];
+  const readFailed: { file: string; reason: unknown }[] = [];
+
+  for (let i = 0; i < readResults.length; i++) {
+    const result = readResults[i];
+    if (result.status === "fulfilled") {
+      const absPath = path.resolve(result.value.filePath);
+      postMetaMap.set(absPath, {
+        uuid: result.value.post.meta.uuid,
+        category: result.value.post.meta.category,
+      });
+      readSucceeded.push(result.value);
+    } else {
+      readFailed.push({ file: mdFiles[i], reason: result.reason });
+    }
+  }
+
+  // Phase 2: Compile all posts with the complete metadata map
+  const compileResults = await Promise.allSettled(
+    readSucceeded.map(async ({ filePath, post }) => {
+      return await dumpPost(post, filePath, imageDist, postMetaMap);
     }),
   );
 
   const succeeded: DumpPost[] = [];
-  const failed: { file: string; reason: unknown }[] = [];
+  const failed: { file: string; reason: unknown }[] = [...readFailed];
 
-  for (let i = 0; i < results.length; i++) {
-    const result = results[i];
+  for (let i = 0; i < compileResults.length; i++) {
+    const result = compileResults[i];
     if (result.status === "fulfilled") {
       succeeded.push(result.value);
     } else {
-      failed.push({ file: mdFiles[i], reason: result.reason });
+      failed.push({
+        file: readSucceeded[i].filePath,
+        reason: result.reason,
+      });
     }
   }
 
