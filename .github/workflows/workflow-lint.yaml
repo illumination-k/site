@@ -63,4 +63,5 @@ jobs:
         with:
           min-severity: low
           advanced-security: "false"
+          online-audits: "false"
           version: "1.23.1"
