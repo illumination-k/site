@@ -3,7 +3,7 @@ dprint = "0.50"
 actionlint = "1.7.10"
 prek = "latest"
 
-node = "20"
+node = "22"
 pnpm = "10"
 
 "npm:@playwright/cli" = "latest"

@@ -1,10 +1,10 @@
 import type { PathLike } from "node:fs";
+import { glob } from "node:fs/promises";
 import path from "node:path";
-import { glob } from "glob";
 import { readPost } from "./io";
 
 export async function generateRedirect(src: PathLike) {
-  const mdFiles = await glob(`${src}/**/*.md`);
+  const mdFiles = await Array.fromAsync(glob(`${src}/**/*.md`));
 
   const redirects = Promise.all(
     mdFiles.map(async (mdFile) => {

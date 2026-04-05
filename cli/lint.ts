@@ -1,7 +1,7 @@
 import { type PathLike, readFile } from "node:fs";
+import { glob } from "node:fs/promises";
 import { promisify } from "node:util";
 import fm from "front-matter";
-import { glob } from "glob";
 import remarkGfm from "remark-gfm";
 import remarkParse from "remark-parse";
 import remarkStringify from "remark-stringify";
@@ -46,7 +46,9 @@ async function lintFile(filePath: string): Promise<LintError[]> {
 }
 
 export async function lintPosts(src: PathLike): Promise<LintError[]> {
-  const mdFiles = await glob(`${src}/**/*.md`, { ignore: "node_modules/*" });
+  const mdFiles = await Array.fromAsync(
+    glob(`${src}/**/*.md`, { exclude: ["**/node_modules/**"] }),
+  );
 
   if (mdFiles.length === 0) {
     logger.warn({ src: String(src) }, "No markdown files found");

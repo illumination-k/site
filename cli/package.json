@@ -22,7 +22,6 @@
     "common": "workspace:^",
     "feed": "^4.2.2",
     "front-matter": "^4.0.2",
-    "glob": "^13.0.6",
     "image-size": "^1.1.1",
     "ipynb2md": "workspace:^",
     "md-plugins": "workspace:^",
@@ -36,10 +35,8 @@
     "remark-stringify": "^11.0.0",
     "satori": "^0.26.0",
     "sharp": "^0.33.4",
-    "strip-markdown": "^6.0.0",
     "tmp-promise": "^3.0.3",
     "unist-util-visit": "^5.0.0",
-    "uuid": "^10.0.0",
     "yaml": "^2.5.1",
     "yargs": "^17.7.2",
     "zod": "^4.3.6"
@@ -50,7 +47,6 @@
     "@types/react": "19.2.14",
     "@types/tmp": "^0.2.6",
     "@types/unist": "^3.0.3",
-    "@types/uuid": "^10.0.0",
     "@types/yargs": "^17.0.33",
     "tsup": "^8.5.1",
     "unified": "^11.0.5"
