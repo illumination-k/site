@@ -1,5 +1,5 @@
-import type { AxiosResponse } from "axios";
 import { afterEach, describe, expect, it, vi } from "vitest";
+import type { FetchResponse } from "./fetch";
 
 vi.mock("./cache", () => ({
   getCacheKey: vi.fn().mockReturnValue("mocked-hash"),
@@ -11,7 +11,7 @@ vi.mock("./fetch", () => ({
   fetchWithRetry: vi.fn().mockResolvedValue({
     data: { message: "fetched" },
     status: 200,
-  } as Partial<AxiosResponse>),
+  } as Partial<FetchResponse>),
 }));
 
 import { cacheGet, cacheSet, getCacheKey } from "./cache";
@@ -66,7 +66,7 @@ describe("cachedFetch - binary (cache miss)", () => {
     vi.mocked(fetchWithRetry).mockResolvedValueOnce({
       data: binaryData,
       status: 200,
-    } as Partial<AxiosResponse> as AxiosResponse);
+    } as Partial<FetchResponse> as FetchResponse);
 
     await cachedFetch("https://example.com/image.png", {
       responseType: "arraybuffer",

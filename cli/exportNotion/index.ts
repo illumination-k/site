@@ -86,7 +86,7 @@ export async function getNotionPages(
       responseType: "arraybuffer",
     });
 
-    const imageBuffer = Buffer.from(imageResponse.data, "binary");
+    const imageBuffer = Buffer.from(imageResponse.data as ArrayBuffer);
 
     const imageFileName = `${imageBlock.id}.png`;
     const imagePath = path.join(publicDir.toString(), imageFileName);

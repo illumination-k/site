@@ -1,12 +1,11 @@
-import type { AxiosRequestConfig, AxiosResponse } from "axios";
 import { cacheGet, cacheSet, getCacheKey } from "./cache";
-import { fetchWithRetry } from "./fetch";
+import { type FetchOptions, type FetchResponse, fetchWithRetry } from "./fetch";
 
 export async function cachedFetch(
   url: string,
-  config?: AxiosRequestConfig,
+  config?: FetchOptions,
   options?: { cacheExtras?: Record<string, string> },
-): Promise<AxiosResponse> {
+): Promise<FetchResponse> {
   const key = getCacheKey(url, options?.cacheExtras);
   const isBinary = config?.responseType === "arraybuffer";
   const cacheFile = isBinary ? `${key}.bin` : `${key}.json`;
@@ -15,7 +14,7 @@ export async function cachedFetch(
   if (cached !== null) {
     const raw = cached.toString("utf-8");
     const data = isBinary ? cached : JSON.parse(raw);
-    return { data } as AxiosResponse;
+    return { data, status: 200 };
   }
 
   const resp = await fetchWithRetry(url, config);
