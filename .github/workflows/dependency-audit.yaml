@@ -27,9 +27,7 @@ jobs:
         uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
 
       - name: pnpm audit (prod)
-        run: |
-          pnpm audit --prod --audit-level=high \
-            --ignore CVE-2026-4800
+        run: pnpm audit --prod --audit-level=high
 
   pnpm-audit-dev:
     runs-on: ubuntu-latest
@@ -45,15 +43,7 @@ jobs:
         uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
 
       - name: pnpm audit (dev + prod)
-        run: |
-          pnpm audit --audit-level=high \
-            --ignore CVE-2026-4800 \
-            --ignore CVE-2024-21538 \
-            --ignore CVE-2026-26996 \
-            --ignore CVE-2026-27903 \
-            --ignore CVE-2026-27904 \
-            --ignore CVE-2026-33671 \
-            --ignore CVE-2026-4926
+        run: pnpm audit --audit-level=high
 
   dependency-review:
     if: github.event_name == 'pull_request'
