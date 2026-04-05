@@ -3,6 +3,8 @@ dprint = "0.50"
 actionlint = "1.7.10"
 prek = "latest"
 
+gh = "v2.62.0"
+
 node = "20"
 pnpm = "10"
 
