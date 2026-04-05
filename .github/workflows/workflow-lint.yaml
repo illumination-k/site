@@ -63,3 +63,4 @@ jobs:
         with:
           min-severity: low
           advanced-security: "false"
+          version: "1.23.1"
