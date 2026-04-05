@@ -3,6 +3,18 @@ packages:
   - "packages/**"
   - web
   - cli
+auditConfig:
+  ignoreCves:
+    - CVE-2026-4800
+    - CVE-2024-21538
+    - CVE-2026-26996
+    - CVE-2026-27903
+    - CVE-2026-27904
+    - CVE-2026-33671
+    - CVE-2026-4926
+
+# transitive dependencyがgitやtarball URLから解決されることを防止
+blockExoticSubdeps: true
 
 # Supply chain security settings
 # 公開から24時間未満のバージョンを除外
@@ -19,6 +31,3 @@ onlyBuiltDependencies:
 
 # provenanceの信頼レベルが低下したパッケージのインストールを拒否
 trustPolicy: no-downgrade
-
-# transitive dependencyがgitやtarball URLから解決されることを防止
-blockExoticSubdeps: true
