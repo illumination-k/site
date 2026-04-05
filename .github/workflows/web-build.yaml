@@ -45,7 +45,7 @@ jobs:
             pnpm-${{ runner.os }}-
 
       - name: install deps
-        run: pnpm i
+        run: pnpm install --frozen-lockfile
 
       - name: cache turbo
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
