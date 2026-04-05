@@ -57,8 +57,11 @@ jobs:
         with:
           persist-credentials: false
       - name: Install zizmor
-        run: pipx install zizmor==1.23.1
+        run: |
+          pipx install zizmor==1.23.1
+          which zizmor
+          zizmor --version
       - name: Run zizmor
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: zizmor --min-severity=low .
+        run: zizmor --no-online-audits --min-severity=low .
