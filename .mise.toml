@@ -5,7 +5,7 @@ actionlint = "1.7.10"
 "pipx:zizmor" = "1.23.1"
 prek = "latest"
 
-node = "20"
+node = "22"
 pnpm = "10"
 
 "npm:@playwright/cli" = "latest"

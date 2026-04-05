@@ -1,8 +1,8 @@
 import { type PathLike, readFile, writeFile } from "node:fs";
+import { glob } from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import fm, { type FrontMatterResult } from "front-matter";
-import { glob } from "glob";
 
 import { remark } from "remark";
 
@@ -150,7 +150,9 @@ export async function getDumpPosts(
   src: PathLike,
   imageDist: string,
 ): Promise<DumpPost[]> {
-  const mdFiles = await glob(`${src}/**/*.md`, { ignore: "node_modules/*" });
+  const mdFiles = await Array.fromAsync(
+    glob(`${src}/**/*.md`, { exclude: ["**/node_modules/**"] }),
+  );
 
   if (mdFiles.length === 0) {
     logger.warn({ src: String(src) }, "No markdown files found");

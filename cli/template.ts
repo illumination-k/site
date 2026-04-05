@@ -1,10 +1,10 @@
+import { randomUUID } from "node:crypto";
 import type { PostMeta } from "common";
 import { formatDate } from "common/utils";
-import * as uuid from "uuid";
 import YAML from "yaml";
 
 const DEFAULT_POST_META: PostMeta = {
-  uuid: uuid.v4(),
+  uuid: randomUUID(),
   title: "",
   description: "",
   category: "",
@@ -17,7 +17,7 @@ const DEFAULT_POST_META: PostMeta = {
 export function template(tags?: string[]): string {
   const meta = {
     ...DEFAULT_POST_META,
-    uuid: uuid.v4(),
+    uuid: randomUUID(),
     ...(tags ? { tags } : {}),
   };
   const template = `---
