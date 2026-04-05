@@ -13,6 +13,23 @@ describe("test read post", () => {
   });
 });
 
+describe("mermaid rendering", () => {
+  it("renders mermaid code blocks to inline SVG at build time", async () => {
+    const post = await readPost("./test/test-mermaid.md");
+    const dumped = await dumpPost(
+      post,
+      "./test/test-mermaid.md",
+      "./test/public/imageDist",
+    );
+    // rehype-mermaid with strategy "inline-svg" replaces the mermaid code
+    // fence with an inline <svg>, which MDX compiles into JSX runtime calls
+    // like _jsx("svg", {...}). The original language-mermaid class should
+    // be gone and a JSX svg element should be present.
+    expect(dumped.compiledMarkdown).toMatch(/"svg"/);
+    expect(dumped.compiledMarkdown).not.toContain("language-mermaid");
+  });
+});
+
 describe("internal links", () => {
   it("resolves .md links to internal URLs in getDumpPosts", async () => {
     const posts = await getDumpPosts("./test", "./test/public/imageDist");

@@ -1,4 +1,5 @@
 import rehypeKatex from "rehype-katex";
+import rehypeMermaid from "rehype-mermaid";
 
 import remarkDirective from "remark-directive";
 import remarkGfm from "remark-gfm";
@@ -41,6 +42,7 @@ export const REMARK_PLUGINS = [
 
 export const REHYPE_PLUGINS = {
   rehypeKatex,
+  rehypeMermaid,
   rehypePrism,
 };
 

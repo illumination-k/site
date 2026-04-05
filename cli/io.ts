@@ -103,6 +103,13 @@ export async function dumpPost(
         ),
         rehypePlugins: [
           REHYPE_PLUGINS.rehypeKatex,
+          [
+            REHYPE_PLUGINS.rehypeMermaid,
+            {
+              strategy: "inline-svg",
+              mermaidConfig: { theme: "neutral" },
+            },
+          ],
           [REHYPE_PLUGINS.rehypePrism, { ignoreMissing: true }],
         ],
       }),

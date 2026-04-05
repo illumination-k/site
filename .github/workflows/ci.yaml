@@ -16,5 +16,8 @@ jobs:
         uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
 
       - run: pnpm i
+
+      - uses: ./.github/actions/setup-playwright
+
       - run: pnpm lint
       - run: pnpm test

@@ -264,6 +264,15 @@ const style = css({
     whiteSpace: "pre",
     overflowX: "auto",
   },
+
+  // mermaid
+  "& svg[id^='mermaid-']": {
+    display: "block",
+    mx: "auto",
+    my: 4,
+    maxWidth: "100%",
+    height: "auto",
+  },
 });
 
 function TableWrapper(props: React.ComponentProps<"table">) {
