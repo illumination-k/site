@@ -15,18 +15,17 @@ vi.mock("../../cache", () => ({
   cacheSet: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("axios", () => ({
-  default: {
-    get: vi.fn().mockResolvedValue({
-      data: {
-        full_name: "owner/repo",
-        html_url: "https://github.com/owner/repo",
-        description: "A test repository",
-        stargazers_count: 1234,
-        pushed_at: "2024-06-15T10:30:00Z",
-      },
-    }),
-  },
+vi.mock("../../fetch", () => ({
+  fetchWithRetry: vi.fn().mockResolvedValue({
+    data: {
+      full_name: "owner/repo",
+      html_url: "https://github.com/owner/repo",
+      description: "A test repository",
+      stargazers_count: 1234,
+      pushed_at: "2024-06-15T10:30:00Z",
+    },
+    status: 200,
+  }),
 }));
 
 const remarkEmbed = remarkDirectiveEmbedGenerator([

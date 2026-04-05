@@ -14,7 +14,16 @@ type BookInfo = {
 export async function getBookInfo(isbn10: string): Promise<BookInfo> {
   const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn10}`;
 
-  const resp = await fetchWithRetry(url);
+  const resp = await fetchWithRetry<{
+    items: {
+      volumeInfo: {
+        title: string;
+        description: string;
+        authors: string[];
+        imageLinks: { thumbnail: string };
+      };
+    }[];
+  }>(url);
 
   const book = resp.data.items[0].volumeInfo;
   return {

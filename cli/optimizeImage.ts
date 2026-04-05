@@ -111,7 +111,10 @@ const optimizeImage = (option: Option) => {
                 const resp = await fetchWithRetry(uri, {
                   responseType: "arraybuffer",
                 });
-                await writeAsync(tmpPath, resp.data);
+                await writeAsync(
+                  tmpPath,
+                  Buffer.from(resp.data as ArrayBuffer),
+                );
               } catch (err) {
                 logger.error(
                   { uri, postPath: String(option.postPath), err },
@@ -142,7 +145,10 @@ const optimizeImage = (option: Option) => {
                 const resp = await fetchWithRetry(uri, {
                   responseType: "arraybuffer",
                 });
-                await writeAsync(tmpPath, resp.data);
+                await writeAsync(
+                  tmpPath,
+                  Buffer.from(resp.data as ArrayBuffer),
+                );
                 imagePath = tmpPath;
               } catch (err) {
                 logger.error(

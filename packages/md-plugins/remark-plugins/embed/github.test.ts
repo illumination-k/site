@@ -34,18 +34,16 @@ refractor.alias({ typescript: ["ts"] });`;
 
 const readmeContent = "# site\n\nPersonal blog site";
 
-vi.mock("axios", () => ({
-  default: {
-    get: vi.fn().mockImplementation((url: string) => {
-      if (url.includes("highlighter.ts")) {
-        return Promise.resolve({ data: highlighterFileContent });
-      }
-      if (url.includes("README.md")) {
-        return Promise.resolve({ data: readmeContent });
-      }
-      return Promise.reject(new Error(`Unexpected URL: ${url}`));
-    }),
-  },
+vi.mock("../../fetch", () => ({
+  fetchWithRetry: vi.fn().mockImplementation((url: string) => {
+    if (url.includes("highlighter.ts")) {
+      return Promise.resolve({ data: highlighterFileContent, status: 200 });
+    }
+    if (url.includes("README.md")) {
+      return Promise.resolve({ data: readmeContent, status: 200 });
+    }
+    return Promise.reject(new Error(`Unexpected URL: ${url}`));
+  }),
 }));
 
 describe("test parse github url", () => {

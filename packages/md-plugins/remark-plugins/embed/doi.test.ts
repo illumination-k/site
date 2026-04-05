@@ -15,12 +15,11 @@ vi.mock("../../cache", () => ({
   cacheSet: vi.fn().mockResolvedValue(undefined),
 }));
 
-vi.mock("axios", () => ({
-  default: {
-    get: vi.fn().mockResolvedValue({
-      data: "Frank, H. S. (1970). The Structure of Ordinary Water. Science, 169(3946), 635–641. https://doi.org/10.1126/science.169.3946.635\n",
-    }),
-  },
+vi.mock("../../fetch", () => ({
+  fetchWithRetry: vi.fn().mockResolvedValue({
+    data: "Frank, H. S. (1970). The Structure of Ordinary Water. Science, 169(3946), 635–641. https://doi.org/10.1126/science.169.3946.635\n",
+    status: 200,
+  }),
 }));
 
 const remarkEmbed = remarkDirectiveEmbedGenerator([new DoiTransformer()]);
