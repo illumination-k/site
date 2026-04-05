@@ -20,8 +20,8 @@ scRNAseqの生データの解析は、基本的にはツールによって自動
 
 **関連記事**
 
-- [ライブラリ調整とシーケンスの基本について](https://illumination-k.dev/techblog/post/dbb49f31-2bca-4a97-857e-a1d7a95b645d)
-- [NGSライブラリ調製の時に使用される反応まとめ](https://illumination-k.dev/techblog/post/65c054ed-bee1-46df-b849-9a7f92ac6d6c)
+- [ライブラリ調整とシーケンスの基本について](./seq_summary.md)
+- [NGSライブラリ調製の時に使用される反応まとめ](./library_construction_reaction.md)
 
 ## scRNAseqにおけるライブラリ調整の概要
 

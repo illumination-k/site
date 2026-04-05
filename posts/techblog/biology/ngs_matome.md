@@ -59,8 +59,8 @@ PCRで特定の配列を増幅させたい場合、増幅したい配列の5'末
 
 ### 次に読む
 
-- [NGSライブラリ調製の時に使用される反応まとめ](https://illumination-k.dev/posts/biology/library_construction_reaction)
-- [ライブラリ調整とシーケンスの基本について](https://illumination-k.dev/posts/biology/seq_summary)
+- [NGSライブラリ調製の時に使用される反応まとめ](./library_construction_reaction.md)
+- [ライブラリ調整とシーケンスの基本について](./seq_summary.md)
 
 ## 結論
 
