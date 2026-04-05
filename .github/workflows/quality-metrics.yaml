@@ -29,6 +29,21 @@ jobs:
 
       - run: pnpm i
 
+      - name: cache playwright browsers
+        id: playwright-cache
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ hashFiles('pnpm-lock.yaml') }}
+
+      - name: install playwright browsers
+        if: steps.playwright-cache.outputs.cache-hit != 'true'
+        run: cd web && npx playwright install --with-deps chromium
+
+      - name: install playwright system deps
+        if: steps.playwright-cache.outputs.cache-hit == 'true'
+        run: cd web && npx playwright install-deps chromium
+
       - name: Run coverage
         run: pnpm test:coverage
 
