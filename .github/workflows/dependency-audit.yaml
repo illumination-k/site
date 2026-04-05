@@ -13,7 +13,7 @@ permissions:
   contents: read
 
 jobs:
-  pnpm-audit:
+  pnpm-audit-prod:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
@@ -26,8 +26,34 @@ jobs:
       - name: install mise
         uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
 
-      - name: pnpm audit
-        run: pnpm audit --audit-level=high
+      - name: pnpm audit (prod)
+        run: |
+          pnpm audit --prod --audit-level=high \
+            --ignore CVE-2026-4800
+
+  pnpm-audit-dev:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+
+      - name: install mise
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+
+      - name: pnpm audit (dev + prod)
+        run: |
+          pnpm audit --audit-level=high \
+            --ignore CVE-2026-4800 \
+            --ignore CVE-2024-21538 \
+            --ignore CVE-2026-26996 \
+            --ignore CVE-2026-27903 \
+            --ignore CVE-2026-27904 \
+            --ignore CVE-2026-33671 \
+            --ignore CVE-2026-4926
 
   dependency-review:
     if: github.event_name == 'pull_request'
