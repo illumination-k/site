@@ -23,6 +23,7 @@ jobs:
   web-build:
     runs-on: "ubuntu-latest"
     timeout-minutes: 30
+    environment: cloudflare-pages
 
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -31,42 +32,52 @@ jobs:
           persist-credentials: false
 
       - name: install mise
-        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3
+        uses: jdx/mise-action@5228313ee0372e111a38da051671ca30fc5a96db # v3.6.3 # zizmor: ignore[cache-poisoning] mise tool cache is content-addressed
 
       - name: trust
         run: mise trust -P .mise.toml
 
       - name: cache pnpm store
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4 # zizmor: ignore[cache-poisoning] keys scoped by github.ref_name
         with:
           path: ~/.local/share/pnpm/store/v10
-          key: pnpm-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          key: pnpm-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
+            pnpm-${{ runner.os }}-${{ github.ref_name }}-
+            pnpm-${{ runner.os }}-main-
             pnpm-${{ runner.os }}-
 
       - name: install deps
         run: pnpm install --frozen-lockfile
 
       - name: cache turbo
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4 # zizmor: ignore[cache-poisoning] keys scoped by github.ref_name
         with:
           path: node_modules/.cache/turbo
-          key: turbo-${{ runner.os }}
+          key: turbo-${{ runner.os }}-${{ github.ref_name }}
+          restore-keys: |
+            turbo-${{ runner.os }}-main
+            turbo-${{ runner.os }}-
 
       - name: cache next.js
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4 # zizmor: ignore[cache-poisoning] keys scoped by github.ref_name
         with:
           path: web/.next/cache
-          key: nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('web/**', 'posts/**') }}
+          key: nextjs-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('web/**', 'posts/**') }}
           restore-keys: |
-            nextjs-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            nextjs-${{ runner.os }}-${{ github.ref_name }}-${{ hashFiles('**/pnpm-lock.yaml') }}-
+            nextjs-${{ runner.os }}-${{ github.ref_name }}-
+            nextjs-${{ runner.os }}-main-
             nextjs-${{ runner.os }}-
 
       - name: cache embedded downloads
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4 # zizmor: ignore[cache-poisoning] keys scoped by github.ref_name
         with:
           path: .cache/embed
-          key: embed-cache-${{ runner.os }}
+          key: embed-cache-${{ runner.os }}-${{ github.ref_name }}
+          restore-keys: |
+            embed-cache-${{ runner.os }}-main
+            embed-cache-${{ runner.os }}-
 
       - name: build cli
         run: pnpm cli:build
