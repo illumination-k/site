@@ -2,6 +2,8 @@
   "$schema": "https://raw.githubusercontent.com/stryker-mutator/stryker/master/packages/core/schema/stryker-core.schema.json",
   "testRunner": "vitest",
   "plugins": ["@stryker-mutator/vitest-runner"],
+  "incremental": true,
+  "incrementalFile": "reports/mutation/stryker-incremental.json",
   "reporters": ["clear-text", "html", "json", "progress"],
   "htmlReporter": {
     "fileName": "reports/mutation/index.html"

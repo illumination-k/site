@@ -34,8 +34,24 @@ jobs:
       - name: Run coverage
         run: pnpm test:coverage
 
+      - name: Restore stryker incremental cache
+        uses: actions/cache/restore@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: reports/mutation/stryker-incremental.json
+          key: stryker-incremental-${{ github.event.pull_request.number }}-${{ github.sha }}
+          restore-keys: |
+            stryker-incremental-${{ github.event.pull_request.number }}-
+            stryker-incremental-
+
       - name: Run mutation testing
         run: pnpm test:mutation
+
+      - name: Save stryker incremental cache
+        if: always()
+        uses: actions/cache/save@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: reports/mutation/stryker-incremental.json
+          key: stryker-incremental-${{ github.event.pull_request.number }}-${{ github.sha }}
 
       - name: Collect metrics
         run: npx tsx scripts/collect-metrics.ts > /tmp/metrics.json
