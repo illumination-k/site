@@ -2,6 +2,7 @@
 dprint = "0.50"
 actionlint = "1.7.10"
 "aqua:suzuki-shunsuke/ghalint" = "1.5.5"
+"pipx:zizmor" = "1.23.1"
 prek = "latest"
 
 node = "20"
@@ -18,4 +19,4 @@ run = ["dprint fmt", "prek run --all-files", "mise fmt", "pnpm run format"]
 
 [tasks.lint]
 description = "Lint code"
-run = ["dprint check", "actionlint", "ghalint run", "pnpm run lint"]
+run = ["dprint check", "actionlint", "ghalint run", "zizmor --no-online-audits --min-severity=low .", "pnpm run lint"]
