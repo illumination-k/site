@@ -41,6 +41,8 @@ Node.js側では、v18でグローバル`fetch`と`node:test`、v20で`--env-fil
 
 ### fetch: axiosの代替
 
+[MDN](https://developer.mozilla.org/ja/docs/Web/API/Fetch_API) / [Node.js](https://nodejs.org/api/globals.html#fetch)
+
 `fetch`は全ブラウザで標準利用可能であり、Node.js 18以降ではグローバルに利用可能(内部的にはundici)。axiosを使う主な理由だった「ブラウザ/Node両対応」は、もはや標準だけで成立する。
 
 ```typescript
@@ -53,7 +55,7 @@ const res = await fetch("/api/users?" + new URLSearchParams({ page: "1" }));
 const users = await res.json();
 ```
 
-タイムアウトは`AbortSignal.timeout()`で簡潔に書ける(2024年に主要ブラウザ対応済み)。
+タイムアウトは[`AbortSignal.timeout()`](https://developer.mozilla.org/ja/docs/Web/API/AbortSignal/timeout_static)で簡潔に書ける(2024年に主要ブラウザ対応済み)。
 
 ```typescript
 // axios
@@ -63,7 +65,7 @@ await axios.get("/api/data", { timeout: 5000 });
 await fetch("/api/data", { signal: AbortSignal.timeout(5000) });
 ```
 
-複数のシグナルを組み合わせたい場合は`AbortSignal.any()`(同じく2024年対応済み)を使う。
+複数のシグナルを組み合わせたい場合は[`AbortSignal.any()`](https://developer.mozilla.org/ja/docs/Web/API/AbortSignal/any_static)(同じく2024年対応済み)を使う。
 
 ```typescript
 const controller = new AbortController();
@@ -75,6 +77,8 @@ await fetch("/api/data", { signal });
 ただし、リクエスト/レスポンスのインターセプターや自動リトライ、進捗イベントはfetchにない。これらが必要ならaxiosか、より軽量な[ky](https://github.com/sindresorhus/ky)(~2KB)を検討する。単純なAPI呼び出しならfetchで十分。
 
 ### structuredClone: lodash.cloneDeep / deepmergeの代替
+
+[MDN](https://developer.mozilla.org/ja/docs/Web/API/Window/structuredClone) / [Node.js](https://nodejs.org/api/globals.html#structuredclonevalue-options)
 
 `structuredClone()`は全ブラウザ・Node.js 17以降で標準利用可能。ディープコピーが1行で書ける。
 
@@ -91,6 +95,8 @@ const copy = structuredClone(original);
 
 ### crypto.randomUUID: uuidパッケージの代替
 
+[MDN](https://developer.mozilla.org/ja/docs/Web/API/Crypto/randomUUID) / [Node.js](https://nodejs.org/api/crypto.html#cryptorandomuuid)
+
 `crypto.randomUUID()`はv4 UUIDを生成する。ブラウザとNode.js 19以降で利用可能。
 
 ```typescript
@@ -105,6 +111,8 @@ const id = crypto.randomUUID();
 ただし、v4 UUID以外(v1, v5, v7等)が必要な場合はuuidパッケージが必要。v4だけなら標準で十分。
 
 ### URLSearchParams: query-stringの代替
+
+[MDN](https://developer.mozilla.org/ja/docs/Web/API/URLSearchParams) / [Node.js](https://nodejs.org/api/url.html#class-urlsearchparams)
 
 `URLSearchParams`は全ブラウザ・Node.jsで標準利用可能。
 
@@ -123,6 +131,8 @@ const str = new URLSearchParams({ foo: "bar", baz: "1" }).toString();
 
 ### Object.groupBy / Map.groupBy: lodash.groupByの代替
 
+[MDN](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy)
+
 `Object.groupBy`はES2024で標準化され、主要ブラウザで利用可能になった。
 
 ```typescript
@@ -137,6 +147,8 @@ const grouped = Object.groupBy(users, (u) => u.role);
 キーにオブジェクトを使いたい場合は`Map.groupBy`を使う。
 
 ### Setメソッド: 手動実装やlodashの代替
+
+[MDN](https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/Set)
 
 ES2025で`Set`に数学的な集合演算メソッドが追加され、主要ブラウザで利用可能になった。
 
@@ -156,6 +168,8 @@ a.isDisjointFrom(b); // false
 以前は`[...a].filter(x => b.has(x))`のような手動実装やlodashの`_.intersection`が必要だったが、ネイティブで高速に動作する。
 
 ### Iteratorヘルパー: lodash系チェーンの代替
+
+[MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Iterator)
 
 ES2025のIteratorヘルパー(2025年3月に主要ブラウザ対応済み)で、遅延評価のチェーン処理が標準で書ける。
 
@@ -180,6 +194,8 @@ const result = users
 `Iterator.from()`でジェネレータや任意のiterableにも使える。大量データの処理で中間配列を作らないため、メモリ効率がよい。
 
 ### Temporal: moment/dayjsの代替
+
+[MDN](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Temporal) / [TC39 Proposal](https://github.com/tc39/proposal-temporal)
 
 2026年3月にTC39 Stage 4に到達し、Chrome 144+とFirefox 139+でネイティブサポートされた。日付・時刻の不変(immutable)な操作が標準で可能になる。
 
@@ -211,6 +227,8 @@ const duration = start.until(end); // P3M5D (3ヶ月5日)
 
 ### URLPattern: path-to-regexpの代替
 
+[MDN](https://developer.mozilla.org/en-US/docs/Web/API/URLPattern) / [Node.js](https://nodejs.org/api/url.html#class-urlpattern)
+
 URLPatternは2025年9月に主要ブラウザで対応済み。Node.js 24ではグローバルに利用可能。
 
 ```typescript
@@ -231,6 +249,8 @@ const id = result?.pathname.groups.id; // "123"
 
 ### グローバルfetch: node-fetchの代替
 
+[Node.js](https://nodejs.org/api/globals.html#fetch)
+
 Node.js 18以降、`fetch`はグローバルに利用可能(内部的にundiciベース)。
 
 ```typescript
@@ -246,6 +266,8 @@ const data = await res.json();
 node-fetchパッケージはもう不要。ただし、undici固有の高度な機能(接続プール制御、HTTP/2等)が必要な場合は`import { request } from "undici"`を直接使う。
 
 ### node:test: Jest/Mocha/Vitestの代替候補
+
+[Node.js](https://nodejs.org/api/test.html)
 
 Node.js 18以降で安定。ゼロ依存のテストランナーが`node:test`で利用可能。
 
@@ -281,6 +303,8 @@ node --test --watch
 
 ### --watch: nodemonの代替
 
+[Node.js](https://nodejs.org/api/cli.html#--watch)
+
 Node.js 18.11以降で`--watch`フラグが利用可能(Node.js 22+で安定)。
 
 ```bash
@@ -300,6 +324,8 @@ node --watch-path=./src --watch-path=./config server.ts
 ただし、`.nodemonrc`による細かい設定(ignore, delay, ext指定等)が必要ならnodemonに優位性がある。シンプルな再起動だけなら`--watch`で十分。
 
 ### --env-file: dotenvの代替
+
+[Node.js](https://nodejs.org/api/cli.html#--env-fileconfig)
 
 Node.js 20.6以降で`--env-file`フラグが利用可能。
 
@@ -327,6 +353,8 @@ node --env-file=.env --env-file=.env.local server.js
 
 ### fs.glob: globパッケージの代替
 
+[Node.js](https://nodejs.org/api/fs.html#fspromisesglob)
+
 `fs.glob`と`fs.promises.glob`はNode.js 22.0で追加され、22.17 LTSで安定した。
 
 ```typescript
@@ -345,6 +373,8 @@ for await (const entry of glob("src/**/*.ts")) {
 標準の`fs.glob`は`AsyncIterable`を返すため、配列で欲しい場合は`for await...of`で収集する必要がある。globパッケージのようなoption(ignore等)のサポートは限定的だが、シンプルなパターンマッチなら標準で十分。
 
 ### fs.rm: rimrafの代替
+
+[Node.js](https://nodejs.org/api/fs.html#fspromisesrmpath-options)
 
 `fs.rm`は`{ recursive: true, force: true }`オプションでディレクトリの再帰削除ができる(Node.js 14.14以降)。
 
@@ -372,6 +402,8 @@ rimrafの存在意義だったWindows互換の再帰削除は、`fs.rm`で解決
 
 ### util.styleText: chalkの代替
 
+[Node.js](https://nodejs.org/api/util.html#utilstyletextformat-text)
+
 `util.styleText`はNode.js 20.12で追加され、22.17 LTSで安定した。
 
 ```typescript
@@ -390,6 +422,8 @@ console.log(
 ただし、テンプレートリテラルでの複雑なスタイリングやカスタムテーマが必要ならchalkに優位性がある。単純な色付きログ出力なら`util.styleText`で十分。
 
 ### TypeScript型ストリッピング: ts-node/tsxの代替
+
+[Node.js](https://nodejs.org/api/typescript.html)
 
 Node.js 22.6で`--experimental-strip-types`として導入され、Node.js 24 LTSでは`.ts`ファイルに対してデフォルトで有効になった。
 
