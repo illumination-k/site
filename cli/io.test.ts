@@ -11,8 +11,9 @@ import { dumpPost, getDumpPosts, readPost } from "./io";
  */
 async function hasPlaywrightBrowser(): Promise<boolean> {
   try {
-    const { chromium } = await import("playwright-core");
-    const browser = await chromium.launch();
+    // @ts-expect-error playwright-core may not be installed in this workspace
+    const pw = await import("playwright-core");
+    const browser = await pw.chromium.launch();
     await browser.close();
     return true;
   } catch {
