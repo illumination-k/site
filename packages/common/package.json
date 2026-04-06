@@ -7,7 +7,9 @@
   "author": "",
   "scripts": {
     "format": "biome check --write .",
-    "lint": "biome lint . && tsc --noEmit"
+    "lint": "biome lint . && tsc --noEmit",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "zod": "^4.3.6"
