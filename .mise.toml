@@ -19,4 +19,10 @@ run = ["dprint fmt", "prek run --all-files", "mise fmt", "pnpm run format"]
 
 [tasks.lint]
 description = "Lint code"
-run = ["dprint check", "actionlint", "ghalint run", "zizmor --no-online-audits --min-severity=low .", "pnpm run lint"]
+run = [
+  "dprint check",
+  "actionlint",
+  "ghalint run",
+  "zizmor --no-online-audits --min-severity=low .",
+  "pnpm run lint",
+]
