@@ -127,7 +127,6 @@ describe("doi embed rendering", () => {
   });
 
   it("renders DOI with custom style via id attribute", async () => {
-    const { fetchWithRetry } = await import("../../fetch");
     const vfile = await processor.process(
       "::doi[10.1126/science.169.3946.635]{#vancouver}",
     );
