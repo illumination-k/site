@@ -15,7 +15,7 @@ created_at: 2026-04-06
 updated_at: 2026-04-06
 ---
 
-この記事では「有名ライブラリはあるが、標準で十分になった」領域を、ブラウザとNode.jsの両面から網羅的に整理する。対象はNode.js 24 LTS (Krypton)以降と、Baseline Widely/Newly availableなWeb APIとする。
+この記事では「有名ライブラリはあるが、標準で十分になった」領域を、ブラウザとNode.jsの両面から網羅的に整理する。対象はNode.js 24 LTS (Krypton)以降と、主要ブラウザで利用可能になったWeb APIとする。
 
 ## TL;DR
 
@@ -27,7 +27,7 @@ updated_at: 2026-04-06
 
 近年、JavaScript/TypeScriptのエコシステムは「標準に機能を取り込む」方向に大きく動いている。
 
-ブラウザ側では、Web Platform Baselineの整備が進み、主要4エンジン(Chrome, Firefox, Safari, Edge)で動作するAPIが増えた。ECMAScript 2025ではSetメソッドやIteratorヘルパーが標準化され、2026年3月にはTemporalがStage 4に到達した。
+ブラウザ側では、主要4エンジン(Chrome, Firefox, Safari, Edge)で共通して動作するAPIが増えた。ECMAScript 2025ではSetメソッドやIteratorヘルパーが標準化され、2026年3月にはTemporalがStage 4に到達した。
 
 Node.js側では、v18でグローバル`fetch`と`node:test`、v20で`--env-file`と`--watch`が追加された。v22で`fs.glob`と`util.styleText`、v24でTypeScript型ストリッピングと`URLPattern`のグローバル化が実現した。Node.js 24 LTSの時点で、開発時に必要だった多くのnpmパッケージが組み込み機能で代替できる。
 
@@ -37,7 +37,7 @@ Node.js側では、v18でグローバル`fetch`と`node:test`、v20で`--env-fil
 
 ### fetch: axiosの代替
 
-`fetch`はBaselineとして全ブラウザで安定しており、Node.js 18以降ではグローバルに利用可能(内部的にはundici)。axiosを使う主な理由だった「ブラウザ/Node両対応」は、もはや標準だけで成立する。
+`fetch`は全ブラウザで標準利用可能であり、Node.js 18以降ではグローバルに利用可能(内部的にはundici)。axiosを使う主な理由だった「ブラウザ/Node両対応」は、もはや標準だけで成立する。
 
 ```typescript
 // axios
@@ -49,7 +49,7 @@ const res = await fetch("/api/users?" + new URLSearchParams({ page: "1" }));
 const users = await res.json();
 ```
 
-タイムアウトは`AbortSignal.timeout()`で簡潔に書ける(Baseline 2024)。
+タイムアウトは`AbortSignal.timeout()`で簡潔に書ける(2024年に主要ブラウザ対応済み)。
 
 ```typescript
 // axios
@@ -59,7 +59,7 @@ await axios.get("/api/data", { timeout: 5000 });
 await fetch("/api/data", { signal: AbortSignal.timeout(5000) });
 ```
 
-複数のシグナルを組み合わせたい場合は`AbortSignal.any()`(Baseline 2024)を使う。
+複数のシグナルを組み合わせたい場合は`AbortSignal.any()`(同じく2024年対応済み)を使う。
 
 ```typescript
 const controller = new AbortController();
@@ -68,11 +68,11 @@ await fetch("/api/data", { signal });
 // 手動キャンセルもタイムアウトも両方効く
 ```
 
-**axiosがまだ勝つ場面**: リクエスト/レスポンスのインターセプター、自動リトライ、進捗イベント。これらが必要な場合はaxiosか、より軽量な[ky](https://github.com/sindresorhus/ky)(~2KB)を検討する。単純なAPI呼び出しならfetchで十分。
+ただし、リクエスト/レスポンスのインターセプターや自動リトライ、進捗イベントはfetchにない。これらが必要ならaxiosか、より軽量な[ky](https://github.com/sindresorhus/ky)(~2KB)を検討する。単純なAPI呼び出しならfetchで十分。
 
 ### structuredClone: lodash.cloneDeep / deepmergeの代替
 
-`structuredClone()`はBaselineとして全ブラウザ・Node.js 17以降で利用可能。ディープコピーが1行で書ける。
+`structuredClone()`は全ブラウザ・Node.js 17以降で標準利用可能。ディープコピーが1行で書ける。
 
 ```typescript
 // lodash
@@ -83,7 +83,7 @@ const copy = cloneDeep(original);
 const copy = structuredClone(original);
 ```
 
-**制限**: 関数、DOMノード、`Error`オブジェクト、プロトタイプチェーンはコピーできない。クラスインスタンスのコピーにはlodashが引き続き必要。JSONシリアライズ可能なデータ構造であれば`structuredClone`で十分。
+ただし、関数やDOMノード、`Error`オブジェクト、プロトタイプチェーンはコピーできない。クラスインスタンスのコピーにはlodashが引き続き必要。JSONシリアライズ可能なデータ構造であれば`structuredClone`で十分。
 
 ### crypto.randomUUID: uuidパッケージの代替
 
@@ -98,11 +98,11 @@ const id = uuidv4();
 const id = crypto.randomUUID();
 ```
 
-**注意点**: v4 UUID以外(v1, v5, v7等)が必要な場合はuuidパッケージが必要。v4だけなら標準で十分。
+ただし、v4 UUID以外(v1, v5, v7等)が必要な場合はuuidパッケージが必要。v4だけなら標準で十分。
 
 ### URLSearchParams: query-stringの代替
 
-`URLSearchParams`はBaselineとして全環境で利用可能。
+`URLSearchParams`は全ブラウザ・Node.jsで標準利用可能。
 
 ```typescript
 // query-string
@@ -115,11 +115,11 @@ const parsed = Object.fromEntries(new URLSearchParams("?foo=bar&baz=1"));
 const str = new URLSearchParams({ foo: "bar", baz: "1" }).toString();
 ```
 
-**制限**: `URLSearchParams`は配列値の扱いが`query-string`と異なる(`foo=1&foo=2`の場合、`getAll("foo")`を使う必要がある)。複雑なクエリ文字列の解析が必要でなければ標準で十分。
+ただし、`URLSearchParams`は配列値の扱いが`query-string`と異なる(`foo=1&foo=2`の場合、`getAll("foo")`を使う必要がある)。複雑なクエリ文字列の解析が必要でなければ標準で十分。
 
 ### Object.groupBy / Map.groupBy: lodash.groupByの代替
 
-`Object.groupBy`はES2024で標準化され、Baseline Newly availableとなった。
+`Object.groupBy`はES2024で標準化され、主要ブラウザで利用可能になった。
 
 ```typescript
 // lodash
@@ -134,7 +134,7 @@ const grouped = Object.groupBy(users, (u) => u.role);
 
 ### Setメソッド: 手動実装やlodashの代替
 
-ES2025で`Set`に数学的な集合演算メソッドが追加された(Baseline Newly available)。
+ES2025で`Set`に数学的な集合演算メソッドが追加され、主要ブラウザで利用可能になった。
 
 ```typescript
 const a = new Set([1, 2, 3, 4]);
@@ -153,7 +153,7 @@ a.isDisjointFrom(b); // false
 
 ### Iteratorヘルパー: lodash系チェーンの代替
 
-ES2025のIteratorヘルパー(Baseline Newly available, 2025年3月)で、遅延評価のチェーン処理が標準で書ける。
+ES2025のIteratorヘルパー(2025年3月に主要ブラウザ対応済み)で、遅延評価のチェーン処理が標準で書ける。
 
 ```typescript
 // lodash chain
@@ -203,11 +203,11 @@ const end = Temporal.PlainDate.from("2026-04-06");
 const duration = start.until(end); // P3M5D (3ヶ月5日)
 ```
 
-**現状**: SafariとEdgeではまだフラグ付きのため、プロダクションではpolyfill([temporal-polyfill](https://www.npmjs.com/package/temporal-polyfill))との併用を推奨。ブラウザがネイティブ対応していればpolyfillはスキップされる。完全なBaseline到達は2026年後半の見込み。
+ただし、SafariとEdgeではまだフラグ付きのため、プロダクションではpolyfill([temporal-polyfill](https://www.npmjs.com/package/temporal-polyfill))との併用を推奨する。ブラウザがネイティブ対応していればpolyfillはスキップされる。全ブラウザでの安定利用は2026年後半の見込み。
 
 ### URLPattern: path-to-regexpの代替
 
-URLPatternはBaseline Newly available(2025年9月)。Node.js 24ではグローバルに利用可能。
+URLPatternは2025年9月に主要ブラウザで対応済み。Node.js 24ではグローバルに利用可能。
 
 ```typescript
 // path-to-regexp
@@ -273,9 +273,7 @@ node --test --experimental-test-coverage
 node --test --watch
 ```
 
-**適している場面**: ライブラリ、CLIツール、バックエンドのユニットテスト。依存ゼロのためCI高速化やDockerイメージの軽量化に有効。
-
-**Vitest/Jestが勝る場面**: スナップショットテスト、豊富なマッチャー、UIモード、ブラウザテスト、既存の大規模テストスイート。新規のNode.jsライブラリ開発では`node:test`を第一候補に検討する価値がある。
+ライブラリやCLIツール、バックエンドのユニットテストに向いている。依存ゼロのためCI高速化やDockerイメージの軽量化に有効。ただし、スナップショットテストや豊富なマッチャー、UIモード、ブラウザテストが必要ならVitest/Jestに優位性がある。新規のNode.jsライブラリ開発では`node:test`を第一候補に検討する価値がある。
 
 ### --watch: nodemonの代替
 
@@ -295,7 +293,7 @@ node --watch server.ts
 node --watch-path=./src --watch-path=./config server.ts
 ```
 
-**nodemonが勝る場面**: `.nodemonrc`による細かい設定(ignore, delay, ext指定等)。シンプルな再起動だけなら`--watch`で十分。
+ただし、`.nodemonrc`による細かい設定(ignore, delay, ext指定等)が必要ならnodemonに優位性がある。シンプルな再起動だけなら`--watch`で十分。
 
 ### --env-file: dotenvの代替
 
@@ -313,7 +311,7 @@ node --env-file=.env server.js
 node --env-file=.env --env-file=.env.local server.js
 ```
 
-**利点**: アプリケーションコードに`dotenv`のインポートが不要になる。`package.json`のスクリプトに書くだけでよい。
+アプリケーションコードに`dotenv`のインポートが不要になり、`package.json`のスクリプトに書くだけでよい。
 
 ```json title=package.json
 {
@@ -385,7 +383,7 @@ console.log(
 );
 ```
 
-**chalkが勝る場面**: テンプレートリテラルでの複雑なスタイリング、カスタムテーマ。単純な色付きログ出力なら`util.styleText`で十分。
+ただし、テンプレートリテラルでの複雑なスタイリングやカスタムテーマが必要ならchalkに優位性がある。単純な色付きログ出力なら`util.styleText`で十分。
 
 ### TypeScript型ストリッピング: ts-node/tsxの代替
 
@@ -402,7 +400,7 @@ npx tsx src/main.ts
 node src/main.ts
 ```
 
-**仕組み**: 型注釈を除去するだけで、トランスパイルは行わない。`enum`, `namespace`, コンストラクタのパラメータプロパティ(`public x: number`)等、JavaScriptコード生成が必要な構文はランタイムエラーになる。
+型注釈を除去するだけで、トランスパイルは行わない。`enum`や`namespace`、コンストラクタのパラメータプロパティ(`public x: number`)等、JavaScriptコード生成が必要な構文はランタイムエラーになる。
 
 ```typescript
 // ✅ 動作する
@@ -419,7 +417,7 @@ enum Direction {
 }
 ```
 
-**tsxがまだ有用な場面**: `enum`やパスエイリアス(`paths`)を使っている場合、またはNode.js 22以前を対象とする場合。新規プロジェクトでは`enum`を避けて`as const`を使い、Node.js標準の型ストリッピングに対応する設計を推奨する。
+ただし、`enum`やパスエイリアス(`paths`)を使っている場合、またはNode.js 22以前を対象とする場合はtsxが引き続き必要になる。新規プロジェクトでは`enum`を避けて`as const`を使い、Node.js標準の型ストリッピングに対応する設計を推奨する。
 
 ## まだライブラリが勝つケース
 
@@ -429,7 +427,7 @@ enum Direction {
 | ------------------------------------ | --------------------------------------------- | ------------------------ |
 | HTTPインターセプター / リトライ      | fetchにはインターセプター機能がない           | ky, axios                |
 | バリデーション                       | 組み込みのスキーマバリデーションはない        | zod, valibot             |
-| 日付(Safariサポート必須)             | TemporalはまだBaseline未到達                  | dayjs, temporal-polyfill |
+| 日付(Safariサポート必須)             | Temporalは全ブラウザ対応に未到達              | dayjs, temporal-polyfill |
 | 高度なglob(ignore, negative pattern) | `fs.glob`のオプションは限定的                 | glob, fast-glob          |
 | 複雑なCLI引数解析                    | `util.parseArgs`は基本的な機能のみ            | yargs, commander         |
 | ロギング                             | `console.log`にはログレベルや構造化出力がない | pino, winston            |
