@@ -10,6 +10,7 @@ import { unified } from "unified";
 import type { PostMeta } from "common";
 import { REMARK_LINT_PLUGINS } from "md-plugins";
 
+import { extractFrontMatterLines, lintSeoMeta } from "./lintSeoMeta";
 import { logger } from "./logger";
 
 const readFileAsync = promisify(readFile);
@@ -24,7 +25,10 @@ export interface LintError {
 
 async function lintFile(filePath: string): Promise<LintError[]> {
   const raw = (await readFileAsync(filePath)).toString();
-  const { body } = fm<PostMeta>(raw);
+  const { body, attributes } = fm<PostMeta>(raw);
+
+  const frontMatterLines = extractFrontMatterLines(raw);
+  const seoErrors = lintSeoMeta(attributes, filePath, frontMatterLines);
 
   const processor = unified()
     .use(remarkParse)
@@ -36,13 +40,15 @@ async function lintFile(filePath: string): Promise<LintError[]> {
 
   const vfile = await processor.process(body);
 
-  return vfile.messages.map((msg) => ({
+  const remarkErrors = vfile.messages.map((msg) => ({
     file: filePath,
     message: msg.message,
     line: msg.line ?? undefined,
     column: msg.column ?? undefined,
     ruleId: msg.ruleId ?? undefined,
   }));
+
+  return [...seoErrors, ...remarkErrors];
 }
 
 export async function lintPosts(src: PathLike): Promise<LintError[]> {
