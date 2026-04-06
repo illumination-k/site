@@ -63,10 +63,7 @@ await fetch("/api/data", { signal: AbortSignal.timeout(5000) });
 
 ```typescript
 const controller = new AbortController();
-const signal = AbortSignal.any([
-  controller.signal,
-  AbortSignal.timeout(5000),
-]);
+const signal = AbortSignal.any([controller.signal, AbortSignal.timeout(5000)]);
 await fetch("/api/data", { signal });
 // 手動キャンセルもタイムアウトも両方効く
 ```
@@ -144,10 +141,10 @@ const a = new Set([1, 2, 3, 4]);
 const b = new Set([3, 4, 5, 6]);
 
 a.intersection(b); // Set {3, 4}
-a.union(b);        // Set {1, 2, 3, 4, 5, 6}
-a.difference(b);   // Set {1, 2}
+a.union(b); // Set {1, 2, 3, 4, 5, 6}
+a.difference(b); // Set {1, 2}
 a.symmetricDifference(b); // Set {1, 2, 5, 6}
-a.isSubsetOf(b);   // false
+a.isSubsetOf(b); // false
 a.isSupersetOf(b); // false
 a.isDisjointFrom(b); // false
 ```
@@ -162,18 +159,18 @@ ES2025のIteratorヘルパー(Baseline Newly available, 2025年3月)で、遅延
 // lodash chain
 import _ from "lodash";
 const result = _(users)
-  .filter((u) => u.active)
-  .map((u) => u.name)
-  .take(5)
-  .value();
+	.filter((u) => u.active)
+	.map((u) => u.name)
+	.take(5)
+	.value();
 
 // Iterator helpers (遅延評価)
 const result = users
-  .values()
-  .filter((u) => u.active)
-  .map((u) => u.name)
-  .take(5)
-  .toArray();
+	.values()
+	.filter((u) => u.active)
+	.map((u) => u.name)
+	.take(5)
+	.toArray();
 ```
 
 `Iterator.from()`でジェネレータや任意のiterableにも使える。大量データの処理で中間配列を作らないため、メモリ効率がよい。
@@ -253,15 +250,15 @@ import { describe, it, mock, beforeEach } from "node:test";
 import assert from "node:assert/strict";
 
 describe("Calculator", () => {
-  it("adds two numbers", () => {
-    assert.strictEqual(1 + 2, 3);
-  });
+	it("adds two numbers", () => {
+		assert.strictEqual(1 + 2, 3);
+	});
 
-  it("supports mocking", () => {
-    const fn = mock.fn((x: number) => x * 2);
-    assert.strictEqual(fn(3), 6);
-    assert.strictEqual(fn.mock.callCount(), 1);
-  });
+	it("supports mocking", () => {
+		const fn = mock.fn((x: number) => x * 2);
+		assert.strictEqual(fn(3), 6);
+		assert.strictEqual(fn.mock.callCount(), 1);
+	});
 });
 ```
 
@@ -339,7 +336,7 @@ const files = await glob("src/**/*.ts");
 import { glob } from "node:fs/promises";
 const files = [];
 for await (const entry of glob("src/**/*.ts")) {
-  files.push(entry);
+	files.push(entry);
 }
 ```
 
@@ -383,8 +380,8 @@ console.log(chalk.red.bold("Error:"), chalk.yellow("file not found"));
 // Node.js 標準
 import { styleText } from "node:util";
 console.log(
-  styleText(["red", "bold"], "Error:"),
-  styleText("yellow", "file not found"),
+	styleText(["red", "bold"], "Error:"),
+	styleText("yellow", "file not found"),
 );
 ```
 
@@ -410,15 +407,15 @@ node src/main.ts
 ```typescript
 // ✅ 動作する
 interface User {
-  name: string;
-  age: number;
+	name: string;
+	age: number;
 }
 const greet = (user: User): string => `Hello, ${user.name}`;
 
 // ❌ ランタイムエラー (コード生成が必要)
 enum Direction {
-  Up,
-  Down,
+	Up,
+	Down,
 }
 ```
 
@@ -428,39 +425,39 @@ enum Direction {
 
 すべてを標準に置き換えるべきではない。以下の領域ではライブラリの優位性が残る。
 
-| 領域 | 標準の限界 | 推奨ライブラリ |
-| --- | --- | --- |
-| HTTPインターセプター / リトライ | fetchにはインターセプター機能がない | ky, axios |
-| バリデーション | 組み込みのスキーマバリデーションはない | zod, valibot |
-| 日付(Safariサポート必須) | TemporalはまだBaseline未到達 | dayjs, temporal-polyfill |
-| 高度なglob(ignore, negative pattern) | `fs.glob`のオプションは限定的 | glob, fast-glob |
-| 複雑なCLI引数解析 | `util.parseArgs`は基本的な機能のみ | yargs, commander |
-| ロギング | `console.log`にはログレベルや構造化出力がない | pino, winston |
-| テスト(スナップショット、UI) | `node:test`は基本機能に限定 | vitest, jest |
+| 領域                                 | 標準の限界                                    | 推奨ライブラリ           |
+| ------------------------------------ | --------------------------------------------- | ------------------------ |
+| HTTPインターセプター / リトライ      | fetchにはインターセプター機能がない           | ky, axios                |
+| バリデーション                       | 組み込みのスキーマバリデーションはない        | zod, valibot             |
+| 日付(Safariサポート必須)             | TemporalはまだBaseline未到達                  | dayjs, temporal-polyfill |
+| 高度なglob(ignore, negative pattern) | `fs.glob`のオプションは限定的                 | glob, fast-glob          |
+| 複雑なCLI引数解析                    | `util.parseArgs`は基本的な機能のみ            | yargs, commander         |
+| ロギング                             | `console.log`にはログレベルや構造化出力がない | pino, winston            |
+| テスト(スナップショット、UI)         | `node:test`は基本機能に限定                   | vitest, jest             |
 
 ## まとめ
 
 2026年現在、「標準で十分」な領域は着実に広がっている。以下の表で移行の判断材料を整理する。
 
-| 従来のライブラリ | 標準の代替 | 環境 | 移行推奨度 |
-| --- | --- | --- | --- |
-| axios (単純なリクエスト) | `fetch` + `AbortSignal.timeout()` | Browser + Node 18+ | A |
-| lodash.cloneDeep / deepmerge | `structuredClone` | Browser + Node 17+ | A |
-| uuid (v4) | `crypto.randomUUID()` | Browser + Node 19+ | A |
-| query-string | `URLSearchParams` | Browser + Node | A |
-| lodash.groupBy | `Object.groupBy` | Browser + Node 21+ | A |
-| Set手動操作 | `Set.prototype.intersection`等 | Browser + Node 22+ | A |
-| lodashチェーン | Iteratorヘルパー | Browser + Node 22+ | B |
-| moment / dayjs | `Temporal` | Chrome 144+, Firefox 139+ | B |
-| path-to-regexp | `URLPattern` | Browser + Node 24+ | B |
-| node-fetch | グローバル`fetch` | Node 18+ | A |
-| nodemon | `node --watch` | Node 22+ | A |
-| dotenv | `node --env-file` | Node 20.6+ | A |
-| glob | `fs.glob` | Node 22+ | B |
-| rimraf | `fs.rm` | Node 14.14+ | A |
-| chalk | `util.styleText` | Node 22+ | B |
-| ts-node / tsx | `node --strip-types` | Node 24+ | A |
-| jest / mocha | `node:test` | Node 18+ | B |
+| 従来のライブラリ             | 標準の代替                        | 環境                      | 移行推奨度 |
+| ---------------------------- | --------------------------------- | ------------------------- | ---------- |
+| axios (単純なリクエスト)     | `fetch` + `AbortSignal.timeout()` | Browser + Node 18+        | A          |
+| lodash.cloneDeep / deepmerge | `structuredClone`                 | Browser + Node 17+        | A          |
+| uuid (v4)                    | `crypto.randomUUID()`             | Browser + Node 19+        | A          |
+| query-string                 | `URLSearchParams`                 | Browser + Node            | A          |
+| lodash.groupBy               | `Object.groupBy`                  | Browser + Node 21+        | A          |
+| Set手動操作                  | `Set.prototype.intersection`等    | Browser + Node 22+        | A          |
+| lodashチェーン               | Iteratorヘルパー                  | Browser + Node 22+        | B          |
+| moment / dayjs               | `Temporal`                        | Chrome 144+, Firefox 139+ | B          |
+| path-to-regexp               | `URLPattern`                      | Browser + Node 24+        | B          |
+| node-fetch                   | グローバル`fetch`                 | Node 18+                  | A          |
+| nodemon                      | `node --watch`                    | Node 22+                  | A          |
+| dotenv                       | `node --env-file`                 | Node 20.6+                | A          |
+| glob                         | `fs.glob`                         | Node 22+                  | B          |
+| rimraf                       | `fs.rm`                           | Node 14.14+               | A          |
+| chalk                        | `util.styleText`                  | Node 22+                  | B          |
+| ts-node / tsx                | `node --strip-types`              | Node 24+                  | A          |
+| jest / mocha                 | `node:test`                       | Node 18+                  | B          |
 
 Aは「すぐに移行してよい」、Bは「新規プロジェクトでは標準を採用、既存は段階的に」を意味する。
 
