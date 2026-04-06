@@ -32,15 +32,15 @@ describe("attachIdToHeadings", () => {
     expect(html).toContain('<h3 id="2">');
     // h4 should NOT have an id (depth 4 > default 3)
     expect(html).toContain("<h4>");
-    expect(html).not.toContain('<h4 id=');
+    expect(html).not.toContain("<h4 id=");
   });
 
   it("respects custom depth=1 (only h1)", async () => {
     const vfile = await createProcessor(1).process("# h1\n## h2\n### h3");
     const html = String(vfile.value);
     expect(html).toContain('<h1 id="0">');
-    expect(html).not.toContain('<h2 id=');
-    expect(html).not.toContain('<h3 id=');
+    expect(html).not.toContain("<h2 id=");
+    expect(html).not.toContain("<h3 id=");
   });
 
   it("respects custom depth=6 (all headings)", async () => {
@@ -61,13 +61,11 @@ describe("attachIdToHeadings", () => {
     const html = String(vfile.value);
     expect(html).toContain('<h1 id="0">');
     expect(html).toContain('<h2 id="1">');
-    expect(html).not.toContain('<h3 id=');
+    expect(html).not.toContain("<h3 id=");
   });
 
   it("assigns incremental IDs across multiple headings", async () => {
-    const vfile = await createProcessor().process(
-      "## a\n## b\n## c\n## d",
-    );
+    const vfile = await createProcessor().process("## a\n## b\n## c\n## d");
     const html = String(vfile.value);
     expect(html).toContain('<h2 id="0">a</h2>');
     expect(html).toContain('<h2 id="1">b</h2>');

@@ -91,9 +91,7 @@ describe("github-meta embed", () => {
   });
 
   it("ignores repo with multiple slashes", async () => {
-    const vfile = await createProcessor().process(
-      "::gh-meta[a/b/c]",
-    );
+    const vfile = await createProcessor().process("::gh-meta[a/b/c]");
     const html = String(vfile.value);
     expect(html).not.toContain('class="gh-meta"');
   });

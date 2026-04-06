@@ -125,10 +125,13 @@ describe("fetchWithRetry", () => {
       headers: { Authorization: "Bearer token" },
     });
 
-    expect(globalThis.fetch).toHaveBeenCalledWith("https://example.com/headers", {
-      headers: { Authorization: "Bearer token" },
-      signal: expect.any(AbortSignal),
-    });
+    expect(globalThis.fetch).toHaveBeenCalledWith(
+      "https://example.com/headers",
+      {
+        headers: { Authorization: "Bearer token" },
+        signal: expect.any(AbortSignal),
+      },
+    );
   });
 
   it("uses default timeout of 30s", async () => {

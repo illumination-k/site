@@ -55,9 +55,7 @@ describe("postMetaSchema", () => {
   });
 
   it("rejects invalid lang", () => {
-    expect(() =>
-      postMetaSchema.parse({ ...validMeta, lang: "fr" }),
-    ).toThrow();
+    expect(() => postMetaSchema.parse({ ...validMeta, lang: "fr" })).toThrow();
   });
 
   it("accepts en lang", () => {

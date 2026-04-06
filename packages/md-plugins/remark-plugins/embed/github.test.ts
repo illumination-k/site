@@ -91,8 +91,7 @@ describe("parseGithubUrl", () => {
   });
 
   it("parses URL with single line number", () => {
-    const url =
-      "https://github.com/user/repo/blob/main/src/index.ts#L5";
+    const url = "https://github.com/user/repo/blob/main/src/index.ts#L5";
     const parsed = parseGithubUrl(url);
 
     expect(parsed.startLine).toBe(5);
@@ -100,8 +99,7 @@ describe("parseGithubUrl", () => {
   });
 
   it("parses deeply nested file path", () => {
-    const url =
-      "https://github.com/user/repo/blob/dev/src/a/b/c/deep.rs";
+    const url = "https://github.com/user/repo/blob/dev/src/a/b/c/deep.rs";
     const parsed = parseGithubUrl(url);
 
     expect(parsed.filePath).toBe("src/a/b/c/deep.rs");
@@ -110,8 +108,7 @@ describe("parseGithubUrl", () => {
   });
 
   it("defaults to txt extension for files without extension", () => {
-    const url =
-      "https://github.com/user/repo/blob/main/Makefile";
+    const url = "https://github.com/user/repo/blob/main/Makefile";
     const parsed = parseGithubUrl(url);
 
     expect(parsed.fileExtension).toBe("txt");

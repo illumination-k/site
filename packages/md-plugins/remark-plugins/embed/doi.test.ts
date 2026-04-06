@@ -117,7 +117,9 @@ describe("DoiTransformer.shouldTransform", () => {
 
 describe("doi embed rendering", () => {
   it("renders a DOI citation with doi class", async () => {
-    const vfile = await processor.process("::doi[10.1126/science.169.3946.635]");
+    const vfile = await processor.process(
+      "::doi[10.1126/science.169.3946.635]",
+    );
     expect(vfile.value).toStrictEqual(
       '<p class="doi">Frank, H. S. (1970). The Structure of Ordinary Water. Science, 169(3946), 635\u2013641. https://doi.org/10.1126/science.169.3946.635\n</p>',
     );

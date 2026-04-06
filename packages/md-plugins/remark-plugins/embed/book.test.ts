@@ -1,6 +1,6 @@
+import type { Directives } from "mdast-util-directive";
 import { describe, expect, it, vi } from "vitest";
 import { BookTransformer, getBookInfo } from "./book";
-import type { Directives } from "mdast-util-directive";
 
 vi.mock("../../cache", () => ({
   getCacheKey: vi.fn().mockReturnValue("test-key"),
