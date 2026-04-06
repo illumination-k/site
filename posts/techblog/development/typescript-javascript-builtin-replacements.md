@@ -87,7 +87,7 @@ const copy = structuredClone(original);
 
 ### crypto.randomUUID: uuidパッケージの代替
 
-`crypto.randomUUID()`はv4 UUIDを生成する。ブラウザ(セキュアコンテキスト)とNode.js 19以降で利用可能。
+`crypto.randomUUID()`はv4 UUIDを生成する。ブラウザとNode.js 19以降で利用可能。
 
 ```typescript
 // uuid パッケージ
@@ -419,44 +419,28 @@ enum Direction {
 
 ただし、`enum`やパスエイリアス(`paths`)を使っている場合、またはNode.js 22以前を対象とする場合はtsxが引き続き必要になる。新規プロジェクトでは`enum`を避けて`as const`を使い、Node.js標準の型ストリッピングに対応する設計を推奨する。
 
-## まだライブラリが勝つケース
-
-すべてを標準に置き換えるべきではない。以下の領域ではライブラリの優位性が残る。
-
-| 領域                                 | 標準の限界                                    | 推奨ライブラリ           |
-| ------------------------------------ | --------------------------------------------- | ------------------------ |
-| HTTPインターセプター / リトライ      | fetchにはインターセプター機能がない           | ky, axios                |
-| バリデーション                       | 組み込みのスキーマバリデーションはない        | zod, valibot             |
-| 日付(Safariサポート必須)             | Temporalは全ブラウザ対応に未到達              | dayjs, temporal-polyfill |
-| 高度なglob(ignore, negative pattern) | `fs.glob`のオプションは限定的                 | glob, fast-glob          |
-| 複雑なCLI引数解析                    | `util.parseArgs`は基本的な機能のみ            | yargs, commander         |
-| ロギング                             | `console.log`にはログレベルや構造化出力がない | pino, winston            |
-| テスト(スナップショット、UI)         | `node:test`は基本機能に限定                   | vitest, jest             |
-
 ## まとめ
 
-2026年現在、「標準で十分」な領域は着実に広がっている。以下の表で移行の判断材料を整理する。
+2026年現在、「標準で十分」な領域は着実に広がっている。以下の表で対応関係を整理する。
 
-| 従来のライブラリ             | 標準の代替                        | 環境                      | 移行推奨度 |
-| ---------------------------- | --------------------------------- | ------------------------- | ---------- |
-| axios (単純なリクエスト)     | `fetch` + `AbortSignal.timeout()` | Browser + Node 18+        | A          |
-| lodash.cloneDeep / deepmerge | `structuredClone`                 | Browser + Node 17+        | A          |
-| uuid (v4)                    | `crypto.randomUUID()`             | Browser + Node 19+        | A          |
-| query-string                 | `URLSearchParams`                 | Browser + Node            | A          |
-| lodash.groupBy               | `Object.groupBy`                  | Browser + Node 21+        | A          |
-| Set手動操作                  | `Set.prototype.intersection`等    | Browser + Node 22+        | A          |
-| lodashチェーン               | Iteratorヘルパー                  | Browser + Node 22+        | B          |
-| moment / dayjs               | `Temporal`                        | Chrome 144+, Firefox 139+ | B          |
-| path-to-regexp               | `URLPattern`                      | Browser + Node 24+        | B          |
-| node-fetch                   | グローバル`fetch`                 | Node 18+                  | A          |
-| nodemon                      | `node --watch`                    | Node 22+                  | A          |
-| dotenv                       | `node --env-file`                 | Node 20.6+                | A          |
-| glob                         | `fs.glob`                         | Node 22+                  | B          |
-| rimraf                       | `fs.rm`                           | Node 14.14+               | A          |
-| chalk                        | `util.styleText`                  | Node 22+                  | B          |
-| ts-node / tsx                | `node --strip-types`              | Node 24+                  | A          |
-| jest / mocha                 | `node:test`                       | Node 18+                  | B          |
+| 従来のライブラリ             | 標準の代替                        | 環境                      |
+| ---------------------------- | --------------------------------- | ------------------------- |
+| axios (単純なリクエスト)     | `fetch` + `AbortSignal.timeout()` | Browser + Node 18+        |
+| lodash.cloneDeep / deepmerge | `structuredClone`                 | Browser + Node 17+        |
+| uuid (v4)                    | `crypto.randomUUID()`             | Browser + Node 19+        |
+| query-string                 | `URLSearchParams`                 | Browser + Node            |
+| lodash.groupBy               | `Object.groupBy`                  | Browser + Node 21+        |
+| Set手動操作                  | `Set.prototype.intersection`等    | Browser + Node 22+        |
+| lodashチェーン               | Iteratorヘルパー                  | Browser + Node 22+        |
+| moment / dayjs               | `Temporal`                        | Chrome 144+, Firefox 139+ |
+| path-to-regexp               | `URLPattern`                      | Browser + Node 24+        |
+| node-fetch                   | グローバル`fetch`                 | Node 18+                  |
+| nodemon                      | `node --watch`                    | Node 22+                  |
+| dotenv                       | `node --env-file`                 | Node 20.6+                |
+| glob                         | `fs.glob`                         | Node 22+                  |
+| rimraf                       | `fs.rm`                           | Node 14.14+               |
+| chalk                        | `util.styleText`                  | Node 22+                  |
+| ts-node / tsx                | `node --strip-types`              | Node 24+                  |
+| jest / mocha                 | `node:test`                       | Node 18+                  |
 
-Aは「すぐに移行してよい」、Bは「新規プロジェクトでは標準を採用、既存は段階的に」を意味する。
-
-依存を減らすことは、セキュリティ、パフォーマンス、メンテナンスすべてに効く。新規プロジェクトではまず標準APIで書き始め、足りない場合にだけライブラリを足すアプローチを推奨する。
+各セクションで触れたとおり、標準APIには制約もある。ただし、依存を減らすことはセキュリティ・パフォーマンス・メンテナンスすべてに効く。新規プロジェクトではまず標準APIで書き始め、足りない場合にだけライブラリを足すアプローチを推奨する。
