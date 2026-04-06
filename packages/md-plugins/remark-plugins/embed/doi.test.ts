@@ -1,3 +1,4 @@
+import type { Directives } from "mdast-util-directive";
 import { describe, expect, it, vi } from "vitest";
 import { DoiTransformer, doiRegExp } from "./doi";
 
@@ -60,7 +61,7 @@ describe("DoiTransformer.shouldTransform", () => {
       type: "leafDirective",
       name: "doi",
       children: [{ type: "text", value: "10.1126/science.169.3946.635" }],
-    } as any;
+    } as unknown as Directives;
     expect(transformer.shouldTransform(node)).toBe(true);
   });
 
@@ -74,7 +75,7 @@ describe("DoiTransformer.shouldTransform", () => {
           value: "https://doi.org/10.1126/science.169.3946.635",
         },
       ],
-    } as any;
+    } as unknown as Directives;
     expect(transformer.shouldTransform(node)).toBe(true);
   });
 
@@ -83,7 +84,7 @@ describe("DoiTransformer.shouldTransform", () => {
       type: "leafDirective",
       name: "doi",
       children: [{ type: "text", value: "https://doi.org/invalid" }],
-    } as any;
+    } as unknown as Directives;
     expect(transformer.shouldTransform(node)).toBe(false);
   });
 
@@ -92,7 +93,7 @@ describe("DoiTransformer.shouldTransform", () => {
       type: "textDirective",
       name: "doi",
       children: [{ type: "text", value: "10.1126/science.169.3946.635" }],
-    } as any;
+    } as unknown as Directives;
     expect(transformer.shouldTransform(node)).toBe(false);
   });
 
@@ -101,7 +102,7 @@ describe("DoiTransformer.shouldTransform", () => {
       type: "leafDirective",
       name: "github",
       children: [{ type: "text", value: "10.1126/science.169.3946.635" }],
-    } as any;
+    } as unknown as Directives;
     expect(transformer.shouldTransform(node)).toBe(false);
   });
 
@@ -110,7 +111,7 @@ describe("DoiTransformer.shouldTransform", () => {
       type: "leafDirective",
       name: "doi",
       children: [{ type: "text", value: "not-a-doi" }],
-    } as any;
+    } as unknown as Directives;
     expect(transformer.shouldTransform(node)).toBe(false);
   });
 });
