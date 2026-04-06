@@ -2,6 +2,28 @@ import { describe, expect, it } from "vitest";
 
 import { dumpPost, getDumpPosts, readPost } from "./io";
 
+/**
+ * Check whether Playwright browsers are installed.
+ * rehype-mermaid with strategy "inline-svg" requires mermaid-isomorphic which
+ * launches a headless Chromium via Playwright. When the browser binary is not
+ * present (e.g. in CI without `playwright install`), these tests must be
+ * skipped rather than reported as failures.
+ */
+async function hasPlaywrightBrowser(): Promise<boolean> {
+  try {
+    // @ts-expect-error playwright-core may not be installed in this workspace
+    const pw = await import("playwright-core");
+    const browser = await pw.chromium.launch();
+    await browser.close();
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const hasBrowser = await hasPlaywrightBrowser();
+const describeWithBrowser = hasBrowser ? describe : describe.skip;
+
 describe("test read post", () => {
   it("sample read post", async () => {
     await readPost("./test/test1.md");
@@ -13,7 +35,7 @@ describe("test read post", () => {
   });
 });
 
-describe("mermaid rendering", () => {
+describeWithBrowser("mermaid rendering", () => {
   it("renders mermaid code blocks to inline SVG at build time", async () => {
     const post = await readPost("./test/test-mermaid.md");
     const dumped = await dumpPost(
@@ -30,7 +52,7 @@ describe("mermaid rendering", () => {
   });
 });
 
-describe("internal links", () => {
+describeWithBrowser("internal links", () => {
   it("resolves .md links to internal URLs in getDumpPosts", async () => {
     const posts = await getDumpPosts("./test", "./test/public/imageDist");
 

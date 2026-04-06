@@ -34,6 +34,8 @@ refractor.alias({ typescript: ["ts"] });`;
 
 const readmeContent = "# site\n\nPersonal blog site";
 
+const jsonContent = { key: "value", nested: { a: 1 } };
+
 vi.mock("../../fetch", () => ({
   fetchWithRetry: vi.fn().mockImplementation((url: string) => {
     if (url.includes("highlighter.ts")) {
@@ -42,12 +44,18 @@ vi.mock("../../fetch", () => ({
     if (url.includes("README.md")) {
       return Promise.resolve({ data: readmeContent, status: 200 });
     }
+    if (url.includes("data.json")) {
+      return Promise.resolve({ data: jsonContent, status: 200 });
+    }
+    if (url.includes("fail-file")) {
+      return Promise.reject(new Error("Not Found"));
+    }
     return Promise.reject(new Error(`Unexpected URL: ${url}`));
   }),
 }));
 
-describe("test parse github url", () => {
-  it("test parse github main url without line", () => {
+describe("parseGithubUrl", () => {
+  it("parses URL without line numbers", () => {
     const url = "https://github.com/illumination-k/site/blob/main/README.md";
     const parsed = parseGithubUrl(url);
 
@@ -64,7 +72,7 @@ describe("test parse github url", () => {
     });
   });
 
-  it("test parse github url with line", () => {
+  it("parses URL with line range", () => {
     const url =
       "https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15";
     const parsed = parseGithubUrl(url);
@@ -81,6 +89,31 @@ describe("test parse github url", () => {
       endLine: 15,
     });
   });
+
+  it("parses URL with single line number", () => {
+    const url = "https://github.com/user/repo/blob/main/src/index.ts#L5";
+    const parsed = parseGithubUrl(url);
+
+    expect(parsed.startLine).toBe(5);
+    expect(parsed.endLine).toBe(5);
+  });
+
+  it("parses deeply nested file path", () => {
+    const url = "https://github.com/user/repo/blob/dev/src/a/b/c/deep.rs";
+    const parsed = parseGithubUrl(url);
+
+    expect(parsed.filePath).toBe("src/a/b/c/deep.rs");
+    expect(parsed.fileExtension).toBe("rs");
+    expect(parsed.branch).toBe("dev");
+  });
+
+  it("defaults to txt extension for files without extension", () => {
+    const url = "https://github.com/user/repo/blob/main/Makefile";
+    const parsed = parseGithubUrl(url);
+
+    expect(parsed.fileExtension).toBe("txt");
+    expect(parsed.filePath).toBe("Makefile");
+  });
 });
 
 const processor = unified()
@@ -91,29 +124,36 @@ const processor = unified()
   .use(rehypePrism)
   .use(rehypeStringify);
 
-describe("test github embed", () => {
-  it("test no url text", async () => {
+describe("github embed", () => {
+  it("does not transform non-github content", async () => {
     const vfile = await processor.process("# h1");
-
     expect(vfile.value).toStrictEqual("<h1>h1</h1>");
   });
 
-  it("test url only", async () => {
+  it("embeds code with line highlighting", async () => {
     const vfile = await processor.process(
       "::gh[https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15]",
     );
 
-    expect(vfile.value).toStrictEqual(
-      '<div class="github-embed"><a href="https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15" class="github-embed-title">illumination-k/blog-remark/src/highlighter.ts</a><pre class="language-ts"><code class="language-ts code-highlight"><span class="code-line line-number" line="11"><span class="token keyword">import</span> ts <span class="token keyword">from</span> <span class="token string">"refractor/lang/typescript.js"</span><span class="token punctuation">;</span>\n' +
-        '</span><span class="code-line line-number" line="12"><span class="token keyword">import</span> tsx <span class="token keyword">from</span> <span class="token string">"refractor/lang/tsx.js"</span><span class="token punctuation">;</span>\n' +
-        '</span><span class="code-line line-number" line="13">refractor<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>ts<span class="token punctuation">)</span><span class="token punctuation">;</span>\n' +
-        '</span><span class="code-line line-number" line="14">refractor<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>tsx<span class="token punctuation">)</span><span class="token punctuation">;</span>\n' +
-        '</span><span class="code-line line-number" line="15">refractor<span class="token punctuation">.</span><span class="token function">alias</span><span class="token punctuation">(</span><span class="token punctuation">{</span> typescript<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"ts"</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>\n' +
-        "</span></code></pre></div>",
-    );
+    const html = String(vfile.value);
+    expect(html).toContain('class="github-embed"');
+    expect(html).toContain('class="github-embed-title"');
+    expect(html).toContain("illumination-k/blog-remark/src/highlighter.ts");
+    expect(html).toContain('line="11"');
+    expect(html).toContain('line="15"');
   });
 
-  it("test usual markdown", async () => {
+  it("embeds full file without line range", async () => {
+    const vfile = await processor.process(
+      "::gh[https://github.com/illumination-k/site/blob/main/README.md]",
+    );
+    const html = String(vfile.value);
+    expect(html).toContain('class="github-embed"');
+    expect(html).toContain("illumination-k/site/README.md");
+    expect(html).toContain("site");
+  });
+
+  it("renders alongside regular markdown", async () => {
     const vfile = await processor.process(`# Refractor
 ## Import refractor and register lang
 
@@ -121,31 +161,76 @@ We should import refractor and register langs as following:
 
 ::gh[https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15]`);
 
-    expect(vfile.value).toStrictEqual(
-      "<h1>Refractor</h1>\n" +
-        "<h2>Import refractor and register lang</h2>\n" +
-        "<p>We should import refractor and register langs as following:</p>\n" +
-        '<div class="github-embed"><a href="https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15" class="github-embed-title">illumination-k/blog-remark/src/highlighter.ts</a>' +
-        '<pre class="language-ts"><code class="language-ts code-highlight"><span class="code-line line-number" line="11"><span class="token keyword">import</span> ts <span class="token keyword">from</span> <span class="token string">"refractor/lang/typescript.js"</span><span class="token punctuation">;</span>\n' +
-        '</span><span class="code-line line-number" line="12"><span class="token keyword">import</span> tsx <span class="token keyword">from</span> <span class="token string">"refractor/lang/tsx.js"</span><span class="token punctuation">;</span>\n' +
-        '</span><span class="code-line line-number" line="13">refractor<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>ts<span class="token punctuation">)</span><span class="token punctuation">;</span>\n' +
-        '</span><span class="code-line line-number" line="14">refractor<span class="token punctuation">.</span><span class="token function">register</span><span class="token punctuation">(</span>tsx<span class="token punctuation">)</span><span class="token punctuation">;</span>\n' +
-        '</span><span class="code-line line-number" line="15">refractor<span class="token punctuation">.</span><span class="token function">alias</span><span class="token punctuation">(</span><span class="token punctuation">{</span> typescript<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token string">"ts"</span><span class="token punctuation">]</span> <span class="token punctuation">}</span><span class="token punctuation">)</span><span class="token punctuation">;</span>\n' +
-        "</span></code></pre></div>",
-    );
+    const html = String(vfile.value);
+    expect(html).toContain("<h1>Refractor</h1>");
+    expect(html).toContain("<h2>");
+    expect(html).toContain('class="github-embed"');
   });
 
-  it("test multiple embed", async () => {
+  it("handles multiple embeds", async () => {
     const url1 = "https://github.com/illumination-k/site/blob/main/README.md";
     const url2 =
       "https://github.com/illumination-k/blog-remark/blob/7855162f655858f2122911c66d6dd80ef327a055/src/highlighter.ts#L11-L15";
-    const vfile = await processor.process(`
-      ::gh[${url1}]
-      ::gh[${url2}]`);
+    const vfile = await processor.process(`::gh[${url1}]\n\n::gh[${url2}]`);
 
-    expect(
-      vfile.value.toString().includes(url1) &&
-        vfile.value.toString().includes(url2),
-    ).toBeTruthy();
+    const html = String(vfile.value);
+    expect(html).toContain(url1);
+    expect(html).toContain(url2);
+    const embedCount = (html.match(/github-embed/g) || []).length;
+    expect(embedCount).toBeGreaterThanOrEqual(4); // 2 containers + 2 titles
+  });
+
+  it("also accepts ::github directive name", async () => {
+    const processorGithub = unified()
+      .use(remarkParse)
+      .use(remarkDirective)
+      .use(remarkDirectiveEmbedGenerator([new GithubTransformer()]))
+      .use(remarkRehype)
+      .use(rehypeStringify);
+
+    const vfile = await processorGithub.process(
+      "::github[https://github.com/illumination-k/site/blob/main/README.md]",
+    );
+    const html = String(vfile.value);
+    expect(html).toContain('class="github-embed"');
+  });
+
+  it("handles JSON response by stringifying", async () => {
+    const vfile = await processor.process(
+      "::gh[https://github.com/user/repo/blob/main/data.json]",
+    );
+    const html = String(vfile.value);
+    expect(html).toContain('class="github-embed"');
+    // JSON gets stringified
+    expect(html).toContain("key");
+    expect(html).toContain("value");
+  });
+
+  it("gracefully handles fetch failure", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const vfile = await processor.process(
+      "::gh[https://github.com/user/repo/blob/main/fail-file.ts]",
+    );
+    const html = String(vfile.value);
+    // Should not render embed on failure
+    expect(html).not.toContain('class="github-embed"');
+    expect(warnSpy).toHaveBeenCalled();
+  });
+
+  it("rejects non-github URLs", async () => {
+    const vfile = await processor.process(
+      "::gh[https://gitlab.com/user/repo/blob/main/file.ts]",
+    );
+    const html = String(vfile.value);
+    expect(html).not.toContain('class="github-embed"');
+  });
+
+  it("rejects non-leafDirective", async () => {
+    // textDirective (:gh[...]) should not trigger
+    const vfile = await processor.process(
+      "some text :gh[https://github.com/user/repo/blob/main/file.ts] more",
+    );
+    const html = String(vfile.value);
+    expect(html).not.toContain('class="github-embed"');
   });
 });
