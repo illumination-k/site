@@ -12,12 +12,12 @@ updated_at: "2022-05-20T18:42:50+00:00"
 
 ## Types of HEAD
 
-| Name       | Meaning                                   |
-| ---------- | ----------------------------------------- |
-| HEAD       | The latest commit                         |
-| ORIG_HEAD  | One commit before the latest              |
-| FETCH_HEAD | The latest commit of the remote branch    |
-| MERGE_HEAD | The latest commit of the merged target    |
+| Name       | Meaning                                |
+| ---------- | -------------------------------------- |
+| HEAD       | The latest commit                      |
+| ORIG_HEAD  | One commit before the latest           |
+| FETCH_HEAD | The latest commit of the remote branch |
+| MERGE_HEAD | The latest commit of the merged target |
 
 - [What are Git's HEAD, ORIG_HEAD, FETCH_HEAD, and MERGE_HEAD?](https://qiita.com/t-mochizuki/items/347cba461fd570bca03c)
 

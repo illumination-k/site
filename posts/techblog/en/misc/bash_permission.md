@@ -41,21 +41,21 @@ It indicates the type of the file.
 
 The characters after the file type indicate what permissions exist for each scope.
 
-| Scope     | Meaning         |
-| --------- | --------------- |
-| `[2, 4]`  | Owner           |
-| `[5, 7]`  | Group           |
-| `[8, 10]` | Others          |
+| Scope     | Meaning |
+| --------- | ------- |
+| `[2, 4]`  | Owner   |
+| `[5, 7]`  | Group   |
+| `[8, 10]` | Others  |
 
 ### Meaning of Permission Symbols
 
-| Symbol | Meaning          |
-| :----: | ---------------- |
-| `r`    | Read permission  |
-| `w`    | Write permission |
-| `x`    | Execute permission |
-| `s`    | SUID or SGID     |
-| `t`    | Sticky bit       |
+| Symbol | Meaning            |
+| :----: | ------------------ |
+|  `r`   | Read permission    |
+|  `w`   | Write permission   |
+|  `x`   | Execute permission |
+|  `s`   | SUID or SGID       |
+|  `t`   | Sticky bit         |
 
 - `SUID (Set User ID)`: The file is executed with the permissions of the specified user.
 - `SGID (Set Group ID)`: The file is executed with the permissions of the specified group. All files created within the directory are assigned the group specified by the directory's SGID.
@@ -94,11 +94,11 @@ chmod --help
 
 Each permission has an assigned value. By specifying the sum of these values, you can set the permissions. Permissions are typically specified with a 3-digit number, where the first digit is the owner, the second digit is the group, and the third digit is the others permission setting.
 
-| Permission            | Value |
-| --------------------- | ----- |
-| Read permission (`r`) | 4     |
-| Write permission (`w`) | 2    |
-| Execute permission (`x`) | 1  |
+| Permission               | Value |
+| ------------------------ | ----- |
+| Read permission (`r`)    | 4     |
+| Write permission (`w`)   | 2     |
+| Execute permission (`x`) | 1     |
 
 **Examples**
 
@@ -108,11 +108,11 @@ Each permission has an assigned value. By specifying the sum of these values, yo
 
 Additionally, when specifying SUID, SGID, or the sticky bit, a 4-digit number is used. In this case, the first digit represents the SUID, SGID, or sticky bit value, the second digit is the owner, the third digit is the group, and the fourth digit is the others permission setting.
 
-| Permission       | Value |
-| ---------------- | ----- |
-| SUID (s)         | 2     |
-| SGID (s)         | 4     |
-| Sticky bit (t)   | 1     |
+| Permission     | Value |
+| -------------- | ----- |
+| SUID (s)       | 2     |
+| SGID (s)       | 4     |
+| Sticky bit (t) | 1     |
 
 **Examples**
 
@@ -128,23 +128,23 @@ The specification format is as follows:
 
 | Target | Meaning |
 | :----: | ------- |
-| `u`    | Owner   |
-| `g`    | Group   |
-| `a`    | Others  |
+|  `u`   | Owner   |
+|  `g`   | Group   |
+|  `a`   | Others  |
 
-| Action | Meaning                     |
-| :----: | --------------------------- |
-| `+`    | Grant permission            |
-| `-`    | Remove permission           |
-| `=`    | Set to the specified permission |
+| Action | Meaning                         |
+| :----: | ------------------------------- |
+|  `+`   | Grant permission                |
+|  `-`   | Remove permission               |
+|  `=`   | Set to the specified permission |
 
-| Permission | Meaning          |
-| :--------: | ---------------- |
-| `r`        | Read permission  |
-| `w`        | Write permission |
-| `x`        | Execute permission |
-| `s`        | SUID or SGID     |
-| `t`        | Sticky bit       |
+| Permission | Meaning            |
+| :--------: | ------------------ |
+|    `r`     | Read permission    |
+|    `w`     | Write permission   |
+|    `x`     | Execute permission |
+|    `s`     | SUID or SGID       |
+|    `t`     | Sticky bit         |
 
 **Examples**
 
@@ -218,11 +218,11 @@ SELinux permissions can be checked with `ls -Z` or `ps -Z`.
 
 ### Operation Modes
 
-| Mode       | Description                                                          |
-| ---------- | -------------------------------------------------------------------- |
-| Enforcing  | SELinux enabled. Blocks operations that violate rules.               |
-| Permissive | SELinux enabled. Only logs operations that violate rules.            |
-| Disable    | SELinux disabled.                                                    |
+| Mode       | Description                                               |
+| ---------- | --------------------------------------------------------- |
+| Enforcing  | SELinux enabled. Blocks operations that violate rules.    |
+| Permissive | SELinux enabled. Only logs operations that violate rules. |
+| Disable    | SELinux disabled.                                         |
 
 Checking and setting the operation mode:
 
