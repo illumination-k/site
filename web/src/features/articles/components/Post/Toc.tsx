@@ -11,11 +11,12 @@ interface Props {
   className?: string;
   meta: PostMeta;
   headings: Headings;
+  prefix: string;
 }
 
 const iconClassName = css({ h: 4, w: 4 });
 
-export default function Toc({ className, headings, meta }: Props) {
+export default function Toc({ className, headings, meta, prefix }: Props) {
   const heading = meta.lang === "ja" ? "目次" : "Contents";
   return (
     <article className={className}>
@@ -42,7 +43,7 @@ export default function Toc({ className, headings, meta }: Props) {
                 transitionDuration: "fast",
                 _hover: { color: "accent.primary" },
               })}
-              href={`/techblog/post/${meta.uuid}#${i}`}
+              href={`/${prefix}/post/${meta.uuid}#${i}` as Route}
             >
               {depth === 3 ? (
                 <ChevronRightIcon
@@ -57,7 +58,7 @@ export default function Toc({ className, headings, meta }: Props) {
       </ul>
 
       <Link
-        href={`/techblog/post/${meta.uuid}` as Route}
+        href={`/${prefix}/post/${meta.uuid}` as Route}
         className={css({
           display: "flex",
           gap: 2,

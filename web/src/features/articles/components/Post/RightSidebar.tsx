@@ -145,6 +145,7 @@ export default function Sidebar({ className, meta, headings, prefix }: Props) {
       <Toc
         meta={meta}
         headings={headings}
+        prefix={prefix}
         className={css({
           bg: "bg.surface",
           rounded: "xl",
