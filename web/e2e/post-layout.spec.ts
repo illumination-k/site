@@ -5,7 +5,7 @@ test.describe("post page layout", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto("/techblog/1");
+    await page.goto("/ja/techblog/1");
 
     // Navigate to the first post
     const firstPostLink = page
@@ -14,7 +14,7 @@ test.describe("post page layout", () => {
       .getByRole("link")
       .first();
     await firstPostLink.click();
-    await page.waitForURL(/\/techblog\/post\//);
+    await page.waitForURL(/\/ja\/techblog\/post\//);
 
     const gridContainer = page.locator("#post-content").locator("..");
     const columns = await gridContainer.evaluate((el) => {
@@ -27,7 +27,7 @@ test.describe("post page layout", () => {
 
   test("sidebar should be visible at lg viewport", async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 800 });
-    await page.goto("/techblog/1");
+    await page.goto("/ja/techblog/1");
 
     const firstPostLink = page
       .locator("article")
@@ -35,7 +35,7 @@ test.describe("post page layout", () => {
       .getByRole("link")
       .first();
     await firstPostLink.click();
-    await page.waitForURL(/\/techblog\/post\//);
+    await page.waitForURL(/\/ja\/techblog\/post\//);
 
     const sidebar = page.locator("aside, [role='complementary']");
     await expect(sidebar).toBeVisible();

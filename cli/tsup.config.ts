@@ -8,12 +8,6 @@ export default defineConfig({
   outDir: "dist",
   clean: true,
   sourcemap: true,
-  external: [
-    "sharp",
-    "playwright",
-    "playwright-core",
-    "chromium-bidi",
-    "mermaid-isomorphic",
-  ],
+  external: ["sharp", "playwright", "playwright-core", "chromium-bidi"],
   noExternal: ["common", "md-plugins", "ipynb2md"],
 });

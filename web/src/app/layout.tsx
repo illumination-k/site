@@ -4,22 +4,13 @@ import { Inter, Noto_Sans_JP } from "next/font/google";
 
 import { css, cx } from "@/styled-system/css";
 
-import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
-
-import FooterBase from "@/components/FooterBase";
-import Nav from "@/components/Nav";
-
-import AdsScripts from "./ads-scripts";
 
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
 });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-
-const GA_TRACKING_ID =
-  process.env.NODE_ENV === "production" ? "G-5X44HTLX5D" : "G-mock";
 
 const siteUrl = "https://www.illumination-k.dev";
 
@@ -32,7 +23,6 @@ export const metadata: Metadata = {
   description: "Software Engineer / Bioinformatics",
   openGraph: {
     type: "website",
-    locale: "ja_JP",
     siteName: "illumination-k.dev",
     url: siteUrl,
   },
@@ -69,13 +59,7 @@ export default function RootLayout({
           }),
         )}
       >
-        <header>
-          <Nav />
-        </header>
-        <main className={css({ flex: 1 })}>{children}</main>
-        <FooterBase />
-        <AdsScripts />
-        <GoogleAnalytics gaId={GA_TRACKING_ID} />
+        {children}
       </body>
     </html>
   );

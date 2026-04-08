@@ -112,7 +112,7 @@ export default function Sidebar({ className, meta, headings, prefix }: Props) {
             title={
               <Link
                 className={css({ _hover: { color: "accent.primary" } })}
-                href={`/techblog/post/${meta.uuid}` as Route}
+                href={`/${prefix}/post/${meta.uuid}` as Route}
               >
                 タグ
               </Link>
@@ -136,11 +136,16 @@ export default function Sidebar({ className, meta, headings, prefix }: Props) {
         </ul>
       </article>
 
-      <SearchBar className={css({ my: 5 })} category={prefix} />
+      <SearchBar
+        className={css({ my: 5 })}
+        category={prefix}
+        locale={prefix.split("/")[0]}
+      />
 
       <Toc
         meta={meta}
         headings={headings}
+        prefix={prefix}
         className={css({
           bg: "bg.surface",
           rounded: "xl",
