@@ -25,13 +25,13 @@ Name    Length  EffectiveLength TPM     NumReads
 
 According to the [official docs (Ver 1.40)](https://salmon.readthedocs.io/en/latest/file_formats.html), these values are defined as follows:
 
-| Name            | Definition                                                                                                            |
-| --------------- | --------------------------------------------------------------------------------------------------------------------- |
-| Name            | The transcript name, taken from the FASTA header line                                                                 |
-| Length          | The length of the transcript in bases                                                                                 |
+| Name            | Definition                                                                                                                                  |
+| --------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| Name            | The transcript name, taken from the FASTA header line                                                                                       |
+| Length          | The length of the transcript in bases                                                                                                       |
 | EffectiveLength | The `effective length` that accounts for fragment distribution, sequence-specific bias, and gc-fragment bias. Used in TPM calculation, etc. |
-| TPM             | TPM in its proper sense. Using this value for downstream analysis is recommended                                      |
-| NumReads        | The number of reads mapped to the transcript by Salmon                                                                |
+| TPM             | TPM in its proper sense. Using this value for downstream analysis is recommended                                                            |
+| NumReads        | The number of reads mapped to the transcript by Salmon                                                                                      |
 
 ## Reading Files with tximport
 
@@ -106,11 +106,11 @@ Instead of counting from NumReads, these values are computed from the abundance 
 
 For reference, the scaling methods are as follows. Also, for each sample, the sum of `tximportObject$counts` equals the total NumReads.
 
-| Name              | Method                                                    |
-| ----------------- | --------------------------------------------------------- |
-| `no`              | simple sum                                                |
-| `scaledTPM`       | scaled by library size                                    |
-| `lengthScaledTPM` | scaled by library size adjusted for mean transcript length |
+| Name              | Method                                                       |
+| ----------------- | ------------------------------------------------------------ |
+| `no`              | simple sum                                                   |
+| `scaledTPM`       | scaled by library size                                       |
+| `lengthScaledTPM` | scaled by library size adjusted for mean transcript length   |
 | `dtuScaledTPM`    | scaled by library size adjusted for median transcript length |
 
 `dtuScaledTPM` is reportedly the best scaling method for Differential Transcript Usage (DTU) analysis. These scaled values, or the raw counts, are used for Differential Expression Gene (DEG) analysis and similar analyses.
