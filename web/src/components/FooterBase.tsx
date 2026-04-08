@@ -4,13 +4,24 @@ import type { PropsWithChildren } from "react";
 
 import { css, cx } from "@/styled-system/css";
 
+import type { Route } from "next";
+
+import type { Locale } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n";
+
 const font = Baskervville({ subsets: ["latin"], weight: "400" });
 
 export type FooterBaseProps = {
+  locale: Locale;
   className?: string;
 } & PropsWithChildren;
 
-export default function FooterBase({ children }: FooterBaseProps) {
+export default async function FooterBase({
+  children,
+  locale,
+}: FooterBaseProps) {
+  const dict = await getDictionary(locale);
+
   return (
     <footer
       className={css({
@@ -47,9 +58,9 @@ export default function FooterBase({ children }: FooterBaseProps) {
             fontStyle: "italic",
             _hover: { color: "accent.hover" },
           })}
-          href={"/privacy-policy"}
+          href={`/${locale}/privacy-policy` as Route}
         >
-          privacy policy
+          {dict.footer.privacyPolicy}
         </Link>
         <Link
           className={css({
@@ -57,9 +68,9 @@ export default function FooterBase({ children }: FooterBaseProps) {
             fontStyle: "italic",
             _hover: { color: "accent.hover" },
           })}
-          href={"/disclaimer"}
+          href={`/${locale}/disclaimer` as Route}
         >
-          disclaimer
+          {dict.footer.disclaimer}
         </Link>
       </div>
     </footer>

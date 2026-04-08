@@ -7,13 +7,18 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/solid";
 interface Props {
   className?: string;
   category?: string;
+  locale?: string;
 }
 
-export default function SearchBar({ className, category }: Props) {
+export default function SearchBar({
+  className,
+  category,
+  locale = "ja",
+}: Props) {
   return (
     <form
       className={cx(css({ display: "flex" }), className)}
-      action="/search"
+      action={`/${locale}/search`}
       method="GET"
     >
       {category ? (

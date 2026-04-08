@@ -9,12 +9,17 @@ import type { Route } from "next";
 
 import GithubIcon from "@/icons/GithubIcon";
 import TwitterIcon from "@/icons/TwitterIcon";
+import type { Locale } from "@/lib/i18n";
+import { getDictionary } from "@/lib/i18n";
 
+import LocaleSwitcher from "./LocaleSwitcher";
 import ThemeToggle from "./ThemeToggle";
 
 const caveat = Caveat({ subsets: ["latin"] });
 
-export default function Nav() {
+export default async function Nav({ locale }: { locale: Locale }) {
+  const dict = await getDictionary(locale);
+
   return (
     <nav
       className={css({
@@ -31,7 +36,7 @@ export default function Nav() {
         zIndex: 50,
       })}
     >
-      <Link href={"/"}>
+      <Link href={`/${locale}` as Route}>
         <span
           className={cx(
             css({
@@ -64,7 +69,7 @@ export default function Nav() {
         })}
       >
         <Link
-          href={"/techblog/1" as Route}
+          href={`/${locale}/techblog/1` as Route}
           className={cx(
             css({
               color: "text.secondary",
@@ -76,7 +81,7 @@ export default function Nav() {
             caveat.className,
           )}
         >
-          TechBlog
+          {dict.nav.techBlog}
         </Link>
 
         <a
@@ -103,6 +108,7 @@ export default function Nav() {
           <GithubIcon aria-hidden="true" className={css({ h: 8, w: 8 })} />
         </a>
 
+        <LocaleSwitcher currentLocale={locale} />
         <ThemeToggle />
       </div>
     </nav>

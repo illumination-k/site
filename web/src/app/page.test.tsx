@@ -1,13 +1,14 @@
-import React from "react";
+import { redirect } from "next/navigation";
 
-import { render, screen } from "@testing-library/react";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
+
+vi.mock("next/navigation", () => ({
+  redirect: vi.fn(),
+}));
 
 import Page from "./page";
 
-test("Page", () => {
-  render(<Page />);
-  const headings = screen.getAllByRole("heading");
-
-  expect(headings).toBeTruthy();
+test("root page redirects to default locale", () => {
+  Page();
+  expect(redirect).toHaveBeenCalledWith("/ja");
 });
