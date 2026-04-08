@@ -26,12 +26,12 @@ For commonly used reactions, please refer to [this blog post](./library_construc
 
 A library is basically composed of the following elements. The names used here are not official terms, but are used for convenience throughout this article.
 
-|                          | Description                                                     | Common Examples                     |
-| ------------------------ | --------------------------------------------------------------- | ----------------------------------- |
-| Flow cell binding sequence | Sequence required for hybridization with the flow cell        | `P5`, `P7` etc.                     |
-| Index sequence           | Sequence used when handling multiple samples                    | `i5`, `i7` etc.                     |
-| Adapter sequence         | Sequence where the sequencing primer binds                      | `Truseq Read`, `Nextera Read` etc.  |
-| Insert DNA               | The sequence that is actually analyzed                          |                                     |
+|                            | Description                                            | Common Examples                    |
+| -------------------------- | ------------------------------------------------------ | ---------------------------------- |
+| Flow cell binding sequence | Sequence required for hybridization with the flow cell | `P5`, `P7` etc.                    |
+| Index sequence             | Sequence used when handling multiple samples           | `i5`, `i7` etc.                    |
+| Adapter sequence           | Sequence where the sequencing primer binds             | `Truseq Read`, `Nextera Read` etc. |
+| Insert DNA                 | The sequence that is actually analyzed                 |                                    |
 
 When you look at the actual library structure, you can see that all of these elements are included.
 
