@@ -461,24 +461,24 @@ However, if you use `enum`, path aliases (`paths`), or need to target Node.js 22
 
 As of 2026, the areas where "the standard is sufficient" are steadily expanding. The following table summarizes the correspondences.
 
-| Legacy Library                  | Standard Replacement              | Environment               |
-| ------------------------------- | --------------------------------- | ------------------------- |
-| axios (simple requests)         | `fetch` + `AbortSignal.timeout()` | Browser + Node 18+        |
-| lodash.cloneDeep / deepmerge    | `structuredClone`                 | Browser + Node 17+        |
-| uuid (v4)                       | `crypto.randomUUID()`             | Browser + Node 19+        |
-| query-string                    | `URLSearchParams`                 | Browser + Node            |
-| lodash.groupBy                  | `Object.groupBy`                  | Browser + Node 21+        |
-| Manual Set operations           | `Set.prototype.intersection` etc. | Browser + Node 22+        |
-| lodash chaining                 | Iterator helpers                  | Browser + Node 22+        |
-| moment / dayjs                  | `Temporal`                        | Chrome 144+, Firefox 139+ |
-| path-to-regexp                  | `URLPattern`                      | Browser + Node 24+        |
-| node-fetch                      | Global `fetch`                    | Node 18+                  |
-| nodemon                         | `node --watch`                    | Node 22+                  |
-| dotenv                          | `node --env-file`                 | Node 20.6+                |
-| glob                            | `fs.glob`                         | Node 22+                  |
-| rimraf                          | `fs.rm`                           | Node 14.14+               |
-| chalk                           | `util.styleText`                  | Node 22+                  |
-| ts-node / tsx                   | `node --strip-types`              | Node 24+                  |
-| jest / mocha                    | `node:test`                       | Node 18+                  |
+| Legacy Library               | Standard Replacement              | Environment               |
+| ---------------------------- | --------------------------------- | ------------------------- |
+| axios (simple requests)      | `fetch` + `AbortSignal.timeout()` | Browser + Node 18+        |
+| lodash.cloneDeep / deepmerge | `structuredClone`                 | Browser + Node 17+        |
+| uuid (v4)                    | `crypto.randomUUID()`             | Browser + Node 19+        |
+| query-string                 | `URLSearchParams`                 | Browser + Node            |
+| lodash.groupBy               | `Object.groupBy`                  | Browser + Node 21+        |
+| Manual Set operations        | `Set.prototype.intersection` etc. | Browser + Node 22+        |
+| lodash chaining              | Iterator helpers                  | Browser + Node 22+        |
+| moment / dayjs               | `Temporal`                        | Chrome 144+, Firefox 139+ |
+| path-to-regexp               | `URLPattern`                      | Browser + Node 24+        |
+| node-fetch                   | Global `fetch`                    | Node 18+                  |
+| nodemon                      | `node --watch`                    | Node 22+                  |
+| dotenv                       | `node --env-file`                 | Node 20.6+                |
+| glob                         | `fs.glob`                         | Node 22+                  |
+| rimraf                       | `fs.rm`                           | Node 14.14+               |
+| chalk                        | `util.styleText`                  | Node 22+                  |
+| ts-node / tsx                | `node --strip-types`              | Node 24+                  |
+| jest / mocha                 | `node:test`                       | Node 18+                  |
 
 As noted in each section, standard APIs do have limitations. However, reducing dependencies benefits security, performance, and maintenance across the board. For new projects, we recommend starting with standard APIs and adding libraries only when they fall short.
