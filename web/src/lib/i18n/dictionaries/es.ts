@@ -102,6 +102,15 @@ const es: Dictionary = {
       },
     ],
   },
+  post: {
+    archiveWarning:
+      "Este artículo ha sido archivado. Es posible que el contenido esté desactualizado.",
+    draftWarning: "Este artículo está en fase de borrador.",
+    aiGeneratedWarning:
+      "Este artículo fue generado por IA. Tenga cuidado con la precisión de su contenido.",
+    githubIssuePrompt: "Crear un issue en GitHub sobre este artículo",
+    readNext: "Leer a continuación",
+  },
   metrics: {
     title: "Métricas de Calidad",
     subtitle: "Tendencias de cobertura de pruebas y puntuación de mutación",

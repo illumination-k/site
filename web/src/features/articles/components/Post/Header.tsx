@@ -2,12 +2,15 @@ import { css } from "@/styled-system/css";
 
 import type { PostMeta } from "common";
 
+import type { Dictionary } from "@/lib/i18n";
+
 interface Props {
   className?: string;
   meta: PostMeta;
+  dict: Dictionary;
 }
 
-export default function Header({ meta }: Props) {
+export default function Header({ meta, dict }: Props) {
   return (
     <>
       {meta.tags.includes("archive") ? (
@@ -23,7 +26,7 @@ export default function Header({ meta }: Props) {
             mx: 2,
           })}
         >
-          この記事はArchiveされています。記事の内容が古い可能性が高いです。
+          {dict.post.archiveWarning}
         </div>
       ) : null}
 
@@ -40,7 +43,7 @@ export default function Header({ meta }: Props) {
             mx: 2,
           })}
         >
-          この記事はドラフト段階です。
+          {dict.post.draftWarning}
         </div>
       ) : null}
 
@@ -57,7 +60,7 @@ export default function Header({ meta }: Props) {
             mx: 2,
           })}
         >
-          この記事はAIによって生成されています。内容の正確性にご注意ください。
+          {dict.post.aiGeneratedWarning}
         </div>
       ) : null}
     </>

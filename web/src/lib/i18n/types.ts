@@ -49,4 +49,11 @@ export interface Dictionary {
     subtitle: string;
     description: string;
   };
+  post: {
+    archiveWarning: string;
+    draftWarning: string;
+    aiGeneratedWarning: string;
+    githubIssuePrompt: string;
+    readNext: string;
+  };
 }
