@@ -18,17 +18,17 @@ When implementing operators for structs, the code gets very long without macros,
 
 Macro arguments are:
 
-|       | Meaning                    | Example                          |
-| ----- | -------------------------- | -------------------------------- |
-| block | Block                      |                                  |
-| expr  | Expression                 | `1+1`                            |
-| stmt  | Statement                  |                                  |
-| pat   | Pattern                    |                                  |
-| ty    | Type                       |                                  |
-| ident | Identifier                 |                                  |
-| path  | Qualified name             | T::deafult                       |
-| tt    | Single token tree          | Almost anything. Operators too.  |
-| meta  | Attribute contents         | cfg(target_os = "windows")       |
+|       | Meaning            | Example                         |
+| ----- | ------------------ | ------------------------------- |
+| block | Block              |                                 |
+| expr  | Expression         | `1+1`                           |
+| stmt  | Statement          |                                 |
+| pat   | Pattern            |                                 |
+| ty    | Type               |                                 |
+| ident | Identifier         |                                 |
+| path  | Qualified name     | T::deafult                      |
+| tt    | Single token tree  | Almost anything. Operators too. |
+| meta  | Attribute contents | cfg(target_os = "windows")      |
 
 The ones we'll use this time are `ident` and `tt`. The key point is that `tt` can be used for operator arguments. There was some discussion in [RFC#426](https://github.com/rust-lang/rfcs/issues/426) about creating a dedicated `op` argument type, but it doesn't seem to have made progress. For example, you can use operators like this:
 

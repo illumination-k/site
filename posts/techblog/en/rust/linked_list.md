@@ -17,12 +17,12 @@ Recently, I've been thinking about working through [Data Structures and Algorith
 
 ## Requirements
 
-| Method Name  | Behavior                              |
-| ----------- | ------------------------------------- |
-| `get(i)`    | View the i-th element                 |
-| `set(i, x)` | Set the i-th element to `x`          |
-| `add(i, x)` | Add `x` at the i-th position         |
-| `remove(i)` | Remove the i-th element              |
+| Method Name | Behavior                     |
+| ----------- | ---------------------------- |
+| `get(i)`    | View the i-th element        |
+| `set(i, x)` | Set the i-th element to `x`  |
+| `add(i, x)` | Add `x` at the i-th position |
+| `remove(i)` | Remove the i-th element      |
 
 We'll implement these four methods.
 

@@ -52,13 +52,13 @@ This is because they guarantee lossless-join decomposition and functional depend
 
 ## Property Preservation Through Normalization
 
-| Source               | Target               | Functional Dependency | Multi-valued Dependency | Join Dependency | Lossless-join |
-| -------------------- | -------------------- | --------------------- | ----------------------- | --------------- | ------------- |
-| First Normal Form    | Second Normal Form   | O                     | O                       | O               | O             |
-| Second Normal Form   | Third Normal Form    | O                     | O                       | O               | O             |
-| Third Normal Form    | Boyce-Codd NF        | x                     | O                       | O               | O             |
-| Boyce-Codd NF        | Fourth Normal Form   | x                     | O                       | O               | O             |
-| Fourth Normal Form   | Fifth Normal Form    | x                     | x                       | O               | O             |
+| Source             | Target             | Functional Dependency | Multi-valued Dependency | Join Dependency | Lossless-join |
+| ------------------ | ------------------ | --------------------- | ----------------------- | --------------- | ------------- |
+| First Normal Form  | Second Normal Form | O                     | O                       | O               | O             |
+| Second Normal Form | Third Normal Form  | O                     | O                       | O               | O             |
+| Third Normal Form  | Boyce-Codd NF      | x                     | O                       | O               | O             |
+| Boyce-Codd NF      | Fourth Normal Form | x                     | O                       | O               | O             |
+| Fourth Normal Form | Fifth Normal Form  | x                     | x                       | O               | O             |
 
 ## First Normal Form (1NF)
 

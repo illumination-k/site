@@ -21,13 +21,13 @@ updated_at: 2026-03-21
 
 Here is a summary of the standard sorting algorithms in 5 major languages:
 
-| Language        | Stable sort                       | Unstable sort | Base algorithm                        | Introduced in    |
-| --------------- | --------------------------------- | ------------- | ------------------------------------- | ---------------- |
-| Python          | Timsort (Powersort merge policy)  | -             | Merge Sort + Insertion Sort           | 3.11 (2022)      |
-| JavaScript (V8) | Timsort                           | -             | Merge Sort + Insertion Sort           | Chrome 70 (2018) |
-| Rust            | driftsort                         | ipnsort       | Merge Sort-based / Quicksort-based    | 1.81 (2024)      |
-| Go              | -                                 | pdqsort       | Quicksort + Heapsort + Insertion Sort | 1.19 (2022)      |
-| R               | Radix Sort / Shell Sort           | -             | Auto-selected based on type           | R 3.x            |
+| Language        | Stable sort                      | Unstable sort | Base algorithm                        | Introduced in    |
+| --------------- | -------------------------------- | ------------- | ------------------------------------- | ---------------- |
+| Python          | Timsort (Powersort merge policy) | -             | Merge Sort + Insertion Sort           | 3.11 (2022)      |
+| JavaScript (V8) | Timsort                          | -             | Merge Sort + Insertion Sort           | Chrome 70 (2018) |
+| Rust            | driftsort                        | ipnsort       | Merge Sort-based / Quicksort-based    | 1.81 (2024)      |
+| Go              | -                                | pdqsort       | Quicksort + Heapsort + Insertion Sort | 1.19 (2022)      |
+| R               | Radix Sort / Shell Sort          | -             | Auto-selected based on type           | R 3.x            |
 
 A common trend in recent years is the rise of adaptive sorting that leverages existing order (pre-sorted runs) and hybrid strategies that combine multiple algorithms.
 

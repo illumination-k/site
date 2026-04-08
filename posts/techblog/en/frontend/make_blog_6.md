@@ -40,11 +40,11 @@ Let's look at the official example:
 
 Basically, you specify an `id` on the `amp-sidebar`, then set `tap:{id}.toggle` on the button's `on` attribute to enable opening and closing with that button. Besides `toggle`, the following actions are available:
 
-| action         | desc                       |
-| -------------- | -------------------------- |
-| open (default) | Opens the sidebar          |
-| close          | Closes the sidebar         |
-| toggle         | Toggles the sidebar        |
+| action         | desc                |
+| -------------- | ------------------- |
+| open (default) | Opens the sidebar   |
+| close          | Closes the sidebar  |
+| toggle         | Toggles the sidebar |
 
 Using toggle is generally sufficient.
 
