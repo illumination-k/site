@@ -25,12 +25,12 @@ updated_at: 2026-03-23
 
 ## Tool Overview: Diff-Based and Parallel Execution Support
 
-| Tool                                 | Language   | Diff-Based Execution                                                    | Parallel Execution    |
-| ------------------------------------ | ---------- | ----------------------------------------------------------------------- | --------------------- |
-| :gh-meta[boxed/mutmut]               | Python     | Yes: built-in incremental + target specification via `--paths-to-mutate` | No: sequential only   |
-| :gh-meta[stryker-mutator/stryker-js] | TypeScript | Yes: JSON diff management via `--incremental`                            | Yes                   |
-| :gh-meta[sourcefrog/cargo-mutants]   | Rust       | Yes: diff file specification via `--in-diff`                             | Yes: `-j` flag        |
-| :gh-meta[go-gremlins/gremlins]       | Go         | Partial: workaround by combining with git diff                           | Yes                   |
+| Tool                                 | Language   | Diff-Based Execution                                                     | Parallel Execution  |
+| ------------------------------------ | ---------- | ------------------------------------------------------------------------ | ------------------- |
+| :gh-meta[boxed/mutmut]               | Python     | Yes: built-in incremental + target specification via `--paths-to-mutate` | No: sequential only |
+| :gh-meta[stryker-mutator/stryker-js] | TypeScript | Yes: JSON diff management via `--incremental`                            | Yes                 |
+| :gh-meta[sourcefrog/cargo-mutants]   | Rust       | Yes: diff file specification via `--in-diff`                             | Yes: `-j` flag      |
+| :gh-meta[go-gremlins/gremlins]       | Go         | Partial: workaround by combining with git diff                           | Yes                 |
 
 ## What Is Mutation Testing?
 
@@ -48,14 +48,14 @@ $$\text{Mutation Score} = \frac{\text{Killed Mutants}}{\text{Total Mutants} - \t
 
 ### Common Mutation Operators
 
-| Type                  | Before          | After                     |
-| --------------------- | --------------- | ------------------------- |
-| Arithmetic operator   | `a + b`         | `a - b`                   |
-| Comparison operator   | `a > b`         | `a >= b`, `a < b`         |
-| Logical operator      | `a && b`        | `a \|\| b`                |
-| Return value          | `return x`      | `return 0`, `return ""`   |
-| Conditional           | `if (cond)`     | `if (true)`, `if (false)` |
-| Statement deletion    | `doSomething()` | (deleted)                 |
+| Type                | Before          | After                     |
+| ------------------- | --------------- | ------------------------- |
+| Arithmetic operator | `a + b`         | `a - b`                   |
+| Comparison operator | `a > b`         | `a >= b`, `a < b`         |
+| Logical operator    | `a && b`        | `a \|\| b`                |
+| Return value        | `return x`      | `return 0`, `return ""`   |
+| Conditional         | `if (cond)`     | `if (true)`, `if (false)` |
+| Statement deletion  | `doSomething()` | (deleted)                 |
 
 ### The Equivalent Mutant Problem
 
@@ -215,13 +215,13 @@ Stryker generates an HTML report where you can visually inspect each mutant's st
 
 StrykerJS provides a rich set of test runner plugins.
 
-| Runner   | Package                          | Notes                    |
-| -------- | -------------------------------- | ------------------------ |
+| Runner   | Package                          | Notes                      |
+| -------- | -------------------------------- | -------------------------- |
 | Vitest   | `@stryker-mutator/vitest-runner` | Added in v7.0. Recommended |
-| Jest     | `@stryker-mutator/jest-runner`   | For React/Next.js        |
-| Mocha    | `@stryker-mutator/mocha-runner`  | For Node.js              |
-| Karma    | `@stryker-mutator/karma-runner`  | For Angular              |
-| Node Tap | `@stryker-mutator/tap-runner`    | Added in v7.0            |
+| Jest     | `@stryker-mutator/jest-runner`   | For React/Next.js          |
+| Mocha    | `@stryker-mutator/mocha-runner`  | For Node.js                |
+| Karma    | `@stryker-mutator/karma-runner`  | For Angular                |
+| Node Tap | `@stryker-mutator/tap-runner`    | Added in v7.0              |
 
 The TypeScript Checker plugin automatically excludes mutants that cause type errors. For example, if a `number` return value is mutated to `""` (empty string), it results in a compile error and execution is skipped. Performance was improved by up to 50% in v6.4.
 
