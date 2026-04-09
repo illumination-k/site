@@ -36,11 +36,11 @@ There are species-specific annotations available. For example, since animals do 
 
 Each GO Term is composed of the following basic elements:
 
-| Name          | Description                                                     | Example                                       |
-| ------------- | --------------------------------------------------------------- | --------------------------------------------- |
-| Gene Product  | The annotated gene product                                      | UniProtKB:Q920D2 (rat Dhfr)                   |
-| GO Term       | ID and name (description)                                       | GO:0004146 (dihydrofolate reductase activity) |
-| Reference     | Paper providing evidence for the annotation                     |                                               |
+| Name          | Description                                                        | Example                                       |
+| ------------- | ------------------------------------------------------------------ | --------------------------------------------- |
+| Gene Product  | The annotated gene product                                         | UniProtKB:Q920D2 (rat Dhfr)                   |
+| GO Term       | ID and name (description)                                          | GO:0004146 (dihydrofolate reductase activity) |
+| Reference     | Paper providing evidence for the annotation                        |                                               |
 | Evidence Code | Code indicating the type of evidence (experiment, phylogeny, etc.) | Inferred from Experiment (EXP)                |
 
 ### Extensions
@@ -72,20 +72,20 @@ The overall GO Annotation is represented as a directed acyclic graph (DAG) where
 
 The relations that express these hierarchical relationships are as follows ([reference](http://geneontology.org/docs/ontology-relations/)):
 
-| Name      | Description                                                                                                                                                                                              |
-| --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| is a      | The basic relation. When we say A is a B, A is a subtype of B.                                                                                                                                          |
+| Name      | Description                                                                                                                                                                                                                  |
+| --------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| is a      | The basic relation. When we say A is a B, A is a subtype of B.                                                                                                                                                               |
 | part of   | A stronger constraint. When B is part of A, whenever B exists it is necessarily a part of A, guaranteeing that A exists. Note that this part_of is an edge relation, unlike the extension part_of which is node information. |
-| has part  | When A has part B, B is a part of A. Whenever A exists, B must exist, but the existence of B does not necessarily imply that A exists.                                                                   |
-| regulates | Represents a regulatory relationship. For example, this includes influences from other pathways.                                                                                                         |
+| has part  | When A has part B, B is a part of A. Whenever A exists, B must exist, but the existence of B does not necessarily imply that A exists.                                                                                       |
+| regulates | Represents a regulatory relationship. For example, this includes influences from other pathways.                                                                                                                             |
 
 The three top-level GO Term categories are listed below. Most analysis tools treat these nodes as the root nodes.
 
-|                    | Abbreviation | Meaning                         |
-| ------------------ | ------------ | ------------------------------- |
-| Biological Process | BP           | Biological processes            |
+|                    | Abbreviation | Meaning                              |
+| ------------------ | ------------ | ------------------------------------ |
+| Biological Process | BP           | Biological processes                 |
 | Molecular Function | MF           | Molecular functions of gene products |
-| Cellular Component | CC           | Cellular components             |
+| Cellular Component | CC           | Cellular components                  |
 
 ## References
 
