@@ -19,6 +19,7 @@ import remarkDirectiveEmbedGenerator, {
   GithubMetaTransformer,
   GithubTransformer,
 } from "./remark-plugins/embed";
+import { BookTransformer } from "./remark-plugins/embed/book";
 import { DoiTransformer } from "./remark-plugins/embed/doi";
 import { YouTubeTransformer } from "./remark-plugins/embed/youtube";
 
@@ -36,6 +37,7 @@ export const REMARK_PLUGINS = [
     new GithubMetaTransformer(),
     new YouTubeTransformer(),
     new DoiTransformer(),
+    new BookTransformer(),
   ]),
   remarkMdx,
 ];
