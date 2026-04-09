@@ -1,4 +1,3 @@
-import type { Paragraph } from "mdast";
 import type { Directives } from "mdast-util-directive";
 import type { Parent } from "unist";
 import { afterEach, describe, expect, it, vi } from "vitest";
@@ -161,14 +160,18 @@ describe("BookTransformer", () => {
 
       await transformer.transform(node, 0, parent);
 
-      const card = parent.children[0] as Paragraph;
+      const card = parent.children[0] as Parent;
       expect(card.data).toEqual({
         hName: "div",
         hProperties: { className: "book-card" },
       });
 
       // Check thumbnail link points to Amazon.co.jp
-      const thumbnailLink = card.children[0] as { type: string; url: string };
+      const thumbnailLink = card.children[0] as unknown as {
+        type: string;
+        url: string;
+        data: unknown;
+      };
       expect(thumbnailLink.url).toBe("https://www.amazon.co.jp/dp/0123456789");
       expect(thumbnailLink.data).toEqual({
         hProperties: { target: "_blank", rel: "noopener sponsored" },
@@ -191,13 +194,16 @@ describe("BookTransformer", () => {
 
       await transformer.transform(node, 0, parent);
 
-      const card = parent.children[0] as Paragraph;
-      const thumbnailLink = card.children[0] as { type: string; url: string };
+      const card = parent.children[0] as Parent;
+      const thumbnailLink = card.children[0] as unknown as {
+        type: string;
+        url: string;
+      };
       expect(thumbnailLink.url).toBe("https://www.amazon.com/dp/0123456789");
 
       // Check button text is English
-      const infoNode = card.children[1] as Paragraph;
-      const buttonNode = infoNode.children[2] as Paragraph;
+      const infoNode = card.children[1] as Parent;
+      const buttonNode = infoNode.children[2] as Parent;
       expect(buttonNode.children[0]).toEqual({
         type: "text",
         value: "View on Amazon",
@@ -220,8 +226,11 @@ describe("BookTransformer", () => {
 
       await transformer.transform(node, 0, parent);
 
-      const card = parent.children[0] as Paragraph;
-      const thumbnailLink = card.children[0] as { type: string; url: string };
+      const card = parent.children[0] as Parent;
+      const thumbnailLink = card.children[0] as unknown as {
+        type: string;
+        url: string;
+      };
       expect(thumbnailLink.url).toBe(
         "https://www.amazon.co.jp/dp/0123456789?tag=test-22",
       );
@@ -242,17 +251,17 @@ describe("BookTransformer", () => {
 
       await transformer.transform(node, 0, parent);
 
-      const card = parent.children[0] as Paragraph;
-      const infoNode = card.children[1] as Paragraph;
+      const card = parent.children[0] as Parent;
+      const infoNode = card.children[1] as Parent;
 
       // Title link
-      const titleLink = infoNode.children[0] as {
+      const titleLink = infoNode.children[0] as unknown as {
         children: { children: { value: string }[] }[];
       };
       expect(titleLink.children[0].children[0].value).toBe("Test Book");
 
       // Authors
-      const authorsNode = infoNode.children[1] as Paragraph;
+      const authorsNode = infoNode.children[1] as Parent;
       expect(authorsNode.children[0]).toEqual({
         type: "text",
         value: "Author One, Author Two",

@@ -1,4 +1,4 @@
-import type { Image, Link, Paragraph } from "mdast";
+import type { Image, Link, Text } from "mdast";
 import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
 import type { Parent } from "unist";
@@ -43,12 +43,8 @@ export async function getBookInfo(isbn: string): Promise<BookInfo> {
   };
 }
 
-export function buildAmazonUrl(
-  isbn: string,
-  region: "jp" | "us",
-): string {
-  const domain =
-    region === "us" ? "www.amazon.com" : "www.amazon.co.jp";
+export function buildAmazonUrl(isbn: string, region: "jp" | "us"): string {
+  const domain = region === "us" ? "www.amazon.com" : "www.amazon.co.jp";
   const tag =
     region === "us"
       ? (process.env.AMAZON_ASSOCIATE_TAG_US ?? "")
@@ -120,19 +116,19 @@ export class BookTransformer implements DirectiveTransformer {
       ],
     };
 
-    const authorsNode: Paragraph = {
-      type: "paragraph",
+    const authorsNode: Parent = {
+      type: "book-card-authors",
       data: {
         hName: "p",
         hProperties: { className: "book-card-authors" },
       },
       children: [
-        { type: "text", value: bookInfo.authors.join(", ") || "Unknown" },
+        { type: "text", value: bookInfo.authors.join(", ") || "Unknown" } as Text,
       ],
     };
 
-    const amazonButton: Paragraph = {
-      type: "paragraph",
+    const amazonButton: Parent = {
+      type: "book-card-amazon-link",
       data: {
         hName: "a",
         hProperties: {
@@ -142,11 +138,11 @@ export class BookTransformer implements DirectiveTransformer {
           rel: "noopener sponsored",
         },
       },
-      children: [{ type: "text", value: buttonText }],
+      children: [{ type: "text", value: buttonText } as Text],
     };
 
-    const infoNode: Paragraph = {
-      type: "paragraph",
+    const infoNode: Parent = {
+      type: "book-card-info",
       data: {
         hName: "div",
         hProperties: { className: "book-card-info" },
@@ -154,8 +150,8 @@ export class BookTransformer implements DirectiveTransformer {
       children: [titleLink, authorsNode, amazonButton],
     };
 
-    const cardNode: Paragraph = {
-      type: "paragraph",
+    const cardNode: Parent = {
+      type: "book-card",
       data: {
         hName: "div",
         hProperties: { className: "book-card" },
