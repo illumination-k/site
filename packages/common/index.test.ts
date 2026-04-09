@@ -63,6 +63,11 @@ describe("postMetaSchema", () => {
     expect(result.lang).toBe("en");
   });
 
+  it("accepts es lang", () => {
+    const result = postMetaSchema.parse({ ...validMeta, lang: "es" });
+    expect(result.lang).toBe("es");
+  });
+
   it("rejects missing required fields", () => {
     expect(() => postMetaSchema.parse({ uuid: validMeta.uuid })).toThrow();
   });

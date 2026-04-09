@@ -20,7 +20,7 @@ describe("formatDate", () => {
 });
 
 describe("getLangText", () => {
-  const texts = { ja: "Japanese text", en: "English text" };
+  const texts = { ja: "Japanese text", en: "English text", es: "Spanish text" };
 
   it("returns Japanese text for ja lang", () => {
     expect(getLangText("ja", texts)).toBe("Japanese text");
@@ -28,5 +28,9 @@ describe("getLangText", () => {
 
   it("returns English text for en lang", () => {
     expect(getLangText("en", texts)).toBe("English text");
+  });
+
+  it("returns Spanish text for es lang", () => {
+    expect(getLangText("es", texts)).toBe("Spanish text");
   });
 });

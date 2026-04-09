@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { formatDate } from "./utils";
 
-const lang = z.enum(["ja", "en"]);
+const lang = z.enum(["ja", "en", "es"]);
 export type Lang = z.infer<typeof lang>;
 
 const dateSchema = z
