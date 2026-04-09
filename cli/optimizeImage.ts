@@ -206,24 +206,30 @@ const optimizeImage = (option: Option) => {
               `${fileNameBase}.avif`,
             );
 
-            try {
-              await sharp(imagePath)
-                .avif({ quality: 75 })
-                .resize(size?.width, size?.height)
-                .toFile(optimizedImagePath);
-            } catch (err) {
-              logger.error(
-                {
-                  imagePath,
-                  optimizedImagePath,
-                  postPath: String(option.postPath),
-                  err,
-                },
-                "Failed to optimize image with sharp",
-              );
-              throw new Error(
-                `Failed to optimize image: ${imagePath} (post: ${option.postPath})`,
-              );
+            const alreadyExists =
+              fs.existsSync(optimizedImagePath) &&
+              fs.statSync(optimizedImagePath).size > 0;
+
+            if (!alreadyExists) {
+              try {
+                await sharp(imagePath)
+                  .avif({ quality: 75 })
+                  .resize(size?.width, size?.height)
+                  .toFile(optimizedImagePath);
+              } catch (err) {
+                logger.error(
+                  {
+                    imagePath,
+                    optimizedImagePath,
+                    postPath: String(option.postPath),
+                    err,
+                  },
+                  "Failed to optimize image with sharp",
+                );
+                throw new Error(
+                  `Failed to optimize image: ${imagePath} (post: ${option.postPath})`,
+                );
+              }
             }
 
             const newUri = replacePathAsPublicRoot(optimizedImagePath);
