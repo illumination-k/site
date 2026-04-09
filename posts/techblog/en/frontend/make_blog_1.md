@@ -26,11 +26,11 @@ The current blog code is here:
 
 **Before**
 
-![lighthouse-wordpress-top](../../public/lighthouse-wordpress-top.PNG)
+![lighthouse-wordpress-top](../../../public/lighthouse-wordpress-top.PNG)
 
 **After 2020/09/30**
 
-![lighthouse-next-blog](../../public/lighthouse-nextblog-top.PNG)
+![lighthouse-next-blog](../../../public/lighthouse-nextblog-top.PNG)
 
 ## Requirements
 

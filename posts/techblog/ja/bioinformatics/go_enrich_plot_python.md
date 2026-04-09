@@ -93,7 +93,7 @@ sns.set_context("paper")
 
 ### Barplot
 
-![barplot](../../public/go_python_plot/barplot.png)
+![barplot](../../../public/go_python_plot/barplot.png)
 
 :::details[Code]
 
@@ -142,7 +142,7 @@ plt.show()
 
 ### dotplot
 
-![dotplot](../../public/go_python_plot/dotplot.png)
+![dotplot](../../../public/go_python_plot/dotplot.png)
 
 :::details[Code]
 
@@ -209,7 +209,7 @@ plt.show()
 
 ### グループごとのdotplot
 
-![dotplot-cluster](../../public/go_python_plot/dotplot_cluster.png)
+![dotplot-cluster](../../../public/go_python_plot/dotplot_cluster.png)
 
 :::details[Code]
 
@@ -356,7 +356,7 @@ df = df.with_columns(pl.Series("cluster", [f"C{c}" for c in clusters]))
 
 Similarity matrixをヒートマップとして可視化します。seabornの`clustermap`を使うと、階層クラスタリングの樹形図（デンドログラム）も同時に表示できるので、GO Term間の関係が直感的にわかります。
 
-![similarity-heatmap](../../public/go_python_plot/similarity_heatmap.png)
+![similarity-heatmap](../../../public/go_python_plot/similarity_heatmap.png)
 
 :::details[Code]
 
@@ -405,7 +405,7 @@ plt.show()
 
 Similarity matrixをMDS（Multi-Dimensional Scaling）で2次元に圧縮し、散布図として可視化します。Rの`rrvgo`のscatter plotに相当するものです。意味的に近いGO Termが近くに配置されるので、enrichmentの全体像を把握するのに便利です。
 
-![similarity-scatter](../../public/go_python_plot/similarity_scatter.png)
+![similarity-scatter](../../../public/go_python_plot/similarity_scatter.png)
 
 :::details[Code]
 
@@ -485,7 +485,7 @@ coords = reducer.fit_transform(dist_matrix)
 
 Treemapは各GO Termを矩形として描画し、面積でサイズ（遺伝子数）を、色でクラスタを表現します。Rの`rrvgo`における`treemapPlot`に相当する可視化です。enrichmentされたGO Termの全体的な構成を俯瞰するのに適しています。
 
-![treemap](../../public/go_python_plot/treemap.png)
+![treemap](../../../public/go_python_plot/treemap.png)
 
 :::details[Code]
 
@@ -539,7 +539,7 @@ plt.show()
 
 `networkx`を使って、GO Term間のsimilarityをネットワークとして可視化することもできます。ノードがGO Term、エッジがsimilarityを表し、類似度が閾値以上のペアのみをエッジとして描画します。ネットワークレイアウトはspring layout（force-directed）を使い、類似度が高いノード同士が近くに配置されます。
 
-![similarity-network](../../public/go_python_plot/similarity_network.png)
+![similarity-network](../../../public/go_python_plot/similarity_network.png)
 
 :::details[Code]
 

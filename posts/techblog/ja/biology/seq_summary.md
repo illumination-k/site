@@ -79,7 +79,7 @@ annotation={<> <P5>Illumina P5</P5> <T7>i5</T7> <S5>Next</S5><Me>era Read 1</Me>
 6. PCRで増幅します。
 7. シーケンスへ。
 
-![truseq](../../public/seq_summary/truseq.PNG)
+![truseq](../../../public/seq_summary/truseq.PNG)
 
 > [次世代シーケンサー用ライブラリー調製試薬](https://www.nebj.jp/jp/Flyer/NEBNEXT.pdf)
 
@@ -89,7 +89,7 @@ annotation={<> <P5>Illumina P5</P5> <T7>i5</T7> <S5>Next</S5><Me>era Read 1</Me>
 2. 付加した配列を鋳型にするプライマーを使って、PCRで残りのアダプターを付加します。
 3. シーケンスへ
 
-![nextera](../../public/seq_summary/nextera.PNG)
+![nextera](../../../public/seq_summary/nextera.PNG)
 
 > [次世代シーケンサー用ライブラリー調製試薬](https://www.nebj.jp/jp/Flyer/NEBNEXT.pdf)
 
@@ -101,7 +101,7 @@ annotation={<> <P5>Illumina P5</P5> <T7>i5</T7> <S5>Next</S5><Me>era Read 1</Me>
 
 シーケンサーにライブラリを入れるとき、1つのライブラリではなく複数のライブラリを同時に流します。その際に、そのリードがどのライブラリ由来なのかを判別するために使われるのがインデックス配列です。つまり、1つのライブラリにユニークなIDを配列という形で付与することで、1回のシーケンスで複数のサンプルを同時に解析し、後でそれを区別するための仕組みです。デュアルインデックスにすると、インデックス配列が2個あるので、インデックス配列の組み合わせがユニークなIDとなります。
 
-![multiplex](../../public/seq_summary/multiplex.PNG)
+![multiplex](../../../public/seq_summary/multiplex.PNG)
 
 > [NGS超入門](https://www.adres.ehime-u.ac.jp/news/NGS1.pdf)
 
@@ -112,7 +112,7 @@ annotation={<> <P5>Illumina P5</P5> <T7>i5</T7> <S5>Next</S5><Me>era Read 1</Me>
 3. ブリッジする。
 4. Read2側からinset-DNAのシーケンスを読みます **(c)**。
 
-![single_index_pair](../../public/seq_summary/single_index_pair.PNG)
+![single_index_pair](../../../public/seq_summary/single_index_pair.PNG)
 
 > [NGS超入門](https://www.adres.ehime-u.ac.jp/news/NGS1.pdf)
 
@@ -123,7 +123,7 @@ annotation={<> <P5>Illumina P5</P5> <T7>i5</T7> <S5>Next</S5><Me>era Read 1</Me>
 3. ブリッジしたあとP5側からインデックス配列2を読みます。
 4. Read2側からinset-DNAのシーケンスを読みます。
 
-![dual_index_pair](../../public/seq_summary/dual_index_pair.PNG)
+![dual_index_pair](../../../public/seq_summary/dual_index_pair.PNG)
 
 > [NGS超入門](https://www.adres.ehime-u.ac.jp/news/NGS1.pdf)
 

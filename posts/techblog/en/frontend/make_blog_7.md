@@ -165,8 +165,8 @@ export default Home
 
 With the above, PWA support is complete. Here's the Lighthouse performance for this site's top page as of 2020/09/30:
 
-![lighthouse-next-blog](../../public/lighthouse-nextblog-top.PNG)
+![lighthouse-next-blog](../../../public/lighthouse-nextblog-top.PNG)
 
 For comparison, here's what it looked like during the WordPress era, so you can see significant improvement. Getting all 100s is tough...
 
-![lighthouse-wordpress-top](../../public//lighthouse-wordpress-top.PNG)
+![lighthouse-wordpress-top](../../../public//lighthouse-wordpress-top.PNG)

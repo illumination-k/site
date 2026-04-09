@@ -56,7 +56,7 @@ mpl.colorbar.Colorbar(
 plt.savefig("sample_colormap.png", bbox_inches="tight")
 ```
 
-![md={4}:sample_colorbar](../../public/colorbar_sample.png)
+![md={4}:sample_colorbar](../../../public/colorbar_sample.png)
 
 Retrieve the corresponding RGBA color.
 

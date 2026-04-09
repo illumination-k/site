@@ -21,7 +21,7 @@ Find the minimum (or maximum) of $X_i$ defined at position $D_i$.
 
 Let's consider the example from [ABC128-E](https://atcoder.jp/contests/abc128/tasks/abc128_e).
 
-![md={6}:abc128_example](../../public/abc128_img.png)
+![md={6}:abc128_example](../../../public/abc128_img.png)
 
 The diagram looks like this, and we need to find the minimum value for each query.
 Now, consider a collection $X$ for the values $X_i$. We treat the left endpoint as an insertion of $X_i$ into $X$, and the right endpoint as a deletion of $X_i$ from $X$. Queries are processed as query events.
@@ -36,7 +36,7 @@ We process these events in order of position. Insertion and deletion events can 
 
 Processing the ABC128 example yields the following:
 
-![abc128_event](../../public/abc128_event.png)
+![abc128_event](../../../public/abc128_event.png)
 
 With this approach, the values within range at position $D_i$ are exactly those in the collection $X$. So for a query event, the minimum of collection $X$ is the answer at that position. By maintaining an Index, we can directly write the minimum value into the answer array.
 

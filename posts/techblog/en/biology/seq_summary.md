@@ -79,7 +79,7 @@ This is the general workflow. Here we will focus on library preparation for DNA,
 6. Amplify by PCR.
 7. Proceed to sequencing.
 
-![truseq](../../public/seq_summary/truseq.PNG)
+![truseq](../../../public/seq_summary/truseq.PNG)
 
 > [Next-Generation Sequencer Library Preparation Reagents](https://www.nebj.jp/jp/Flyer/NEBNEXT.pdf)
 
@@ -89,7 +89,7 @@ This is the general workflow. Here we will focus on library preparation for DNA,
 2. Use primers that target the added sequences as templates to attach the remaining adapters via PCR.
 3. Proceed to sequencing.
 
-![nextera](../../public/seq_summary/nextera.PNG)
+![nextera](../../../public/seq_summary/nextera.PNG)
 
 > [Next-Generation Sequencer Library Preparation Reagents](https://www.nebj.jp/jp/Flyer/NEBNEXT.pdf)
 
@@ -101,7 +101,7 @@ First, as terminology: a library with one index sequence is called a single inde
 
 When loading libraries into the sequencer, multiple libraries are loaded simultaneously rather than just one. The index sequence is used to determine which library each read originates from. In other words, by assigning a unique ID in the form of a sequence to each library, multiple samples can be analyzed in a single sequencing run and distinguished afterward. With dual indexing, there are two index sequences, so the combination of index sequences serves as the unique ID.
 
-![multiplex](../../public/seq_summary/multiplex.PNG)
+![multiplex](../../../public/seq_summary/multiplex.PNG)
 
 > [NGS Introduction](https://www.adres.ehime-u.ac.jp/news/NGS1.pdf)
 
@@ -112,7 +112,7 @@ When loading libraries into the sequencer, multiple libraries are loaded simulta
 3. Bridge amplification.
 4. Sequence the insert DNA from the Read 2 side **(c)**.
 
-![single_index_pair](../../public/seq_summary/single_index_pair.PNG)
+![single_index_pair](../../../public/seq_summary/single_index_pair.PNG)
 
 > [NGS Introduction](https://www.adres.ehime-u.ac.jp/news/NGS1.pdf)
 
@@ -123,7 +123,7 @@ When loading libraries into the sequencer, multiple libraries are loaded simulta
 3. After bridge amplification, read index sequence 2 from the P5 side.
 4. Sequence the insert DNA from the Read 2 side.
 
-![dual_index_pair](../../public/seq_summary/dual_index_pair.PNG)
+![dual_index_pair](../../../public/seq_summary/dual_index_pair.PNG)
 
 > [NGS Introduction](https://www.adres.ehime-u.ac.jp/news/NGS1.pdf)
 

@@ -27,7 +27,7 @@ UIを構成する部分はReactを使っています。これらは`popup`以下
 
 これらは`pnpm build`でまとめて`dist`以下にビルドされ、Chrome extensionの開発者モードでアップロードすればすぐに利用できます。
 
-![alt text](../../public/chrome-ext.png)
+![alt text](../../../public/chrome-ext.png)
 
 ### 2. formatter, linterのセットアップ
 

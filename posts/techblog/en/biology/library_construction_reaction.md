@@ -53,7 +53,7 @@ These are primers with random sequences. Since they bind to anything, amplificat
 
 Only the cDNA of the targeted gene can be synthesized. These are basically used only for RT-PCR and similar applications.
 
-![RT-primers](../../public/library_construction/RT_primers.png)
+![RT-primers](../../../public/library_construction/RT_primers.png)
 
 ## TSO (Template Switching Oligo)
 
@@ -61,7 +61,7 @@ Some reverse transcriptases possess Terminal nucleotidyl transferase (TdT) activ
 
 During cDNA synthesis, a polyC sequence is added to the 3' end, and a DNA oligo (template switching oligo) with a complementary polyG sequence at its 3' end is used. This enables second strand synthesis while modifying the 3' end. Through this reaction, barcodes and adapters are added to the 3' end. Such enzymes are induced during cDNA synthesis or in the latter half of the reaction in the presence of high concentrations of magnesium or magnesium ions.
 
-![tso](../../public/library_construction/tso.png)
+![tso](../../../public/library_construction/tso.png)
 
 ## Klenow Fragment
 
@@ -83,7 +83,7 @@ Ligation is a reaction that joins DNA fragments together and is used in various 
 
 This is an enzyme with both Uracil DNA Glycosylase and Endonuclease VIII activities. It can remove U from double-stranded DNA and introduce nicks.
 
-![USER](../../public/library_construction/USER_Mechanism.png)
+![USER](../../../public/library_construction/USER_Mechanism.png)
 
 It is sometimes used for adapter cleavage and USER cloning.
 

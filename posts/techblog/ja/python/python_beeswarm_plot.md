@@ -64,7 +64,7 @@ plt.show()
 
 **出力**
 
-![beeswarm1](../../public/beeswarm/beeswarm1.png)
+![beeswarm1](../../../public/beeswarm/beeswarm1.png)
 
 ## hueで分離
 
@@ -87,7 +87,7 @@ plt.show()
 
 **出力**
 
-![beeswarm2](../../public/beeswarm/beeswarm2.png)
+![beeswarm2](../../../public/beeswarm/beeswarm2.png)
 
 ## violinplotと合わせて表示する
 
@@ -113,7 +113,7 @@ plt.show()
 
 **出力**
 
-![beeswarm3](../../public/beeswarm/beeswarm3.png)
+![beeswarm3](../../../public/beeswarm/beeswarm3.png)
 
 なんとなく分布感まで見られるbeeswarm plotのほうが見やすい感じを受けます。数が多すぎると表示しきれなくなるのが難点です。この辺は表現したいデータによっても変わりそうで難しいところですが、beeswarm plotも選択肢としては有力です。
 

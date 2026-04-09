@@ -93,7 +93,7 @@ sns.set_context("paper")
 
 ### Barplot
 
-![barplot](../../public/go_python_plot/barplot.png)
+![barplot](../../../public/go_python_plot/barplot.png)
 
 :::details[Code]
 
@@ -142,7 +142,7 @@ plt.show()
 
 ### Dotplot
 
-![dotplot](../../public/go_python_plot/dotplot.png)
+![dotplot](../../../public/go_python_plot/dotplot.png)
 
 :::details[Code]
 
@@ -209,7 +209,7 @@ plt.show()
 
 ### Dotplot by Group
 
-![dotplot-cluster](../../public/go_python_plot/dotplot_cluster.png)
+![dotplot-cluster](../../../public/go_python_plot/dotplot_cluster.png)
 
 :::details[Code]
 
@@ -356,7 +356,7 @@ df = df.with_columns(pl.Series("cluster", [f"C{c}" for c in clusters]))
 
 Visualize the similarity matrix as a heatmap. Using seaborn's `clustermap` also displays hierarchical clustering dendrograms, making the relationships between GO Terms intuitive to understand.
 
-![similarity-heatmap](../../public/go_python_plot/similarity_heatmap.png)
+![similarity-heatmap](../../../public/go_python_plot/similarity_heatmap.png)
 
 :::details[Code]
 
@@ -405,7 +405,7 @@ plt.show()
 
 Reduce the similarity matrix to 2D using MDS (Multi-Dimensional Scaling) and visualize it as a scatter plot. This is the Python equivalent of the scatter plot in R's `rrvgo`. Semantically similar GO Terms are placed close together, making it useful for getting an overview of the enrichment results.
 
-![similarity-scatter](../../public/go_python_plot/similarity_scatter.png)
+![similarity-scatter](../../../public/go_python_plot/similarity_scatter.png)
 
 :::details[Code]
 
@@ -485,7 +485,7 @@ coords = reducer.fit_transform(dist_matrix)
 
 A treemap renders each GO Term as a rectangle, where the area represents size (gene count) and color represents the cluster. This is the Python equivalent of `treemapPlot` in R's `rrvgo`. It is well-suited for getting a bird's-eye view of the overall composition of enriched GO Terms.
 
-![treemap](../../public/go_python_plot/treemap.png)
+![treemap](../../../public/go_python_plot/treemap.png)
 
 :::details[Code]
 
@@ -539,7 +539,7 @@ plt.show()
 
 You can also use `networkx` to visualize the similarity between GO Terms as a network. Nodes represent GO Terms and edges represent similarity, with only pairs above a certain similarity threshold drawn as edges. The network uses a spring layout (force-directed), which places nodes with high similarity close together.
 
-![similarity-network](../../public/go_python_plot/similarity_network.png)
+![similarity-network](../../../public/go_python_plot/similarity_network.png)
 
 :::details[Code]
 

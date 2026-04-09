@@ -20,7 +20,7 @@ Using this crate, you can potentially process large files much faster, but since
 
 You can run it on Jupyter using [excvr](https://github.com/google/evcxr). Using Jupyter Lab made it very convenient to compare Python and Rust side by side.
 
-![jupyter-image](../../public/polars_pandas/jupyter_image.png)
+![jupyter-image](../../../public/polars_pandas/jupyter_image.png)
 
 However, I found it a bit inconvenient that there is no code completion or type inference. I also tried setting up `rust-analyzer` support. Completion started working, but it still felt lacking compared to VSCode.\
 Here is a sample notebook. You can launch it with docker-compose.

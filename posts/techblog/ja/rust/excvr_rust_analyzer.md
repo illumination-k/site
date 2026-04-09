@@ -117,6 +117,6 @@ cargo new work
 これで、`docker-compose up`でjupyterが起動するはずです。
 以下のように補完が効くようになります。
 
-![evxcr_jupyter_lsp_example](../../public/evcxr_jupyter_lsp.PNG)
+![evxcr_jupyter_lsp_example](../../../public/evcxr_jupyter_lsp.PNG)
 
 VSCodeほどではないですが、tab補完よりは快適な気がします。

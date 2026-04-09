@@ -23,19 +23,19 @@ For an R implementation example, please refer to [this site](https://stats.biopa
 
 First, let's look at a comparison between Venn diagrams and UpSet plots.
 
-![md={6}:upsetplot_venn](../../public/upsetplot/upsetplot_venn.gif)
+![md={6}:upsetplot_venn](../../../public/upsetplot/upsetplot_venn.gif)
 Figure 1. Venn diagram and UpSet plot (Lex et al., 2014 Fig. 4)
 
 With around three sets, each has its pros and cons. UpSet plots seem more suitable for viewing quantitative relationships between sets.
 
 Also, a merit of UpSet plots is their high extensibility. Since set relationships are represented as rows, additional data can be inserted into those rows. For example, they can be extended as follows:
 
-![upsetplot_extensions](../../public/upsetplot/upsetplot_extensions.gif)
+![upsetplot_extensions](../../../public/upsetplot/upsetplot_extensions.gif)
 Figure 2. Extensibility of UpSet plots (Lex et al., 2014 Fig. 1)
 
 Additionally, to express quantitative relationships between sets, you can sort by the number of elements in each set. Of course, you can also sort by the extended data.
 
-![md={8}:upsetplot_sort](../../public/upsetplot/upsetplot_sort.gif)
+![md={8}:upsetplot_sort](../../../public/upsetplot/upsetplot_sort.gif)
 Figure 3. Sorting in UpSet plots (Lex et al., 2014 Fig. 6)
 
 ## Python Implementation
@@ -84,7 +84,7 @@ plt.show()
 ```
 
 **Output**
-![md={4}:venn](../../public/upsetplot/venn.png)
+![md={4}:venn](../../../public/upsetplot/venn.png)
 
 When the quantities are skewed, it becomes a bit hard to understand.
 
@@ -102,7 +102,7 @@ plt.show()
 
 **Output**
 
-![md={6}:upsetplot_basic](../../public/upsetplot/upsetplot_basic.png)
+![md={6}:upsetplot_basic](../../../public/upsetplot/upsetplot_basic.png)
 
 By separating quantitative relationships from set relationships, the visual understanding of quantitative relationships becomes easier. Conversely, the set relationships become slightly harder to understand.
 
@@ -114,9 +114,9 @@ plot(examples, sort_by="cardinality", show_counts="%d")
 plt.show()
 ```
 
-![md={6}:upsetplot_basic_orientation](../../public/upsetplot/upsetplot_basic_orientation.png)
+![md={6}:upsetplot_basic_orientation](../../../public/upsetplot/upsetplot_basic_orientation.png)
 
-![md={6}:upsetplot_basic_sort](../../public/upsetplot/upsetplot_basic_sort.png)
+![md={6}:upsetplot_basic_sort](../../../public/upsetplot/upsetplot_basic_sort.png)
 
 ### Extending UpSet Plots
 
@@ -161,7 +161,7 @@ upset.plot()
 plt.show()
 ```
 
-![upsetplot_ext_python](../../public/upsetplot/upsetplot_ext_python.png)
+![upsetplot_ext_python](../../../public/upsetplot/upsetplot_ext_python.png)
 
 ### Creating UpSet Plots from Category Lists
 
@@ -190,7 +190,7 @@ upset_data = upset_data.set_index(list(upset_data.columns))
 upsetplot.plot(upset_data, subset_size="count", show_counts="%d", sort_categories_by=None)
 ```
 
-![md={6}:upsetplot_category_examples](../../public/upsetplot/upsetplot_category_examples.png)
+![md={6}:upsetplot_category_examples](../../../public/upsetplot/upsetplot_category_examples.png)
 
 Once you get used to it, the dataframe operations are straightforward, but they were quite confusing at first, so I'm leaving this as a note. The key is initializing with True at the start.
 

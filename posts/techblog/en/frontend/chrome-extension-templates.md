@@ -27,7 +27,7 @@ Content Scripts for DOM manipulation are managed under `content-script`, and cod
 
 All of these are built together into the `dist` directory with `pnpm build`, and can be used immediately by uploading them in Chrome's developer mode.
 
-![alt text](../../public/chrome-ext.png)
+![alt text](../../../public/chrome-ext.png)
 
 ### 2. Formatter and Linter Setup
 

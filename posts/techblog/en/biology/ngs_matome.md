@@ -26,7 +26,7 @@ This technique works as follows:
 3. DNA polymerase extends the DNA.
 4. By repeating steps 1-3, $2^n$ copies of identical DNA are obtained.
 
-![md={6}:fig1](../../public/ngs_matome/500px-PCR.png)
+![md={6}:fig1](../../../public/ngs_matome/500px-PCR.png)
 
 So DNA can be amplified at an order of $O(2^n)$. Impressive.
 
@@ -41,7 +41,7 @@ Originally, a method called Sanger sequencing was used for DNA sequence determin
 
 In the figure below, the sequence `ACGACGTTCGTCA` is determined. With current technological advances, it is possible to read about 200 samples of approximately 500 bp (base pair) reads in about one day (based on my experience; newer instruments may be capable of more).
 
-![fig2](../../public/APB_NGS_Sanger_Sequencing_Illustration.avif)
+![fig2](../../../public/APB_NGS_Sanger_Sequencing_Illustration.avif)
 
 While this method was sufficiently groundbreaking, in recent years, technologies called next-generation sequencers have become widespread. These can execute millions to billions of massive sequencing reactions simultaneously in parallel. Here, I will focus on explaining bridge PCR and sequencing-by-synthesis, the main methods used in next-generation sequencers.
 
@@ -49,13 +49,13 @@ While this method was sufficiently groundbreaking, in recent years, technologies
 
 First, adapters (an evolved version of primers) are attached to both ends of the DNA to be amplified. These adapters contain sequences that bind (hybridize) to the flow cell (the surface where DNA is placed), allowing fixation on the flow cell (1-2). At this point, the thick blue adapter and the thin blue adapter can bind to each other, forming a bridge structure (3). PCR is performed starting from the adapters to amplify the DNA (4). When heat denaturation is applied in this state, the bonds between adapters break, doubling the quantity (5). This method enables local (only in a portion of the flow cell) mass synthesis of DNA (9). This technique yields approximately 40 Gb to 200 Gb of sequence data per analysis run.
 
-![fig3](../../public/ngs_matome/bridge-pcr.png)
+![fig3](../../../public/ngs_matome/bridge-pcr.png)
 
 ### Sequencing-by-Synthesis
 
 Now that the materials are ready, the nucleotide sequence is determined. Fluorescently labeled dNTPs with the 3' position (the direction of DNA elongation) blocked are incorporated into the regions amplified by bridge PCR, extending by just one base (one nucleotide) at a time. The incorporated fluorescent dNTP is illuminated to confirm which base it is. After confirmation, the fluorescent substance and the blocking agent at the 3' position are removed. By repeating this cycle, the entire sequence can be determined.
 
-![fig4](../../public/ngs_matome/seqence-method.png)
+![fig4](../../../public/ngs_matome/seqence-method.png)
 
 ### Further Reading
 

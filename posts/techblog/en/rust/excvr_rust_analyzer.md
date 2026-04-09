@@ -117,6 +117,6 @@ cargo new work
 With this, `docker-compose up` should launch Jupyter.
 Completions will work as shown below:
 
-![evxcr_jupyter_lsp_example](../../public/evcxr_jupyter_lsp.PNG)
+![evxcr_jupyter_lsp_example](../../../public/evcxr_jupyter_lsp.PNG)
 
 It's not quite as good as VS Code, but it feels more comfortable than tab completion.

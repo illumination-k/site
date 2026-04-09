@@ -64,7 +64,7 @@ plt.show()
 
 **Output**
 
-![beeswarm1](../../public/beeswarm/beeswarm1.png)
+![beeswarm1](../../../public/beeswarm/beeswarm1.png)
 
 ## Splitting by hue
 
@@ -87,7 +87,7 @@ plt.show()
 
 **Output**
 
-![beeswarm2](../../public/beeswarm/beeswarm2.png)
+![beeswarm2](../../../public/beeswarm/beeswarm2.png)
 
 ## Combining with Violin Plots
 
@@ -113,7 +113,7 @@ plt.show()
 
 **Output**
 
-![beeswarm3](../../public/beeswarm/beeswarm3.png)
+![beeswarm3](../../../public/beeswarm/beeswarm3.png)
 
 The beeswarm plot seems more readable since it also shows the distribution pattern. The downside is that it cannot display everything when there are too many data points. The best choice depends on the data you want to represent, but beeswarm plots are a strong option to consider.
 
