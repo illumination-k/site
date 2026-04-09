@@ -445,7 +445,10 @@ describe("BookTransformer", () => {
         type: string;
         url: string;
         data: unknown;
-        children: { type: string; children: { type: string; value: string }[] }[];
+        children: {
+          type: string;
+          children: { type: string; value: string }[];
+        }[];
       };
       expect(titleLink.type).toBe("link");
       expect(titleLink.url).toBe("https://www.amazon.co.jp/dp/0123456789");
