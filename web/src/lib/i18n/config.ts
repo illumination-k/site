@@ -18,3 +18,7 @@ export const localeToOgLocale: Record<Locale, string> = {
   en: "en_US",
   es: "es_ES",
 };
+
+export function localeToLang(locale: Locale): "ja" | "en" {
+  return locale === "en" ? "en" : "ja";
+}

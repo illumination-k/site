@@ -4,6 +4,7 @@ import type { Headings, PostMeta } from "common";
 
 import Adsense from "@/components/Adsense";
 import ArticleJsonLd from "@/components/ArticleJsonLd";
+import type { Dictionary } from "@/lib/i18n";
 
 import PostFooter from "./Footer";
 import PostHeader from "./Header";
@@ -18,6 +19,7 @@ export interface PostProps {
   prefix: string;
   relatedPostMeta: PostMeta[];
   compiledMarkdown: string;
+  dict: Dictionary;
 }
 
 /*
@@ -31,6 +33,7 @@ export default function Post({
   compiledMarkdown,
   meta,
   relatedPostMeta,
+  dict,
 }: PostProps) {
   return (
     <article
@@ -94,9 +97,9 @@ export default function Post({
             lg: { gridColumnStart: 3, gridColumnEnd: 10, gridRow: 1 },
           })}
         >
-          <PostHeader meta={meta} />
+          <PostHeader meta={meta} dict={dict} />
           <MdView compiledMarkdown={compiledMarkdown} />
-          <PostFooter meta={meta} />
+          <PostFooter meta={meta} dict={dict} />
         </article>
 
         <RightSidebar
@@ -136,7 +139,7 @@ export default function Post({
           color: "text.primary",
         })}
       >
-        Read Next
+        {dict.post.readNext}
       </h2>
       <nav
         className={css({

@@ -107,6 +107,16 @@ const ja: Dictionary = {
       },
     ],
   },
+  // Post
+  post: {
+    archiveWarning:
+      "この記事はArchiveされています。記事の内容が古い可能性が高いです。",
+    draftWarning: "この記事はドラフト段階です。",
+    aiGeneratedWarning:
+      "この記事はAIによって生成されています。内容の正確性にご注意ください。",
+    githubIssuePrompt: "この記事に関するIssueをGithubで作成する",
+    readNext: "次に読む",
+  },
   // Metrics page
   metrics: {
     title: "Quality Metrics",

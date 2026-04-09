@@ -24,9 +24,14 @@ export default class DumpRepository implements IBlogRepository {
     }
   }
 
-  async retrieve(uuid: string) {
+  async retrieve(uuid: string, lang?: Lang) {
     const dump = await this.get_dump();
-    return dump.posts.filter((post) => post.meta.uuid === uuid).pop();
+    const candidates = dump.posts.filter((post) => post.meta.uuid === uuid);
+    if (lang) {
+      const langMatch = candidates.find((post) => post.meta.lang === lang);
+      if (langMatch) return langMatch;
+    }
+    return candidates[0];
   }
 
   async list() {

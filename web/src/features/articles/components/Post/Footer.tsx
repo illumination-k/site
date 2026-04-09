@@ -7,14 +7,16 @@ import {
 import type { PostMeta } from "common";
 
 import GithubIcon from "@/icons/GithubIcon";
+import type { Dictionary } from "@/lib/i18n";
 
 interface Props {
   meta: PostMeta;
+  dict: Dictionary;
 }
 
 const iconClassName = css({ h: 5, w: 5 });
 
-export default function Footer({ meta }: Props) {
+export default function Footer({ meta, dict }: Props) {
   return (
     <div
       className={css({
@@ -35,9 +37,7 @@ export default function Footer({ meta }: Props) {
         })}
       >
         <GithubIcon className={iconClassName} />
-        {meta.lang === "ja"
-          ? "この記事に関するIssueをGithubで作成する"
-          : "Create a issue on Github about this article"}
+        {dict.post.githubIssuePrompt}
       </p>
       <ul>
         <li>

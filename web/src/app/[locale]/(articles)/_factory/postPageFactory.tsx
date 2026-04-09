@@ -4,7 +4,14 @@ import { z } from "zod";
 import { withZodPage } from "@/app/_util/withZodPage";
 import Post from "@/features/articles/components/Post";
 import type BlogService from "@/features/articles/service";
-import { type Locale, isLocale, localeToOgLocale, locales } from "@/lib/i18n";
+import {
+  type Locale,
+  getDictionary,
+  isLocale,
+  localeToLang,
+  localeToOgLocale,
+  locales,
+} from "@/lib/i18n";
 
 const paramsSchema = z.object({
   locale: z.string(),
@@ -24,9 +31,10 @@ export default class PostPageFactory {
 
   public createGenerateStaticParamsFn(): () => Promise<Params[]> {
     return async () => {
-      const posts = await this.blogService.repo.filterPosts("ja");
+      const allPosts = await this.blogService.repo.list();
+      const uniqueUuids = [...new Set(allPosts.map((post) => post.meta.uuid))];
       return locales.flatMap((locale) =>
-        posts.map((post) => ({ locale, uuid: post.meta.uuid })),
+        uniqueUuids.map((uuid) => ({ locale, uuid })),
       );
     };
   }
@@ -38,7 +46,8 @@ export default class PostPageFactory {
     ): Promise<Metadata> => {
       const _params = await params;
       const locale: Locale = isLocale(_params.locale) ? _params.locale : "ja";
-      const post = await this.blogService.repo.retrieve(_params.uuid);
+      const lang = localeToLang(locale);
+      const post = await this.blogService.repo.retrieve(_params.uuid, lang);
       if (!post) {
         throw `${_params.uuid} is not found`;
       }
@@ -79,15 +88,17 @@ export default class PostPageFactory {
   public createPostPage() {
     return withZodPage({ params: paramsSchema }, async ({ params }) => {
       const locale: Locale = isLocale(params.locale) ? params.locale : "ja";
-      const post = await this.blogService.repo.retrieve(params.uuid);
+      const lang = localeToLang(locale);
+      const post = await this.blogService.repo.retrieve(params.uuid, lang);
 
       if (!post) {
         throw `${params.uuid} is not found`;
       }
 
-      const relatedPostMeta = await this.blogService.getRelatedPostMeta(
-        post.meta,
-      );
+      const [relatedPostMeta, dict] = await Promise.all([
+        this.blogService.getRelatedPostMeta(post.meta),
+        getDictionary(locale),
+      ]);
 
       return (
         <Post
@@ -96,6 +107,7 @@ export default class PostPageFactory {
           prefix={`${locale}/${this.prefix}`}
           relatedPostMeta={relatedPostMeta}
           compiledMarkdown={post.compiledMarkdown}
+          dict={dict}
         />
       );
     });

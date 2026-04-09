@@ -7,7 +7,13 @@ import { withZodPage } from "@/app/_util/withZodPage";
 import Pager from "@/features/articles/components/Pager";
 import type BlogService from "@/features/articles/service";
 import pager from "@/features/articles/utils/pager";
-import { type Locale, getDictionary, isLocale, locales } from "@/lib/i18n";
+import {
+  type Locale,
+  getDictionary,
+  isLocale,
+  localeToLang,
+  locales,
+} from "@/lib/i18n";
 
 const schema = {
   params: z.object({
@@ -61,14 +67,18 @@ export default class PagerFactory {
     { locale: string; page: string }[]
   > {
     return async () => {
-      const posts = await this.blogService.repo.filterPosts("ja");
-      const totalPage = pager.getTotalPage(posts);
-      return locales.flatMap((locale) =>
-        Array.from({ length: totalPage }, (_, i) => ({
-          locale,
-          page: String(i + 1),
-        })),
+      const results = await Promise.all(
+        locales.map(async (locale) => {
+          const lang = localeToLang(locale);
+          const posts = await this.blogService.repo.filterPosts(lang);
+          const totalPage = Math.max(1, pager.getTotalPage(posts));
+          return Array.from({ length: totalPage }, (_, i) => ({
+            locale,
+            page: String(i + 1),
+          }));
+        }),
       );
+      return results.flat();
     };
   }
 
@@ -76,7 +86,8 @@ export default class PagerFactory {
     return withZodPage(schema, async ({ params }) => {
       const { page, locale: localeParam } = params;
       const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
-      const posts = await this.blogService.repo.filterPosts("ja");
+      const lang = localeToLang(locale);
+      const posts = await this.blogService.repo.filterPosts(lang);
       const pageInformation = pager.getPageInformation(
         posts.map((p) => p.meta),
         page,

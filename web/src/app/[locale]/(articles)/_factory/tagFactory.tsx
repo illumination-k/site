@@ -8,7 +8,13 @@ import Pager from "@/features/articles/components/Pager";
 import Tag from "@/features/articles/components/Tag";
 import type BlogService from "@/features/articles/service";
 import pager from "@/features/articles/utils/pager";
-import { type Locale, getDictionary, isLocale, locales } from "@/lib/i18n";
+import {
+  type Locale,
+  getDictionary,
+  isLocale,
+  localeToLang,
+  locales,
+} from "@/lib/i18n";
 
 const schema = {
   params: z.object({
@@ -68,7 +74,7 @@ export class TagPagerFactory {
       const nestedParams = await Promise.all(
         [...tags].map(async (tag) => {
           const tagged_posts = await this.blogService.repo.filterPosts(
-            "ja",
+            undefined,
             tag,
           );
           const totalPage = pager.getTotalPage(tagged_posts);
@@ -90,7 +96,8 @@ export class TagPagerFactory {
     return withZodPage(schema, async ({ params }) => {
       const { page, tag, locale: localeParam } = params;
       const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
-      const posts = await this.blogService.repo.filterPosts("ja", tag);
+      const lang = localeToLang(locale);
+      const posts = await this.blogService.repo.filterPosts(lang, tag);
       const pageInformation = pager.getPageInformation(
         posts.map((p) => p.meta),
         page,
