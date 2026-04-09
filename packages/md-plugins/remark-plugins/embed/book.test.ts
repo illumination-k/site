@@ -1,6 +1,6 @@
 import type { Directives } from "mdast-util-directive";
 import type { Parent } from "unist";
-import { afterEach, describe, expect, it, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { BookTransformer, buildAmazonUrl, getBookInfo } from "./book";
 
 vi.mock("../../cache", () => ({
@@ -44,11 +44,6 @@ describe("getBookInfo", () => {
 });
 
 describe("buildAmazonUrl", () => {
-  afterEach(() => {
-    process.env.AMAZON_ASSOCIATE_TAG_JP = "";
-    process.env.AMAZON_ASSOCIATE_TAG_US = "";
-  });
-
   it("generates Amazon.co.jp URL for jp region", () => {
     const url = buildAmazonUrl("0123456789", "jp");
     expect(url).toBe("https://www.amazon.co.jp/dp/0123456789");
@@ -59,16 +54,19 @@ describe("buildAmazonUrl", () => {
     expect(url).toBe("https://www.amazon.com/dp/0123456789");
   });
 
-  it("includes JP associate tag when set", () => {
-    process.env.AMAZON_ASSOCIATE_TAG_JP = "mytag-22";
-    const url = buildAmazonUrl("0123456789", "jp");
+  it("includes associate tag when provided", () => {
+    const url = buildAmazonUrl("0123456789", "jp", "mytag-22");
     expect(url).toBe("https://www.amazon.co.jp/dp/0123456789?tag=mytag-22");
   });
 
-  it("includes US associate tag when set", () => {
-    process.env.AMAZON_ASSOCIATE_TAG_US = "mytag-20";
-    const url = buildAmazonUrl("0123456789", "us");
+  it("includes US associate tag when provided", () => {
+    const url = buildAmazonUrl("0123456789", "us", "mytag-20");
     expect(url).toBe("https://www.amazon.com/dp/0123456789?tag=mytag-20");
+  });
+
+  it("omits tag param when tag is undefined", () => {
+    const url = buildAmazonUrl("0123456789", "jp", undefined);
+    expect(url).toBe("https://www.amazon.co.jp/dp/0123456789");
   });
 });
 
@@ -140,11 +138,6 @@ describe("BookTransformer", () => {
   });
 
   describe("transform", () => {
-    afterEach(() => {
-      process.env.AMAZON_ASSOCIATE_TAG_JP = "";
-      process.env.AMAZON_ASSOCIATE_TAG_US = "";
-    });
-
     it("generates a book card with Amazon.co.jp link by default", async () => {
       const transformer = new BookTransformer();
       const node = {
@@ -166,7 +159,7 @@ describe("BookTransformer", () => {
         hProperties: { className: "book-card" },
       });
 
-      // Check thumbnail link points to Amazon.co.jp
+      // Check thumbnail link points to Amazon.co.jp (no tag by default)
       const thumbnailLink = card.children[0] as unknown as {
         type: string;
         url: string;
@@ -210,9 +203,10 @@ describe("BookTransformer", () => {
       });
     });
 
-    it("includes associate tag in URL when env var is set", async () => {
-      process.env.AMAZON_ASSOCIATE_TAG_JP = "test-22";
-      const transformer = new BookTransformer();
+    it("includes JP associate tag in URL when injected via constructor", async () => {
+      const transformer = new BookTransformer({
+        associateTagJp: "test-22",
+      });
       const node = {
         type: "leafDirective",
         name: "isbn",
@@ -233,6 +227,35 @@ describe("BookTransformer", () => {
       };
       expect(thumbnailLink.url).toBe(
         "https://www.amazon.co.jp/dp/0123456789?tag=test-22",
+      );
+    });
+
+    it("includes US associate tag for {#us} region", async () => {
+      const transformer = new BookTransformer({
+        associateTagJp: "jp-tag-22",
+        associateTagUs: "us-tag-20",
+      });
+      const node = {
+        type: "leafDirective",
+        name: "isbn",
+        attributes: { id: "us" },
+        children: [{ type: "text", value: "0123456789" }],
+      } as unknown as Directives;
+
+      const parent: Parent = {
+        type: "root",
+        children: [node],
+      };
+
+      await transformer.transform(node, 0, parent);
+
+      const card = parent.children[0] as Parent;
+      const thumbnailLink = card.children[0] as unknown as {
+        type: string;
+        url: string;
+      };
+      expect(thumbnailLink.url).toBe(
+        "https://www.amazon.com/dp/0123456789?tag=us-tag-20",
       );
     });
 

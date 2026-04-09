@@ -7,7 +7,12 @@ import fm, { type FrontMatterResult } from "front-matter";
 import { remark } from "remark";
 
 import { compile } from "@mdx-js/mdx";
-import { REHYPE_PLUGINS, REMARK_PLUGINS } from "md-plugins";
+import {
+  BookTransformer,
+  REHYPE_PLUGINS,
+  REMARK_PLUGINS,
+  remarkDirectiveEmbedGenerator,
+} from "md-plugins";
 
 import {
   type Dump,
@@ -97,10 +102,19 @@ export async function dumpPost(
                 ],
               ]
             : []),
-        ].concat(
-          // @ts-ignore
-          REMARK_PLUGINS,
-        ),
+        ]
+          .concat(
+            // @ts-ignore
+            REMARK_PLUGINS,
+          )
+          .concat([
+            remarkDirectiveEmbedGenerator([
+              new BookTransformer({
+                associateTagJp: process.env.AMAZON_ASSOCIATE_TAG_JP,
+                associateTagUs: process.env.AMAZON_ASSOCIATE_TAG_US,
+              }),
+            ]),
+          ]),
         rehypePlugins: [
           REHYPE_PLUGINS.rehypeKatex,
           [

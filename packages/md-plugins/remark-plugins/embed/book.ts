@@ -43,18 +43,30 @@ export async function getBookInfo(isbn: string): Promise<BookInfo> {
   };
 }
 
-export function buildAmazonUrl(isbn: string, region: "jp" | "us"): string {
+export function buildAmazonUrl(
+  isbn: string,
+  region: "jp" | "us",
+  tag?: string,
+): string {
   const domain = region === "us" ? "www.amazon.com" : "www.amazon.co.jp";
-  const tag =
-    region === "us"
-      ? (process.env.AMAZON_ASSOCIATE_TAG_US ?? "")
-      : (process.env.AMAZON_ASSOCIATE_TAG_JP ?? "");
   const tagParam = tag ? `?tag=${tag}` : "";
   return `https://${domain}/dp/${isbn}${tagParam}`;
 }
 
+export type BookTransformerOptions = {
+  associateTagJp?: string;
+  associateTagUs?: string;
+};
+
 export class BookTransformer implements DirectiveTransformer {
   isbn?: string;
+  private associateTagJp: string;
+  private associateTagUs: string;
+
+  constructor(options?: BookTransformerOptions) {
+    this.associateTagJp = options?.associateTagJp ?? "";
+    this.associateTagUs = options?.associateTagUs ?? "";
+  }
 
   shouldTransform(node: Directives) {
     if (node.type !== "leafDirective") return false;
@@ -83,7 +95,8 @@ export class BookTransformer implements DirectiveTransformer {
         ? "us"
         : "jp";
 
-    const amazonUrl = buildAmazonUrl(isbn, region);
+    const tag = region === "us" ? this.associateTagUs : this.associateTagJp;
+    const amazonUrl = buildAmazonUrl(isbn, region, tag || undefined);
     const buttonText = region === "us" ? "View on Amazon" : "Amazonで見る";
 
     const thumbnailImage: Image = {

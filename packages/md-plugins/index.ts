@@ -19,7 +19,6 @@ import remarkDirectiveEmbedGenerator, {
   GithubMetaTransformer,
   GithubTransformer,
 } from "./remark-plugins/embed";
-import { BookTransformer } from "./remark-plugins/embed/book";
 import { DoiTransformer } from "./remark-plugins/embed/doi";
 import { YouTubeTransformer } from "./remark-plugins/embed/youtube";
 
@@ -37,7 +36,6 @@ export const REMARK_PLUGINS = [
     new GithubMetaTransformer(),
     new YouTubeTransformer(),
     new DoiTransformer(),
-    new BookTransformer(),
   ]),
   remarkMdx,
 ];
@@ -60,3 +58,8 @@ export {
 } from "./fetch";
 export { cachedFetch } from "./cachedFetch";
 export { getCacheKey, cacheGet, cacheSet, getDefaultCacheDir } from "./cache";
+export { default as remarkDirectiveEmbedGenerator } from "./remark-plugins/embed";
+export {
+  BookTransformer,
+  type BookTransformerOptions,
+} from "./remark-plugins/embed/book";
