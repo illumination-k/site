@@ -112,6 +112,7 @@ export async function dumpPost(
               new BookTransformer({
                 associateTagJp: process.env.AMAZON_ASSOCIATE_TAG_JP,
                 associateTagUs: process.env.AMAZON_ASSOCIATE_TAG_US,
+                defaultRegion: post.meta.lang === "en" ? "us" : "jp",
               }),
             ]),
           ]),

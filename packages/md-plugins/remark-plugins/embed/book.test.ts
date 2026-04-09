@@ -3,13 +3,7 @@ import type { Parent } from "unist";
 import { describe, expect, it, vi } from "vitest";
 import { BookTransformer, buildAmazonUrl, getBookInfo } from "./book";
 
-vi.mock("../../cache", () => ({
-  getCacheKey: vi.fn().mockReturnValue("test-key"),
-  cacheGet: vi.fn().mockResolvedValue(null),
-  cacheSet: vi.fn().mockResolvedValue(undefined),
-}));
-
-vi.mock("../../fetch", () => ({
+const { fetchWithRetry } = vi.hoisted(() => ({
   fetchWithRetry: vi.fn().mockResolvedValue({
     data: {
       items: [
@@ -27,6 +21,14 @@ vi.mock("../../fetch", () => ({
   }),
 }));
 
+vi.mock("../../cache", () => ({
+  getCacheKey: vi.fn().mockReturnValue("test-key"),
+  cacheGet: vi.fn().mockResolvedValue(null),
+  cacheSet: vi.fn().mockResolvedValue(undefined),
+}));
+
+vi.mock("../../fetch", () => ({ fetchWithRetry }));
+
 describe("getBookInfo", () => {
   it("fetches and parses book info from Google Books API", async () => {
     const info = await getBookInfo("0123456789");
@@ -37,9 +39,57 @@ describe("getBookInfo", () => {
     expect(info.isbn).toBe("0123456789");
   });
 
+  it("constructs the correct Google Books API URL", async () => {
+    await getBookInfo("0123456789");
+    expect(fetchWithRetry).toHaveBeenCalledWith(
+      "https://www.googleapis.com/books/v1/volumes?q=isbn:0123456789",
+      undefined,
+    );
+  });
+
   it("handles ISBN-13", async () => {
     const info = await getBookInfo("9780123456789");
     expect(info.isbn).toBe("9780123456789");
+  });
+
+  it("throws when no items returned", async () => {
+    fetchWithRetry.mockResolvedValueOnce({
+      data: { items: [] },
+      status: 200,
+    });
+    await expect(getBookInfo("0000000000")).rejects.toThrow(
+      "No book found for ISBN: 0000000000",
+    );
+  });
+
+  it("throws when items is undefined", async () => {
+    fetchWithRetry.mockResolvedValueOnce({
+      data: {},
+      status: 200,
+    });
+    await expect(getBookInfo("0000000000")).rejects.toThrow(
+      "No book found for ISBN:",
+    );
+  });
+
+  it("falls back to empty values for missing optional fields", async () => {
+    fetchWithRetry.mockResolvedValueOnce({
+      data: {
+        items: [
+          {
+            volumeInfo: {
+              title: "Minimal Book",
+            },
+          },
+        ],
+      },
+      status: 200,
+    });
+    const info = await getBookInfo("1111111111");
+    expect(info.title).toBe("Minimal Book");
+    expect(info.description).toBe("");
+    expect(info.authors).toEqual([]);
+    expect(info.thumbnail).toBe("");
   });
 });
 
@@ -259,7 +309,194 @@ describe("BookTransformer", () => {
       );
     });
 
-    it("renders book title and authors from API response", async () => {
+    it("uses defaultRegion 'us' when set via constructor", async () => {
+      const transformer = new BookTransformer({
+        defaultRegion: "us",
+        associateTagUs: "us-tag-20",
+      });
+      const node = {
+        type: "leafDirective",
+        name: "isbn",
+        children: [{ type: "text", value: "0123456789" }],
+      } as unknown as Directives;
+
+      const parent: Parent = {
+        type: "root",
+        children: [node],
+      };
+
+      await transformer.transform(node, 0, parent);
+
+      const card = parent.children[0] as Parent;
+      const thumbnailLink = card.children[0] as unknown as {
+        type: string;
+        url: string;
+      };
+      expect(thumbnailLink.url).toBe(
+        "https://www.amazon.com/dp/0123456789?tag=us-tag-20",
+      );
+
+      // Button text should be English
+      const infoNode = card.children[1] as Parent;
+      const buttonNode = infoNode.children[2] as Parent;
+      expect(buttonNode.children[0]).toEqual({
+        type: "text",
+        value: "View on Amazon",
+      });
+    });
+
+    it("directive attribute overrides defaultRegion", async () => {
+      const transformer = new BookTransformer({
+        defaultRegion: "us",
+        associateTagJp: "jp-tag-22",
+      });
+      const node = {
+        type: "leafDirective",
+        name: "isbn",
+        attributes: { id: "jp" },
+        children: [{ type: "text", value: "0123456789" }],
+      } as unknown as Directives;
+
+      const parent: Parent = {
+        type: "root",
+        children: [node],
+      };
+
+      await transformer.transform(node, 0, parent);
+
+      const card = parent.children[0] as Parent;
+      const thumbnailLink = card.children[0] as unknown as {
+        type: string;
+        url: string;
+      };
+      expect(thumbnailLink.url).toBe(
+        "https://www.amazon.co.jp/dp/0123456789?tag=jp-tag-22",
+      );
+
+      // Button text should be Japanese despite defaultRegion=us
+      const infoNode = card.children[1] as Parent;
+      const buttonNode = infoNode.children[2] as Parent;
+      expect(buttonNode.children[0]).toEqual({
+        type: "text",
+        value: "Amazonで見る",
+      });
+    });
+
+    it("renders full card structure with correct hName and hProperties", async () => {
+      const transformer = new BookTransformer();
+      const node = {
+        type: "leafDirective",
+        name: "isbn",
+        children: [{ type: "text", value: "0123456789" }],
+      } as unknown as Directives;
+
+      const parent: Parent = {
+        type: "root",
+        children: [node],
+      };
+
+      await transformer.transform(node, 0, parent);
+
+      const card = parent.children[0] as Parent;
+
+      // Card wrapper
+      expect(card.data).toEqual({
+        hName: "div",
+        hProperties: { className: "book-card" },
+      });
+      expect(card.children).toHaveLength(2);
+
+      // Thumbnail link
+      const thumbnailLink = card.children[0] as unknown as {
+        type: string;
+        url: string;
+        data: unknown;
+        children: Parent[];
+      };
+      expect(thumbnailLink.type).toBe("link");
+      expect(thumbnailLink.data).toEqual({
+        hProperties: { target: "_blank", rel: "noopener sponsored" },
+      });
+
+      // Thumbnail image
+      const thumbnailImg = thumbnailLink.children[0] as unknown as {
+        type: string;
+        url: string;
+        alt: string;
+        data: unknown;
+      };
+      expect(thumbnailImg.type).toBe("image");
+      expect(thumbnailImg.url).toBe("https://example.com/thumb.jpg");
+      expect(thumbnailImg.alt).toBe("Test Book");
+      expect(thumbnailImg.data).toEqual({
+        hProperties: { className: "book-card-thumbnail" },
+      });
+
+      // Info node
+      const infoNode = card.children[1] as Parent;
+      expect(infoNode.data).toEqual({
+        hName: "div",
+        hProperties: { className: "book-card-info" },
+      });
+      expect(infoNode.children).toHaveLength(3);
+
+      // Title link
+      const titleLink = infoNode.children[0] as unknown as {
+        type: string;
+        url: string;
+        data: unknown;
+        children: { type: string; children: { type: string; value: string }[] }[];
+      };
+      expect(titleLink.type).toBe("link");
+      expect(titleLink.url).toBe("https://www.amazon.co.jp/dp/0123456789");
+      expect(titleLink.data).toEqual({
+        hProperties: { target: "_blank", rel: "noopener sponsored" },
+      });
+      expect(titleLink.children[0].type).toBe("strong");
+      expect(titleLink.children[0].children[0].value).toBe("Test Book");
+
+      // Authors node
+      const authorsNode = infoNode.children[1] as Parent;
+      expect(authorsNode.data).toEqual({
+        hName: "p",
+        hProperties: { className: "book-card-authors" },
+      });
+      expect(authorsNode.children[0]).toEqual({
+        type: "text",
+        value: "Author One, Author Two",
+      });
+
+      // Amazon button
+      const buttonNode = infoNode.children[2] as Parent;
+      expect(buttonNode.data).toEqual({
+        hName: "a",
+        hProperties: {
+          className: "book-card-amazon-link",
+          href: "https://www.amazon.co.jp/dp/0123456789",
+          target: "_blank",
+          rel: "noopener sponsored",
+        },
+      });
+      expect(buttonNode.children[0]).toEqual({
+        type: "text",
+        value: "Amazonで見る",
+      });
+    });
+
+    it("shows 'Unknown' when authors array is empty", async () => {
+      fetchWithRetry.mockResolvedValueOnce({
+        data: {
+          items: [
+            {
+              volumeInfo: {
+                title: "No Author Book",
+              },
+            },
+          ],
+        },
+        status: 200,
+      });
+
       const transformer = new BookTransformer();
       const node = {
         type: "leafDirective",
@@ -276,18 +513,10 @@ describe("BookTransformer", () => {
 
       const card = parent.children[0] as Parent;
       const infoNode = card.children[1] as Parent;
-
-      // Title link
-      const titleLink = infoNode.children[0] as unknown as {
-        children: { children: { value: string }[] }[];
-      };
-      expect(titleLink.children[0].children[0].value).toBe("Test Book");
-
-      // Authors
       const authorsNode = infoNode.children[1] as Parent;
       expect(authorsNode.children[0]).toEqual({
         type: "text",
-        value: "Author One, Author Two",
+        value: "Unknown",
       });
     });
   });

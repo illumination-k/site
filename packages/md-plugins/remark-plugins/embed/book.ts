@@ -56,16 +56,19 @@ export function buildAmazonUrl(
 export type BookTransformerOptions = {
   associateTagJp?: string;
   associateTagUs?: string;
+  defaultRegion?: "jp" | "us";
 };
 
 export class BookTransformer implements DirectiveTransformer {
   isbn?: string;
   private associateTagJp: string;
   private associateTagUs: string;
+  private defaultRegion: "jp" | "us";
 
   constructor(options?: BookTransformerOptions) {
     this.associateTagJp = options?.associateTagJp ?? "";
     this.associateTagUs = options?.associateTagUs ?? "";
+    this.defaultRegion = options?.defaultRegion ?? "jp";
   }
 
   shouldTransform(node: Directives) {
@@ -90,10 +93,15 @@ export class BookTransformer implements DirectiveTransformer {
     const isbn = mdastToString(node);
     const bookInfo = await getBookInfo(isbn);
 
+    // Directive attribute {#us} or {#jp} overrides the default region
+    const explicitRegion =
+      node.attributes && "id" in node.attributes
+        ? (node.attributes.id as string)
+        : undefined;
     const region: "jp" | "us" =
-      node.attributes && "id" in node.attributes && node.attributes.id === "us"
-        ? "us"
-        : "jp";
+      explicitRegion === "us" || explicitRegion === "jp"
+        ? explicitRegion
+        : this.defaultRegion;
 
     const tag = region === "us" ? this.associateTagUs : this.associateTagJp;
     const amazonUrl = buildAmazonUrl(isbn, region, tag || undefined);
