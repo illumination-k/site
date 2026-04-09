@@ -68,16 +68,16 @@ During cDNA synthesis, a polyC sequence is added to the 3' end, and a DNA oligo 
 This is used for blunt-ending protruding ends and adding A-tails to blunt ends. It is actually DNA polymerase I, which synthesizes DNA complementary to the template using dNTPs as substrates in the presence of a template and primer. By reacting with dATP, A-tails can be added. It lacks 5' -> 3' exonuclease activity and possesses single-strand-specific 5' -> 3' exonuclease activity.
 
 1. 5' -> 3' DNA polymerase activity
-   ![klenow](https://catalog.takara-bio.co.jp/IMAGES/2130a.gif)
+   ![klenow](../../../public/library_construction/klenow.gif)
 
 2. Single-strand-specific 3' -> 5' exonuclease activity
-   ![klenow exonuclease](https://catalog.takara-bio.co.jp/IMAGES/2130c.gif)
+   ![klenow exonuclease](../../../public/library_construction/klenow_exonuclease.gif)
 
 ## Ligation
 
 Ligation is a reaction that joins DNA fragments together and is used in various applications besides library preparation, such as vector construction. A commonly used method involves joining a vector cut with restriction enzymes to an insert DNA with complementary overhanging ends. As shown in the figure below, DNA fragments with complementary overhanging ends can be joined together. Some enzymes can also join blunt ends. When processing blunt ends, phosphorylation is generally performed ([reference](https://lifescience.toyobo.co.jp/upload/upld86/protocol-c/cloning86pc01.pdf)).
 
-![ligation](https://media.addgene.org/data/easy-thumbnails/filer_public/cms/filer_public/21/27/212780f6-b140-440b-b414-1ec4353167d6/ligation.gif__900x316_q85_crop_subsampling-2_upscale.png)
+![ligation](../../../public/library_construction/ligation.png)
 
 ## USER
 
@@ -93,7 +93,7 @@ It is sometimes used for adapter cleavage and USER cloning.
 
 cDNA is single-stranded DNA, but double-stranded DNA is generally easier to handle. Therefore, methods exist for converting it to double-stranded DNA. Recent methods commonly use RNase H + DNA polymerase I. RNase H introduces nicks into RNA. DNA polymerase I is a DNA synthesis enzyme with double-strand-specific 5'->3' exonuclease activity and single-strand-specific 3'->5' exonuclease activity.
 
-![RNAnicking_doublestrandedcdna](https://www.thermofisher.com/jp/ja/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/rt-education/reverse-transcription-setup/jcr:content/MainParsys/image_a871/foregroundimg.img.320.low.png/1500204713307.png)
+![RNAnicking_doublestrandedcdna](../../../public/library_construction/rt_setup.png)
 
 First, nicks are introduced by RNase H. The resulting RNA fragments serve as primers for DNA polymerase I to synthesize the complementary second strand of DNA.
 

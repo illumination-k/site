@@ -211,29 +211,56 @@ const optimizeImage = (option: Option) => {
               fs.statSync(optimizedImagePath).size > 0;
 
             if (!alreadyExists) {
+              const tmpOutput = `${optimizedImagePath}.${process.pid}.tmp`;
               try {
                 await sharp(imagePath)
                   .avif({ quality: 75 })
                   .resize(size?.width, size?.height)
-                  .toFile(optimizedImagePath);
+                  .toFile(tmpOutput);
+                fs.renameSync(tmpOutput, optimizedImagePath);
               } catch (err) {
-                logger.error(
-                  {
-                    imagePath,
-                    optimizedImagePath,
-                    postPath: String(option.postPath),
-                    err,
-                  },
-                  "Failed to optimize image with sharp",
-                );
-                throw new Error(
-                  `Failed to optimize image: ${imagePath} (post: ${option.postPath})`,
-                );
+                // Another process may have written the file concurrently
+                if (
+                  fs.existsSync(optimizedImagePath) &&
+                  fs.statSync(optimizedImagePath).size > 0
+                ) {
+                  try {
+                    fs.unlinkSync(tmpOutput);
+                  } catch {}
+                } else {
+                  try {
+                    fs.unlinkSync(tmpOutput);
+                  } catch {}
+                  logger.error(
+                    {
+                      imagePath,
+                      optimizedImagePath,
+                      postPath: String(option.postPath),
+                      err,
+                    },
+                    "Failed to optimize image with sharp",
+                  );
+                  throw new Error(
+                    `Failed to optimize image: ${imagePath} (post: ${option.postPath})`,
+                  );
+                }
               }
             }
 
+            // Wait for file to be fully written if another process is writing
+            let dim: Awaited<ReturnType<typeof sizeOfAsync>> | undefined;
+            for (let attempt = 0; attempt < 5; attempt++) {
+              try {
+                const stat = fs.statSync(optimizedImagePath);
+                if (stat.size > 0) {
+                  dim = await sizeOfAsync(optimizedImagePath);
+                  break;
+                }
+              } catch {}
+              await new Promise((r) => setTimeout(r, 200));
+            }
+
             const newUri = replacePathAsPublicRoot(optimizedImagePath);
-            const dim = await sizeOfAsync(optimizedImagePath);
             node.url = newUri;
 
             if (dim) {
