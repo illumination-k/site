@@ -46,8 +46,8 @@ describe("getBookInfo", () => {
 
 describe("buildAmazonUrl", () => {
   afterEach(() => {
-    delete process.env.AMAZON_ASSOCIATE_TAG_JP;
-    delete process.env.AMAZON_ASSOCIATE_TAG_US;
+    process.env.AMAZON_ASSOCIATE_TAG_JP = "";
+    process.env.AMAZON_ASSOCIATE_TAG_US = "";
   });
 
   it("generates Amazon.co.jp URL for jp region", () => {
@@ -142,8 +142,8 @@ describe("BookTransformer", () => {
 
   describe("transform", () => {
     afterEach(() => {
-      delete process.env.AMAZON_ASSOCIATE_TAG_JP;
-      delete process.env.AMAZON_ASSOCIATE_TAG_US;
+      process.env.AMAZON_ASSOCIATE_TAG_JP = "";
+      process.env.AMAZON_ASSOCIATE_TAG_US = "";
     });
 
     it("generates a book card with Amazon.co.jp link by default", async () => {
@@ -169,9 +169,7 @@ describe("BookTransformer", () => {
 
       // Check thumbnail link points to Amazon.co.jp
       const thumbnailLink = card.children[0] as { type: string; url: string };
-      expect(thumbnailLink.url).toBe(
-        "https://www.amazon.co.jp/dp/0123456789",
-      );
+      expect(thumbnailLink.url).toBe("https://www.amazon.co.jp/dp/0123456789");
       expect(thumbnailLink.data).toEqual({
         hProperties: { target: "_blank", rel: "noopener sponsored" },
       });
