@@ -123,7 +123,10 @@ export class BookTransformer implements DirectiveTransformer {
         hProperties: { className: "book-card-authors" },
       },
       children: [
-        { type: "text", value: bookInfo.authors.join(", ") || "Unknown" } as Text,
+        {
+          type: "text",
+          value: bookInfo.authors.join(", ") || "Unknown",
+        } as Text,
       ],
     };
 
