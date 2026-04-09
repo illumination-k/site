@@ -1,42 +1,75 @@
+import type { Image, Link, Text } from "mdast";
 import type { Directives } from "mdast-util-directive";
 import { toString as mdastToString } from "mdast-util-to-string";
+import type { Parent } from "unist";
 import type { DirectiveTransformer } from ".";
-import { fetchWithRetry } from "../../fetch";
+import { cachedFetch } from "../../cachedFetch";
 
 type BookInfo = {
   title: string;
   description: string;
   authors: string[];
   thumbnail: string;
-  isbn10: string;
+  isbn: string;
 };
 
-export async function getBookInfo(isbn10: string): Promise<BookInfo> {
-  const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn10}`;
+export async function getBookInfo(isbn: string): Promise<BookInfo> {
+  const url = `https://www.googleapis.com/books/v1/volumes?q=isbn:${isbn}`;
 
-  const resp = await fetchWithRetry<{
-    items: {
+  const resp = await cachedFetch(url);
+
+  const data = resp.data as {
+    items?: {
       volumeInfo: {
         title: string;
-        description: string;
-        authors: string[];
-        imageLinks: { thumbnail: string };
+        description?: string;
+        authors?: string[];
+        imageLinks?: { thumbnail?: string };
       };
     }[];
-  }>(url);
+  };
 
-  const book = resp.data.items[0].volumeInfo;
+  if (!data.items || data.items.length === 0) {
+    throw new Error(`No book found for ISBN: ${isbn}`);
+  }
+
+  const book = data.items[0].volumeInfo;
   return {
     title: book.title,
-    description: book.description,
-    authors: book.authors,
-    thumbnail: book.imageLinks.thumbnail,
-    isbn10: isbn10,
+    description: book.description ?? "",
+    authors: book.authors ?? [],
+    thumbnail: book.imageLinks?.thumbnail ?? "",
+    isbn,
   };
 }
 
+export function buildAmazonUrl(
+  isbn: string,
+  region: "jp" | "us",
+  tag?: string,
+): string {
+  const domain = region === "us" ? "www.amazon.com" : "www.amazon.co.jp";
+  const tagParam = tag ? `?tag=${tag}` : "";
+  return `https://${domain}/dp/${isbn}${tagParam}`;
+}
+
+export type BookTransformerOptions = {
+  associateTagJp?: string;
+  associateTagUs?: string;
+  defaultRegion?: "jp" | "us";
+};
+
 export class BookTransformer implements DirectiveTransformer {
-  isbn10?: string;
+  isbn?: string;
+  private associateTagJp: string;
+  private associateTagUs: string;
+  private defaultRegion: "jp" | "us";
+
+  constructor(options?: BookTransformerOptions) {
+    this.associateTagJp = options?.associateTagJp ?? "";
+    this.associateTagUs = options?.associateTagUs ?? "";
+    this.defaultRegion = options?.defaultRegion ?? "jp";
+  }
 
   shouldTransform(node: Directives) {
     if (node.type !== "leafDirective") return false;
@@ -44,14 +77,112 @@ export class BookTransformer implements DirectiveTransformer {
 
     const v = mdastToString(node);
 
-    if (v.length !== 10) {
+    if (v.length !== 10 && v.length !== 13) {
       return false;
     }
 
-    this.isbn10 = v;
+    this.isbn = v;
     return true;
   }
 
-  // @ts-ignore
-  async transform(node: Directives) {}
+  async transform(
+    node: Directives,
+    index: number | null | undefined,
+    parent: Parent,
+  ) {
+    const isbn = mdastToString(node);
+    const bookInfo = await getBookInfo(isbn);
+
+    // Directive attribute {#us} or {#jp} overrides the default region
+    const explicitRegion =
+      node.attributes && "id" in node.attributes
+        ? (node.attributes.id as string)
+        : undefined;
+    const region: "jp" | "us" =
+      explicitRegion === "us" || explicitRegion === "jp"
+        ? explicitRegion
+        : this.defaultRegion;
+
+    const tag = region === "us" ? this.associateTagUs : this.associateTagJp;
+    const amazonUrl = buildAmazonUrl(isbn, region, tag || undefined);
+    const buttonText = region === "us" ? "View on Amazon" : "Amazonで見る";
+
+    const thumbnailImage: Image = {
+      type: "image",
+      url: bookInfo.thumbnail,
+      alt: bookInfo.title,
+      data: { hProperties: { className: "book-card-thumbnail" } },
+    };
+
+    const thumbnailLink: Link = {
+      type: "link",
+      url: amazonUrl,
+      data: {
+        hProperties: { target: "_blank", rel: "noopener sponsored" },
+      },
+      children: [thumbnailImage],
+    };
+
+    const titleLink: Link = {
+      type: "link",
+      url: amazonUrl,
+      data: {
+        hProperties: { target: "_blank", rel: "noopener sponsored" },
+      },
+      children: [
+        {
+          type: "strong",
+          children: [{ type: "text", value: bookInfo.title }],
+        },
+      ],
+    };
+
+    const authorsNode: Parent = {
+      type: "book-card-authors",
+      data: {
+        hName: "p",
+        hProperties: { className: "book-card-authors" },
+      },
+      children: [
+        {
+          type: "text",
+          value: bookInfo.authors.join(", ") || "Unknown",
+        } as Text,
+      ],
+    };
+
+    const amazonButton: Parent = {
+      type: "book-card-amazon-link",
+      data: {
+        hName: "a",
+        hProperties: {
+          className: "book-card-amazon-link",
+          href: amazonUrl,
+          target: "_blank",
+          rel: "noopener sponsored",
+        },
+      },
+      children: [{ type: "text", value: buttonText } as Text],
+    };
+
+    const infoNode: Parent = {
+      type: "book-card-info",
+      data: {
+        hName: "div",
+        hProperties: { className: "book-card-info" },
+      },
+      children: [titleLink, authorsNode, amazonButton],
+    };
+
+    const cardNode: Parent = {
+      type: "book-card",
+      data: {
+        hName: "div",
+        hProperties: { className: "book-card" },
+      },
+      children: [thumbnailLink, infoNode],
+    };
+
+    parent.children[index || 0] = cardNode;
+  }
 }

@@ -237,6 +237,52 @@ const style = css({
     py: 2,
   },
 
+  // book-card (Amazon affiliate)
+  "& div.book-card": {
+    display: "flex",
+    gap: 4,
+    p: 4,
+    my: 4,
+    borderWidth: 1,
+    borderColor: "border.default",
+    rounded: "lg",
+    bg: "bg.surface",
+    "& a": {
+      textDecoration: "none",
+    },
+    "& img.book-card-thumbnail": {
+      w: "120px",
+      h: "auto",
+      objectFit: "contain",
+      rounded: "md",
+      my: 0,
+      flexShrink: 0,
+    },
+    "& div.book-card-info": {
+      display: "flex",
+      flexDirection: "column",
+      gap: 1,
+    },
+    "& p.book-card-authors": {
+      color: "text.secondary",
+      fontSize: "sm",
+      my: 0,
+    },
+    "& a.book-card-amazon-link": {
+      display: "inline-block",
+      bg: "#FF9900",
+      color: "white",
+      px: 3,
+      py: 1,
+      rounded: "md",
+      fontSize: "sm",
+      mt: "auto",
+      w: "fit-content",
+      textDecoration: "none",
+      _hover: { bg: "#E68A00", color: "white" },
+    },
+  },
+
   // gh-meta
   "& span.gh-meta": {
     display: "inline-flex",

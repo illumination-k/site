@@ -58,3 +58,8 @@ export {
 } from "./fetch";
 export { cachedFetch } from "./cachedFetch";
 export { getCacheKey, cacheGet, cacheSet, getDefaultCacheDir } from "./cache";
+export { default as remarkDirectiveEmbedGenerator } from "./remark-plugins/embed";
+export {
+  BookTransformer,
+  type BookTransformerOptions,
+} from "./remark-plugins/embed/book";
