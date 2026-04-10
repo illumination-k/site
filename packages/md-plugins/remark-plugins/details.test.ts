@@ -64,7 +64,9 @@ Some other directive
   it("does not transform :details leaf or text directives", async () => {
     // Ensures `visit(ast, "containerDirective", ...)` filter holds: non-container
     // directives with name 'details' must not become <details> elements.
-    const vfile = await prosessor.process(":details[inline]\n\n::details[leaf]\n");
+    const vfile = await prosessor.process(
+      ":details[inline]\n\n::details[leaf]\n",
+    );
     const html = String(vfile.value);
     expect(html).not.toContain("<details>");
     expect(html).not.toContain("<summary>");

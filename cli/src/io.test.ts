@@ -8,7 +8,6 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const cliRoot = path.resolve(__dirname, "..");
 const fixture = (...segments: string[]) => path.join(cliRoot, ...segments);
 
-
 /**
  * Check whether Playwright browsers are installed.
  * rehype-mermaid with strategy "inline-svg" requires mermaid-isomorphic which
@@ -44,9 +43,9 @@ describe("readPost", () => {
   });
 
   it("throws on non-existent file", async () => {
-    await expect(readPost(fixture("test", "does-not-exist.md"))).rejects.toThrow(
-      "Failed to read post file",
-    );
+    await expect(
+      readPost(fixture("test", "does-not-exist.md")),
+    ).rejects.toThrow("Failed to read post file");
   });
 
   it("throws on invalid front-matter schema (missing required fields)", async () => {
@@ -124,7 +123,10 @@ describe("dumpSinglePost", () => {
 
   it("throws on non-existent file", async () => {
     await expect(
-      dumpSinglePost(fixture("test", "nope.md"), fixture("test", "public", "imageDist")),
+      dumpSinglePost(
+        fixture("test", "nope.md"),
+        fixture("test", "public", "imageDist"),
+      ),
     ).rejects.toThrow("Failed to read post file");
   });
 
@@ -149,7 +151,10 @@ describe("getDumpPosts", () => {
 
   it("fails when directory contains posts with invalid front-matter", async () => {
     await expect(
-      getDumpPosts(fixture("test-fixtures-invalid"), fixture("test", "public", "imageDist")),
+      getDumpPosts(
+        fixture("test-fixtures-invalid"),
+        fixture("test", "public", "imageDist"),
+      ),
     ).rejects.toThrow("posts failed to process");
   });
 });
@@ -173,7 +178,10 @@ describeWithBrowser("mermaid rendering", () => {
 
 describeWithBrowser("internal links", () => {
   it("resolves .md links to internal URLs in getDumpPosts", async () => {
-    const posts = await getDumpPosts(fixture("test"), fixture("test", "public", "imageDist"));
+    const posts = await getDumpPosts(
+      fixture("test"),
+      fixture("test", "public", "imageDist"),
+    );
 
     const test2 = posts.find(
       (p) => p.meta.uuid === "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",

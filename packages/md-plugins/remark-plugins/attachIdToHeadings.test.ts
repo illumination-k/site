@@ -94,7 +94,9 @@ describe("attachIdToHeadings", () => {
     const preAttach = () => (tree: import("mdast").Root) => {
       for (const child of tree.children) {
         if (child.type === "heading") {
-          child.data = { customFlag: true };
+          (child.data as unknown as Record<string, unknown>) = {
+            customFlag: true,
+          };
         }
       }
     };
@@ -119,8 +121,9 @@ describe("attachIdToHeadings", () => {
       .use(rehypeStringify)
       .process("## test heading");
 
-    const headingData = (vfile.data as { headingData: Record<string, unknown>[] })
-      .headingData;
+    const headingData = (
+      vfile.data as { headingData: Record<string, unknown>[] }
+    ).headingData;
     expect(headingData).toHaveLength(1);
     // If attachIdToHeadings overwrote node.data, customFlag would be lost.
     expect(headingData[0].customFlag).toBe(true);
