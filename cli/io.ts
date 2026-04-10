@@ -30,6 +30,11 @@ import resolveInternalLinks, { type PostMetaMap } from "./resolveInternalLinks";
 
 const readFileAsync = promisify(readFile);
 
+function elapsed(startMs: number): string {
+  const ms = performance.now() - startMs;
+  return ms >= 1000 ? `${(ms / 1000).toFixed(2)}s` : `${Math.round(ms)}ms`;
+}
+
 export async function readPost(filePath: PathLike): Promise<Post> {
   let rawPost: string;
   try {
@@ -71,13 +76,18 @@ export async function dumpPost(
   imageDist: string,
   postMetaMap?: PostMetaMap,
 ): Promise<DumpPost> {
+  const startTime = performance.now();
+  const pathStr = String(postPath);
+
+  logger.debug({ postPath: pathStr, title: post.meta.title }, "Compiling post");
+
   let stripFile: Awaited<ReturnType<ReturnType<typeof remark>["process"]>>;
   try {
     // @ts-ignore
     stripFile = await remark().use(extractHeader).process(post.markdown);
   } catch (err) {
     logger.error(
-      { postPath: String(postPath), err },
+      { postPath: pathStr, err },
       "Failed to extract headers via remark",
     );
     throw new Error(`Failed to extract headers via remark: ${postPath}`);
@@ -95,12 +105,7 @@ export async function dumpPost(
         remarkPlugins: [
           [optimizeImage, { postPath, imageDist }],
           ...(postMetaMap
-            ? [
-                [
-                  resolveInternalLinks,
-                  { postPath: String(postPath), postMetaMap },
-                ],
-              ]
+            ? [[resolveInternalLinks, { postPath: pathStr, postMetaMap }]]
             : []),
         ]
           .concat(
@@ -131,7 +136,7 @@ export async function dumpPost(
     );
   } catch (err) {
     logger.error(
-      { postPath: String(postPath), err },
+      { postPath: pathStr, err, elapsed: elapsed(startTime) },
       "Failed to compile markdown",
     );
     throw new Error(`Failed to compile markdown: ${postPath}`);
@@ -143,7 +148,7 @@ export async function dumpPost(
   if (!parsed.success) {
     logger.error(
       {
-        postPath: String(postPath),
+        postPath: pathStr,
         headings: _headings,
         validationError: parsed.error,
       },
@@ -151,6 +156,11 @@ export async function dumpPost(
     );
     throw new Error(`Failed to extract headers: ${postPath}`);
   }
+
+  logger.debug(
+    { postPath: pathStr, elapsed: elapsed(startTime) },
+    "Post compiled successfully",
+  );
 
   const { markdown: _, ...meta } = post;
   return {
@@ -165,6 +175,8 @@ export async function getDumpPosts(
   src: PathLike,
   imageDist: string,
 ): Promise<DumpPost[]> {
+  const totalStartTime = performance.now();
+
   const mdFiles = await Array.fromAsync(
     glob(`${src}/**/*.md`, { exclude: ["**/node_modules/**"] }),
   );
@@ -180,6 +192,9 @@ export async function getDumpPosts(
   );
 
   // Phase 1: Read all posts to build the metadata map
+  const phase1Start = performance.now();
+  logger.info("Phase 1: Reading posts and building metadata map");
+
   const readResults = await Promise.allSettled(
     mdFiles.map(async (f) => ({ filePath: f, post: await readPost(f) })),
   );
@@ -202,7 +217,22 @@ export async function getDumpPosts(
     }
   }
 
+  logger.info(
+    {
+      read: readSucceeded.length,
+      failed: readFailed.length,
+      elapsed: elapsed(phase1Start),
+    },
+    "Phase 1 complete",
+  );
+
   // Phase 2: Compile all posts with the complete metadata map
+  const phase2Start = performance.now();
+  logger.info(
+    { count: readSucceeded.length },
+    "Phase 2: Compiling posts with metadata map",
+  );
+
   const compileResults = await Promise.allSettled(
     readSucceeded.map(async ({ filePath, post }) => {
       return await dumpPost(post, filePath, imageDist, postMetaMap);
@@ -224,6 +254,16 @@ export async function getDumpPosts(
     }
   }
 
+  const compileFailed = failed.length - readFailed.length;
+  logger.info(
+    {
+      compiled: succeeded.length,
+      failed: compileFailed,
+      elapsed: elapsed(phase2Start),
+    },
+    "Phase 2 complete",
+  );
+
   if (failed.length > 0) {
     for (const f of failed) {
       logger.error({ file: f.file, err: f.reason }, "Failed to process post");
@@ -242,8 +282,45 @@ export async function getDumpPosts(
     );
   }
 
-  logger.info({ count: succeeded.length }, "All posts processed successfully");
+  logger.info(
+    { count: succeeded.length, totalElapsed: elapsed(totalStartTime) },
+    "All posts processed successfully",
+  );
   return succeeded;
+}
+
+export async function dumpSinglePost(
+  filePath: string,
+  imageDist: string,
+): Promise<DumpPost> {
+  const startTime = performance.now();
+
+  logger.info({ filePath }, "Dumping single post");
+
+  const post = await readPost(filePath);
+
+  logger.info(
+    {
+      title: post.meta.title,
+      category: post.meta.category,
+      uuid: post.meta.uuid,
+    },
+    "Post metadata loaded",
+  );
+
+  const result = await dumpPost(post, filePath, imageDist);
+
+  logger.info(
+    {
+      filePath,
+      title: post.meta.title,
+      headings: result.headings.length,
+      elapsed: elapsed(startTime),
+    },
+    "Single post dump complete",
+  );
+
+  return result;
 }
 
 function getDump(dumpPosts: DumpPost[]): Dump {
