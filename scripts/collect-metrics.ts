@@ -2,13 +2,20 @@
  * Collect coverage and mutation testing metrics from report files.
  * Outputs a JSON object with summary data.
  *
- * Usage: npx tsx scripts/collect-metrics.ts [--update-history]
+ * Usage: npx tsx scripts/collect-metrics.ts [--update-history] [--pr <number>]
  *
- * When --update-history is passed, appends the metrics to web/src/data/metrics-history.json
+ * When --update-history is passed together with --pr N, writes the metrics
+ * snapshot to web/src/data/metrics-history/pr-<N>.json. Using one file per PR
+ * avoids merge conflicts that would otherwise happen when multiple PRs append
+ * to a single shared ndjson file in parallel.
+ *
+ * When --update-history is passed without --pr (e.g. a local run), the
+ * snapshot is appended to web/src/data/metrics-history/_legacy.ndjson, which
+ * stores non-PR historical entries.
  */
 
-import { readFileSync, writeFileSync, existsSync, mkdirSync, appendFileSync } from "node:fs";
-import { join, dirname } from "node:path";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 interface CoverageEntry {
@@ -151,29 +158,26 @@ function main() {
   console.log(JSON.stringify(snapshot, null, 2));
 
   if (updateHistory) {
-    const historyDir = join(root, "web", "src", "data");
-    const historyPath = join(historyDir, "metrics-history.ndjson");
+    const historyDir = join(root, "web", "src", "data", "metrics-history");
 
     if (!existsSync(historyDir)) {
       mkdirSync(historyDir, { recursive: true });
     }
 
-    const lines = existsSync(historyPath)
-      ? readFileSync(historyPath, "utf-8").trim().split("\n").filter(Boolean)
-      : [];
-
     if (pr != null) {
-      // Upsert by PR number: replace existing entry for same PR
-      const filtered = lines.filter((line) => {
-        const h = JSON.parse(line) as MetricsSnapshot;
-        return h.pr !== pr;
-      });
-      filtered.push(JSON.stringify(snapshot));
-      const trimmed = filtered.slice(-100);
-      writeFileSync(historyPath, trimmed.join("\n") + "\n");
-      console.error(`Updated metrics for PR #${pr} (${trimmed.length} entries)`);
+      // One file per PR. Re-runs on the same PR simply overwrite its file, so
+      // there is never a textual conflict between two open PRs.
+      const prPath = join(historyDir, `pr-${pr}.json`);
+      writeFileSync(prPath, `${JSON.stringify(snapshot, null, 2)}\n`);
+      console.error(`Wrote metrics for PR #${pr} to ${prPath}`);
     } else {
-      // Legacy: deduplicate by date+sha
+      // Non-PR runs (manual / local) append to a shared legacy file,
+      // deduplicated by date+sha.
+      const legacyPath = join(historyDir, "_legacy.ndjson");
+      const lines = existsSync(legacyPath)
+        ? readFileSync(legacyPath, "utf-8").trim().split("\n").filter(Boolean)
+        : [];
+
       const exists = lines.some((line) => {
         const h = JSON.parse(line) as MetricsSnapshot;
         return h.date === date && h.sha === sha;
@@ -182,8 +186,8 @@ function main() {
       if (!exists) {
         lines.push(JSON.stringify(snapshot));
         const trimmed = lines.slice(-100);
-        writeFileSync(historyPath, trimmed.join("\n") + "\n");
-        console.error(`Updated metrics history (${trimmed.length} entries)`);
+        writeFileSync(legacyPath, `${trimmed.join("\n")}\n`);
+        console.error(`Updated legacy metrics history (${trimmed.length} entries)`);
       } else {
         console.error("Entry already exists, skipping");
       }

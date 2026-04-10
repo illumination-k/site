@@ -1,0 +1,19 @@
+{
+  "date": "2026-03-30",
+  "sha": "ffbc507",
+  "pr": 132,
+  "coverage": {
+    "lines": 69.53,
+    "statements": 66.67,
+    "functions": 65.67,
+    "branches": 56.02
+  },
+  "mutation": {
+    "score": 47.49,
+    "killed": 546,
+    "survived": 607,
+    "timeout": 3,
+    "noCoverage": 0,
+    "total": 1156
+  }
+}
