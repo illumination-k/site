@@ -15,7 +15,7 @@ postinstall = ["prek install -f"]
 
 [tasks.fmt]
 description = "Format code"
-run = ["dprint fmt", "prek run --all-files", "mise fmt", "pnpm run format"]
+run = ["dprint fmt", "mise fmt", "pnpm run format"]
 
 [tasks.lint]
 description = "Lint code"

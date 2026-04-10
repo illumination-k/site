@@ -44,4 +44,25 @@ fi
 mise settings experimental=true
 mise install
 
-pnpm i
+# Skip `pnpm install` when pnpm-lock.yaml is unchanged since the last
+# successful install. The hash sentinel lives under node_modules/ so that
+# wiping dependencies naturally forces a reinstall.
+LOCK_HASH_FILE="node_modules/.claude-pnpm-lock-hash"
+LOCK_HASH=""
+if [ -f "pnpm-lock.yaml" ]; then
+	LOCK_HASH=$(sha256sum pnpm-lock.yaml | awk '{print $1}')
+fi
+PREV_LOCK_HASH=""
+if [ -f "$LOCK_HASH_FILE" ]; then
+	PREV_LOCK_HASH=$(cat "$LOCK_HASH_FILE")
+fi
+
+if [ -n "$LOCK_HASH" ] && [ "$LOCK_HASH" = "$PREV_LOCK_HASH" ] && [ -d "node_modules" ]; then
+	echo "pnpm-lock.yaml unchanged; skipping pnpm install."
+else
+	pnpm install --frozen-lockfile --prefer-offline
+	if [ -n "$LOCK_HASH" ]; then
+		mkdir -p "$(dirname "$LOCK_HASH_FILE")"
+		printf '%s\n' "$LOCK_HASH" >"$LOCK_HASH_FILE"
+	fi
+fi
