@@ -5,7 +5,8 @@ import { describe, expect, it } from "vitest";
 import { dumpPost, dumpSinglePost, getDumpPosts, readPost } from "./io";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const fixture = (...segments: string[]) => path.join(__dirname, ...segments);
+const cliRoot = path.resolve(__dirname, "..");
+const fixture = (...segments: string[]) => path.join(cliRoot, ...segments);
 
 
 /**
