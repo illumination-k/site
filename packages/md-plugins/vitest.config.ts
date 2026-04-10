@@ -6,6 +6,13 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json", "json-summary", "html"],
       reportsDirectory: "./coverage",
+      include: ["**/*.ts"],
+      exclude: [
+        "**/*.test.*",
+        "**/*.d.ts",
+        "vitest.config.*",
+        "node_modules/**",
+      ],
     },
   },
 });
