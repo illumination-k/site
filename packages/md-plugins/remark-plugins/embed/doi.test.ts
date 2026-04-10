@@ -51,6 +51,18 @@ describe("doiRegExp", () => {
   it("rejects DOI without slash", () => {
     expect(doiRegExp.test("10.1126")).toBe(false);
   });
+
+  it("rejects DOI with leading non-DOI prefix (anchored start)", () => {
+    // Without the ^ anchor, the regex would find "10.1234/xyz" inside the string.
+    expect(doiRegExp.test("abc10.1234/xyz")).toBe(false);
+  });
+
+  it("rejects DOI with trailing invalid characters (anchored end)", () => {
+    // Without the $ anchor, the regex would match the valid DOI prefix
+    // and ignore the trailing garbage.
+    expect(doiRegExp.test("10.1234/xyz trailing stuff")).toBe(false);
+    expect(doiRegExp.test("10.1234/xyz?extra")).toBe(false);
+  });
 });
 
 describe("DoiTransformer.shouldTransform", () => {

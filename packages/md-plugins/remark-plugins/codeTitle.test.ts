@@ -87,4 +87,22 @@ describe("codeTitle", () => {
     // title= produces empty string which is falsy, so no wrapping
     expect(html).not.toContain("code-title-container");
   });
+
+  it("rejects a lone title= entry with extra = segments", async () => {
+    // `title=a=b` has 3 split parts — the `kv.length !== 2` guard must drop it.
+    // If that guard is removed, "a" would wrongly render as the title.
+    const vfile = await processor.process("```js title=a=b\ncode\n```");
+    const html = String(vfile.value);
+    expect(html).not.toContain("code-title-container");
+    expect(html).not.toContain(">a</p>");
+  });
+
+  it("renders the title with both expected class names", async () => {
+    // Guards against class-name literals being mutated to empty strings.
+    const vfile = await processor.process("```js title=main.ts\nx\n```");
+    const html = String(vfile.value);
+    expect(html).toContain('class="code-title-container"');
+    expect(html).toContain('class="code-title"');
+    expect(html).toContain(">main.ts</p>");
+  });
 });

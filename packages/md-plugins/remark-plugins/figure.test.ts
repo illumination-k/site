@@ -62,4 +62,27 @@ Some details
     expect(String(vfile.value)).not.toContain("<figure>");
     expect(String(vfile.value)).not.toContain("<figcaption>");
   });
+
+  it("does not transform leafDirective or textDirective with name 'figure'", async () => {
+    // Ensures the `visit(ast, "containerDirective", ...)` filter is effective:
+    // a `::figure` leaf/text directive must not get a figcaption attached.
+    const vfile = await processor.process(
+      ":figure[inline]\n\n::figure[leaf]\n",
+    );
+    expect(String(vfile.value)).not.toContain("<figure>");
+    expect(String(vfile.value)).not.toContain("<figcaption>");
+  });
+
+  it("produces figcaption text nodes that render as visible text", async () => {
+    // Guards against the inner `type: "text"` of the figcaption child being
+    // mutated to an empty string (which would drop the caption text).
+    const vfile = await processor.process(`:::figure[キャプション]
+![img](./img.png)
+:::
+`);
+    const html = String(vfile.value);
+    expect(html).toContain("<figcaption>Figure 1: キャプション</figcaption>");
+    // Caption text must literally appear in the rendered HTML.
+    expect(html).toMatch(/Figure 1: キャプション/);
+  });
 });

@@ -1,3 +1,4 @@
+import type { Directives } from "mdast-util-directive";
 import { describe, expect, it } from "vitest";
 
 import rehypeStringify from "rehype-stringify";
@@ -24,5 +25,41 @@ describe("test youtube embed", () => {
     expect(vile.value).toStrictEqual(
       '<iframe id="ytplayer" class="youtube-embed" src="https://www.youtube.com/embed/NXTO3m1B_h4"></iframe>',
     );
+  });
+
+  describe("shouldTransform", () => {
+    const transformer = new YouTubeTransformer();
+
+    it("returns true for leafDirective named 'youtube'", () => {
+      const node = {
+        type: "leafDirective",
+        name: "youtube",
+        children: [{ type: "text", value: "abc" }],
+      } as unknown as Directives;
+      expect(transformer.shouldTransform(node)).toBe(true);
+    });
+
+    it("returns false for non-leafDirective with name 'youtube'", () => {
+      const node = {
+        type: "textDirective",
+        name: "youtube",
+        children: [{ type: "text", value: "abc" }],
+      } as unknown as Directives;
+      expect(transformer.shouldTransform(node)).toBe(false);
+    });
+
+    it("returns false for leafDirective with a different name", () => {
+      const node = {
+        type: "leafDirective",
+        name: "gh-card",
+        children: [{ type: "text", value: "user/repo" }],
+      } as unknown as Directives;
+      expect(transformer.shouldTransform(node)).toBe(false);
+    });
+
+    it("does not render an iframe for :youtube text directive", async () => {
+      const vfile = await processor.process(":youtube[NXTO3m1B_h4]");
+      expect(String(vfile.value)).not.toContain("<iframe");
+    });
   });
 });

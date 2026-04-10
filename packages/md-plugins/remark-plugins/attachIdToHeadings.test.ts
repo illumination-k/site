@@ -87,4 +87,46 @@ describe("attachIdToHeadings", () => {
     const html = String(vfile.value);
     expect(html).toBe("<p>Just a paragraph.</p>");
   });
+
+  it("preserves existing node.data set by a prior plugin", async () => {
+    // A prior plugin attaches custom data to headings; attachIdToHeadings
+    // must not clobber it, only augment with hName/hProperties.
+    const preAttach = () => (tree: import("mdast").Root) => {
+      for (const child of tree.children) {
+        if (child.type === "heading") {
+          (child.data as unknown as Record<string, unknown>) = {
+            customFlag: true,
+          };
+        }
+      }
+    };
+
+    const vfile = await unified()
+      .use(remarkParse)
+      .use(preAttach)
+      .use(attachIdToHeadings, { depth: 3 })
+      .use(
+        // Capture post-plugin AST via a plugin that stashes heading data.
+        () => (tree: import("mdast").Root, file) => {
+          const headingData: unknown[] = [];
+          for (const child of tree.children) {
+            if (child.type === "heading") {
+              headingData.push(child.data);
+            }
+          }
+          (file.data as Record<string, unknown>).headingData = headingData;
+        },
+      )
+      .use(remarkRehype)
+      .use(rehypeStringify)
+      .process("## test heading");
+
+    const headingData = (
+      vfile.data as { headingData: Record<string, unknown>[] }
+    ).headingData;
+    expect(headingData).toHaveLength(1);
+    // If attachIdToHeadings overwrote node.data, customFlag would be lost.
+    expect(headingData[0].customFlag).toBe(true);
+    expect(headingData[0].hName).toBe("h2");
+  });
 });

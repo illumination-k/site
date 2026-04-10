@@ -1,3 +1,7 @@
+import rehypeStringify from "rehype-stringify";
+import remarkParse from "remark-parse";
+import remarkRehype from "remark-rehype";
+import { unified } from "unified";
 import { describe, expect, it } from "vitest";
 import { REHYPE_PLUGINS, REMARK_LINT_PLUGINS, REMARK_PLUGINS } from "./index";
 
@@ -40,5 +44,36 @@ describe("plugin exports", () => {
         typeof plugin === "function" || Array.isArray(plugin),
       ).toBeTruthy();
     }
+  });
+
+  it("REMARK_PLUGINS pipeline transforms ::youtube leaf directives", async () => {
+    // Integration guard: the transformer list passed to
+    // remarkDirectiveEmbedGenerator must include a YouTubeTransformer
+    // (otherwise the ::youtube directive would fall through unhandled).
+    const processor = unified()
+      .use(remarkParse)
+      // Apply every plugin EXCEPT remarkMdx (the last entry), which would
+      // otherwise try to parse the input as MDX and break remark-stringify.
+      .use(REMARK_PLUGINS.slice(0, -1))
+      .use(remarkRehype)
+      .use(rehypeStringify);
+
+    const vfile = await processor.process("::youtube[dQw4w9WgXcQ]");
+    const html = String(vfile.value);
+    expect(html).toContain('src="https://www.youtube.com/embed/dQw4w9WgXcQ"');
+    expect(html).toContain("<iframe");
+  });
+
+  it("REMARK_PLUGINS pipeline transforms ::gh-card leaf directives", async () => {
+    // Integration guard: GithubCardTransformer must be in the transformer list.
+    const processor = unified()
+      .use(remarkParse)
+      .use(REMARK_PLUGINS.slice(0, -1))
+      .use(remarkRehype)
+      .use(rehypeStringify);
+
+    const vfile = await processor.process("::gh-card[user/repo]");
+    const html = String(vfile.value);
+    expect(html).toContain('class="gh-card"');
   });
 });
