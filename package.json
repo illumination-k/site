@@ -12,7 +12,7 @@
   "author": "",
   "main": "index.js",
   "scripts": {
-    "cli": "node ./cli/dist/main.js",
+    "cli": "node ./cli/dist/main.mjs",
     "cli:build": "pnpm turbo build --filter cli",
     "cli:dev": "pnpm turbo dev --filter cli",
     "cli:paper-stream": "pnpm cli paper-stream --databaseId 183bd7a1ae484a68b63b66d95b814a4a --outputDir ./posts/paperStream --publicDir ./posts/public/paperStream",

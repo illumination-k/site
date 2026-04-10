@@ -101,7 +101,7 @@ GO Annotation全体はノードとしてGO Termを、エッジとして下で定
 | is a      | 基本構造です。A is a Bと示すとき、AはBのサブタイプです。                                                                                                                   |
 | part of   | より強い制約です。B is part of Aでは、Bが存在するとき、それは必ずAの一部であり、Aの存在が約束されます。Extensionのpart ofはノード情報ですが、このpart ofはエッジ情報です。 |
 | has part  | A has part Bのとき、BはAの一部です。Aが存在するとき、Bは存在する必要がありますが、Bが存在していても必ずしもAが存在する必要がありません。                                   |
-| regulates | 制御関係を表します。例えば、他のパスウェイからの影響などがあります。positively_regulates（正の制御）とnegatively_regulates（負の制御）のサブタイプがあります。 |
+| regulates | 制御関係を表します。例えば、他のパスウェイからの影響などがあります。positively_regulates（正の制御）とnegatively_regulates（負の制御）のサブタイプがあります。             |
 
 以下は、Biological Processにおけるアポトーシス（プログラム細胞死）関連のGO Termを例に、DAGの構造と各Relationを図示したものです。
 
