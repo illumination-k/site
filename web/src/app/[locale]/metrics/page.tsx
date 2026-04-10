@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
 
 import { css } from "@/styled-system/css";
@@ -24,6 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 interface MetricsSnapshot {
   date: string;
   sha: string;
+  pr?: number;
   coverage: {
     lines: number;
     statements: number;
@@ -40,15 +41,37 @@ interface MetricsSnapshot {
   };
 }
 
-const raw = readFileSync(
-  join(process.cwd(), "src/data/metrics-history.ndjson"),
-  "utf-8",
-);
-const history = raw
-  .trim()
-  .split("\n")
-  .filter(Boolean)
-  .map((line) => JSON.parse(line) as MetricsSnapshot);
+function loadHistory(): MetricsSnapshot[] {
+  const dir = join(process.cwd(), "src/data/metrics-history");
+  const snapshots: MetricsSnapshot[] = [];
+
+  if (!existsSync(dir)) return snapshots;
+
+  const legacyPath = join(dir, "_legacy.ndjson");
+  if (existsSync(legacyPath)) {
+    for (const line of readFileSync(legacyPath, "utf-8").split("\n")) {
+      if (!line.trim()) continue;
+      snapshots.push(JSON.parse(line) as MetricsSnapshot);
+    }
+  }
+
+  for (const entry of readdirSync(dir)) {
+    if (!entry.startsWith("pr-") || !entry.endsWith(".json")) continue;
+    const raw = readFileSync(join(dir, entry), "utf-8");
+    snapshots.push(JSON.parse(raw) as MetricsSnapshot);
+  }
+
+  // Stable chronological order: by date, then by PR number so that multiple
+  // entries sharing a date are ordered deterministically.
+  snapshots.sort((a, b) => {
+    if (a.date !== b.date) return a.date.localeCompare(b.date);
+    return (a.pr ?? 0) - (b.pr ?? 0);
+  });
+
+  return snapshots.slice(-100);
+}
+
+const history = loadHistory();
 const latest = history[history.length - 1];
 
 function MetricCard({

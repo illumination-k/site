@@ -68,11 +68,13 @@ jobs:
         with:
           script: |
             const fs = require('fs');
-            const path = 'web/src/data/metrics-history.ndjson';
-            const content = fs.readFileSync(path, 'utf-8');
-            const encoded = Buffer.from(content).toString('base64');
             const headRef = process.env.HEAD_REF;
             const prNumber = process.env.PR_NUMBER;
+            // Each PR writes only its own file; this keeps concurrent PRs
+            // from producing merge conflicts on a shared ndjson.
+            const path = `web/src/data/metrics-history/pr-${prNumber}.json`;
+            const content = fs.readFileSync(path, 'utf-8');
+            const encoded = Buffer.from(content).toString('base64');
 
             let sha;
             try {

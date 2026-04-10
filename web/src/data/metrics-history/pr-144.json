@@ -1,0 +1,19 @@
+{
+  "date": "2026-04-09",
+  "sha": "a3853dd",
+  "pr": 144,
+  "coverage": {
+    "lines": 71.89,
+    "statements": 69.06,
+    "functions": 62.6,
+    "branches": 62.95
+  },
+  "mutation": {
+    "score": 56.02,
+    "killed": 729,
+    "survived": 574,
+    "timeout": 2,
+    "noCoverage": 0,
+    "total": 1305
+  }
+}
