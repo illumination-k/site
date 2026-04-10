@@ -7,6 +7,7 @@ import { BookOpenIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 import type { Route } from "next";
 
 import GithubIcon from "@/icons/GithubIcon";
+import OrcidIcon from "@/icons/OrcidIcon";
 import TwitterIcon from "@/icons/TwitterIcon";
 import { type Locale, getDictionary, isLocale } from "@/lib/i18n";
 
@@ -131,6 +132,25 @@ export default async function Home({
               className={css({ h: 5, w: 5, fill: "currentColor" })}
             />
             <span>Twitter</span>
+          </a>
+          <a
+            href="https://orcid.org/0000-0002-3066-2940"
+            aria-label="ORCID"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              color: "text.secondary",
+              fontSize: "sm",
+              transition: "colors",
+              transitionDuration: "fast",
+              _hover: { color: "accent.primary" },
+            })}
+          >
+            <OrcidIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
+            <span>ORCID</span>
           </a>
         </div>
 
