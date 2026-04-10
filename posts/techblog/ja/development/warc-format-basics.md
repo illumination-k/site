@@ -89,7 +89,6 @@ Content-Type: text/html; charset=utf-8
 Content-Length: 42
 
 <!doctype html><title>Hello</title><p>ok</p>
-
 ```
 
 ポイントは、レコードの`Content-Type`が`application/http;msgtype=response`となっていること。つまり**レコードのコンテンツブロックはHTTPメッセージそのもの**であり、ステータス行からレスポンスボディまで生の形で格納される。WARCはその上にもう1段ヘッダーを被せてメタデータを付けているだけ、と考えるとわかりやすい。
@@ -98,12 +97,12 @@ Content-Length: 42
 
 仕様で全レコードに必須とされるヘッダーは以下の4つ。
 
-| ヘッダー          | 内容                                                                  |
-| ----------------- | --------------------------------------------------------------------- |
-| `WARC-Type`       | レコードの種類。`warcinfo`/`response`/`request`など                   |
-| `WARC-Record-ID`  | レコードを一意に識別するURI。通常は`<urn:uuid:...>`                   |
-| `WARC-Date`       | レコード作成日時。ISO 8601のUTC                                       |
-| `Content-Length` | コンテンツブロックのバイト数                                          |
+| ヘッダー         | 内容                                                |
+| ---------------- | --------------------------------------------------- |
+| `WARC-Type`      | レコードの種類。`warcinfo`/`response`/`request`など |
+| `WARC-Record-ID` | レコードを一意に識別するURI。通常は`<urn:uuid:...>` |
+| `WARC-Date`      | レコード作成日時。ISO 8601のUTC                     |
+| `Content-Length` | コンテンツブロックのバイト数                        |
 
 加えて、レコード型に応じて以下のようなヘッダーが使われる。
 
