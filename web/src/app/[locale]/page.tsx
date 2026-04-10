@@ -7,6 +7,7 @@ import { BookOpenIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
 import type { Route } from "next";
 
 import GithubIcon from "@/icons/GithubIcon";
+import LinkedInIcon from "@/icons/LinkedInIcon";
 import OrcidIcon from "@/icons/OrcidIcon";
 import TwitterIcon from "@/icons/TwitterIcon";
 import { type Locale, getDictionary, isLocale } from "@/lib/i18n";
@@ -151,6 +152,25 @@ export default async function Home({
           >
             <OrcidIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
             <span>ORCID</span>
+          </a>
+          <a
+            href="https://www.linkedin.com/in/shogo-kawamura-77492b223"
+            aria-label="LinkedIn"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              gap: 2,
+              color: "text.secondary",
+              fontSize: "sm",
+              transition: "colors",
+              transitionDuration: "fast",
+              _hover: { color: "accent.primary" },
+            })}
+          >
+            <LinkedInIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
+            <span>LinkedIn</span>
           </a>
         </div>
 
