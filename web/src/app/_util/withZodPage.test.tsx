@@ -81,7 +81,9 @@ describe("withZodPage", () => {
 
   it("logs the zod error in development mode", async () => {
     vi.stubEnv("NODE_ENV", "development");
-    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {});
+    const errorSpy = vi.spyOn(console, "error").mockImplementation(() => {
+      // swallow zod error output in dev-mode assertion
+    });
     const schema = { params: z.object({ uuid: z.string() }) };
     const page = vi.fn();
 

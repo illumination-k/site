@@ -53,8 +53,16 @@ describe("Pager", () => {
 
     it("sorts posts by created_at when specified", () => {
       const items = [
-        makeMeta("a1b2c3d4-e5f6-7890-abcd-ef1234567891", "2024-01-01", "2020-01-01"),
-        makeMeta("a1b2c3d4-e5f6-7890-abcd-ef1234567892", "2024-01-01", "2022-01-01"),
+        makeMeta(
+          "a1b2c3d4-e5f6-7890-abcd-ef1234567891",
+          "2024-01-01",
+          "2020-01-01",
+        ),
+        makeMeta(
+          "a1b2c3d4-e5f6-7890-abcd-ef1234567892",
+          "2024-01-01",
+          "2022-01-01",
+        ),
       ];
       const sorted = Pager.sortPost(items, "created_at");
       expect(sorted[0].created_at).toBe("2022-01-01");

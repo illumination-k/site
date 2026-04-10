@@ -36,9 +36,17 @@ const UUID_C = "a3b2c3d4-e5f6-7890-abcd-ef1234567890";
 function makeDump(): Dump {
   return {
     posts: [
-      makePost(UUID_A, { tags: ["ts", "draft"], category: "techblog", lang: "ja" }),
+      makePost(UUID_A, {
+        tags: ["ts", "draft"],
+        category: "techblog",
+        lang: "ja",
+      }),
       makePost(UUID_A, { tags: ["ts"], category: "techblog", lang: "en" }),
-      makePost(UUID_B, { tags: ["go", "archive"], category: "paperstream", lang: "ja" }),
+      makePost(UUID_B, {
+        tags: ["go", "archive"],
+        category: "paperstream",
+        lang: "ja",
+      }),
       makePost(UUID_C, { tags: ["rust"], category: "techblog", lang: "ja" }),
     ],
     categories: ["techblog", "paperstream"],

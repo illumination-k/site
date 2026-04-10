@@ -43,7 +43,11 @@ function uuid(n: number): string {
   return `a${hex}b2c3d4-e5f6-7890-abcd-ef1234567890`;
 }
 
-const baseMeta = (u: string, tags: string[] = [], lang: Lang = "ja"): PostMeta => ({
+const baseMeta = (
+  u: string,
+  tags: string[] = [],
+  lang: Lang = "ja",
+): PostMeta => ({
   uuid: u,
   title: "t",
   description: "",

@@ -7,7 +7,12 @@ export default defineConfig({
       reporter: ["text", "json", "json-summary", "html"],
       reportsDirectory: "./coverage",
       include: ["**/*.ts"],
-      exclude: ["**/*.test.*", "**/*.d.ts", "vitest.config.*", "node_modules/**"],
+      exclude: [
+        "**/*.test.*",
+        "**/*.d.ts",
+        "vitest.config.*",
+        "node_modules/**",
+      ],
     },
   },
 });

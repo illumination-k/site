@@ -4,8 +4,8 @@ import {
   defaultLocale,
   isLocale,
   localeToLang,
-  locales,
   localeToOgLocale,
+  locales,
 } from "./config";
 import { getDictionary } from "./getDictionary";
 
