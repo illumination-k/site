@@ -46,6 +46,8 @@ describe("lintSeoMeta", () => {
       const errors = lintSeoMeta(meta, DUMMY_PATH, EMPTY_LINES);
       expect(errors).toHaveLength(1);
       expect(errors[0].message).toContain("title is too long");
+      // Explicitly guards the "too long" ruleId field against mutation.
+      expect(errors[0].ruleId).toBe("seo-meta-length");
     });
 
     it("reports error when description is too short", () => {
@@ -181,5 +183,56 @@ notafield: value`;
     const raw = "# Just a heading\nSome content";
     const lines = extractFrontMatterLines(raw);
     expect(lines.size).toBe(0);
+  });
+
+  it("treats only trimmed --- as the front-matter delimiter", () => {
+    // Delimiters with surrounding whitespace must still open/close the block.
+    // If the trim() check is removed, the opening "  ---  " would not be
+    // recognised and the inner fields wouldn't be captured.
+    const raw = `  ---
+title: "Test"
+  ---
+ignored: value`;
+    const lines = extractFrontMatterLines(raw);
+    expect(lines.get("title")).toBe(2);
+    expect(lines.has("ignored")).toBe(false);
+  });
+
+  it("ignores field-like lines appearing before the opening delimiter", () => {
+    // The `inFrontMatter` guard must prevent capturing lines outside the block.
+    // If that conditional is forced to true, "pre: value" would get captured.
+    const raw = `pre: value
+---
+title: "Test"
+---`;
+    const lines = extractFrontMatterLines(raw);
+    expect(lines.has("pre")).toBe(false);
+    expect(lines.get("title")).toBe(3);
+  });
+
+  it("ignores indented field-like lines inside front-matter (anchored regex)", () => {
+    // `^(\w+):` must only match at the beginning of the line. An unanchored
+    // regex would wrongly capture the inner "nested" token on the indented line.
+    const raw = `---
+title: "Test"
+  nested: value
+---`;
+    const lines = extractFrontMatterLines(raw);
+    expect(lines.get("title")).toBe(2);
+    expect(lines.has("nested")).toBe(false);
+  });
+
+  it("skips lines inside front-matter that do not match the field pattern", () => {
+    // Blank / non-field lines must not cause the map to grow. If the
+    // `if (match)` guard is removed, destructuring a null match would throw.
+    const raw = `---
+title: "Test"
+
+# not a field
+---`;
+    expect(() => extractFrontMatterLines(raw)).not.toThrow();
+    const lines = extractFrontMatterLines(raw);
+    expect(lines.size).toBe(1);
+    expect(lines.get("title")).toBe(2);
   });
 });

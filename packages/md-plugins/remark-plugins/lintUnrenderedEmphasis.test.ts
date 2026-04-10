@@ -68,6 +68,12 @@ describe("remarkLintUnrenderedEmphasis", () => {
       const vfile = await createProcessor().process("** bold **");
       expect(vfile.messages).toHaveLength(1);
       expect(vfile.messages[0].message).toContain("** bold **");
+      // Message source should be the rule id passed to file.message.
+      expect(vfile.messages[0].ruleId).toBe("remark-lint-unrendered-emphasis");
+      // Exact message shape (guards against the template literal being blanked).
+      expect(vfile.messages[0].message).toBe(
+        'Unrendered emphasis found: "** bold **"',
+      );
     });
 
     it("detects **bold ** (trailing space)", async () => {
@@ -83,6 +89,28 @@ describe("remarkLintUnrenderedEmphasis", () => {
     it("detects *bold * (italic with trailing space)", async () => {
       const vfile = await createProcessor().process("*bold *");
       expect(vfile.messages).toHaveLength(1);
+      expect(vfile.messages[0].ruleId).toBe("remark-lint-unrendered-emphasis");
+      // Exact italic message shape (guards the italic branch template literal).
+      expect(vfile.messages[0].message).toBe(
+        'Unrendered emphasis found: "*bold *"',
+      );
+    });
+
+    it("detects *bold* with only leading inner space (italic branch)", async () => {
+      // Inner is " bold": starts with space, does NOT end with space → reported.
+      // Ensures the endsWith(" ") half of the filter is exercised.
+      // Surrounded by CJK so *…* parses as a text node (not rendered emphasis).
+      const vfile = await createProcessor().process("あ* bold*い");
+      expect(vfile.messages).toHaveLength(1);
+      expect(vfile.messages[0].message).toContain("* bold*");
+    });
+
+    it("detects *bold* with only trailing inner space using non-emphasis context", async () => {
+      // Inner is "bold ": does NOT start with space, ends with space → reported.
+      // Ensures the startsWith(" ") half of the filter is exercised.
+      const vfile = await createProcessor().process("あ*bold *い");
+      expect(vfile.messages).toHaveLength(1);
+      expect(vfile.messages[0].message).toContain("*bold *");
     });
 
     it("detects unrendered emphasis with CJK surroundings", async () => {

@@ -121,6 +121,40 @@ describe("buildAmazonUrl", () => {
 });
 
 describe("BookTransformer", () => {
+  describe("constructor defaults", () => {
+    it("accepts being constructed with no arguments at all", () => {
+      // Guards the `options?.xxx` optional-chaining on the constructor arg:
+      // if any `?.` is removed, `new BookTransformer()` would throw because
+      // `undefined.associateTagJp` is a TypeError.
+      expect(() => new BookTransformer()).not.toThrow();
+    });
+
+    it("falls back to the JP region when no options are provided", async () => {
+      // Indirectly verifies that `defaultRegion ?? \"jp\"` is active: a
+      // mutation replacing `"jp"` with `""` would break the default region.
+      const transformer = new BookTransformer();
+      const node = {
+        type: "leafDirective",
+        name: "isbn",
+        children: [{ type: "text", value: "0123456789" }],
+      } as unknown as Directives;
+      const parent: Parent = { type: "root", children: [node] };
+      await transformer.transform(node, 0, parent);
+
+      const card = parent.children[0] as Parent;
+      const thumbnailLink = card.children[0] as unknown as { url: string };
+      expect(thumbnailLink.url).toBe("https://www.amazon.co.jp/dp/0123456789");
+
+      // Button label must be the Japanese default.
+      const infoNode = card.children[1] as Parent;
+      const buttonNode = infoNode.children[2] as Parent;
+      expect(buttonNode.children[0]).toEqual({
+        type: "text",
+        value: "Amazonで見る",
+      });
+    });
+  });
+
   describe("shouldTransform", () => {
     const transformer = new BookTransformer();
 

@@ -174,6 +174,47 @@ describe("fetchWithRetry", () => {
     expect(result.data).toBe("fallback");
   });
 
+  it("logs a retry warning with incrementing attempt number and exponential delay", async () => {
+    const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+    let attempt = 0;
+    globalThis.fetch = vi.fn().mockImplementation(() => {
+      attempt++;
+      if (attempt < 3) {
+        return Promise.reject(new Error("network error"));
+      }
+      return Promise.resolve({
+        ok: true,
+        status: 200,
+        headers: new Headers({ "content-type": "text/plain" }),
+        text: () => Promise.resolve("ok"),
+      });
+    });
+
+    // maxRetries=2 keeps cumulative backoff under the default test timeout
+    // (1000ms + 2000ms = 3000ms) while still exercising two retry log lines.
+    await fetchWithRetry("https://example.com/retrylog", {}, 2);
+
+    // Two warnings emitted: after attempts 0 and 1, before the third succeeds.
+    expect(warnSpy).toHaveBeenCalledTimes(2);
+
+    const firstCall = warnSpy.mock.calls[0][0] as string;
+    const secondCall = warnSpy.mock.calls[1][0] as string;
+
+    // Exact attempt numbering (1-indexed human-facing).
+    expect(firstCall).toContain("attempt 1/2");
+    expect(secondCall).toContain("attempt 2/2");
+
+    // Exponential backoff: 1000, 2000 ms (not divided).
+    expect(firstCall).toContain("wait 1000ms");
+    expect(secondCall).toContain("wait 2000ms");
+
+    // URL is echoed in the warning.
+    expect(firstCall).toContain("https://example.com/retrylog");
+    expect(firstCall).toContain("[fetchWithRetry] Retrying");
+
+    warnSpy.mockRestore();
+  });
+
   it("retries on non-ok status before exhausting", async () => {
     let attempt = 0;
     globalThis.fetch = vi.fn().mockImplementation(() => {

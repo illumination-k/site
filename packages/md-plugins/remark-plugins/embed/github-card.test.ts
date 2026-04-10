@@ -1,3 +1,4 @@
+import type { Directives } from "mdast-util-directive";
 import { describe, expect, it } from "vitest";
 
 import rehypeStringify from "rehype-stringify";
@@ -56,5 +57,43 @@ describe("github-card embed", () => {
     );
 
     console.log(vfile);
+  });
+
+  describe("shouldTransform", () => {
+    const transformer = new GithubCardTransformer();
+
+    it("returns true for leafDirective named 'gh-card'", () => {
+      const node = {
+        type: "leafDirective",
+        name: "gh-card",
+        children: [{ type: "text", value: "user/repo" }],
+      } as unknown as Directives;
+      expect(transformer.shouldTransform(node)).toBe(true);
+    });
+
+    it("returns false for non-leafDirective with name 'gh-card'", () => {
+      const node = {
+        type: "textDirective",
+        name: "gh-card",
+        children: [{ type: "text", value: "user/repo" }],
+      } as unknown as Directives;
+      expect(transformer.shouldTransform(node)).toBe(false);
+    });
+
+    it("returns false for leafDirective with a different name", () => {
+      const node = {
+        type: "leafDirective",
+        name: "youtube",
+        children: [{ type: "text", value: "abc" }],
+      } as unknown as Directives;
+      expect(transformer.shouldTransform(node)).toBe(false);
+    });
+
+    it("does not transform textDirective gh-card in rendered output", async () => {
+      // Full-pipeline guard: a text/container directive of the same name
+      // must not produce a <div class="gh-card"> wrapper.
+      const vfile = await processor.process(":gh-card[user/repo]");
+      expect(String(vfile.value)).not.toContain('class="gh-card"');
+    });
   });
 });
