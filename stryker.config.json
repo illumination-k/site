@@ -14,11 +14,12 @@
   "mutate": [
     "packages/md-plugins/**/*.ts",
     "packages/ipynb2md/src/**/*.ts",
-    "cli/src/**/*.ts",
+    "cli/**/*.ts",
     "!**/*.test.ts",
     "!**/*.spec.ts",
     "!**/*.d.ts",
     "!**/vitest.config.ts",
+    "!**/tsup.config.ts",
     "!**/dist/**",
     "!**/node_modules/**"
   ]

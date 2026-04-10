@@ -4,7 +4,7 @@ import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
 import { exportDatabase } from "./exportNotion";
 import generateFeed from "./feed";
-import { getDumpPosts, writeDump } from "./io";
+import { dumpSinglePost, getDumpPosts, writeDump } from "./io";
 import { lintPosts } from "./lint";
 import { logger } from "./logger";
 import { generateRedirect } from "./migration";
@@ -44,6 +44,45 @@ yargs(hideBin(process.argv))
       const dumpPosts = await getDumpPosts(mdDir, imageDist);
       await writeDump(output, dumpPosts);
       logger.info({ count: dumpPosts.length, output }, "Dump complete");
+    },
+  )
+  .command(
+    "dump-file",
+    "Dump a single markdown file into json (for debugging)",
+    (yargs) => {
+      yargs.positional("file", {
+        type: "string",
+        describe: "Path to the markdown file",
+      });
+
+      yargs.positional("imageDist", {
+        type: "string",
+        describe: "Destination directory for optimized images",
+      });
+
+      yargs.option("output", {
+        type: "string",
+        describe: "Output file path (defaults to stdout)",
+        alias: ["o", "out"],
+      });
+
+      yargs.demandOption(["file", "imageDist"]);
+    },
+    async (argv) => {
+      const file = argv.file as string;
+      const imageDist = argv.imageDist as string;
+      const output = argv.output as string | undefined;
+
+      const result = await dumpSinglePost(file, imageDist);
+
+      const json = JSON.stringify(result, null, 2);
+      if (output) {
+        const { writeFile: writeFileAsync } = await import("node:fs/promises");
+        await writeFileAsync(output, json);
+        logger.info({ output }, "Single post dump written to file");
+      } else {
+        process.stdout.write(`${json}\n`);
+      }
     },
   )
   .command(
