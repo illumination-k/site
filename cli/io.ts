@@ -105,12 +105,7 @@ export async function dumpPost(
         remarkPlugins: [
           [optimizeImage, { postPath, imageDist }],
           ...(postMetaMap
-            ? [
-                [
-                  resolveInternalLinks,
-                  { postPath: pathStr, postMetaMap },
-                ],
-              ]
+            ? [[resolveInternalLinks, { postPath: pathStr, postMetaMap }]]
             : []),
         ]
           .concat(
@@ -305,7 +300,11 @@ export async function dumpSinglePost(
   const post = await readPost(filePath);
 
   logger.info(
-    { title: post.meta.title, category: post.meta.category, uuid: post.meta.uuid },
+    {
+      title: post.meta.title,
+      category: post.meta.category,
+      uuid: post.meta.uuid,
+    },
     "Post metadata loaded",
   );
 
