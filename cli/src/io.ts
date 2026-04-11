@@ -232,11 +232,31 @@ export async function getDumpPosts(
     { count: readSucceeded.length },
     "Phase 2: Compiling posts with metadata map",
   );
+  process.stderr.write(
+    `[diag] phase2-start count=${readSucceeded.length}\n`,
+  );
 
+  let completed = 0;
   const compileResults = await Promise.allSettled(
     readSucceeded.map(async ({ filePath, post }) => {
-      return await dumpPost(post, filePath, imageDist, postMetaMap);
+      process.stderr.write(`[diag] compile-start ${filePath}\n`);
+      try {
+        const r = await dumpPost(post, filePath, imageDist, postMetaMap);
+        completed++;
+        process.stderr.write(
+          `[diag] compiled ${completed}/${readSucceeded.length} ${filePath}\n`,
+        );
+        return r;
+      } catch (err) {
+        process.stderr.write(
+          `[diag] FAIL ${filePath}: ${err instanceof Error ? err.stack : String(err)}\n`,
+        );
+        throw err;
+      }
     }),
+  );
+  process.stderr.write(
+    `[diag] phase2-allSettled-returned count=${compileResults.length}\n`,
   );
 
   const succeeded: DumpPost[] = [];
