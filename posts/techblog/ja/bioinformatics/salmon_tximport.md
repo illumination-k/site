@@ -193,9 +193,7 @@ dds <- DESeq(dds)
 res <- results(dds)
 ```
 
-`DESeqDataSetFromTximport()` は内部でおおまかに次の処理を実行します。実装は `thelovelab/DESeq2` の `R/AllClasses.R` にあります。
-
-::gh[https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425]
+`DESeqDataSetFromTximport()` は内部でおおまかに次の処理を実行します。実装は [thelovelab/DESeq2 の `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425) にあります。
 
 - `txi$counts` を整数に丸めて `DESeqDataSet` の `counts` にする
 - `countsFromAbundance = "no"` の場合は `txi$length` を `avgTxLength` assayとして保持し、DESeq2が内部でsample-specificなoffsetとして使う

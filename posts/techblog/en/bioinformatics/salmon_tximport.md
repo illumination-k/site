@@ -193,9 +193,7 @@ dds <- DESeq(dds)
 res <- results(dds)
 ```
 
-Internally, `DESeqDataSetFromTximport()` does roughly the following. The implementation lives in `thelovelab/DESeq2` at `R/AllClasses.R`.
-
-::gh[https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425]
+Internally, `DESeqDataSetFromTximport()` does roughly the following. The implementation lives in [thelovelab/DESeq2 at `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425).
 
 - Round `txi$counts` to integers and use them as the `counts` slot of the `DESeqDataSet`
 - When `countsFromAbundance = "no"`, store `txi$length` as the `avgTxLength` assay. DESeq2 uses it internally as a sample-specific offset
