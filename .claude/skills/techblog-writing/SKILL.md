@@ -6,7 +6,7 @@ allowed-tools: Bash(npx textlint:*), Bash(pnpm cli template:*), Bash(pnpm cli:*)
 
 # 技術ブログ執筆スキル
 
-illumination-k.dev の技術ブログ記事を執筆・編集する。
+illumination-k.devの技術ブログ記事を執筆・編集する。
 構成と内容の質が最も重要。読者は技術者・研究者を想定する。
 
 ## 記事の構成原則
@@ -50,7 +50,7 @@ illumination-k.dev の技術ブログ記事を執筆・編集する。
 ### 絶対に守ること
 
 - **自分の言葉で書く** — ドキュメントのコピペではなく、実際に使ってみた知見や考察を入れる
-- **なぜを書く** — 「何をするか」だけでなく「なぜそうするのか」を必ず添える
+- **なぜを書く** —「何をするか」だけでなく「なぜそうするのか」を必ず添える
 - **コードは動くものを書く** — 断片ではなく、コピーして動かせるコードにする
 - **不正確なことを書かない** — 曖昧な場合は「未確認だが」「おそらく」等を添えるか、書かない
 
@@ -90,9 +90,9 @@ title, description, category, tagsを埋める。descriptionは検索結果やOG
 
 ### 4. 本文の執筆
 
-- 言語: 日本語（lang: ja）。英語を求められた場合のみ lang: en
-- 見出しは h2 でセクション、h3 でサブセクション
-- コードブロックには言語を指定する（`python,`bash 等）
+- 言語: 日本語（lang: ja）。英語を求められた場合のみlang: en
+- 見出しはh2でセクション、h3でサブセクション
+- コードブロックには言語を指定する（`python,`bash等）
 
 ### 5. textlint検証（必須）
 
@@ -114,10 +114,21 @@ pnpm cli:build && pnpm cli lint --src posts
 
 - 標準Markdown（見出し、リスト、コードブロック、リンク、画像）
 - KaTeX数式（`$inline$` / `$$block$$`）
-- GitHub埋め込み: `::gh[https://github.com/...]`
+- GitHub埋め込み: `::gh[https://github.com/...]`（後述）
 - 図表: `::figure[caption]{src="image.png"}`
 - 折りたたみ: `:::details` / `:::`
 - コードブロックのタイトル: `` ```lang title=filename ``
+
+#### 実在するリポジトリのソースを参照するときは `::gh` を使う
+
+ライブラリや他リポジトリの実装を紹介するときは、本文にコピペで貼るのではなく、必ず `::gh[...]` ディレクティブで参照する。このディレクティブはビルド時に対象ファイルを `raw.githubusercontent.com` からfetchし、シンタックスハイライト済みのコードブロックとして埋め込む。
+
+- 推奨フォーマット: `::gh[https://github.com/owner/repo/blob/<sha>/path/to/file.ext#Lstart-Lend]`
+  - ブランチ名（`main` / `master` / `devel` 等）ではなく**コミットSHA**を使うこと。ブランチ名だと将来的に参照先の内容が変わって記事が壊れる
+  - 行範囲を指定する場合はURLの末尾に `#Lstart-Lend` を付ける（省略するとファイル全体）
+- 例: `::gh[https://github.com/CloudCannon/pagefind/blob/20a4206471f8618709aeaa3515ea92d1c0d528e5/pagefind_web/src/search.rs#L65-L75]`
+- 利点: 実ソースを常に正しく引用できる／記事からワンクリックで該当行にジャンプできる／将来のバージョンずれを防げる
+- コードブロックに手でソースを貼り付けると経年で内容がズレるため、実在するリポジトリの内容を引用する場合はこのディレクティブを優先する
 
 ### 7. セルフレビュー
 
