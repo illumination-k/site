@@ -117,12 +117,12 @@ scaledTPM <- gene.scaled$counts
 
 それぞれのスケーリング方法は以下のとおりです。
 
-| 名称              | 方法                                                                                     |
-| ----------------- | ---------------------------------------------------------------------------------------- |
-| `no`              | salmonの `NumReads` をそのまま使う。サンプルごとの合計は元の推定リード数と一致する       |
-| `scaledTPM`       | `(TPM / 1e6) × libSize` でライブラリサイズにスケーリング                                 |
-| `lengthScaledTPM` | 平均の転写産物長でスケールした後、ライブラリサイズにスケーリング                         |
-| `dtuScaledTPM`    | 中央値の転写産物長でスケールした後、ライブラリサイズにスケーリング                       |
+| 名称              | 方法                                                                               |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| `no`              | salmonの `NumReads` をそのまま使う。サンプルごとの合計は元の推定リード数と一致する |
+| `scaledTPM`       | `(TPM / 1e6) × libSize` でライブラリサイズにスケーリング                           |
+| `lengthScaledTPM` | 平均の転写産物長でスケールした後、ライブラリサイズにスケーリング                   |
+| `dtuScaledTPM`    | 中央値の転写産物長でスケールした後、ライブラリサイズにスケーリング                 |
 
 `dtuScaledTPM` はDifferential Transcript Usage (DTU) 解析で推奨されるスケーリング方法です（参考: [Bioconductorのサポート投稿](https://support.bioconductor.org/p/119720/)）。これらのスケール済みの値、またはそのままのcountをDifferentially Expressed Gene (DEG) 解析などに用います。
 
@@ -193,11 +193,41 @@ dds <- DESeq(dds)
 res <- results(dds)
 ```
 
-`DESeqDataSetFromTximport()` は内部でおおまかに次の処理を実行します（[DESeq2ソース](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R)）。
+`DESeqDataSetFromTximport()` は内部でおおまかに次の処理を実行します。
 
 - `txi$counts` を整数に丸めて `DESeqDataSet` の `counts` にする
 - `countsFromAbundance = "no"` の場合は `txi$length` を `avgTxLength` assayとして保持し、DESeq2が内部でsample-specificなoffsetとして使う
 - `countsFromAbundance` が `scaledTPM` / `lengthScaledTPM` / `dtuScaledTPM` の場合は、lengthがすでにcountに織り込まれているとみなし、 `avgTxLength` は付けずにcountのみを使う
+
+実装は [thelovelab/DESeq2 の `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R) にあります。要点だけ抜き出すと以下のようなコードです。
+
+:::details[DESeqDataSetFromTximport source]
+
+```r
+DESeqDataSetFromTximport <- function(txi, colData, design, ...)
+{
+  stopifnot(is(txi, "list"))
+  counts <- round(txi$counts)
+  mode(counts) <- "integer"
+  object <- DESeqDataSetFromMatrix(countData = counts, colData = colData,
+                                   design = design, ...)
+  stopifnot(txi$countsFromAbundance %in%
+              c("no", "scaledTPM", "lengthScaledTPM", "dtuScaledTPM"))
+  if (txi$countsFromAbundance %in%
+        c("scaledTPM", "lengthScaledTPM", "dtuScaledTPM")) {
+    message("using just counts from tximport")
+  } else {
+    message("using counts and average transcript lengths from tximport")
+    lengths <- txi$length
+    stopifnot(all(lengths > 0))
+    dimnames(lengths) <- dimnames(object)
+    assays(object)[["avgTxLength"]] <- lengths
+  }
+  return(object)
+}
+```
+
+:::
 
 この挙動から、「CSVに書き出したcountを後からDESeq2に渡したい」場合は、あらかじめ `countsFromAbundance = "lengthScaledTPM"` などを指定してから書き出しておけば、`DESeqDataSetFromMatrix()` で読み込ませても整合が取れます。逆に `"no"` のcountをCSV経由で渡すと `avgTxLength` offsetが失われるため、できればtximportオブジェクトのまま流すのがおすすめです。
 

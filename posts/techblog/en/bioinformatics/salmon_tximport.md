@@ -118,12 +118,12 @@ They are derived from abundance (TPM), not from `NumReads`, and then scaled to l
 
 The scaling methods are summarized below.
 
-| Name              | Method                                                                                              |
-| ----------------- | --------------------------------------------------------------------------------------------------- |
-| `no`              | Use Salmon's `NumReads` as-is. Per-sample totals match the original estimated read counts           |
-| `scaledTPM`       | `(TPM / 1e6) × libSize`, i.e. scale TPM to library size                                             |
-| `lengthScaledTPM` | Scale by mean transcript length first, then scale to library size                                   |
-| `dtuScaledTPM`    | Scale by the median transcript length, then scale to library size                                   |
+| Name              | Method                                                                                    |
+| ----------------- | ----------------------------------------------------------------------------------------- |
+| `no`              | Use Salmon's `NumReads` as-is. Per-sample totals match the original estimated read counts |
+| `scaledTPM`       | `(TPM / 1e6) × libSize`, i.e. scale TPM to library size                                   |
+| `lengthScaledTPM` | Scale by mean transcript length first, then scale to library size                         |
+| `dtuScaledTPM`    | Scale by the median transcript length, then scale to library size                         |
 
 `dtuScaledTPM` is the recommended scaling for Differential Transcript Usage (DTU) analysis (see [this Bioconductor support thread](https://support.bioconductor.org/p/119720/)). Either the scaled values or the raw counts feed into Differentially Expressed Gene (DEG) analysis.
 
@@ -194,11 +194,41 @@ dds <- DESeq(dds)
 res <- results(dds)
 ```
 
-Internally, `DESeqDataSetFromTximport()` does roughly the following (see the [DESeq2 source](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R)):
+Internally, `DESeqDataSetFromTximport()` does roughly the following:
 
 - Round `txi$counts` to integers and use them as the `counts` slot of the `DESeqDataSet`
 - When `countsFromAbundance = "no"`, store `txi$length` as the `avgTxLength` assay. DESeq2 uses it internally as a sample-specific offset
 - When `countsFromAbundance` is `scaledTPM`, `lengthScaledTPM`, or `dtuScaledTPM`, the length correction is already baked into the counts. `avgTxLength` is skipped and only the counts are used
+
+The implementation lives in [thelovelab/DESeq2 `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R). The relevant excerpt is:
+
+:::details[DESeqDataSetFromTximport source]
+
+```r
+DESeqDataSetFromTximport <- function(txi, colData, design, ...)
+{
+  stopifnot(is(txi, "list"))
+  counts <- round(txi$counts)
+  mode(counts) <- "integer"
+  object <- DESeqDataSetFromMatrix(countData = counts, colData = colData,
+                                   design = design, ...)
+  stopifnot(txi$countsFromAbundance %in%
+              c("no", "scaledTPM", "lengthScaledTPM", "dtuScaledTPM"))
+  if (txi$countsFromAbundance %in%
+        c("scaledTPM", "lengthScaledTPM", "dtuScaledTPM")) {
+    message("using just counts from tximport")
+  } else {
+    message("using counts and average transcript lengths from tximport")
+    lengths <- txi$length
+    stopifnot(all(lengths > 0))
+    dimnames(lengths) <- dimnames(object)
+    assays(object)[["avgTxLength"]] <- lengths
+  }
+  return(object)
+}
+```
+
+:::
 
 This has a practical consequence. Say you want to round-trip counts through CSV and feed them into DESeq2 later. Set `countsFromAbundance = "lengthScaledTPM"` (or similar) before writing the CSV. Then `DESeqDataSetFromMatrix()` gives consistent results. Raw `"no"` counts written to CSV lose the `avgTxLength` offset. Keep the tximport object and hand it to DESeq2 directly when possible.
 
