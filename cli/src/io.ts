@@ -234,25 +234,44 @@ export async function getDumpPosts(
   );
   process.stderr.write(`[diag] phase2-start count=${readSucceeded.length}\n`);
 
+  // Keep the event loop alive while compiles are in flight. In CI we saw
+  // Node exit with code 0 before Promise.allSettled below resolved — the
+  // only pending work left after most posts finished was a native fetch
+  // stuck inside a remark embed transformer, which apparently did not
+  // keep the loop ref'd. A ref'd interval forces Node to wait for
+  // allSettled rather than bail out early.
+  const keepAliveInterval = setInterval(() => {
+    process.stderr.write(
+      `[diag] keepalive completed=${completed}/${readSucceeded.length}\n`,
+    );
+  }, 5000);
+
   let completed = 0;
-  const compileResults = await Promise.allSettled(
-    readSucceeded.map(async ({ filePath, post }) => {
-      process.stderr.write(`[diag] compile-start ${filePath}\n`);
-      try {
-        const r = await dumpPost(post, filePath, imageDist, postMetaMap);
-        completed++;
-        process.stderr.write(
-          `[diag] compiled ${completed}/${readSucceeded.length} ${filePath}\n`,
-        );
-        return r;
-      } catch (err) {
-        process.stderr.write(
-          `[diag] FAIL ${filePath}: ${err instanceof Error ? err.stack : String(err)}\n`,
-        );
-        throw err;
-      }
-    }),
-  );
+  let compileResults: PromiseSettledResult<DumpPost>[];
+  try {
+    compileResults = await Promise.allSettled(
+      readSucceeded.map(async ({ filePath, post }) => {
+        process.stderr.write(`[diag] compile-start ${filePath}\n`);
+        try {
+          const r = await dumpPost(post, filePath, imageDist, postMetaMap);
+          completed++;
+          process.stderr.write(
+            `[diag] compiled ${completed}/${readSucceeded.length} ${filePath}\n`,
+          );
+          return r;
+        } catch (err) {
+          process.stderr.write(
+            `[diag] FAIL ${filePath}: ${
+              err instanceof Error ? err.stack : String(err)
+            }\n`,
+          );
+          throw err;
+        }
+      }),
+    );
+  } finally {
+    clearInterval(keepAliveInterval);
+  }
   process.stderr.write(
     `[diag] phase2-allSettled-returned count=${compileResults.length}\n`,
   );
