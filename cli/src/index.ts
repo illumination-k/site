@@ -11,22 +11,6 @@ import { generateRedirect } from "./migration";
 import generateOgImages from "./og";
 import { template } from "./template";
 
-process.on("uncaughtException", (err) => {
-  process.stderr.write(
-    `[diag] uncaughtException: ${err instanceof Error ? err.stack : String(err)}\n`,
-  );
-  process.exit(1);
-});
-process.on("unhandledRejection", (reason) => {
-  process.stderr.write(
-    `[diag] unhandledRejection: ${reason instanceof Error ? reason.stack : String(reason)}\n`,
-  );
-  process.exit(1);
-});
-process.on("exit", (code) => {
-  process.stderr.write(`[diag] process.exit code=${code}\n`);
-});
-
 yargs(hideBin(process.argv))
   .scriptName("post-utils")
   .usage("$0 <cmd> [args]")

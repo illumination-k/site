@@ -42,10 +42,24 @@ export async function fetchWithRetry<T = unknown>(
   const timeoutMs = config?.timeoutMs ?? 30_000;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    // Use a manual AbortController + setTimeout instead of
+    // AbortSignal.timeout(): the latter uses an unref'd timer on Node 22,
+    // so if a fetch stalls and nothing else holds the event loop, the
+    // process exits with code 0 before the timeout ever fires.
+    const controller = new AbortController();
+    const timer = setTimeout(() => {
+      controller.abort(
+        new DOMException(
+          `The operation timed out after ${timeoutMs}ms`,
+          "TimeoutError",
+        ),
+      );
+    }, timeoutMs);
+
     try {
       const response = await fetch(url, {
         headers: config?.headers,
-        signal: AbortSignal.timeout(timeoutMs),
+        signal: controller.signal,
       });
 
       if (!response.ok) {
@@ -69,6 +83,8 @@ export async function fetchWithRetry<T = unknown>(
         `[fetchWithRetry] Retrying ${url} (attempt ${attempt + 1}/${maxRetries}, wait ${delay}ms)`,
       );
       await new Promise((r) => setTimeout(r, delay));
+    } finally {
+      clearTimeout(timer);
     }
   }
   throw new Error("unreachable");
