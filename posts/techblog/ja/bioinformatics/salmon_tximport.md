@@ -72,14 +72,12 @@ names(salmon.files) <- sub("_exp/quant.sf$", "", salmon.files)
 tx.exp <- tximport(salmon.files, type = "salmon", txOut = TRUE)
 ```
 
-遺伝子レベルに集計するには、転写産物名と遺伝子名を対応させる `tx2gene` データフレームが必要です。本来はGTFや `biomaRt` から作るべきですが、転写産物IDが `ENSTxxxxxxx.1` のようにバージョンサフィックスが付いているだけの場合は、次のような簡易変換で済ませられることもあります。
+遺伝子レベルに集計するには、転写産物名と遺伝子名を対応させる `tx2gene` データフレームが必要です。転写産物IDが `TranscriptID = geneID.1` のように末尾のドット以降だけが違う形式なら、次のようにrownamesから作れます。
 
 ```r
-# 注意: この変換は "ENSTxxxxxxx.1 → ENSTxxxxxxx" のようにバージョンを落とすだけで、
-# 本来の transcript → gene 対応ではない。本番解析ではGTFなどから作ること。
 tx2gene <- data.frame(
     TXNAME = rownames(tx.exp$counts),
-    GENEID = sub("\\..*$", "", rownames(tx.exp$counts))
+    GENEID = sapply(strsplit(rownames(tx.exp$counts), "\\."), "[", 1)
 )
 
 # 遺伝子レベルで直接読み込む
@@ -88,6 +86,8 @@ gene.exp <- tximport(salmon.files, type = "salmon", tx2gene = tx2gene)
 # すでに読み込んだ転写産物レベルのオブジェクトから集計する場合
 gene_from_tx.exp <- summarizeToGene(tx.exp, tx2gene)
 ```
+
+この簡易版は「末尾の `.N` を落とす」操作にすぎず、本来の転写産物 → 遺伝子マッピングではないので、IDがEnsemblのバージョンサフィックス付きのようにきれいな形をしていないデータセットでは使えません。そういう場合はGTFやアノテーションパッケージから正式な `tx2gene` を作る必要があります。
 
 ## tximportオブジェクトの中身とCSVへの書き出し
 

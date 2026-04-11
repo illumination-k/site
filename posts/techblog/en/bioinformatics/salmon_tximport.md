@@ -72,15 +72,12 @@ names(salmon.files) <- sub("_exp/quant.sf$", "", salmon.files)
 tx.exp <- tximport(salmon.files, type = "salmon", txOut = TRUE)
 ```
 
-To aggregate to the gene level you need a `tx2gene` data frame that maps transcript IDs to gene IDs. The proper way is to derive it from a GTF or via `biomaRt`. If your transcript IDs are only decorated with a version suffix such as `ENSTxxxxxxx.1`, the following shortcut sometimes works:
+To aggregate to the gene level you need a `tx2gene` data frame that maps transcript IDs to gene IDs. Say your transcript IDs follow a `TranscriptID = geneID.1` pattern, where only the suffix after the dot differs. Then you can build `tx2gene` straight from the row names:
 
 ```r
-# NOTE: this only strips the "ENSTxxxxxxx.1 -> ENSTxxxxxxx" version suffix —
-# it is NOT an actual transcript-to-gene mapping. For real analyses, build
-# tx2gene from a GTF.
 tx2gene <- data.frame(
     TXNAME = rownames(tx.exp$counts),
-    GENEID = sub("\\..*$", "", rownames(tx.exp$counts))
+    GENEID = sapply(strsplit(rownames(tx.exp$counts), "\\."), "[", 1)
 )
 
 # Read directly at the gene level
@@ -89,6 +86,8 @@ gene.exp <- tximport(salmon.files, type = "salmon", tx2gene = tx2gene)
 # Or aggregate from an already-loaded transcript-level object
 gene_from_tx.exp <- summarizeToGene(tx.exp, tx2gene)
 ```
+
+This shortcut just strips the trailing `.N` and is not a real transcript-to-gene mapping. It only works when the IDs already look like Ensembl's version-suffixed form. For anything else, build a proper `tx2gene` from a GTF or an annotation package.
 
 ## Inspecting the tximport Object and Exporting to CSV
 
