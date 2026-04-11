@@ -237,6 +237,7 @@ export async function getDumpPosts(
   let completed = 0;
   const compileResults = await Promise.allSettled(
     readSucceeded.map(async ({ filePath, post }) => {
+      process.stderr.write(`[diag] compile-start ${filePath}\n`);
       try {
         const r = await dumpPost(post, filePath, imageDist, postMetaMap);
         completed++;

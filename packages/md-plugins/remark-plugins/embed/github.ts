@@ -96,10 +96,23 @@ export class GithubTransformer implements DirectiveTransformer {
     const url = mdastToString(node);
     const parsed = parseGithubUrl(url);
 
+    process.stderr.write(`[diag gh] ENTER ${url}\n`);
+
     let allValue: unknown;
     try {
+      process.stderr.write(`[diag gh] fetch-start ${parsed.rawFileUrl}\n`);
       allValue = (await cachedFetch(parsed.rawFileUrl)).data;
+      process.stderr.write(
+        `[diag gh] fetch-ok ${parsed.rawFileUrl} size=${
+          typeof allValue === "string" ? allValue.length : "non-string"
+        }\n`,
+      );
     } catch (e) {
+      process.stderr.write(
+        `[diag gh] fetch-err ${parsed.rawFileUrl} ${
+          e instanceof Error ? e.message : String(e)
+        }\n`,
+      );
       console.warn(
         `[gh-embed] Failed to fetch ${parsed.rawFileUrl}:`,
         e instanceof Error ? e.message : e,
@@ -146,5 +159,6 @@ export class GithubTransformer implements DirectiveTransformer {
     };
 
     parent.children[index || 0] = githubNode;
+    process.stderr.write(`[diag gh] DONE ${url}\n`);
   }
 }
