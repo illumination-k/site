@@ -14,4 +14,4 @@
 {"date":"2026-04-10","sha":"42d297c","pr":149,"coverage":{"lines":75.48,"statements":72.91,"functions":64.45,"branches":65.3},"mutation":{"score":42.53,"killed":975,"survived":1320,"timeout":2,"noCoverage":0,"total":2297}}
 {"date":"2026-04-10","sha":"0edfe7a","pr":154,"coverage":{"lines":55.63,"statements":55.67,"functions":45.78,"branches":58.08},"mutation":{"score":43.58,"killed":999,"survived":1296,"timeout":2,"noCoverage":0,"total":2297}}
 {"date":"2026-04-10","sha":"a4b29d6","pr":152,"coverage":{"lines":55.63,"statements":55.67,"functions":45.78,"branches":58.08},"mutation":{"score":42.53,"killed":975,"survived":1320,"timeout":2,"noCoverage":0,"total":2297}}
-{"date":"2026-04-11","sha":"3f2ac7e","pr":157,"coverage":{"lines":55.6,"statements":55.65,"functions":45.78,"branches":58},"mutation":{"score":43.07,"killed":999,"survived":1323,"timeout":2,"noCoverage":0,"total":2324}}
+{"date":"2026-04-11","sha":"4e758e4","pr":157,"coverage":{"lines":55.63,"statements":55.67,"functions":45.65,"branches":57.86},"mutation":{"score":43.07,"killed":999,"survived":1323,"timeout":2,"noCoverage":0,"total":2324}}
