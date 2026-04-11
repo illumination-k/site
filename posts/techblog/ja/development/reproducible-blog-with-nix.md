@@ -139,6 +139,12 @@ langとtitleは必要ならdirectiveの属性で上書きできる。
 ::file[./config.txt]{lang=toml title="custom.toml"}
 ```
 
+長いファイルから一部だけ抜粋したいときは、GitHubのURLフラグメントと同じ `#L<start>-L<end>` 表記で行範囲を指定できる。例えばflake.nixの `devShells` 定義部分だけを抜き出して見せると以下のようになる。
+
+::file[./reproducible-blog-with-nix/flake.nix#L19-L33]
+
+`#L<n>` と単一行だけの指定も可能で、範囲がファイル行数を超えた場合や `#L20-L10` のように逆順の場合はdump時にエラーとなり、間違った抜粋を素通ししない。タイトルは自動的に `flake.nix#L19-L33` のように元ファイル名と行範囲を含む形になるので、読者にも「ファイルの一部」だとわかる。
+
 これで記事本文のコードブロックとcompanionディレクトリ内のコードの二重管理が解消された。著者（= 自分）はcompanionディレクトリ内のファイルだけをメンテすればよく、記事は自動的に追随する。`::file` directiveそのものはCLI側 (`cli/src/embedFile.ts`) のremark pluginとして実装したので、`md-plugins` パッケージは純粋なAST変換に留めている。
 
 ## 制約と将来拡張
@@ -148,7 +154,6 @@ langとtitleは必要ならdirectiveの属性で上書きできる。
 1. `postMetaSchema` に `reproducible: { dir: "./<slug>" }` 相当のフィールドを足し、記事ページ下部に「この記事の環境を再現する」というGitHubリンクを出す
 2. 月1回くらいの頻度でGitHub Actionsが `nix flake check` をcompanionディレクトリ全部に対して回し、腐ったフレークを可視化する
 3. 既存の再現性の必要な記事（FastAPI系、SQLAlchemy系、Rust系など）に遡ってcompanionディレクトリを付与していく
-4. `::file[...]` に行番号レンジ（たとえば `::file[./foo.py#L10-L20]`）を足して長いファイルから一部だけ抜粋できるようにする
 
 ## まとめ
 
