@@ -118,7 +118,108 @@ pnpm cli:build && pnpm cli lint --src posts
 - 図表: `::figure[caption]{src="image.png"}`
 - 折りたたみ: `:::details` / `:::`
 - コードブロックのタイトル: `` ```lang title=filename ``
+- ファイル埋め込み: `::file[./relative/path]` — 記事と同階層の companion ディレクトリ内ファイルを記事本文にコードブロックとして差し込む。詳細は下記「再現性のためのcompanionディレクトリ」を参照
 
 ### 7. セルフレビュー
 
 執筆後、`references/writing-checklist.md` のチェックリストで内容を確認する。
+
+## 再現性のためのcompanionディレクトリ（オプトイン）
+
+ハンズオンやチュートリアル系の記事では、**記事と同じ階層に同名のcompanionディレクトリ**を作り、その中に `flake.nix` や実コードを置いて環境を固定できる。読者や将来の自分が `nix develop` で当時の環境を再現できるようにするための仕組み。
+
+### 使うべきケース
+
+- チュートリアル系・ハンズオン系の記事（実際に動かすコードが中心）
+- 特定の言語・ライブラリのバージョンに強く依存する記事
+- ツールの挙動が時間経過で変わりそうな記事
+
+使わなくていいケース:
+
+- ポエム・考察・比較記事など、動かすコードがない、または再現の必要がない記事
+- 既存の安定ライブラリの一般的な使い方だけを説明する記事
+
+### 配置規約
+
+記事 `posts/techblog/<lang>/<category>/<slug>.md` に対して、companionディレクトリは `posts/techblog/<lang>/<category>/<slug>/`（同階層・同名）に置く。
+
+```
+posts/techblog/ja/development/
+├── my-article.md
+└── my-article/
+    ├── .gitignore       # result, .direnv/, __pycache__/ など
+    ├── flake.nix        # nixpkgs を特定コミットにピン留め
+    ├── flake.lock       # 任意。narHashレベルで固定したい場合
+    └── src/             # 再現対象のコード
+        └── main.py
+```
+
+**重要な制約**: companionディレクトリ内には `.md` ファイルを置いてはいけない。dumpパイプラインが `posts/**/*.md` をglobで拾うので、front-matter のない `.md` が混ざると dump が失敗する。READMEが必要なら `README.txt` にする。
+
+### flake.nix の書き方のベースライン
+
+nixpkgs は必ず **コミットSHA** か `flake.lock` で固定する。ブランチ名だけ（`nixos-25.11` など）を指定した場合は時間とともに中身が変わり、再現性を失う。最小例:
+
+```nix
+{
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/<commit-sha>";
+  outputs = { self, nixpkgs }:
+    let forAllSystems = f: nixpkgs.lib.genAttrs
+      [ "x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin" ]
+      (system: f (import nixpkgs { inherit system; }));
+    in {
+      devShells = forAllSystems (pkgs: {
+        default = pkgs.mkShell { packages = [ /* ... */ ]; };
+      });
+    };
+}
+```
+
+最新の安定 nixpkgs コミットは GitHub API (`/repos/NixOS/nixpkgs/branches/nixos-XX.YY`) から取得できる。
+
+### 記事本文との同期: `::file` directive
+
+記事のコード例を companion ディレクトリの実ファイルと常に一致させるため、コードブロックをベタ書きせず `::file` directive で埋め込む。二重管理を避けられる。
+
+```markdown
+::file[./my-article/flake.nix]
+```
+
+- パスは記事のMarkdownファイルのディレクトリを起点に解決される
+- 言語は拡張子から自動検出される（`.nix`→nix, `.py`→python, `.rs`→rust, `.toml`→toml など）
+- タイトルは自動的にファイル名になる（`codeTitle` plugin 経由）
+
+属性での上書きも可能:
+
+```markdown
+::file[./config.txt]{lang=toml title="custom.toml"}
+```
+
+長いファイルから一部だけ抜粋したい場合は、GitHub の URL フラグメントと同じ `#L<start>-L<end>` 形式で行範囲を指定する:
+
+```markdown
+::file[./my-article/flake.nix#L10-L25]
+::file[./my-article/src/main.py#L42]
+```
+
+- 行番号は 1-indexed・両端含む
+- 単一行だけなら `#L15` のように `-L<end>` を省略できる
+- タイトルは自動的に `flake.nix#L10-L25` のように元ファイル名と行範囲を含む形になる
+- 範囲がファイル行数を超える、`#L20-L10` のように逆順、`#Labc` のような malformed な指定は dump 時にエラーになる
+
+記事内でファイルの一部を解説するときも、原則 `::file` で埋め込んだ上で本文で該当箇所に言及する。コピペしてベタ書きすると、companion ディレクトリと記事本文が時間とともに乖離する。
+
+### 執筆手順への追加ステップ
+
+companion ディレクトリを伴う記事では、通常の執筆手順に加えて以下を行う:
+
+1. 記事 `<slug>.md` と同じ階層に `<slug>/` ディレクトリを作る
+2. `flake.nix` を書き、必要なら `flake.lock` を生成する（`nix flake lock`）
+3. 再現したいソース（`src/`, `pyproject.toml`, `Cargo.toml` など）を配置
+4. `.gitignore` を置いて `result`, `result-*`, `.direnv/`, `__pycache__/`, `target/`, `.venv/` などを除外
+5. 記事本文から `::file[./<slug>/...]` で各ファイルを参照する
+6. `pnpm cli dump-file --file <slug>.md --imageDist /tmp/img --output /tmp/dumped.json` を走らせ、`/tmp/dumped.json` の `compiledMarkdown` に実ファイルの内容が展開されていることを確認する
+
+### 参考記事
+
+`posts/techblog/ja/development/reproducible-blog-with-nix.md` がこの仕組みのパイロットで、規約・flake.nix例・`::file` directiveの使い方をまとめて示している。新しいcompanionディレクトリを作るときはこれをテンプレートとして参照する。

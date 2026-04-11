@@ -23,6 +23,7 @@ import {
   postMetaSchema,
 } from "common";
 
+import embedFile from "./embedFile";
 import extractHeader from "./extractHeader";
 import { logger } from "./logger";
 import optimizeImage from "./optimizeImage";
@@ -104,6 +105,7 @@ export async function dumpPost(
         // @ts-ignore
         remarkPlugins: [
           [optimizeImage, { postPath, imageDist }],
+          [embedFile, { postPath }],
           ...(postMetaMap
             ? [[resolveInternalLinks, { postPath: pathStr, postMetaMap }]]
             : []),
