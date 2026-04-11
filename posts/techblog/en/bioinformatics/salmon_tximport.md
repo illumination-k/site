@@ -194,41 +194,14 @@ dds <- DESeq(dds)
 res <- results(dds)
 ```
 
-Internally, `DESeqDataSetFromTximport()` does roughly the following:
+Internally, `DESeqDataSetFromTximport()` does roughly the following. The implementation lives in `thelovelab/DESeq2` at `R/AllClasses.R`.
+
+::gh[https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425]
 
 - Round `txi$counts` to integers and use them as the `counts` slot of the `DESeqDataSet`
 - When `countsFromAbundance = "no"`, store `txi$length` as the `avgTxLength` assay. DESeq2 uses it internally as a sample-specific offset
-- When `countsFromAbundance` is `scaledTPM`, `lengthScaledTPM`, or `dtuScaledTPM`, the length correction is already baked into the counts. `avgTxLength` is skipped and only the counts are used
-
-The implementation lives in [thelovelab/DESeq2 `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R). The relevant excerpt is:
-
-:::details[DESeqDataSetFromTximport source]
-
-```r
-DESeqDataSetFromTximport <- function(txi, colData, design, ...)
-{
-  stopifnot(is(txi, "list"))
-  counts <- round(txi$counts)
-  mode(counts) <- "integer"
-  object <- DESeqDataSetFromMatrix(countData = counts, colData = colData,
-                                   design = design, ...)
-  stopifnot(txi$countsFromAbundance %in%
-              c("no", "scaledTPM", "lengthScaledTPM", "dtuScaledTPM"))
-  if (txi$countsFromAbundance %in%
-        c("scaledTPM", "lengthScaledTPM", "dtuScaledTPM")) {
-    message("using just counts from tximport")
-  } else {
-    message("using counts and average transcript lengths from tximport")
-    lengths <- txi$length
-    stopifnot(all(lengths > 0))
-    dimnames(lengths) <- dimnames(object)
-    assays(object)[["avgTxLength"]] <- lengths
-  }
-  return(object)
-}
-```
-
-:::
+- When `countsFromAbundance` is `scaledTPM` or `lengthScaledTPM`, the length correction is already baked into the counts. `avgTxLength` is skipped and only the counts are used
+- `dtuScaledTPM` is not accepted here. DTU analysis is expected to run through DEXSeq or DRIMSeq instead, so when feeding DESeq2, stop at `lengthScaledTPM`
 
 This has a practical consequence. Say you want to round-trip counts through CSV and feed them into DESeq2 later. Set `countsFromAbundance = "lengthScaledTPM"` (or similar) before writing the CSV. Then `DESeqDataSetFromMatrix()` gives consistent results. Raw `"no"` counts written to CSV lose the `avgTxLength` offset. Keep the tximport object and hand it to DESeq2 directly when possible.
 
