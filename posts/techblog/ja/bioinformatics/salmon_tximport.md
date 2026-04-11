@@ -1,29 +1,44 @@
 ---
 uuid: fb2efb0b-1ca6-48e5-983d-c425d5783598
 title: salmonの出力ファイルをtximportで加工する
-description: salmonの出力ファイルはquant.sfですが、その加工は非常に多岐に渡り、結構難しいです。tximportで加工できる先と用途についてまとめていきたいと思います。
+description: salmonの出力ファイルquant.sfをtximportでRに読み込み、edgeRやDESeq2でDEG解析するまでの流れと、scaledTPM系統のカウント値の違いについてまとめます。
 lang: ja
 category: techblog
 tags:
   - bioinformatics
   - r
 created_at: "2022-05-20T18:42:50+00:00"
-updated_at: "2022-05-20T18:42:50+00:00"
+updated_at: "2026-04-11T00:00:00+00:00"
 ---
 
 ## TL;DR
 
-salmonやkalstoなどは、速く、正確な発現量の定量ソフトウェアです。しかし、単純なカウントデータと違って、その加工と用途は様々です。そこで、salmonの出力ファイルであるquant.sfとその加工ができるtximportについてまとめておきたいと思います。
+- salmonの出力 `quant.sf` をRで扱うときは [tximport](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html) を経由する
+- `tximport` オブジェクトの `counts` と `length` をそのままedgeR/DESeq2に渡し、転写産物長をoffsetとして扱うのが下流DEG解析での標準的な方針
+- `scaledTPM` / `lengthScaledTPM` / `dtuScaledTPM` は名前に "TPM" とつくがTPMとは別物で、ライブラリサイズ相当にスケールしたcount風の値
+- 3'タグRNA-seqなど転写産物長が発現量に影響しないプロトコルでは、length補正を入れずに素のcountを使う
+
+## 前提
+
+- R 4.x、Bioconductor 3.16以降
+- `tximport` / `DESeq2` / `edgeR` がインストール済み
+- salmonの定量結果（`quant.sf`）が手元にある
+
+記事内のコードはtximport 1.26.x、DESeq2 1.38.x、edgeR 3.40.xで動作確認したものがベースです。
+
+## 背景
+
+salmonやkallistoなどは、速く、正確な発現量の定量ソフトウェアです。しかし、単純なカウントデータと違って、その出力は転写産物単位の疑似カウント（estimated read count）であり、そのまま遺伝子レベルのDEG解析に流すには加工が必要です。tximportはその加工を担うR/Bioconductorパッケージで、salmonの `quant.sf` を読み込んで遺伝子レベルに集計したり、edgeR/DESeq2が期待する形に整えたりできます。
 
 ## quant.sf
 
-`quant.sf`はタブ区切りのファイルです。
+`quant.sf`はタブ区切りのファイルで、以下の5列を持ちます。
 
-```
+```text
 Name    Length  EffectiveLength TPM     NumReads
 ```
 
-上の5つの値を持っています。[公式Docs Ver1.40](https://salmon.readthedocs.io/en/latest/file_formats.html)を読むと、これらの値は以下のように定義されています。
+[salmonの公式ドキュメント](https://salmon.readthedocs.io/en/latest/file_formats.html)によると、これらの値は以下のように定義されています。
 
 | 名称            | 定義                                                                                                                  |
 | --------------- | --------------------------------------------------------------------------------------------------------------------- |
@@ -35,50 +50,48 @@ Name    Length  EffectiveLength TPM     NumReads
 
 ## tximportでファイルを読み込む
 
-`quant.sf`ファイルを読み込めます。
+以下のように、末尾に `_exp` が付いたディレクトリにsalmonの出力が入っている状況を想定します。
 
-```bash
-ls
-# SRRxxxxxx_exp
-# DRRxxxxxx_exp
+```text
+SRRxxxxxx_exp/quant.sf
+DRRxxxxxx_exp/quant.sf
 ```
 
-のような末尾にexpがついたディレクトリにsalmonの出力が入っているとします。
+この場合、次のようにしてtximportに渡すファイルリストを組み立てます。
 
 ```r
 library(tximport)
 
-# expがついたファイルの読み込み
-salmon.files <- file.path(list.files(".", pattern = "_exp"), 'quant.sf')
+# _exp ディレクトリを探して quant.sf への相対パスを作る
+salmon.files <- file.path(list.files(".", pattern = "_exp"), "quant.sf")
 
-# このままだとcolnameがSRR_exp/quant.sfになるので置換しておく。
-sample_name <- c(gsub("_exp/quant.sf", "", salmon.files))
-names(salmon.files) <- sample_name
+# このままだとcolnameが "SRR_exp/quant.sf" になるのでサンプル名に置換しておく
+names(salmon.files) <- sub("_exp/quant.sf$", "", salmon.files)
 
-# txOut=TRUEでTranscriptsレベルで読み込む
+# txOut = TRUE で転写産物レベルのまま読み込む
 tx.exp <- tximport(salmon.files, type = "salmon", txOut = TRUE)
+```
 
-# txOut=FALSE (default) の場合はgeneレベルで読み込まれる
-# ただし、転写産物名と遺伝子名を対応させるデータフレームが必要。
-# このあたりは臨機応変にする必要がある。TranscriptID = geneID.1みたいな場合を想定。
+遺伝子レベルに集計するには、転写産物名と遺伝子名を対応させる `tx2gene` データフレームが必要です。転写産物IDが `TranscriptID = geneID.1` のように末尾のドット以降だけが違う形式なら、次のようにrownamesから作れます。
+
+```r
 tx2gene <- data.frame(
     TXNAME = rownames(tx.exp$counts),
-    GENEID = sapply(strsplit(rownames(tx.exp$counts), '\\.'), '[', 1)
+    GENEID = sapply(strsplit(rownames(tx.exp$counts), "\\."), "[", 1)
 )
 
-# 直接読み込む
+# 遺伝子レベルで直接読み込む
 gene.exp <- tximport(salmon.files, type = "salmon", tx2gene = tx2gene)
 
-# Transcripts単位からGene単位にする
+# すでに読み込んだ転写産物レベルのオブジェクトから集計する場合
 gene_from_tx.exp <- summarizeToGene(tx.exp, tx2gene)
 ```
 
-## tximportされたものの中身をcsv形式で書き出す
+この簡易版は「末尾の `.N` を落とす」操作にすぎず、本来の転写産物 → 遺伝子マッピングではないので、IDがEnsemblのバージョンサフィックス付きのようにきれいな形をしていないデータセットでは使えません。そういう場合はGTFやアノテーションパッケージから正式な `tx2gene` を作る必要があります。
 
-workspaceは続いている感じです。
-読み込みはできたんですが、目的のものを取り出す操作が必要です。
+## tximportオブジェクトの中身とCSVへの書き出し
 
-tximportに何が入っているかは`names(tximportObject)`で確認できます。
+前節で作った `tx.exp` / `gene.exp` をそのまま使います。tximportオブジェクトの要素は `names()` で確認できます。
 
 ```r
 names(tx.exp)
@@ -86,67 +99,69 @@ names(tx.exp)
 ## [4] "countsFromAbundance"
 ```
 
-中身は
+それぞれの中身は次のとおりです。
 
-- abundance: TPM
-- counts: NumReads
-- length: EffectiveLength
-- countsFromAbundance: `"no"`, `"scaledTPM"`, `"lengthScaledTPM"` or `"dtuScaledTPM"`
+- `abundance`: TPM
+- `counts`: 推定リード数（`countsFromAbundance = "no"` のときはsalmonの `NumReads` と一致）
+- `length`: 転写産物の長さ。`txOut = TRUE` のときは `EffectiveLength` そのもの。`summarizeToGene()` 後は「サンプルごとの、abundanceで重み付けした平均の転写産物長」になる。DESeq2の `avgTxLength` offsetとして使われる値
+- `countsFromAbundance`: `"no"`（デフォルト）/ `"scaledTPM"` / `"lengthScaledTPM"` / `"dtuScaledTPM"` のいずれか
 
-です。`countsFromAbundance`のdefaultは`"no"`です。
-面倒な話なのですが、`scaledTPM`、`lengthScaledTPM`、`dtuScaledTPM`はTPMとは別物で、
+ややこしいのが `scaledTPM` 系統で、名前に "TPM" と付いていますがTPMとは別物です。次のように取得できます。
 
 ```r
 gene.scaled <- summarizeToGene(tx.exp, tx2gene, countsFromAbundance = "scaledTPM")
-
 scaledTPM <- gene.scaled$counts
 ```
 
-などのようにして得られるカウント値のようなものです。NumReadsからカウントするのではなく、abundance(この場合はTPM)からカウントして、それをライブラリサイズによってスケーリングしたものです。この場合の`xxxxTPM`はTPM由来ということで、TPMのように扱うのは好ましくないです。
+これは `NumReads` を使わず、abundance（TPM）をライブラリサイズ相当にスケーリングして得られるcount風の値です。単位はcountに近い一方、元がTPMなので通常のTPMとして扱うべきではありません。
 
-ちなみにですが、それぞれのscale方法は以下です。また、`tximportObject$counts`で得られるものは、サンプルごとにsumをとるとすべてNumReadsの総数と等しくなります。
+それぞれのスケーリング方法は以下のとおりです。
 
-| 名称              | 方法                                               |
-| ----------------- | -------------------------------------------------- |
-| `no`              | simplesum                                          |
-| `scaledTPM`       | ライブラリサイズに補正                             |
-| `lengthScaledTPM` | 転写産物の平均長を補正したライブラリサイズに補正   |
-| `dtuScaledTPM`    | 転写産物の中央値長で補正したライブラリサイズに補正 |
+| 名称              | 方法                                                                               |
+| ----------------- | ---------------------------------------------------------------------------------- |
+| `no`              | salmonの `NumReads` をそのまま使う。サンプルごとの合計は元の推定リード数と一致する |
+| `scaledTPM`       | `(TPM / 1e6) × libSize` でライブラリサイズにスケーリング                           |
+| `lengthScaledTPM` | 平均の転写産物長でスケールした後、ライブラリサイズにスケーリング                   |
+| `dtuScaledTPM`    | 中央値の転写産物長でスケールした後、ライブラリサイズにスケーリング                 |
 
-また`dtuScaledTPM`はDifferential Transcripts Usage (DTU) 解析のときに最も優れた補正方法らしいです。これらのscaleした値、もしくはそのままのカウントをDifferential Expression Gene (DEG) 解析などには用います。
+`dtuScaledTPM` はDifferential Transcript Usage (DTU) 解析で推奨されるスケーリング方法です（参考: [Bioconductorのサポート投稿](https://support.bioconductor.org/p/119720/)）。これらのスケール済みの値、またはそのままのcountをDifferentially Expressed Gene (DEG) 解析などに用います。
 
-csvなどで書き出したければ以下のようにすれば良いと思います。
+CSVに書き出したい場合は次のようにします。
 
 ```r
 # count
 write.csv(gene.exp$counts, file = "gene_count.csv", row.names = TRUE)
 
-# tpm
+# TPM
 write.csv(gene.exp$abundance, file = "gene_tpm.csv", row.names = TRUE)
 ```
 
-## DEG解析の際にどうすればいいのか
+## DEG解析にどう渡すか
 
-3' tagged RNAseqのようなものの場合は、length長を入れるとむしろ補正がかかってよくないので、countFromAbundanceを使わずに、そのままのcount値を入れたほうがいいです。
+3'タグRNA-seqのように転写産物全長をシーケンスしないプロトコルでは、転写産物長に応じた補正がむしろ不適切になるため、`countsFromAbundance` を使わず素のcountをそのまま使います。
 
-しかし、普通のfull-transcripts-lengthなRNA-seqでは転写産物の長さを補正したほうがいい結果が得られるらしいです。
-
-ここからは[公式doc](https://bioconductor.org/packages/devel/bioc/vignettes/tximport/inst/doc/tximport.html#Do)のコードを少しだけ改変したものをメモ用に貼っておきます。
+一方、通常のfull-length RNA-seqでは、転写産物長をoffsetとして与えた方が良い結果が得られるとされています。下流のDEGツール側もこれを期待しており、tximportの [公式vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html) にはedgeR/DESeq2/limma-voom向けの受け渡し例が載っています。ここではedgeRとDESeq2のパターンを抜粋します。
 
 ### edgeR
 
+公式vignetteのコードをほぼそのまま使っています。`txi` には `tximport(..., countsFromAbundance = "no")` の結果が入っている前提です。
+
 ```r
+library(tximport)
+library(edgeR)
+
+txi <- tximport(salmon.files, type = "salmon", tx2gene = tx2gene)
+
 cts <- txi$counts
 normMat <- txi$length
 
 # Obtaining per-observation scaling factors for length, adjusted to avoid
 # changing the magnitude of the counts.
-normMat <- normMat/exp(rowMeans(log(normMat)))
-normCts <- cts/normMat
+normMat <- normMat / exp(rowMeans(log(normMat)))
+normCts <- cts / normMat
 
 # Computing effective library sizes from scaled counts, to account for
 # composition biases between samples.
-library(edgeR)
 eff.lib <- calcNormFactors(normCts) * colSums(normCts)
 
 # Combining effective library sizes with the length factors, and calculating
@@ -163,8 +178,12 @@ keep <- filterByExpr(y)
 
 ### DESeq2
 
+DESeq2は `DESeqDataSetFromTximport()` が用意されており、tximportオブジェクトをそのまま渡せます。
+
 ```r
 library(DESeq2)
+
+txi <- tximport(salmon.files, type = "salmon", tx2gene = tx2gene)
 
 sampleTable <- data.frame(condition = factor(rep(c("A", "B"), each = 3)))
 rownames(sampleTable) <- colnames(txi$counts)
@@ -174,40 +193,26 @@ dds <- DESeq(dds)
 res <- results(dds)
 ```
 
-DESeq2の`DESeqDataSetFromTximport`を読むと
+`DESeqDataSetFromTximport()` は内部でおおまかに次の処理を実行します。実装は以下のとおりです。
 
-```r
-DESeqDataSetFromTximport <- function(txi, colData, design, ...)
-{
-  stopifnot(is(txi, "list"))
-  counts <- round(txi$counts)
-  mode(counts) <- "integer"
-  object <- DESeqDataSetFromMatrix(countData=counts, colData=colData, design=design, ...)
-  stopifnot(txi$countsFromAbundance %in% c("no","scaledTPM","lengthScaledTPM"))
-  if (txi$countsFromAbundance %in% c("scaledTPM","lengthScaledTPM")) {
-    message("using just counts from tximport")
-  } else {
-    message("using counts and average transcript lengths from tximport")
-    lengths <- txi$length
-    stopifnot(all(lengths > 0))
-    dimnames(lengths) <- dimnames(object)
-    assays(object)[["avgTxLength"]] <- lengths
-  }
-  return(object)
-}
-```
+::gh[https://github.com/thelovelab/DESeq2/blob/15f2ec90e8707705d43c1cd66d32b7e99fd6a741/R/AllClasses.R#L408-L425]
 
-なので、`countAbundance = "scaledTPM"`とかならcsvとかにした後そのまま読み込ませても良さそう。
+要点は次のとおりです。
 
-## 感想
+- `txi$counts` を整数に丸めて `DESeqDataSet` の `counts` にする
+- `countsFromAbundance = "no"` の場合は `txi$length` を `avgTxLength` assayとして保持し、DESeq2が内部でsample-specificなoffsetとして使う
+- `countsFromAbundance` が `scaledTPM` / `lengthScaledTPM` の場合は、lengthがすでにcountに織り込まれているとみなし、`avgTxLength` は付けずにcountのみを使う
+- `dtuScaledTPM` はここでは受け付けていない点に注意。DTU解析はDEXSeqやDRIMSeqなどで扱う想定で、DESeq2に渡すなら `lengthScaledTPM` までに留めること
 
-`scaledTPM`系列ががややこしい。
+この挙動から、「CSVに書き出したcountを後からDESeq2に渡したい」場合は、あらかじめ `countsFromAbundance = "lengthScaledTPM"` などを指定してから書き出しておけば、`DESeqDataSetFromMatrix()` で読み込ませても整合が取れます。逆に `"no"` のcountをCSV経由で渡すと `avgTxLength` offsetが失われるため、できればtximportオブジェクトのまま流すのがおすすめです。
 
-limma-voomって使ったことないんですけどどういうメリットがあるんですかね。
+## 終わりに
+
+`scaledTPM` 系統は名前に "TPM" と付くために混同しやすいですが、実体はcount風の値という理解でだいたい間違いません。full-length RNA-seqならtximportオブジェクトをそのままedgeR/DESeq2に渡してlengthをoffsetに使う、3'タグRNA-seqなら素のcountで流す、という2パターンを押さえておけば下流に困ることは少ないはずです。
 
 ## Reference
 
-- [tximport](https://bioconductor.org/packages/devel/bioc/vignettes/tximport/inst/doc/tximport.html#Do)
-- [DESeq2](https://github.com/mikelove/DESeq2/blob/master/R/AllClasses.R)
+- [tximport vignette](https://bioconductor.org/packages/release/bioc/vignettes/tximport/inst/doc/tximport.html)
+- [DESeq2 AllClasses.R](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R)
 - [dtuScaledTPM vs lengthScaledTPM in DTU analysis](https://support.bioconductor.org/p/119720/)
 - [difference among tximport scaledTPM, lengthScaledTPM and the original TPM output by salmon/kallisto](https://support.bioconductor.org/p/84883/)

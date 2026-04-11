@@ -96,10 +96,21 @@ export class GithubTransformer implements DirectiveTransformer {
     const url = mdastToString(node);
     const parsed = parseGithubUrl(url);
 
+    process.stderr.write(`[diag gh] fetch-start ${parsed.rawFileUrl}\n`);
+    const fetchStart = Date.now();
+
     let allValue: unknown;
     try {
       allValue = (await cachedFetch(parsed.rawFileUrl)).data;
+      process.stderr.write(
+        `[diag gh] fetch-ok ${parsed.rawFileUrl} (${Date.now() - fetchStart}ms)\n`,
+      );
     } catch (e) {
+      process.stderr.write(
+        `[diag gh] fetch-err ${parsed.rawFileUrl} (${Date.now() - fetchStart}ms) ${
+          e instanceof Error ? e.message : String(e)
+        }\n`,
+      );
       console.warn(
         `[gh-embed] Failed to fetch ${parsed.rawFileUrl}:`,
         e instanceof Error ? e.message : e,
