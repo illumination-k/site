@@ -231,9 +231,9 @@ describe("sliceLines", () => {
     // 4th (empty) line, making `L3` unexpectedly point at an empty string.
     const multipleTrailing = "a\nb\nc\n\n\n";
     expect(sliceLines(multipleTrailing, { start: 3, end: 3 })).toBe("c");
-    expect(() =>
-      sliceLines(multipleTrailing, { start: 4, end: 4 }),
-    ).toThrow(/exceeds file length \(3 lines\)/);
+    expect(() => sliceLines(multipleTrailing, { start: 4, end: 4 })).toThrow(
+      /exceeds file length \(3 lines\)/,
+    );
   });
 
   it("handles CRLF line endings", () => {
