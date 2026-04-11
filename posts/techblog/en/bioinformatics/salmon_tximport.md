@@ -193,7 +193,30 @@ dds <- DESeq(dds)
 res <- results(dds)
 ```
 
-Internally, `DESeqDataSetFromTximport()` does roughly the following. The implementation lives in [thelovelab/DESeq2 at `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425).
+Internally, `DESeqDataSetFromTximport()` does roughly the following. The implementation lives in [thelovelab/DESeq2 at `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425) (as of April 2026):
+
+```r
+DESeqDataSetFromTximport <- function(txi, colData, design, ...)
+{
+  stopifnot(is(txi, "list"))
+  counts <- round(txi$counts)
+  mode(counts) <- "integer"
+  object <- DESeqDataSetFromMatrix(countData=counts, colData=colData, design=design, ...)
+  stopifnot(txi$countsFromAbundance %in% c("no","scaledTPM","lengthScaledTPM"))
+  if (txi$countsFromAbundance %in% c("scaledTPM","lengthScaledTPM")) {
+    message("using just counts from tximport")
+  } else {
+    message("using counts and average transcript lengths from tximport")
+    lengths <- txi$length
+    stopifnot(all(lengths > 0))
+    dimnames(lengths) <- dimnames(object)
+    assays(object)[["avgTxLength"]] <- lengths
+  }
+  return(object)
+}
+```
+
+The key points are:
 
 - Round `txi$counts` to integers and use them as the `counts` slot of the `DESeqDataSet`
 - When `countsFromAbundance = "no"`, store `txi$length` as the `avgTxLength` assay. DESeq2 uses it internally as a sample-specific offset

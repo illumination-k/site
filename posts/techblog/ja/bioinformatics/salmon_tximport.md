@@ -193,7 +193,30 @@ dds <- DESeq(dds)
 res <- results(dds)
 ```
 
-`DESeqDataSetFromTximport()` は内部でおおまかに次の処理を実行します。実装は [thelovelab/DESeq2 の `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425) にあります。
+`DESeqDataSetFromTximport()` は内部でおおまかに次の処理を実行します。実装は [thelovelab/DESeq2 の `R/AllClasses.R`](https://github.com/thelovelab/DESeq2/blob/master/R/AllClasses.R#L408-L425) にあります（2026年4月時点）。
+
+```r
+DESeqDataSetFromTximport <- function(txi, colData, design, ...)
+{
+  stopifnot(is(txi, "list"))
+  counts <- round(txi$counts)
+  mode(counts) <- "integer"
+  object <- DESeqDataSetFromMatrix(countData=counts, colData=colData, design=design, ...)
+  stopifnot(txi$countsFromAbundance %in% c("no","scaledTPM","lengthScaledTPM"))
+  if (txi$countsFromAbundance %in% c("scaledTPM","lengthScaledTPM")) {
+    message("using just counts from tximport")
+  } else {
+    message("using counts and average transcript lengths from tximport")
+    lengths <- txi$length
+    stopifnot(all(lengths > 0))
+    dimnames(lengths) <- dimnames(object)
+    assays(object)[["avgTxLength"]] <- lengths
+  }
+  return(object)
+}
+```
+
+要点は次のとおりです。
 
 - `txi$counts` を整数に丸めて `DESeqDataSet` の `counts` にする
 - `countsFromAbundance = "no"` の場合は `txi$length` を `avgTxLength` assayとして保持し、DESeq2が内部でsample-specificなoffsetとして使う
