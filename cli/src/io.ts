@@ -232,9 +232,7 @@ export async function getDumpPosts(
     { count: readSucceeded.length },
     "Phase 2: Compiling posts with metadata map",
   );
-  process.stderr.write(
-    `[diag] phase2-start count=${readSucceeded.length}\n`,
-  );
+  process.stderr.write(`[diag] phase2-start count=${readSucceeded.length}\n`);
 
   let completed = 0;
   const compileResults = await Promise.allSettled(
