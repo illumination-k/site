@@ -108,10 +108,7 @@ export default async function ProfilePage({ params }: Props) {
             _hover: { color: "accent.primary" },
           })}
         >
-          <OrcidIcon
-            aria-hidden="true"
-            className={css({ h: 4, w: 4 })}
-          />
+          <OrcidIcon aria-hidden="true" className={css({ h: 4, w: 4 })} />
           ORCID: {profile.orcidId}
         </a>
       </div>
@@ -154,7 +151,8 @@ export default async function ProfilePage({ params }: Props) {
           mt: 10,
         })}
       >
-        Data from ORCID (fetched: {new Date(profile.fetchedAt).toLocaleDateString()})
+        Data from ORCID (fetched:{" "}
+        {new Date(profile.fetchedAt).toLocaleDateString()})
       </p>
     </div>
   );

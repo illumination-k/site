@@ -8,7 +8,10 @@ import { logger } from "./logger";
 
 const ORCID_API_BASE = "https://pub.orcid.org/v3.0";
 
-async function fetchOrcidJson(orcidId: string, endpoint: string): Promise<unknown> {
+async function fetchOrcidJson(
+  orcidId: string,
+  endpoint: string,
+): Promise<unknown> {
   const url = `${ORCID_API_BASE}/${orcidId}/${endpoint}`;
   logger.info({ url }, `Fetching ORCID ${endpoint}`);
 
@@ -17,13 +20,17 @@ async function fetchOrcidJson(orcidId: string, endpoint: string): Promise<unknow
   });
 
   if (!res.ok) {
-    throw new Error(`ORCID API error: ${res.status} ${res.statusText} for ${url}`);
+    throw new Error(
+      `ORCID API error: ${res.status} ${res.statusText} for ${url}`,
+    );
   }
 
   return res.json();
 }
 
-function formatOrcidDate(date: OrcidDate | null | undefined): string | undefined {
+function formatOrcidDate(
+  date: OrcidDate | null | undefined,
+): string | undefined {
   if (!date?.year?.value) return undefined;
   const parts = [date.year.value];
   if (date.month?.value) {
@@ -106,14 +113,18 @@ function parseAffiliations(
   return results;
 }
 
-export async function fetchEmployments(orcidId: string): Promise<ProfileEmployment[]> {
+export async function fetchEmployments(
+  orcidId: string,
+): Promise<ProfileEmployment[]> {
   const data = (await fetchOrcidJson(orcidId, "employments")) as {
     "affiliation-group": OrcidAffiliationGroup[];
   };
   return parseAffiliations(data["affiliation-group"], "employment-summary");
 }
 
-export async function fetchEducations(orcidId: string): Promise<ProfileEducation[]> {
+export async function fetchEducations(
+  orcidId: string,
+): Promise<ProfileEducation[]> {
   const data = (await fetchOrcidJson(orcidId, "educations")) as {
     "affiliation-group": OrcidAffiliationGroup[];
   };
