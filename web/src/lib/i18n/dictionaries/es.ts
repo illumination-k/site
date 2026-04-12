@@ -111,6 +111,16 @@ const es: Dictionary = {
     githubIssuePrompt: "Crear un issue en GitHub sobre este artículo",
     readNext: "Leer a continuación",
   },
+  profile: {
+    title: "Perfil",
+    subtitle: "Empleo, Educación y Publicaciones",
+    description:
+      "Perfil de illumination-k — empleo, educación y publicaciones (vía ORCID)",
+    employment: "Empleo",
+    education: "Educación",
+    publications: "Publicaciones",
+    present: "Actual",
+  },
   metrics: {
     title: "Métricas de Calidad",
     subtitle: "Tendencias de cobertura de pruebas y puntuación de mutación",
