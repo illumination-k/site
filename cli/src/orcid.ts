@@ -131,6 +131,37 @@ export async function fetchEducations(
   return parseAffiliations(data["affiliation-group"], "education-summary");
 }
 
+function selectPreferredSummary(
+  summaries: OrcidWorkSummary[],
+): OrcidWorkSummary | undefined {
+  // Prefer non-preprint version when duplicates exist in the same group
+  const nonPreprint = summaries.find((s) => s.type !== "preprint");
+  return nonPreprint ?? summaries[0];
+}
+
+async function fetchCitationCount(doi: string): Promise<number | undefined> {
+  const url = `https://api.crossref.org/works/${encodeURIComponent(doi)}?mailto=illumination.k.contact@gmail.com&select=DOI,is-referenced-by-count`;
+  try {
+    const res = await fetch(url, {
+      headers: {
+        "User-Agent":
+          "illumination-k.dev/1.0 (mailto:illumination.k.contact@gmail.com)",
+      },
+    });
+    if (!res.ok) {
+      logger.warn({ doi, status: res.status }, "Crossref API request failed");
+      return undefined;
+    }
+    const data = (await res.json()) as {
+      message: { "is-referenced-by-count"?: number };
+    };
+    return data.message["is-referenced-by-count"];
+  } catch (err) {
+    logger.warn({ doi, err }, "Failed to fetch citation count from Crossref");
+    return undefined;
+  }
+}
+
 export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
   const data = (await fetchOrcidJson(orcidId, "works")) as {
     group: OrcidWorkGroup[];
@@ -139,8 +170,7 @@ export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
   const works: ProfileWork[] = [];
 
   for (const group of data.group) {
-    // Use the first (preferred) work summary in each group
-    const summary = group["work-summary"]?.[0];
+    const summary = selectPreferredSummary(group["work-summary"] ?? []);
     if (!summary) continue;
 
     const externalIds = summary["external-ids"]?.["external-id"] ?? [];
@@ -156,6 +186,21 @@ export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
       url: doiId?.["external-id-url"]?.value ?? summary.url?.value ?? undefined,
       type: summary.type ?? undefined,
     });
+  }
+
+  // Fetch citation counts from Crossref for works with DOIs
+  const worksWithDoi = works.filter((w) => w.doi);
+  if (worksWithDoi.length > 0) {
+    logger.info(
+      { count: worksWithDoi.length },
+      "Fetching citation counts from Crossref",
+    );
+    // Process sequentially with small batches to respect rate limits
+    for (const work of worksWithDoi) {
+      if (work.doi) {
+        work.citationCount = await fetchCitationCount(work.doi);
+      }
+    }
   }
 
   // Sort by publication year descending

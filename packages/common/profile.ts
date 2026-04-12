@@ -27,6 +27,7 @@ export const profileWorkSchema = z.object({
   doi: z.string().optional(),
   url: z.string().optional(),
   type: z.string().optional(),
+  citationCount: z.number().optional(),
 });
 
 export type ProfileWork = z.infer<typeof profileWorkSchema>;

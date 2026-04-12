@@ -91,17 +91,37 @@ export function WorkList({ works }: Props) {
               {work.journalTitle}
             </p>
           )}
-          {work.doi && (
-            <p
-              className={css({
-                fontSize: "xs",
-                color: "text.tertiary",
-                mt: 1,
-              })}
-            >
-              DOI: {work.doi}
-            </p>
-          )}
+          <div
+            className={css({
+              display: "flex",
+              alignItems: "center",
+              gap: 3,
+              mt: 1,
+              flexWrap: "wrap",
+            })}
+          >
+            {work.doi && (
+              <span
+                className={css({
+                  fontSize: "xs",
+                  color: "text.tertiary",
+                })}
+              >
+                DOI: {work.doi}
+              </span>
+            )}
+            {work.citationCount != null && work.citationCount > 0 && (
+              <span
+                className={css({
+                  fontSize: "xs",
+                  color: "text.secondary",
+                  fontWeight: "medium",
+                })}
+              >
+                Cited by {work.citationCount}
+              </span>
+            )}
+          </div>
         </li>
       ))}
     </ul>
