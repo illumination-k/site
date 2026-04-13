@@ -9,6 +9,7 @@ import { lintPosts } from "./lint";
 import { logger } from "./logger";
 import { generateRedirect } from "./migration";
 import generateOgImages from "./og";
+import { fetchOrcidProfile } from "./orcid";
 import { template } from "./template";
 
 yargs(hideBin(process.argv))
@@ -204,6 +205,31 @@ yargs(hideBin(process.argv))
       }
 
       logger.info("No lint errors found");
+    },
+  )
+  .command(
+    "orcid",
+    "Fetch ORCID profile data and dump to JSON",
+    (yargs) => {
+      yargs.positional("orcidId", {
+        type: "string",
+        describe: "ORCID ID (e.g. 0000-0002-3066-2940)",
+      });
+      yargs.positional("output", {
+        type: "string",
+        describe: "Output JSON file path",
+        alias: ["o", "out"],
+      });
+      yargs.demandOption(["orcidId", "output"]);
+    },
+    async (argv) => {
+      const orcidId = argv.orcidId as string;
+      const output = argv.output as string;
+      logger.info({ orcidId, output }, "Starting ORCID profile dump");
+      const profile = await fetchOrcidProfile(orcidId);
+      const { writeFile } = await import("node:fs/promises");
+      await writeFile(output, JSON.stringify(profile, null, 2));
+      logger.info({ output }, "ORCID profile dump complete");
     },
   )
   .command(

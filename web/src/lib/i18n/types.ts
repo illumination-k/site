@@ -49,6 +49,15 @@ export interface Dictionary {
     subtitle: string;
     description: string;
   };
+  profile: {
+    title: string;
+    subtitle: string;
+    description: string;
+    employment: string;
+    education: string;
+    publications: string;
+    present: string;
+  };
   post: {
     archiveWarning: string;
     draftWarning: string;

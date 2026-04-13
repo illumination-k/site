@@ -117,6 +117,17 @@ const ja: Dictionary = {
     githubIssuePrompt: "この記事に関するIssueをGithubで作成する",
     readNext: "次に読む",
   },
+  // Profile page
+  profile: {
+    title: "Profile",
+    subtitle: "経歴・学歴・論文",
+    description:
+      "illumination-k のプロフィール — 経歴・学歴・論文一覧（ORCID連携）",
+    employment: "職歴",
+    education: "学歴",
+    publications: "論文",
+    present: "現在",
+  },
   // Metrics page
   metrics: {
     title: "Quality Metrics",
