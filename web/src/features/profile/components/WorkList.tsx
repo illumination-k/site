@@ -1,12 +1,15 @@
+import { Fragment } from "react";
+
 import { css } from "@/styled-system/css";
 
 import type { ProfileWork } from "common/profile";
 
 interface Props {
   works: ProfileWork[];
+  ownOrcidId?: string;
 }
 
-export function WorkList({ works }: Props) {
+export function WorkList({ works, ownOrcidId }: Props) {
   return (
     <ul className={css({ listStyle: "none", p: 0, m: 0 })}>
       {works.map((work) => (
@@ -79,6 +82,38 @@ export function WorkList({ works }: Props) {
               </span>
             )}
           </div>
+          {work.authors && work.authors.length > 0 && (
+            <p
+              className={css({
+                fontSize: "xs",
+                color: "text.secondary",
+                mt: 1,
+                lineHeight: "1.6",
+              })}
+            >
+              {work.authors.map((author, idx) => {
+                const isOwn =
+                  ownOrcidId !== undefined && author.orcid === ownOrcidId;
+                return (
+                  <Fragment key={`${author.orcid ?? author.name}-${idx}`}>
+                    {idx > 0 && ", "}
+                    <span
+                      className={
+                        isOwn
+                          ? css({
+                              fontWeight: "bold",
+                              color: "text.primary",
+                            })
+                          : undefined
+                      }
+                    >
+                      {author.name}
+                    </span>
+                  </Fragment>
+                );
+              })}
+            </p>
+          )}
           {work.journalTitle && (
             <p
               className={css({

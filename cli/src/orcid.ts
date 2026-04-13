@@ -3,6 +3,7 @@ import type {
   ProfileEducation,
   ProfileEmployment,
   ProfileWork,
+  ProfileWorkAuthor,
 } from "common/profile";
 import { logger } from "./logger";
 
@@ -205,9 +206,63 @@ export function dedupeWorksByTitle(works: ProfileWork[]): ProfileWork[] {
   return result.map((entry) => entry.work);
 }
 
-export async function fetchCitationCount(
+interface CrossrefAuthor {
+  given?: string;
+  family?: string;
+  name?: string;
+  ORCID?: string;
+  sequence?: string;
+}
+
+export interface CrossrefWorkMetadata {
+  citationCount?: number;
+  authors?: ProfileWorkAuthor[];
+}
+
+function formatCrossrefAuthorName(author: CrossrefAuthor): string | undefined {
+  // Crossref normally splits names into `given` / `family`, but corporate
+  // authors (and a few human ones) come through as a single `name` field.
+  const given = author.given?.trim();
+  const family = author.family?.trim();
+  if (given && family) return `${given} ${family}`;
+  if (family) return family;
+  if (given) return given;
+  return author.name?.trim() || undefined;
+}
+
+function normalizeCrossrefOrcid(raw: string | undefined): string | undefined {
+  if (!raw) return undefined;
+  // Crossref returns ORCIDs as full URLs (http(s)://orcid.org/0000-...);
+  // strip the prefix so consumers get a bare identifier.
+  return raw.replace(/^https?:\/\/orcid\.org\//, "");
+}
+
+function parseCrossrefAuthors(
+  raw: CrossrefAuthor[] | undefined,
+): ProfileWorkAuthor[] | undefined {
+  if (!raw || raw.length === 0) return undefined;
+  // Sort by `sequence`: "first" comes before "additional" so the lead author
+  // is always rendered first regardless of API ordering quirks.
+  const sorted = [...raw].sort((a, b) => {
+    const aFirst = a.sequence === "first" ? 0 : 1;
+    const bFirst = b.sequence === "first" ? 0 : 1;
+    return aFirst - bFirst;
+  });
+  const authors: ProfileWorkAuthor[] = [];
+  for (const author of sorted) {
+    const name = formatCrossrefAuthorName(author);
+    if (!name) continue;
+    authors.push({
+      name,
+      orcid: normalizeCrossrefOrcid(author.ORCID),
+    });
+  }
+  return authors.length > 0 ? authors : undefined;
+}
+
+export async function fetchCrossrefWorkMetadata(
   doi: string,
-): Promise<number | undefined> {
+): Promise<CrossrefWorkMetadata> {
   // NOTE: Crossref's /works/{doi} route does not support the `select` query
   // parameter (it returns HTTP 400). Request the full record instead.
   const url = `https://api.crossref.org/works/${encodeURIComponent(doi)}?mailto=illumination.k.contact@gmail.com`;
@@ -220,16 +275,33 @@ export async function fetchCitationCount(
     });
     if (!res.ok) {
       logger.warn({ doi, status: res.status }, "Crossref API request failed");
-      return undefined;
+      return {};
     }
     const data = (await res.json()) as {
-      message: { "is-referenced-by-count"?: number };
+      message: {
+        "is-referenced-by-count"?: number;
+        author?: CrossrefAuthor[];
+      };
     };
-    return data.message["is-referenced-by-count"];
+    return {
+      citationCount: data.message["is-referenced-by-count"],
+      authors: parseCrossrefAuthors(data.message.author),
+    };
   } catch (err) {
-    logger.warn({ doi, err }, "Failed to fetch citation count from Crossref");
-    return undefined;
+    logger.warn({ doi, err }, "Failed to fetch metadata from Crossref");
+    return {};
   }
+}
+
+/**
+ * Backwards-compatible wrapper around {@link fetchCrossrefWorkMetadata} that
+ * only returns the citation count.
+ */
+export async function fetchCitationCount(
+  doi: string,
+): Promise<number | undefined> {
+  const { citationCount } = await fetchCrossrefWorkMetadata(doi);
+  return citationCount;
 }
 
 export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
@@ -260,18 +332,21 @@ export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
 
   const works = dedupeWorksByTitle(collected);
 
-  // Fetch citation counts from Crossref for works with DOIs
+  // Fetch citation counts and authors from Crossref for works with DOIs
   const worksWithDoi = works.filter((w) => w.doi);
   if (worksWithDoi.length > 0) {
     logger.info(
       { count: worksWithDoi.length },
-      "Fetching citation counts from Crossref",
+      "Fetching work metadata from Crossref",
     );
     // Process sequentially with small batches to respect rate limits
     for (const work of worksWithDoi) {
-      if (work.doi) {
-        work.citationCount = await fetchCitationCount(work.doi);
-      }
+      if (!work.doi) continue;
+      const { citationCount, authors } = await fetchCrossrefWorkMetadata(
+        work.doi,
+      );
+      work.citationCount = citationCount;
+      work.authors = authors;
     }
   }
 

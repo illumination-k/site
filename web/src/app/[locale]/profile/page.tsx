@@ -214,7 +214,7 @@ export default async function ProfilePage({ params }: Props) {
       {profile.works.length > 0 && (
         <section className={sectionStyle}>
           <h2 className={sectionHeadingStyle}>{dict.profile.publications}</h2>
-          <WorkList works={profile.works} />
+          <WorkList works={profile.works} ownOrcidId={profile.orcidId} />
         </section>
       )}
 

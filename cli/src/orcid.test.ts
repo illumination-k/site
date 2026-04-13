@@ -4,6 +4,7 @@ import {
   TITLE_SIMILARITY_THRESHOLD,
   dedupeWorksByTitle,
   fetchCitationCount,
+  fetchCrossrefWorkMetadata,
   titleSimilarity,
 } from "./orcid";
 
@@ -58,6 +59,101 @@ describe("fetchCitationCount", () => {
 
     const count = await fetchCitationCount("10.1093/pcp/pcaf159");
     expect(count).toBeUndefined();
+  });
+});
+
+describe("fetchCrossrefWorkMetadata", () => {
+  const originalFetch = globalThis.fetch;
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  it("extracts citation count and authors from the same response", async () => {
+    globalThis.fetch = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            message: {
+              "is-referenced-by-count": 7,
+              author: [
+                {
+                  given: "Shogo",
+                  family: "Kawamura",
+                  ORCID: "https://orcid.org/0000-0002-3066-2940",
+                  sequence: "first",
+                },
+                {
+                  given: "Facundo",
+                  family: "Romani",
+                  ORCID: "http://orcid.org/0000-0003-3954-6740",
+                  sequence: "additional",
+                },
+              ],
+            },
+          }),
+          { status: 200 },
+        ),
+    ) as unknown as typeof fetch;
+
+    const metadata = await fetchCrossrefWorkMetadata("10.1093/pcp/pcac129");
+
+    expect(metadata.citationCount).toBe(7);
+    expect(metadata.authors).toEqual([
+      { name: "Shogo Kawamura", orcid: "0000-0002-3066-2940" },
+      { name: "Facundo Romani", orcid: "0000-0003-3954-6740" },
+    ]);
+  });
+
+  it("orders the first author ahead of additional authors", async () => {
+    // Crossref usually returns sorted, but the metadata extractor should
+    // be defensive about ordering so the lead author is always rendered
+    // first.
+    globalThis.fetch = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            message: {
+              author: [
+                { given: "B", family: "Two", sequence: "additional" },
+                { given: "A", family: "One", sequence: "first" },
+              ],
+            },
+          }),
+          { status: 200 },
+        ),
+    ) as unknown as typeof fetch;
+
+    const metadata = await fetchCrossrefWorkMetadata("10.1/x");
+    expect(metadata.authors?.map((a) => a.name)).toEqual(["A One", "B Two"]);
+  });
+
+  it("falls back to the bare `name` field for corporate authors", async () => {
+    globalThis.fetch = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            message: {
+              author: [{ name: "The HUGO Gene Nomenclature Committee" }],
+            },
+          }),
+          { status: 200 },
+        ),
+    ) as unknown as typeof fetch;
+
+    const metadata = await fetchCrossrefWorkMetadata("10.1/y");
+    expect(metadata.authors).toEqual([
+      { name: "The HUGO Gene Nomenclature Committee", orcid: undefined },
+    ]);
+  });
+
+  it("returns an empty object when Crossref errors out", async () => {
+    globalThis.fetch = vi.fn(
+      async () => new Response("nope", { status: 500 }),
+    ) as unknown as typeof fetch;
+
+    const metadata = await fetchCrossrefWorkMetadata("10.1/z");
+    expect(metadata).toEqual({});
   });
 });
 
