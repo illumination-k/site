@@ -139,8 +139,12 @@ function selectPreferredSummary(
   return nonPreprint ?? summaries[0];
 }
 
-async function fetchCitationCount(doi: string): Promise<number | undefined> {
-  const url = `https://api.crossref.org/works/${encodeURIComponent(doi)}?mailto=illumination.k.contact@gmail.com&select=DOI,is-referenced-by-count`;
+export async function fetchCitationCount(
+  doi: string,
+): Promise<number | undefined> {
+  // NOTE: Crossref's /works/{doi} route does not support the `select` query
+  // parameter (it returns HTTP 400). Request the full record instead.
+  const url = `https://api.crossref.org/works/${encodeURIComponent(doi)}?mailto=illumination.k.contact@gmail.com`;
   try {
     const res = await fetch(url, {
       headers: {
