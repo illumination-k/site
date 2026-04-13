@@ -1,145 +1,92 @@
-# site
+# illumination-k.dev
 
-Source for [illumination-k.dev](https://www.illumination-k.dev) — a personal
-tech blog and paper-stream site built as a pnpm + Turbo monorepo.
+> Personal tech blog and paper-stream by [@illumination-k](https://github.com/illumination-k).
+> Live at **<https://www.illumination-k.dev>**.
 
-Posts are authored in Markdown/MDX, compiled to JSON by a custom CLI
-(`post-utils`), and rendered by a statically-exported Next.js 16 app deployed
-to Cloudflare Pages. Content is multilingual (`ja` / `en` / `es`) and searched
-client-side via Pagefind.
+A handcrafted publishing system: Markdown + MDX in, a statically-exported
+Next.js site out, with a tiny custom CLI (`post-utils`) tying everything
+together. Trilingual (日本語 / English / Español), searchable, syndicated,
+reproducible.
 
-For a deeper architectural tour (conventions, tooling, testing, Claude Code
-integration), see [CLAUDE.md](./CLAUDE.md).
+## Highlights
 
-## Stack
+- **Trilingual techblog.** Posts live under `posts/techblog/{ja,en,es}/…` and
+  are routed through a single `[locale]` segment — the same site, three
+  languages, one pipeline.
+- **paperStream.** A research reading-log synced from a Notion database
+  (filtered by `Status=Done`) via `pnpm cli paper-stream`, then rendered
+  alongside the techblog.
+- **Rich Markdown, not plain Markdown.** A small collection of directive-based
+  embeds — `:::github`, `:::github-card`, `:::youtube`, `:::doi`, `:::book`,
+  `:::file`, plus `:::details` and `:::figure` containers — makes posts feel
+  alive without leaving MDX. Code blocks get titles, headings get anchor IDs,
+  math renders with KaTeX, diagrams with Mermaid, code with Prism.
+- **Automatic OG images.** Every post gets a per-title social card generated
+  at build time with Satori + Sharp.
+- **Feeds.** RSS, Atom, and JSON feeds are produced from the compiled dump —
+  one command, three formats.
+- **Client-side search.** Pagefind indexes the static export after the build,
+  so search stays instant without any server.
+- **AVIF everywhere.** Images referenced in posts are fetched (if remote),
+  resized, and converted to AVIF during the dump step, so pages stay light.
+- **Reproducible articles.** A post can ship a sibling directory with a
+  `flake.nix` that pins the exact environment used to write it — so "it
+  worked on my machine" becomes `nix develop`.
+- **Statically exported and edge-hosted.** `output: "export"` → Cloudflare
+  Pages. Typed routes keep internal links honest; redirects live in
+  `etc/cloudflare/bulk_redirects.csv`.
+- **Taken seriously.** Biome, ESLint, Prettier, dprint, textlint, actionlint,
+  ghalint, zizmor, Vitest, Playwright, and Stryker mutation testing all run
+  in CI. The pnpm workspace is hardened with `blockExoticSubdeps`, a 1-day
+  `minimumReleaseAge`, and an explicit `onlyBuiltDependencies` allowlist.
 
-- **Frontend**: Next.js 16 (App Router, React 19, `output: "export"`), PandaCSS
-- **Content**: Markdown / MDX with remark + rehype plugins (`packages/md-plugins`)
-- **CLI**: TypeScript (`cli/`, yargs + tsup) — dump, RSS/Atom/JSON feeds, OG images
-- **Schemas**: Zod (`packages/common`) as the source of truth for post data
-- **Search**: Pagefind (client-side, indexes the static export)
-- **Tooling**: pnpm 10, Turbo, Biome, Prettier, ESLint 9, dprint, Vitest 4,
-  Playwright, Stryker, textlint
-- **Hosting**: Cloudflare Pages
+## Under the hood
 
-## Layout
+| Area      | Choice                                                   |
+| --------- | -------------------------------------------------------- |
+| Framework | Next.js 16 (App Router, React 19, static export)         |
+| Styling   | PandaCSS                                                 |
+| Content   | Markdown / MDX → remark + rehype (`packages/md-plugins`) |
+| Schemas   | Zod (`packages/common`) as the single source of truth    |
+| CLI       | TypeScript + yargs + tsup (`cli/`), pino for logs        |
+| Images    | Sharp (AVIF), Satori for OG cards                        |
+| Search    | Pagefind                                                 |
+| Notebooks | In-house `ipynb2md` converter (`packages/ipynb2md`)      |
+| Monorepo  | pnpm 10 workspaces + Turbo                               |
+| Hosting   | Cloudflare Pages                                         |
+
+## Repository layout
 
 ```
-.
-├── web/           Next.js 16 app (App Router, static export)
-├── cli/           post-utils CLI (dump, og, rss, template, lint, …)
-├── packages/
-│   ├── common/    Shared Zod schemas & types (postSchema, Lang, …)
-│   ├── md-plugins/ remark / rehype plugins + embed transformers
-│   ├── ipynb2md/  Jupyter notebook → Markdown
-│   └── settings/  Shared biome.json / tsconfig.base.json
-├── posts/
-│   ├── techblog/{ja,en,es}/{category}/*.md
-│   ├── paperStream/   Notion exports
-│   └── public/        Image / OG source assets
-├── scripts/       Metrics collection helpers
-├── etc/cloudflare/bulk_redirects.csv
-└── .github/workflows/
+web/        Next.js 16 app (App Router, static export)
+cli/        post-utils CLI (dump, og, rss, template, lint, orcid, …)
+packages/
+  common/       Shared Zod schemas & types
+  md-plugins/   remark / rehype plugins + embed transformers
+  ipynb2md/     Jupyter notebook → Markdown
+  settings/     Shared biome.json / tsconfig.base.json
+posts/
+  techblog/{ja,en,es}/{category}/*.md
+  paperStream/                           Notion exports
+  public/                                Image / OG source assets
+etc/cloudflare/bulk_redirects.csv
 ```
 
-## Prerequisites
+## Development
 
-Tool versions are pinned in [`.mise.toml`](./.mise.toml); the easiest way to
-get them is via [`mise`](https://mise.jdx.dev):
+The full command reference, content pipeline, and repo conventions live in
+**[CLAUDE.md](./CLAUDE.md)** — it's the canonical guide for working on this
+codebase (whether you're a human or an LLM).
+
+Tool versions are pinned in [`.mise.toml`](./.mise.toml); with
+[`mise`](https://mise.jdx.dev) installed, `mise install` provisions Node,
+pnpm, dprint, and the Actions linters. The usual loop is then:
 
 ```bash
-mise install
+pnpm install   # frozen lockfile
+pnpm dump      # compile posts → web/dump/*.json
+pnpm web-dev   # Next.js dev server + pagefind
 ```
-
-This provisions Node 22, pnpm 10, dprint, actionlint, ghalint, zizmor, prek,
-and the Playwright CLI. `packageManager` is also pinned to `pnpm@10.33.0` in
-the root `package.json`.
-
-## Quick start
-
-```bash
-# 1. Install dependencies (frozen lockfile)
-pnpm install
-
-# 2. Compile posts → web/dump/{techblog,paperStream,profile}.json
-pnpm dump
-
-# 3. Start the Next.js dev server (+ pagefind)
-pnpm web-dev
-```
-
-A full production build runs dump → OG images → RSS → Next.js static export →
-Pagefind:
-
-```bash
-pnpm web-build
-```
-
-## Common commands
-
-| Command                      | Description                                                   |
-| ---------------------------- | ------------------------------------------------------------- |
-| `pnpm web-dev`               | Next.js dev server (run `pnpm dump` first)                    |
-| `pnpm web-build`             | Full production build pipeline                                |
-| `pnpm dump`                  | Compile all Markdown posts to `web/dump/*.json`               |
-| `pnpm cli:build`             | Build the CLI (tsup)                                          |
-| `pnpm cli:rss`               | Generate RSS / Atom / JSON feeds                              |
-| `pnpm cli:og`                | Generate per-post OG images (Satori + Sharp)                  |
-| `pnpm cli <cmd>`             | Invoke the CLI directly (see below)                           |
-| `pnpm test`                  | Vitest across all workspaces via Turbo                        |
-| `pnpm test:coverage`         | Vitest + v8 coverage                                          |
-| `pnpm test:mutation`         | Stryker mutation tests                                        |
-| `pnpm --filter web test:e2e` | Playwright e2e tests                                          |
-| `pnpm lint`                  | dprint + sort-package-json + Biome / ESLint / `tsc --noEmit`  |
-| `pnpm format`                | Auto-format the whole repo                                    |
-| `mise run lint`              | Aggregate: dprint + actionlint + ghalint + zizmor + pnpm lint |
-| `mise run fmt`               | Aggregate: dprint fmt + mise fmt + pnpm format                |
-
-### CLI (`post-utils`)
-
-The CLI is a thin yargs wrapper around the content pipeline. After
-`pnpm cli:build`, invoke it via `pnpm cli <command>`:
-
-| Command        | Purpose                                                       |
-| -------------- | ------------------------------------------------------------- |
-| `dump`         | Compile a directory of Markdown posts into a JSON dump        |
-| `dump-file`    | Compile a single Markdown file (debugging)                    |
-| `rss`          | Generate RSS / Atom / JSON feeds from a dump                  |
-| `og`           | Generate OG images from a dump                                |
-| `template`     | Scaffold a new blog post with the required front-matter       |
-| `orcid`        | Fetch an ORCID profile into JSON                              |
-| `lint`         | Custom Markdown lint rules (unrendered emphasis, SEO meta, …) |
-| `migration`    | Migration / redirect helpers                                  |
-| `paper-stream` | Export the Notion paper-stream database                       |
-
-## Authoring posts
-
-1. Scaffold a post:
-
-   ```bash
-   pnpm cli template -o posts/techblog/ja/development/my-post.md
-   ```
-
-2. Fill in the YAML front-matter (validated by `postMetaSchema` in
-   `packages/common`):
-
-   - `uuid`, `title`, `description`, `category`, `tags`
-   - `lang`: `ja` | `en` | `es`
-   - `created_at`, `updated_at`
-
-3. Write Markdown / MDX. Directive-based embeds (`github`, `github-card`,
-   `github-meta`, `youtube`, `doi`, `book`) and the `:::details` / `:::figure`
-   containers are provided by `packages/md-plugins`.
-
-4. Run `pnpm dump` to compile, and `pnpm web-dev` to preview.
-
-See [CLAUDE.md](./CLAUDE.md) for the full content pipeline, the reproducible
-article companion-directory convention, and the tooling details.
-
-## Deployment
-
-The static export (`web/out/`) is deployed to Cloudflare Pages. URL redirects
-are managed via [`etc/cloudflare/bulk_redirects.csv`](./etc/cloudflare/bulk_redirects.csv).
 
 ## License
 
