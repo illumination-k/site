@@ -8,6 +8,7 @@ const ja: Dictionary = {
     techBlogSub: "技術ブログ",
     paperStream: "Paper Stream",
     paperStreamSub: "論文メモ",
+    profile: "プロフィール",
   },
   // Navigation
   nav: {

@@ -6,7 +6,10 @@ import { EducationList } from "@/features/profile/components/EducationList";
 import { EmploymentList } from "@/features/profile/components/EmploymentList";
 import { WorkList } from "@/features/profile/components/WorkList";
 import { profileRepository } from "@/features/profile/constants";
+import GithubIcon from "@/icons/GithubIcon";
+import LinkedInIcon from "@/icons/LinkedInIcon";
 import OrcidIcon from "@/icons/OrcidIcon";
+import TwitterIcon from "@/icons/TwitterIcon";
 import { type Locale, getDictionary, isLocale } from "@/lib/i18n";
 
 interface Props {
@@ -92,7 +95,7 @@ export default async function ProfilePage({ params }: Props) {
         className={css({
           display: "flex",
           justifyContent: "center",
-          mb: { base: 8, md: 10 },
+          mb: { base: 4, md: 5 },
         })}
       >
         <a
@@ -110,6 +113,78 @@ export default async function ProfilePage({ params }: Props) {
         >
           <OrcidIcon aria-hidden="true" className={css({ h: 4, w: 4 })} />
           ORCID: {profile.orcidId}
+        </a>
+      </div>
+
+      {/* Social Links */}
+      <div
+        className={css({
+          display: "flex",
+          justifyContent: "center",
+          gap: 5,
+          alignItems: "center",
+          mb: { base: 8, md: 10 },
+        })}
+      >
+        <a
+          href="https://www.github.com/illumination-k"
+          aria-label="GitHub"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={css({
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            color: "text.secondary",
+            fontSize: "sm",
+            transition: "colors",
+            transitionDuration: "fast",
+            _hover: { color: "accent.primary" },
+          })}
+        >
+          <GithubIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
+          <span>GitHub</span>
+        </a>
+        <a
+          href="https://twitter.com/illuminationK"
+          aria-label="Twitter"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={css({
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            color: "text.secondary",
+            fontSize: "sm",
+            transition: "colors",
+            transitionDuration: "fast",
+            _hover: { color: "accent.primary" },
+          })}
+        >
+          <TwitterIcon
+            aria-hidden="true"
+            className={css({ h: 5, w: 5, fill: "currentColor" })}
+          />
+          <span>Twitter</span>
+        </a>
+        <a
+          href="https://www.linkedin.com/in/shogo-kawamura-77492b223"
+          aria-label="LinkedIn"
+          target="_blank"
+          rel="noopener noreferrer"
+          className={css({
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            color: "text.secondary",
+            fontSize: "sm",
+            transition: "colors",
+            transitionDuration: "fast",
+            _hover: { color: "accent.primary" },
+          })}
+        >
+          <LinkedInIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
+          <span>LinkedIn</span>
         </a>
       </div>
 
@@ -139,7 +214,11 @@ export default async function ProfilePage({ params }: Props) {
       {profile.works.length > 0 && (
         <section className={sectionStyle}>
           <h2 className={sectionHeadingStyle}>{dict.profile.publications}</h2>
-          <WorkList works={profile.works} />
+          <WorkList
+            works={profile.works}
+            ownOrcidId={profile.orcidId}
+            ownerNames={profile.ownerNames}
+          />
         </section>
       )}
 

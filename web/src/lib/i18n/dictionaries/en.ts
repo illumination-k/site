@@ -7,6 +7,7 @@ const en: Dictionary = {
     techBlogSub: "Technical articles",
     paperStream: "Paper Stream",
     paperStreamSub: "Paper notes",
+    profile: "Profile",
   },
   nav: {
     techBlog: "TechBlog",

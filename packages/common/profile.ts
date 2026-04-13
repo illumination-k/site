@@ -20,6 +20,13 @@ export const profileEducationSchema = z.object({
 
 export type ProfileEducation = z.infer<typeof profileEducationSchema>;
 
+export const profileWorkAuthorSchema = z.object({
+  name: z.string(),
+  orcid: z.string().optional(),
+});
+
+export type ProfileWorkAuthor = z.infer<typeof profileWorkAuthorSchema>;
+
 export const profileWorkSchema = z.object({
   title: z.string(),
   journalTitle: z.string().optional(),
@@ -28,6 +35,7 @@ export const profileWorkSchema = z.object({
   url: z.string().optional(),
   type: z.string().optional(),
   citationCount: z.number().optional(),
+  authors: z.array(profileWorkAuthorSchema).optional(),
 });
 
 export type ProfileWork = z.infer<typeof profileWorkSchema>;
@@ -35,6 +43,7 @@ export type ProfileWork = z.infer<typeof profileWorkSchema>;
 export const profileDumpSchema = z.object({
   orcidId: z.string(),
   fetchedAt: z.string(),
+  ownerNames: z.array(z.string()).default([]),
   employments: z.array(profileEmploymentSchema),
   educations: z.array(profileEducationSchema),
   works: z.array(profileWorkSchema),

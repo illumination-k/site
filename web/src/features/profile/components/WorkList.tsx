@@ -1,12 +1,21 @@
+import { Fragment } from "react";
+
 import { css } from "@/styled-system/css";
 
 import type { ProfileWork } from "common/profile";
 
 interface Props {
   works: ProfileWork[];
+  ownOrcidId?: string;
+  ownerNames?: string[];
 }
 
-export function WorkList({ works }: Props) {
+function normalizeName(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+export function WorkList({ works, ownOrcidId, ownerNames }: Props) {
+  const ownNameSet = new Set((ownerNames ?? []).map(normalizeName));
   return (
     <ul className={css({ listStyle: "none", p: 0, m: 0 })}>
       {works.map((work) => (
@@ -79,6 +88,42 @@ export function WorkList({ works }: Props) {
               </span>
             )}
           </div>
+          {work.authors && work.authors.length > 0 && (
+            <p
+              className={css({
+                fontSize: "xs",
+                color: "text.secondary",
+                mt: 1,
+                lineHeight: "1.6",
+              })}
+            >
+              {work.authors.map((author, idx) => {
+                const matchesOrcid =
+                  ownOrcidId !== undefined && author.orcid === ownOrcidId;
+                const matchesName =
+                  author.orcid === undefined &&
+                  ownNameSet.has(normalizeName(author.name));
+                const isOwn = matchesOrcid || matchesName;
+                return (
+                  <Fragment key={`${author.orcid ?? author.name}-${idx}`}>
+                    {idx > 0 && ", "}
+                    <span
+                      className={
+                        isOwn
+                          ? css({
+                              fontWeight: "bold",
+                              color: "text.primary",
+                            })
+                          : undefined
+                      }
+                    >
+                      {author.name}
+                    </span>
+                  </Fragment>
+                );
+              })}
+            </p>
+          )}
           {work.journalTitle && (
             <p
               className={css({

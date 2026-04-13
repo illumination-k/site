@@ -2,13 +2,11 @@ import { Caveat } from "next/font/google";
 import Link from "next/link";
 
 import { css, cx } from "@/styled-system/css";
-import { circle } from "@/styled-system/patterns";
 
 import { HomeIcon } from "@heroicons/react/24/solid";
 import type { Route } from "next";
 
 import GithubIcon from "@/icons/GithubIcon";
-import TwitterIcon from "@/icons/TwitterIcon";
 import type { Locale } from "@/lib/i18n";
 import { getDictionary } from "@/lib/i18n";
 
@@ -83,17 +81,6 @@ export default async function Nav({ locale }: { locale: Locale }) {
         >
           {dict.nav.techBlog}
         </Link>
-
-        <a
-          href="https://twitter.com/illuminationK"
-          className={circle({ size: 8, bg: "bg.elevated" })}
-          aria-label="twitter"
-        >
-          <TwitterIcon
-            aria-hidden="true"
-            className={css({ h: 8, w: 8, fill: "accent.primary" })}
-          />
-        </a>
 
         <a
           href="https://www.github.com/illumination-k"
