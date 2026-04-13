@@ -3,13 +3,13 @@ import Link from "next/link";
 
 import { css, cx } from "@/styled-system/css";
 
-import { BookOpenIcon, DocumentTextIcon } from "@heroicons/react/24/outline";
+import {
+  BookOpenIcon,
+  DocumentTextIcon,
+  UserIcon,
+} from "@heroicons/react/24/outline";
 import type { Route } from "next";
 
-import GithubIcon from "@/icons/GithubIcon";
-import LinkedInIcon from "@/icons/LinkedInIcon";
-import OrcidIcon from "@/icons/OrcidIcon";
-import TwitterIcon from "@/icons/TwitterIcon";
 import { type Locale, getDictionary, isLocale } from "@/lib/i18n";
 
 const caveat = Caveat({ subsets: ["latin"] });
@@ -88,91 +88,35 @@ export default async function Home({
           })}
         />
 
-        {/* Social Links */}
-        <div
+        {/* Profile Link */}
+        <Link
+          href={`/${locale}/profile` as Route}
           className={css({
-            display: "flex",
-            gap: 5,
+            display: "inline-flex",
             alignItems: "center",
+            gap: 2,
+            px: 5,
+            py: 2.5,
+            rounded: "full",
+            bg: "bg.surface",
+            borderWidth: 1,
+            borderColor: "border.default",
+            color: "text.secondary",
+            fontSize: "sm",
+            fontWeight: "medium",
+            transition: "all",
+            transitionDuration: "normal",
             animation: "fadeInUp 0.6s ease-out 0.2s both",
+            _hover: {
+              borderColor: "accent.primary",
+              color: "accent.primary",
+              transform: "translateY(-1px)",
+            },
           })}
         >
-          <a
-            href="https://www.github.com/illumination-k"
-            aria-label="GitHub"
-            className={css({
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              color: "text.secondary",
-              fontSize: "sm",
-              transition: "colors",
-              transitionDuration: "fast",
-              _hover: { color: "accent.primary" },
-            })}
-          >
-            <GithubIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
-            <span>GitHub</span>
-          </a>
-          <a
-            href="https://twitter.com/illuminationK"
-            aria-label="Twitter"
-            className={css({
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              color: "text.secondary",
-              fontSize: "sm",
-              transition: "colors",
-              transitionDuration: "fast",
-              _hover: { color: "accent.primary" },
-            })}
-          >
-            <TwitterIcon
-              aria-hidden="true"
-              className={css({ h: 5, w: 5, fill: "currentColor" })}
-            />
-            <span>Twitter</span>
-          </a>
-          <a
-            href="https://orcid.org/0000-0002-3066-2940"
-            aria-label="ORCID"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={css({
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              color: "text.secondary",
-              fontSize: "sm",
-              transition: "colors",
-              transitionDuration: "fast",
-              _hover: { color: "accent.primary" },
-            })}
-          >
-            <OrcidIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
-            <span>ORCID</span>
-          </a>
-          <a
-            href="https://www.linkedin.com/in/shogo-kawamura-77492b223"
-            aria-label="LinkedIn"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={css({
-              display: "flex",
-              alignItems: "center",
-              gap: 2,
-              color: "text.secondary",
-              fontSize: "sm",
-              transition: "colors",
-              transitionDuration: "fast",
-              _hover: { color: "accent.primary" },
-            })}
-          >
-            <LinkedInIcon aria-hidden="true" className={css({ h: 5, w: 5 })} />
-            <span>LinkedIn</span>
-          </a>
-        </div>
+          <UserIcon aria-hidden="true" className={css({ h: 4, w: 4 })} />
+          <span>{dict.home.profile}</span>
+        </Link>
 
         {/* Content Cards */}
         <div

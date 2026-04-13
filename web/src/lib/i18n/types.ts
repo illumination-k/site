@@ -10,6 +10,7 @@ export interface Dictionary {
     techBlogSub: string;
     paperStream: string;
     paperStreamSub: string;
+    profile: string;
   };
   nav: {
     techBlog: string;
