@@ -139,33 +139,70 @@ function selectPreferredSummary(
   return nonPreprint ?? summaries[0];
 }
 
-function normalizeTitleKey(title: string): string {
-  return title
-    .replace(/<[^>]+>/g, "") // strip HTML tags like <i>
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLowerCase();
+// Threshold for Jaccard similarity above which two titles are treated as
+// the same work. 0.85 tolerates minor word-level edits (a few changed,
+// added, or dropped tokens out of ~20) without merging genuinely distinct
+// papers that happen to share common nouns like "Marchantia polymorpha".
+export const TITLE_SIMILARITY_THRESHOLD = 0.85;
+
+function tokenizeTitle(title: string): Set<string> {
+  return new Set(
+    title
+      .replace(/<[^>]+>/g, " ") // strip HTML tags like <i>
+      .toLowerCase()
+      .split(/[^\p{L}\p{N}]+/u)
+      .filter((token) => token.length > 0),
+  );
+}
+
+function jaccardSimilarity(a: Set<string>, b: Set<string>): number {
+  if (a.size === 0 && b.size === 0) return 1;
+  let intersection = 0;
+  for (const token of a) {
+    if (b.has(token)) intersection++;
+  }
+  const union = a.size + b.size - intersection;
+  return union === 0 ? 0 : intersection / union;
+}
+
+export function titleSimilarity(a: string, b: string): number {
+  return jaccardSimilarity(tokenizeTitle(a), tokenizeTitle(b));
 }
 
 export function dedupeWorksByTitle(works: ProfileWork[]): ProfileWork[] {
   // ORCID groups duplicates by external-id, but a preprint and its published
   // version often have different DOIs and end up in separate groups. Collapse
-  // them here by normalized title, preferring the non-preprint version.
-  const byKey = new Map<string, ProfileWork>();
+  // them here by fuzzy title matching, preferring the non-preprint version.
+  type Entry = { work: ProfileWork; tokens: Set<string> };
+  const result: Entry[] = [];
+
   for (const work of works) {
-    const key = normalizeTitleKey(work.title);
-    const existing = byKey.get(key);
-    if (!existing) {
-      byKey.set(key, work);
+    const tokens = tokenizeTitle(work.title);
+    let matchedIdx = -1;
+    for (let i = 0; i < result.length; i++) {
+      const existing = result[i];
+      if (!existing) continue;
+      if (
+        jaccardSimilarity(tokens, existing.tokens) >= TITLE_SIMILARITY_THRESHOLD
+      ) {
+        matchedIdx = i;
+        break;
+      }
+    }
+    if (matchedIdx === -1) {
+      result.push({ work, tokens });
       continue;
     }
-    const existingIsPreprint = existing.type === "preprint";
+    const existing = result[matchedIdx];
+    if (!existing) continue;
+    const existingIsPreprint = existing.work.type === "preprint";
     const candidateIsPreprint = work.type === "preprint";
     if (existingIsPreprint && !candidateIsPreprint) {
-      byKey.set(key, work);
+      result[matchedIdx] = { work, tokens };
     }
   }
-  return Array.from(byKey.values());
+
+  return result.map((entry) => entry.work);
 }
 
 export async function fetchCitationCount(
