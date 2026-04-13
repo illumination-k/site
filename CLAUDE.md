@@ -11,7 +11,7 @@ Personal blog/portfolio site (illumination-k.dev) built as a **pnpm + Turbo mono
 Workspaces are declared in `pnpm-workspace.yaml` (`packages/**`, `web`, `cli`).
 
 - **web/** — Next.js 16 frontend (App Router, React 19, PandaCSS, static export via `output: "export"`, `typedRoutes: true`, `transpilePackages: ["md-plugins"]`). Routes live under `web/src/app/[locale]/(articles)/{techblog,paperstream,search}`, plus `disclaimer`, `privacy-policy`, and `metrics`. Feature logic is organized under `web/src/features/{articles,techblog,paperStream}`. Styles are generated under `web/src/styled-system/` via `panda codegen` (runs in `prepare`).
-- **cli/** — TypeScript CLI (`post-utils`, yargs) built with tsup. Entry point: `cli/src/index.ts`. Commands: `dump`, `dump-file`, `rss`, `og`, `template`, `migration`, `lint`, `paper-stream`. Uses pino for structured logging.
+- **cli/** — TypeScript CLI (`post-utils`, yargs) built with tsup. Entry point: `cli/src/index.ts`. Commands: `dump`, `dump-file`, `rss`, `og`, `template`, `migration`, `lint`, `orcid`, `paper-stream`. Uses pino for structured logging.
 - **packages/common/** — Shared Zod schemas and types. Exports `postMetaSchema`, `postSchema`, `dumpPostSchema`, `dumpSchema`, `headingsSchema`, and the `Lang` enum (`ja` | `en` | `es`). This package is the source of truth for post data shapes.
 - **packages/md-plugins/** — Custom remark/rehype plugins plus shared `REMARK_PLUGINS` / `REHYPE_PLUGINS` / `REMARK_LINT_PLUGINS` arrays.
   - remark: `attachIdToHeadings`, `codeTitle`, `DetailsDirective`, `FigureDirective`, `lintUnrenderedEmphasis`, plus a directive-based embed generator with transformers for `github`, `github-card`, `github-meta`, `youtube`, `doi`, `book`.
@@ -68,7 +68,7 @@ The granular dump/og scripts (`cli:dump:techblog`, `cli:dump:paper-stream`, `cli
 ## Content Pipeline
 
 1. Posts are Markdown (+ MDX) with YAML front-matter validated by `postMetaSchema` — required fields: `uuid`, `title`, `description`, `category`, `tags`, `lang` (`ja`|`en`|`es`), `created_at`, `updated_at`.
-2. `pnpm dump` runs `pnpm cli dump` for techblog and paperStream. It parses front-matter, compiles MDX using `REMARK_PLUGINS` + `REHYPE_PLUGINS` from `md-plugins`, extracts headings, downloads and optimizes images to AVIF via Sharp, and writes `web/dump/{techblog,paperStream}.json` validated by `dumpSchema`.
+2. `pnpm dump` runs `pnpm cli dump` for techblog and paperStream. It parses front-matter, compiles MDX using `REMARK_PLUGINS` + `REHYPE_PLUGINS` from `md-plugins`, extracts headings, downloads and optimizes images to AVIF via Sharp, and writes `web/dump/{techblog,paperStream}.json` validated by `dumpSchema`. `pnpm dump` also runs `pnpm cli orcid` to fetch the author's ORCID profile into `web/dump/profile.json`.
 3. `pnpm cli:og` (Satori + Sharp) generates per-post OG images under `web/public/og/{techblog,paperstream}`. It downloads fonts first via `cli/download-fonts.sh`.
 4. `pnpm cli:rss` builds RSS, Atom, and JSON feeds from the techblog dump into `web/public/rss`.
 5. Next.js consumes `web/dump/*.json` at build time for static page generation (`output: "export"`).
