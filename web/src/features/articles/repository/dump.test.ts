@@ -121,11 +121,33 @@ describe("DumpRepository", () => {
       expect(posts[0].meta.lang).toBe("en");
     });
 
-    it("filters by tag (note: current impl overwrites lang filter)", async () => {
+    it("filters by lang AND tag together", async () => {
       const repo = new DumpRepository(dumpPath);
       const posts = await repo.filterPosts("ja", "ts");
-      // Implementation reassigns `ok`, so the final predicate is the tag check.
-      expect(posts.map((p) => p.meta.uuid).sort()).toEqual([UUID_A, UUID_A]);
+      expect(posts).toHaveLength(1);
+      expect(posts[0].meta.uuid).toBe(UUID_A);
+      expect(posts[0].meta.lang).toBe("ja");
+    });
+
+    it("filters by tag alone when lang is undefined", async () => {
+      const repo = new DumpRepository(dumpPath);
+      const posts = await repo.filterPosts(undefined, "ts");
+      expect(posts.map((p) => p.meta.lang).sort()).toEqual(["en", "ja"]);
+    });
+
+    it("filters by lang AND category together", async () => {
+      const repo = new DumpRepository(dumpPath);
+      const posts = await repo.filterPosts("ja", undefined, "techblog");
+      expect(posts.map((p) => p.meta.uuid).sort()).toEqual(
+        [UUID_A, UUID_C].sort(),
+      );
+    });
+
+    it("filters by lang AND tag AND category together", async () => {
+      const repo = new DumpRepository(dumpPath);
+      const posts = await repo.filterPosts("ja", "ts", "techblog");
+      expect(posts).toHaveLength(1);
+      expect(posts[0].meta.uuid).toBe(UUID_A);
     });
 
     it("filters by category", async () => {

@@ -72,19 +72,20 @@ export class TagPagerFactory {
       const tags = await this.blogService.repo.tags();
 
       const nestedParams = await Promise.all(
-        [...tags].map(async (tag) => {
-          const tagged_posts = await this.blogService.repo.filterPosts(
-            undefined,
-            tag,
-          );
-          const totalPage = pager.getTotalPage(tagged_posts);
-          return locales.flatMap((locale) =>
-            Array.from({ length: totalPage }, (_, i) => ({
+        locales.flatMap((locale) => {
+          const lang = localeToLang(locale);
+          return [...tags].map(async (tag) => {
+            const tagged_posts = await this.blogService.repo.filterPosts(
+              lang,
+              tag,
+            );
+            const totalPage = pager.getTotalPage(tagged_posts);
+            return Array.from({ length: totalPage }, (_, i) => ({
               locale,
               tag,
               page: String(i + 1),
-            })),
-          );
+            }));
+          });
         }),
       );
 
