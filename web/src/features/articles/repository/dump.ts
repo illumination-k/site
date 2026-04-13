@@ -67,12 +67,10 @@ export default class DumpRepository implements IBlogRepository {
       tag?: string,
       category?: string,
     ) => {
-      let ok = true;
-      if (lang) ok = lang === post.meta.lang;
-      if (tag) ok = post.meta.tags.includes(tag);
-      if (category) ok = category === post.meta.category;
-
-      return ok;
+      if (lang && post.meta.lang !== lang) return false;
+      if (tag && !post.meta.tags.includes(tag)) return false;
+      if (category && post.meta.category !== category) return false;
+      return true;
     };
 
     return dump.posts.filter((post) => checkPost(post, lang, tag, category));

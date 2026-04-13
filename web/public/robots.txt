@@ -1,6 +1,9 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /ja/search
+Disallow: /en/search
+Disallow: /es/search
 
 # Host
 Host: https://www.illumination-k.dev
