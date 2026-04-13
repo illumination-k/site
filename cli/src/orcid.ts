@@ -139,6 +139,35 @@ function selectPreferredSummary(
   return nonPreprint ?? summaries[0];
 }
 
+function normalizeTitleKey(title: string): string {
+  return title
+    .replace(/<[^>]+>/g, "") // strip HTML tags like <i>
+    .replace(/\s+/g, " ")
+    .trim()
+    .toLowerCase();
+}
+
+export function dedupeWorksByTitle(works: ProfileWork[]): ProfileWork[] {
+  // ORCID groups duplicates by external-id, but a preprint and its published
+  // version often have different DOIs and end up in separate groups. Collapse
+  // them here by normalized title, preferring the non-preprint version.
+  const byKey = new Map<string, ProfileWork>();
+  for (const work of works) {
+    const key = normalizeTitleKey(work.title);
+    const existing = byKey.get(key);
+    if (!existing) {
+      byKey.set(key, work);
+      continue;
+    }
+    const existingIsPreprint = existing.type === "preprint";
+    const candidateIsPreprint = work.type === "preprint";
+    if (existingIsPreprint && !candidateIsPreprint) {
+      byKey.set(key, work);
+    }
+  }
+  return Array.from(byKey.values());
+}
+
 export async function fetchCitationCount(
   doi: string,
 ): Promise<number | undefined> {
@@ -171,7 +200,7 @@ export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
     group: OrcidWorkGroup[];
   };
 
-  const works: ProfileWork[] = [];
+  const collected: ProfileWork[] = [];
 
   for (const group of data.group) {
     const summary = selectPreferredSummary(group["work-summary"] ?? []);
@@ -180,7 +209,7 @@ export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
     const externalIds = summary["external-ids"]?.["external-id"] ?? [];
     const doiId = externalIds.find((id) => id["external-id-type"] === "doi");
 
-    works.push({
+    collected.push({
       title: summary.title.title.value,
       journalTitle: summary["journal-title"]?.value ?? undefined,
       publicationYear: summary["publication-date"]?.year?.value
@@ -191,6 +220,8 @@ export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
       type: summary.type ?? undefined,
     });
   }
+
+  const works = dedupeWorksByTitle(collected);
 
   // Fetch citation counts from Crossref for works with DOIs
   const worksWithDoi = works.filter((w) => w.doi);
