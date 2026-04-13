@@ -43,6 +43,7 @@ export type ProfileWork = z.infer<typeof profileWorkSchema>;
 export const profileDumpSchema = z.object({
   orcidId: z.string(),
   fetchedAt: z.string(),
+  ownerNames: z.array(z.string()).default([]),
   employments: z.array(profileEmploymentSchema),
   educations: z.array(profileEducationSchema),
   works: z.array(profileWorkSchema),

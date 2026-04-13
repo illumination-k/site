@@ -7,9 +7,15 @@ import type { ProfileWork } from "common/profile";
 interface Props {
   works: ProfileWork[];
   ownOrcidId?: string;
+  ownerNames?: string[];
 }
 
-export function WorkList({ works, ownOrcidId }: Props) {
+function normalizeName(name: string): string {
+  return name.toLowerCase().replace(/\s+/g, " ").trim();
+}
+
+export function WorkList({ works, ownOrcidId, ownerNames }: Props) {
+  const ownNameSet = new Set((ownerNames ?? []).map(normalizeName));
   return (
     <ul className={css({ listStyle: "none", p: 0, m: 0 })}>
       {works.map((work) => (
@@ -92,8 +98,12 @@ export function WorkList({ works, ownOrcidId }: Props) {
               })}
             >
               {work.authors.map((author, idx) => {
-                const isOwn =
+                const matchesOrcid =
                   ownOrcidId !== undefined && author.orcid === ownOrcidId;
+                const matchesName =
+                  author.orcid === undefined &&
+                  ownNameSet.has(normalizeName(author.name));
+                const isOwn = matchesOrcid || matchesName;
                 return (
                   <Fragment key={`${author.orcid ?? author.name}-${idx}`}>
                     {idx > 0 && ", "}

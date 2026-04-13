@@ -5,6 +5,7 @@ import {
   dedupeWorksByTitle,
   fetchCitationCount,
   fetchCrossrefWorkMetadata,
+  fetchOwnerNames,
   titleSimilarity,
 } from "./orcid";
 
@@ -154,6 +155,61 @@ describe("fetchCrossrefWorkMetadata", () => {
 
     const metadata = await fetchCrossrefWorkMetadata("10.1/z");
     expect(metadata).toEqual({});
+  });
+});
+
+describe("fetchOwnerNames", () => {
+  const originalFetch = globalThis.fetch;
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  it("derives display-name aliases from the ORCID person record", async () => {
+    globalThis.fetch = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            name: {
+              "given-names": { value: "Shogo" },
+              "family-name": { value: "Kawamura" },
+              "credit-name": null,
+            },
+            "other-names": { "other-name": [] },
+          }),
+          { status: 200 },
+        ),
+    ) as unknown as typeof fetch;
+
+    const aliases = await fetchOwnerNames("0000-0002-3066-2940");
+    // Both Western "Given Family" and East Asian "Family Given" forms are
+    // emitted so display-name matching works regardless of byline order.
+    expect(aliases).toContain("Shogo Kawamura");
+    expect(aliases).toContain("Kawamura Shogo");
+  });
+
+  it("includes the credit name and other-name aliases", async () => {
+    globalThis.fetch = vi.fn(
+      async () =>
+        new Response(
+          JSON.stringify({
+            name: {
+              "given-names": { value: "Jane" },
+              "family-name": { value: "Doe" },
+              "credit-name": { value: "Jane Q. Doe" },
+            },
+            "other-names": {
+              "other-name": [{ content: "J. Doe" }, { content: "Jane Doe" }],
+            },
+          }),
+          { status: 200 },
+        ),
+    ) as unknown as typeof fetch;
+
+    const aliases = await fetchOwnerNames("0000-0000-0000-0000");
+    expect(aliases).toEqual(
+      expect.arrayContaining(["Jane Doe", "Doe Jane", "Jane Q. Doe", "J. Doe"]),
+    );
   });
 });
 

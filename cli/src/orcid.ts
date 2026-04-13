@@ -114,6 +114,41 @@ function parseAffiliations(
   return results;
 }
 
+interface OrcidPersonName {
+  "given-names"?: { value: string } | null;
+  "family-name"?: { value: string } | null;
+  "credit-name"?: { value: string } | null;
+}
+
+interface OrcidPerson {
+  name?: OrcidPersonName | null;
+  "other-names"?: {
+    "other-name"?: Array<{ content?: string | null }> | null;
+  } | null;
+}
+
+export async function fetchOwnerNames(orcidId: string): Promise<string[]> {
+  // Build a list of name aliases from the ORCID person record so that
+  // contributors without a linked ORCID id can still be matched against the
+  // owner by display name.
+  const data = (await fetchOrcidJson(orcidId, "person")) as OrcidPerson;
+  const aliases = new Set<string>();
+  const name = data.name;
+  if (name) {
+    const given = name["given-names"]?.value?.trim();
+    const family = name["family-name"]?.value?.trim();
+    const credit = name["credit-name"]?.value?.trim();
+    if (given && family) aliases.add(`${given} ${family}`);
+    if (family && given) aliases.add(`${family} ${given}`);
+    if (credit) aliases.add(credit);
+  }
+  for (const other of data["other-names"]?.["other-name"] ?? []) {
+    const value = other.content?.trim();
+    if (value) aliases.add(value);
+  }
+  return Array.from(aliases);
+}
+
 export async function fetchEmployments(
   orcidId: string,
 ): Promise<ProfileEmployment[]> {
@@ -358,7 +393,8 @@ export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
 export async function fetchOrcidProfile(orcidId: string): Promise<ProfileDump> {
   logger.info({ orcidId }, "Fetching ORCID profile");
 
-  const [employments, educations, works] = await Promise.all([
+  const [ownerNames, employments, educations, works] = await Promise.all([
+    fetchOwnerNames(orcidId),
     fetchEmployments(orcidId),
     fetchEducations(orcidId),
     fetchWorks(orcidId),
@@ -366,6 +402,7 @@ export async function fetchOrcidProfile(orcidId: string): Promise<ProfileDump> {
 
   logger.info(
     {
+      ownerNames: ownerNames.length,
       employments: employments.length,
       educations: educations.length,
       works: works.length,
@@ -376,6 +413,7 @@ export async function fetchOrcidProfile(orcidId: string): Promise<ProfileDump> {
   return {
     orcidId,
     fetchedAt: new Date().toISOString(),
+    ownerNames,
     employments,
     educations,
     works,
