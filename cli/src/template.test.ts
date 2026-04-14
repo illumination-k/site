@@ -1,6 +1,6 @@
 import type { PostMeta } from "common";
-import YAML from "yaml";
 import { describe, expect, it } from "vitest";
+import YAML from "yaml";
 
 import { template, templateFromPostMeta } from "./template";
 

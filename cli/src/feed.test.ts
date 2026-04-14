@@ -136,9 +136,7 @@ describe("generateFeed", () => {
   it("emits locale-prefixed URLs that match each post's language", async () => {
     await generateFeed(dumpPath, dst);
     const json = JSON.parse(readFileSync(path.join(dst, "feed.json"), "utf-8"));
-    const urls: string[] = json.items.map(
-      (item: { url: string }) => item.url,
-    );
+    const urls: string[] = json.items.map((item: { url: string }) => item.url);
 
     expect(urls).toContain(
       `https://www.illumination-k.dev/ja/techblog/post/${UUID_FIRST}`,
