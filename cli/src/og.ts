@@ -24,7 +24,12 @@ interface OgImageOptions {
   siteName: string;
 }
 
-function buildOgSvgMarkup({ title, category, tags, siteName }: OgImageOptions) {
+export function buildOgSvgMarkup({
+  title,
+  category,
+  tags,
+  siteName,
+}: OgImageOptions) {
   const displayTags = tags.slice(0, 4);
   const truncatedTitle = title.length > 60 ? `${title.slice(0, 57)}...` : title;
 
