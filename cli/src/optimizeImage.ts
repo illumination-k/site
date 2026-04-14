@@ -20,7 +20,9 @@ type Size = {
 };
 
 // width=100,height=100,...
-function parseTitleToSize(title: string | null | undefined): Size | undefined {
+export function parseTitleToSize(
+  title: string | null | undefined,
+): Size | undefined {
   const size: Size = {};
   if (!title) {
     return undefined;
@@ -42,7 +44,7 @@ function parseTitleToSize(title: string | null | undefined): Size | undefined {
   return size;
 }
 
-function replacePathAsPublicRoot(imagePath: string) {
+export function replacePathAsPublicRoot(imagePath: string) {
   const pathElems = path.resolve(imagePath).split(path.sep);
 
   let startPublic = false;
