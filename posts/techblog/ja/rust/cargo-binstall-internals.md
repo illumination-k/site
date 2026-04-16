@@ -2,7 +2,7 @@
 uuid: 36eea43f-5a0a-453a-924f-89b91164f3f6
 title: cargo-binstall はどこからバイナリを取得しているのか
 description: cargo-binstall の内部実装を実際のソースコードを参照しながら解説する。3段階のフォールバック戦略、QuickInstall の固定署名鍵とテレメトリ、minisign による署名検証の仕組みなど、サプライチェーンの観点から知っておくべきポイントをまとめる。
-category: rust
+category: techblog
 lang: ja
 tags:
   - ai-generated
