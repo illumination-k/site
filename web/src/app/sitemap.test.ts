@@ -113,6 +113,7 @@ const shared = vi.hoisted(() => {
         }),
       retrieve: async () => undefined,
       categories: async () => dump.categories,
+      tagNetwork: async () => ({ nodes: [], edges: [] }),
     },
   });
 

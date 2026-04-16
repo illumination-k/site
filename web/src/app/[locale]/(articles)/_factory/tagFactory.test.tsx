@@ -60,6 +60,7 @@ function makeService(opts: {
         return true;
       });
     },
+    tagNetwork: async () => ({ nodes: [], edges: [] }),
   });
 }
 
@@ -183,10 +184,16 @@ describe("TagTopPageFactory", () => {
       params: Promise.resolve({ locale: "ja" }),
     });
 
-    // Returned a React element; tag list must include 3 children
+    // Returned a React element with network link + tag list
     expect(result).toBeTruthy();
     const element = result as ReactElement<{ children: ReactNode }>;
     const children = element.props.children;
-    expect(Array.isArray(children) ? children.length : 0).toBe(3);
+    // children[0] = network link div, children[1] = tag list div
+    expect(Array.isArray(children) ? children.length : 0).toBe(2);
+    const tagListDiv = (children as ReactElement[])[1] as ReactElement<{
+      children: ReactNode;
+    }>;
+    const tags = tagListDiv.props.children;
+    expect(Array.isArray(tags) ? tags.length : 0).toBe(3);
   });
 });

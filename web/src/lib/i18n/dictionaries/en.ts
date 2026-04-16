@@ -31,6 +31,9 @@ const en: Dictionary = {
     tagList: (prefix: string) => `${prefix} Tags`,
     tagListDescription: (prefix: string) =>
       `List of tags used in ${prefix} articles on illumination-k.dev`,
+    tagNetwork: (prefix: string) => `${prefix} Tag Network`,
+    tagNetworkDescription: (prefix: string) =>
+      `Tag co-occurrence network for ${prefix} articles on illumination-k.dev`,
   },
   search: {
     placeholder: "Search articles...",

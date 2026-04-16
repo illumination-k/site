@@ -35,6 +35,7 @@ function makeRepo(posts: DumpPost[]): IBlogRepository {
     categories: async () => [],
     tags: async () => [],
     filterPosts: async () => posts,
+    tagNetwork: async () => ({ nodes: [], edges: [] }),
   };
 }
 
