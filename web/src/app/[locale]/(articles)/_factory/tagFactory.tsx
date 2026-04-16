@@ -1,6 +1,7 @@
+import Link from "next/link";
+
 import { css } from "@/styled-system/css";
 
-import Link from "next/link";
 import type { Metadata, ResolvingMetadata, Route } from "next";
 import { z } from "zod";
 
@@ -183,9 +184,7 @@ export class TagTopPageFactory {
             })}
           >
             <Link
-              href={
-                `/${locale}/${this.prefix}/tag/network` as Route
-              }
+              href={`/${locale}/${this.prefix}/tag/network` as Route}
               className={css({
                 display: "inline-flex",
                 alignItems: "center",

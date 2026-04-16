@@ -1,15 +1,11 @@
+import { css } from "@/styled-system/css";
+
 import type { Metadata } from "next";
 
-import { css } from "@/styled-system/css";
 
 import TagNetwork from "@/features/articles/components/TagNetwork";
 import { blogService } from "@/features/techblog/constant";
-import {
-  type Locale,
-  getDictionary,
-  isLocale,
-  localeToLang,
-} from "@/lib/i18n";
+import { type Locale, getDictionary, isLocale, localeToLang } from "@/lib/i18n";
 
 export async function generateMetadata({
   params,

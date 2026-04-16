@@ -1,9 +1,9 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import type { Route } from "next";
-import { useRouter } from "next/navigation";
 
 interface TagNode {
   tag: string;
@@ -282,11 +282,7 @@ export default function TagNetwork({ nodes, edges, prefix }: TagNetworkProps) {
       // Draw count inside node
       if (n.radius >= 14) {
         ctx.font = `bold ${Math.max(9, fontSize - 2)}px system-ui, -apple-system, sans-serif`;
-        ctx.fillStyle = isHovered
-          ? "#ffffff"
-          : dark
-            ? "#7dd3fc"
-            : "#1e40af";
+        ctx.fillStyle = isHovered ? "#ffffff" : dark ? "#7dd3fc" : "#1e40af";
         ctx.fillText(String(n.count), n.x, n.y);
       }
     }
@@ -355,19 +351,16 @@ export default function TagNetwork({ nodes, edges, prefix }: TagNetworkProps) {
     return null;
   }, []);
 
-  const getCanvasPos = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
-      const canvas = canvasRef.current;
-      if (!canvas) return { x: 0, y: 0 };
-      const rect = canvas.getBoundingClientRect();
-      const clientX =
-        "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
-      const clientY =
-        "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
-      return { x: clientX - rect.left, y: clientY - rect.top };
-    },
-    [],
-  );
+  const getCanvasPos = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return { x: 0, y: 0 };
+    const rect = canvas.getBoundingClientRect();
+    const clientX =
+      "touches" in e ? e.touches[0].clientX : (e as React.MouseEvent).clientX;
+    const clientY =
+      "touches" in e ? e.touches[0].clientY : (e as React.MouseEvent).clientY;
+    return { x: clientX - rect.left, y: clientY - rect.top };
+  }, []);
 
   const handlePointerDown = useCallback(
     (e: React.MouseEvent) => {
