@@ -227,14 +227,15 @@ export default function TagNetwork({ nodes, edges, prefix }: TagNetworkProps) {
     }
 
     // Draw nodes
+    const hoveredTag = hoveredRef.current?.tag;
     for (const n of ns) {
       const isHovered = hoveredRef.current === n;
       const isConnected =
-        hoveredRef.current &&
+        hoveredTag != null &&
         es.some(
           (e) =>
-            (e.source === hoveredRef.current!.tag && e.target === n.tag) ||
-            (e.target === hoveredRef.current!.tag && e.source === n.tag),
+            (e.source === hoveredTag && e.target === n.tag) ||
+            (e.target === hoveredTag && e.source === n.tag),
         );
       const dimmed = hoveredRef.current && !isHovered && !isConnected;
 
