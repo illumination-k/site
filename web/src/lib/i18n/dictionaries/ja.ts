@@ -35,6 +35,9 @@ const ja: Dictionary = {
     tagList: (prefix: string) => `${prefix} タグ一覧`,
     tagListDescription: (prefix: string) =>
       `illumination-k.dev の${prefix}記事に付けられたタグの一覧`,
+    tagNetwork: (prefix: string) => `${prefix} タグネットワーク`,
+    tagNetworkDescription: (prefix: string) =>
+      `illumination-k.dev の${prefix}記事のタグ共起ネットワーク`,
   },
   // Search
   search: {

@@ -4,7 +4,10 @@ import type { Dump, DumpPost, Lang } from "common";
 import { readDump } from "common/io";
 import * as R from "remeda";
 
-import type { IBlogRepository as IBlogRepository } from "../irepository";
+import type {
+  IBlogRepository as IBlogRepository,
+  TagNetworkData,
+} from "../irepository";
 
 export default class DumpRepository implements IBlogRepository {
   path: PathLike;
@@ -74,5 +77,42 @@ export default class DumpRepository implements IBlogRepository {
     };
 
     return dump.posts.filter((post) => checkPost(post, lang, tag, category));
+  }
+
+  async tagNetwork(lang?: Lang): Promise<TagNetworkData> {
+    const dump = await this.get_dump();
+    const excludedTags = new Set(["archive", "draft"]);
+
+    const posts = lang
+      ? dump.posts.filter((p) => p.meta.lang === lang)
+      : dump.posts;
+
+    const tagCount = new Map<string, number>();
+    const edgeMap = new Map<string, number>();
+
+    for (const post of posts) {
+      const tags = post.meta.tags.filter((t) => !excludedTags.has(t));
+      for (const tag of tags) {
+        tagCount.set(tag, (tagCount.get(tag) ?? 0) + 1);
+      }
+      for (let i = 0; i < tags.length; i++) {
+        for (let j = i + 1; j < tags.length; j++) {
+          const key = [tags[i], tags[j]].sort().join("\0");
+          edgeMap.set(key, (edgeMap.get(key) ?? 0) + 1);
+        }
+      }
+    }
+
+    const nodes = [...tagCount.entries()].map(([tag, count]) => ({
+      tag,
+      count,
+    }));
+
+    const edges = [...edgeMap.entries()].map(([key, weight]) => {
+      const [source, target] = key.split("\0");
+      return { source, target, weight };
+    });
+
+    return { nodes, edges };
   }
 }

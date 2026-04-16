@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 import { css } from "@/styled-system/css";
 
 import type { Metadata, ResolvingMetadata, Route } from "next";
@@ -170,19 +172,59 @@ export class TagTopPageFactory {
       const { locale: localeParam } = await params;
       const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
       const tags = await this.blogService.repo.tags();
+      const dict = await getDictionary(locale);
 
       return (
-        <div
-          className={css({ p: 5, display: "flex", flexWrap: "wrap", gap: 3 })}
-        >
-          {tags.map((tag) => (
-            <Tag
-              key={tag}
-              prefix={`${locale}/${this.prefix}`}
-              tag={tag}
-              className={css({})}
-            />
-          ))}
+        <div className={css({ p: 5 })}>
+          <div
+            className={css({
+              display: "flex",
+              justifyContent: "flex-end",
+              mb: 4,
+            })}
+          >
+            <Link
+              href={`/${locale}/${this.prefix}/tag/network` as Route}
+              className={css({
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 1.5,
+                px: 4,
+                py: 2,
+                borderRadius: "lg",
+                fontSize: "sm",
+                fontWeight: "medium",
+                bg: "bg.surface",
+                color: "accent.primary",
+                border: "1px solid",
+                borderColor: "border.default",
+                transition: "all",
+                transitionDuration: "fast",
+                _hover: {
+                  bg: "accent.muted",
+                  borderColor: "accent.primary",
+                },
+              })}
+            >
+              {dict.meta.tagNetwork(this.prefix)}
+            </Link>
+          </div>
+          <div
+            className={css({
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 3,
+            })}
+          >
+            {tags.map((tag) => (
+              <Tag
+                key={tag}
+                prefix={`${locale}/${this.prefix}`}
+                tag={tag}
+                className={css({})}
+              />
+            ))}
+          </div>
         </div>
       );
     };

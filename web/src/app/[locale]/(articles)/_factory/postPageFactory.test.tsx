@@ -52,6 +52,7 @@ function makeService(posts: DumpPost[]): BlogService {
     categories: async () => [],
     tags: async () => [],
     filterPosts: async () => posts,
+    tagNetwork: async () => ({ nodes: [], edges: [] }),
   });
 }
 

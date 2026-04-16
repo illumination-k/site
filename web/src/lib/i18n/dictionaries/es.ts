@@ -31,6 +31,9 @@ const es: Dictionary = {
     tagList: (prefix: string) => `${prefix} Etiquetas`,
     tagListDescription: (prefix: string) =>
       `Lista de etiquetas de artículos de ${prefix} en illumination-k.dev`,
+    tagNetwork: (prefix: string) => `${prefix} Red de Etiquetas`,
+    tagNetworkDescription: (prefix: string) =>
+      `Red de co-ocurrencia de etiquetas de artículos de ${prefix} en illumination-k.dev`,
   },
   search: {
     placeholder: "Buscar artículos...",
