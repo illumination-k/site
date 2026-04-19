@@ -1,0 +1,14 @@
+[tools]
+"aqua:cargo-bins/cargo-binstall" = "latest"
+
+[tools."cargo:cargo-nextest"]
+version = "latest"
+depends = ["aqua:cargo-bins/cargo-binstall"]
+
+[tools."cargo:cargo-audit"]
+version = "latest"
+depends = ["aqua:cargo-bins/cargo-binstall"]
+
+[tools."cargo:tokei"]
+version = "latest"
+depends = ["aqua:cargo-bins/cargo-binstall"]
