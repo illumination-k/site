@@ -38,6 +38,14 @@ export default defineConfig({
           from: { opacity: "0", transform: "scale(0.9)" },
           to: { opacity: "1", transform: "scale(1)" },
         },
+        grassSway: {
+          "0%, 100%": { transform: "rotate(-3.5deg)" },
+          "50%": { transform: "rotate(3.5deg)" },
+        },
+        grassGrow: {
+          from: { transform: "scaleY(0)" },
+          to: { transform: "scaleY(1)" },
+        },
       },
       textStyles: {},
       semanticTokens: {

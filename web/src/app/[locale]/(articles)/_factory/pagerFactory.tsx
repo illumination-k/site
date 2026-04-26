@@ -27,13 +27,23 @@ const schema = {
 
 type Params = z.input<typeof schema.params>;
 
+interface PagerFactoryOptions {
+  renderHeader?: (page: number, locale: Locale) => React.ReactNode;
+}
+
 export default class PagerFactory {
   private blogService: BlogService;
   private prefix: string;
+  private renderHeader?: (page: number, locale: Locale) => React.ReactNode;
 
-  constructor(prefix: string, blogService: BlogService) {
+  constructor(
+    prefix: string,
+    blogService: BlogService,
+    options: PagerFactoryOptions = {},
+  ) {
     this.prefix = prefix;
     this.blogService = blogService;
+    this.renderHeader = options.renderHeader;
   }
 
   public createGenerateMetadataFn() {
@@ -93,6 +103,8 @@ export default class PagerFactory {
         page,
       );
 
+      const header = this.renderHeader?.(page, locale);
+
       return (
         <div
           className={css({
@@ -101,6 +113,16 @@ export default class PagerFactory {
             gridTemplateColumns: "repeat(12, minmax(0, 1fr))",
           })}
         >
+          {header && (
+            <div
+              className={css({
+                gridColumnStart: "1",
+                gridColumnEnd: "-1",
+              })}
+            >
+              {header}
+            </div>
+          )}
           <Pager
             className={css({
               gridColumnStart: "1",
