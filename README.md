@@ -17,8 +17,8 @@ reproducible.
   (filtered by `Status=Done`) via `pnpm cli paper-stream`, then rendered
   alongside the techblog.
 - **Rich Markdown, not plain Markdown.** A small collection of directive-based
-  embeds — `:::github`, `:::github-card`, `:::youtube`, `:::doi`, `:::book`,
-  `:::file`, plus `:::details` and `:::figure` containers — makes posts feel
+  embeds — `::gh`, `::gh-card`, `::gh-meta`, `::youtube`, `::doi`, `::isbn`,
+  `::file`, plus `:::details` and `:::figure` containers — makes posts feel
   alive without leaving MDX. Code blocks get titles, headings get anchor IDs,
   math renders with KaTeX, diagrams with Mermaid, code with Prism.
 - **Automatic OG images.** Every post gets a per-title social card generated
@@ -59,7 +59,7 @@ reproducible.
 
 ```
 web/        Next.js 16 app (App Router, static export)
-cli/        post-utils CLI (dump, og, rss, template, lint, orcid, …)
+cli/        post-utils CLI (dump, dump-file, og, rss, template, migration, lint, orcid, paper-stream)
 packages/
   common/       Shared Zod schemas & types
   md-plugins/   remark / rehype plugins + embed transformers

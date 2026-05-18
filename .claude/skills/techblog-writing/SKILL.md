@@ -73,7 +73,7 @@ illumination-k.dev の技術ブログ記事を執筆・編集する。
 ### 1. 雛形の生成
 
 ```bash
-pnpm cli template -o posts/techblog/{category}/{filename}.md --tags ai-generated --tags {proper tags}
+pnpm cli template -o posts/techblog/ja/{category}/{filename}.md --tags ai-generated --tags {proper tags}
 ```
 
 `ai-generated` タグは必ず入れる。その他のタグは内容に応じて適切に選ぶ。
@@ -99,12 +99,15 @@ title, description, category, tagsを埋める。descriptionは検索結果やOG
 記事の執筆・編集後は、必ずtextlintを実行する。エラーがあれば修正し、エラーがなくなるまで繰り返す。
 
 ```bash
-npx textlint posts/techblog/{category}/{filename}.md
+npx textlint posts/techblog/ja/{category}/{filename}.md
 ```
 
 ### 6. cli lint検証（必須）
 
-レンダリングされない強調（`**...**`や`*...*`がテキストのまま残る問題）を検出するため、cli lintを実行する。エラーがあれば修正する。典型的な原因は`**`の前後にスペースが必要なケース。
+cli lintを実行する。エラーがあれば修正する。検出される主な問題は2種類:
+
+- **レンダリングされない強調** — `**...**`や`*...*`がテキストのまま残る問題。典型的な原因は`**`の前後にスペースが必要なケース。
+- **SEO metaの文字数** — front-matterの`title`・`description`が想定範囲外だとエラーになる。日本語記事（`lang: ja`）の範囲は `title` 15〜60文字、`description` 50〜160文字。
 
 ```bash
 pnpm cli:build && pnpm cli lint --src posts
@@ -114,11 +117,31 @@ pnpm cli:build && pnpm cli lint --src posts
 
 - 標準Markdown（見出し、リスト、コードブロック、リンク、画像）
 - KaTeX数式（`$inline$` / `$$block$$`）
-- GitHub埋め込み: `::gh[https://github.com/...]`
-- 図表: `::figure[caption]{src="image.png"}`
-- 折りたたみ: `:::details` / `:::`
+- Mermaid図（`` ```mermaid `` コードブロック）
 - コードブロックのタイトル: `` ```lang title=filename ``
+- GitHub埋め込み（いずれもリーフディレクティブ `::`）:
+  - `::gh[https://github.com/owner/repo/blob/.../file#L1-L10]` — ファイル/パーマリンクの埋め込み
+  - `::gh-card[owner/repo]` — リポジトリカード
+  - `::gh-meta[owner/repo]` — スター数・更新日などのメタ情報をインライン表示
+- YouTube埋め込み: `::youtube[VIDEO_ID]`
+- 論文埋め込み: `::doi[10.xxxx/...]`
+- 書籍埋め込み: `::isbn[ISBN]`（ISBN-10 / ISBN-13）
 - ファイル埋め込み: `::file[./relative/path]` — 記事と同階層の companion ディレクトリ内ファイルを記事本文にコードブロックとして差し込む。詳細は下記「再現性のためのcompanionディレクトリ」を参照
+- 図表（コンテナディレクティブ `:::`。`Figure N: caption` のキャプションが自動で付く）:
+
+  ```markdown
+  :::figure[キャプション]
+  ![alt](image.png)
+  :::
+  ```
+
+- 折りたたみ（コンテナディレクティブ `:::`。ラベルが`<summary>`になる。省略時は `Details`）:
+
+  ```markdown
+  :::details[サマリ]
+  本文
+  :::
+  ```
 
 ### 7. セルフレビュー
 
