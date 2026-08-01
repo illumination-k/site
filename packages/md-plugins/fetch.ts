@@ -42,11 +42,28 @@ export async function fetchWithRetry<T = unknown>(
   const timeoutMs = config?.timeoutMs ?? 30_000;
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
+    // AbortSignal.timeout uses an unref'd timer, so a request that stalls
+    // (during connect OR mid-body) can leave nothing keeping the event loop
+    // alive and Node exits silently with code 0 mid-command. Race the whole
+    // attempt — headers and body read — against a ref'd timer so every
+    // attempt is guaranteed to settle within timeoutMs.
+    let timer: ReturnType<typeof setTimeout> | undefined;
+    const deadline = new Promise<never>((_, reject) => {
+      timer = setTimeout(
+        () =>
+          reject(new Error(`Request timed out after ${timeoutMs}ms: ${url}`)),
+        timeoutMs,
+      );
+    });
+
     try {
-      const response = await fetch(url, {
-        headers: config?.headers,
-        signal: AbortSignal.timeout(timeoutMs),
-      });
+      const response = await Promise.race([
+        fetch(url, {
+          headers: config?.headers,
+          signal: AbortSignal.timeout(timeoutMs),
+        }),
+        deadline,
+      ]);
 
       if (!response.ok) {
         throw new Error(
@@ -58,7 +75,10 @@ export async function fetchWithRetry<T = unknown>(
         response.headers.get("content-type"),
         config?.responseType,
       );
-      const data = (await readBody(response, resolvedType)) as T;
+      const data = (await Promise.race([
+        readBody(response, resolvedType),
+        deadline,
+      ])) as T;
       return { data, status: response.status };
     } catch (err) {
       if (attempt === maxRetries) {
@@ -69,6 +89,8 @@ export async function fetchWithRetry<T = unknown>(
         `[fetchWithRetry] Retrying ${url} (attempt ${attempt + 1}/${maxRetries}, wait ${delay}ms)`,
       );
       await new Promise((r) => setTimeout(r, delay));
+    } finally {
+      clearTimeout(timer);
     }
   }
   throw new Error("unreachable");

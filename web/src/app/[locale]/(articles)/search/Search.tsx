@@ -104,6 +104,7 @@ export default function Search({ locale }: { locale: string }) {
       }
     }
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- loading flag intentionally wraps the async pagefind load
     setLoading(true);
     loadPagefind()
       .then(async () => {

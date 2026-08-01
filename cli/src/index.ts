@@ -1,6 +1,6 @@
 import fs from "node:fs";
 
-import yargs from "yargs";
+import yargs, { type ArgumentsCamelCase } from "yargs";
 import { hideBin } from "yargs/helpers";
 import { exportDatabase } from "./exportNotion";
 import generateFeed from "./feed";
@@ -11,6 +11,37 @@ import { generateRedirect } from "./migration";
 import generateOgImages from "./og";
 import { fetchOrcidProfile } from "./orcid";
 import { template } from "./template";
+
+// Guard against the event loop draining while a command is still awaiting
+// (e.g. a dependency leaves a promise unsettled). Without this, Node exits
+// with code 0 and downstream steps fail later with confusing errors.
+let pendingCommand: string | null = null;
+
+function guarded(
+  name: string,
+  handler: (argv: ArgumentsCamelCase) => Promise<void>,
+): (argv: ArgumentsCamelCase) => Promise<void> {
+  return async (argv) => {
+    pendingCommand = name;
+    try {
+      await handler(argv);
+    } finally {
+      pendingCommand = null;
+    }
+  };
+}
+
+process.on("beforeExit", () => {
+  if (pendingCommand !== null) {
+    // console.error writes synchronously here; the pino logger may not flush
+    // before exit.
+    console.error(
+      `[post-utils] FATAL: process exited before the "${pendingCommand}" command completed (event loop drained with pending work)`,
+    );
+    process.exitCode = 1;
+    pendingCommand = null;
+  }
+});
 
 yargs(hideBin(process.argv))
   .scriptName("post-utils")
@@ -37,7 +68,7 @@ yargs(hideBin(process.argv))
 
       yargs.demandOption(["mdDir", "imageDist", "output"]);
     },
-    async (argv) => {
+    guarded("dump", async (argv) => {
       const mdDir = argv.mdDir as string;
       const imageDist = argv.imageDist as string;
       const output = argv.output as string;
@@ -45,7 +76,7 @@ yargs(hideBin(process.argv))
       const dumpPosts = await getDumpPosts(mdDir, imageDist);
       await writeDump(output, dumpPosts);
       logger.info({ count: dumpPosts.length, output }, "Dump complete");
-    },
+    }),
   )
   .command(
     "dump-file",
@@ -69,7 +100,7 @@ yargs(hideBin(process.argv))
 
       yargs.demandOption(["file", "imageDist"]);
     },
-    async (argv) => {
+    guarded("dump-file", async (argv) => {
       const file = argv.file as string;
       const imageDist = argv.imageDist as string;
       const output = argv.output as string | undefined;
@@ -84,7 +115,7 @@ yargs(hideBin(process.argv))
       } else {
         process.stdout.write(`${json}\n`);
       }
-    },
+    }),
   )
   .command(
     "rss",
@@ -101,13 +132,13 @@ yargs(hideBin(process.argv))
 
       yargs.demandOption(["dump", "dst"]);
     },
-    async (argv) => {
+    guarded("rss", async (argv) => {
       const dump = argv.dump as string;
       const dst = argv.dst as string;
       logger.info({ dump, dst }, "Generating RSS feed");
       await generateFeed(dump, dst);
       logger.info({ dst }, "RSS feed generation complete");
-    },
+    }),
   )
   .command(
     "og",
@@ -131,14 +162,14 @@ yargs(hideBin(process.argv))
       });
       yargs.demandOption(["dump", "dst", "prefix", "fontDir"]);
     },
-    async (argv) => {
+    guarded("og", async (argv) => {
       await generateOgImages(
         argv.dump as string,
         argv.dst as string,
         argv.prefix as string,
         argv.fontDir as string,
       );
-    },
+    }),
   )
   .command(
     "template",
@@ -169,10 +200,10 @@ yargs(hideBin(process.argv))
       yargs.positional("src", { type: "string", describe: "posts src" });
       yargs.demand("src");
     },
-    async (argv) => {
+    guarded("migration", async (argv) => {
       const result = await generateRedirect(argv.src as string);
       logger.info({ result }, "Migration redirect generated");
-    },
+    }),
   )
   .command(
     "lint",
@@ -184,7 +215,7 @@ yargs(hideBin(process.argv))
       });
       yargs.demandOption(["src"]);
     },
-    async (argv) => {
+    guarded("lint", async (argv) => {
       const src = argv.src as string;
       const errors = await lintPosts(src);
 
@@ -205,7 +236,7 @@ yargs(hideBin(process.argv))
       }
 
       logger.info("No lint errors found");
-    },
+    }),
   )
   .command(
     "orcid",
@@ -222,7 +253,7 @@ yargs(hideBin(process.argv))
       });
       yargs.demandOption(["orcidId", "output"]);
     },
-    async (argv) => {
+    guarded("orcid", async (argv) => {
       const orcidId = argv.orcidId as string;
       const output = argv.output as string;
       logger.info({ orcidId, output }, "Starting ORCID profile dump");
@@ -230,7 +261,7 @@ yargs(hideBin(process.argv))
       const { writeFile } = await import("node:fs/promises");
       await writeFile(output, JSON.stringify(profile, null, 2));
       logger.info({ output }, "ORCID profile dump complete");
-    },
+    }),
   )
   .command(
     "paper-stream",
@@ -243,7 +274,7 @@ yargs(hideBin(process.argv))
       yargs.positional("publicDir", { type: "string", describe: "public dir" });
       yargs.positional("outputDir", { type: "string", describe: "output dir" });
     },
-    async (argv) => {
+    guarded("paper-stream", async (argv) => {
       await exportDatabase(
         argv.databaseId as string,
 
@@ -259,7 +290,7 @@ yargs(hideBin(process.argv))
         argv.publicDir as string,
         argv.outputDir as string,
       );
-    },
+    }),
   )
   .fail((msg, err) => {
     if (err) {

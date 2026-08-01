@@ -55,7 +55,7 @@ export default function () {
         const titleNode: Paragraph = {
           type: "paragraph",
           children: [{ type: "text", value: title }],
-          data: { hProperties: { className: "code-title" } },
+          data: { hProperties: { className: ["code-title"] } },
         };
 
         const wrapNode = {
