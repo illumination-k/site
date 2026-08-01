@@ -17,6 +17,28 @@ import { template } from "./template";
 // with code 0 and downstream steps fail later with confusing errors.
 let pendingCommand: string | null = null;
 
+// Embed fetches that hit their deadline are abandoned rather than aborted
+// (aborting corrupts undici's connection pool), so their sockets can stay open
+// long after the command's work is done. Observed in CI as a dump that wrote
+// its JSON and then sat for 28 minutes until the job timed out. Once a command
+// has completed there is nothing left to wait for, so flush the logs and exit
+// instead of waiting for the event loop to drain.
+async function exitAfterFlush(): Promise<void> {
+  await new Promise<void>((resolve) => {
+    let settled = false;
+    const done = () => {
+      if (settled) return;
+      settled = true;
+      resolve();
+    };
+    // The pino transport writes from a worker thread; bound the wait so a
+    // transport that never reports back cannot reintroduce the hang.
+    setTimeout(done, 2_000);
+    logger.flush(done);
+  });
+  process.exit(process.exitCode ?? 0);
+}
+
 function guarded(
   name: string,
   handler: (argv: ArgumentsCamelCase) => Promise<void>,
@@ -28,6 +50,7 @@ function guarded(
     } finally {
       pendingCommand = null;
     }
+    await exitAfterFlush();
   };
 }
 
