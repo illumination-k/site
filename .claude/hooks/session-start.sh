@@ -60,9 +60,11 @@ fi
 if [ -n "$LOCK_HASH" ] && [ "$LOCK_HASH" = "$PREV_LOCK_HASH" ] && [ -d "node_modules" ]; then
 	echo "pnpm-lock.yaml unchanged; skipping pnpm install."
 else
-	pnpm install --frozen-lockfile --prefer-offline
+	pnpm install --frozen-lockfile --prefer-offline --ignore-scripts
 	if [ -n "$LOCK_HASH" ]; then
 		mkdir -p "$(dirname "$LOCK_HASH_FILE")"
 		printf '%s\n' "$LOCK_HASH" >"$LOCK_HASH_FILE"
 	fi
+	# Run panda codegen separately to avoid ESM issue
+	(cd web && pnpm panda codegen 2>/dev/null || echo "Warning: panda codegen failed, but continuing...")
 fi
