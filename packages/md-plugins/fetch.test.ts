@@ -225,6 +225,21 @@ describe("fetchWithRetry", () => {
     ).rejects.toThrow("Request timed out after 50ms");
   });
 
+  it("rejects when the body read never settles (deadline covers the body)", async () => {
+    // Headers arrive but the body stream stalls: the same deadline must
+    // also bound readBody, or the attempt hangs after the fetch race ends.
+    globalThis.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      status: 200,
+      headers: new Headers({ "content-type": "application/json" }),
+      json: () => new Promise(() => {}),
+    });
+
+    await expect(
+      fetchWithRetry("https://example.com/stalled-body", { timeoutMs: 50 }, 0),
+    ).rejects.toThrow("Request timed out after 50ms");
+  });
+
   it("retries on non-ok status before exhausting", async () => {
     let attempt = 0;
     globalThis.fetch = vi.fn().mockImplementation(() => {
