@@ -7,6 +7,7 @@ import type { RunOptions } from "@mdx-js/mdx";
 import { runSync } from "@mdx-js/mdx";
 import * as runtime from "react/jsx-runtime";
 
+import { CmpTree } from "./CmpTree";
 import { CodeBlock } from "./CodeBlock";
 import { ImageZoom } from "./ImageZoom";
 import { Me, P5, P7, S5, S7, Seq, T7 } from "../Seq/Seq";
@@ -348,6 +349,7 @@ export default function MdView({ compiledMarkdown }: MdViewProps) {
           S7,
           T7,
           Me,
+          CmpTree,
           img: ImageZoom,
           pre: CodeBlock,
           table: TableWrapper,
