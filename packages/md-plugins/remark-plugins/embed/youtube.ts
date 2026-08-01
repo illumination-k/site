@@ -18,7 +18,7 @@ export class YouTubeTransformer implements DirectiveTransformer {
       hName: "iframe",
       hProperties: {
         id: "ytplayer",
-        className: "youtube-embed",
+        className: ["youtube-embed"],
         src: `https://www.youtube.com/embed/${video_id}`,
       },
     };

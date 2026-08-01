@@ -51,7 +51,7 @@ export class DoiTransformer implements DirectiveTransformer {
     const newNode: Paragraph = {
       type: "paragraph",
       children: [{ type: "text", value: citation }],
-      data: { hProperties: { className: "doi" } },
+      data: { hProperties: { className: ["doi"] } },
     };
 
     parent.children[index || 0] = newNode;

@@ -137,7 +137,7 @@ export class GithubTransformer implements DirectiveTransformer {
     };
 
     linkNode.data = {};
-    linkNode.data.hProperties = { className: "github-embed-title" };
+    linkNode.data.hProperties = { className: ["github-embed-title"] };
 
     const githubNode: Parent = {
       type: "github-embed",

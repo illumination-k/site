@@ -24,7 +24,7 @@ export default class GithubCardTransformer implements DirectiveTransformer {
       children: [imageNode],
     };
 
-    node.data = { hProperties: { className: "gh-card" } };
+    node.data = { hProperties: { className: ["gh-card"] } };
 
     node.children = [linkNode];
   }

@@ -111,14 +111,14 @@ export class BookTransformer implements DirectiveTransformer {
       type: "image",
       url: bookInfo.thumbnail,
       alt: bookInfo.title,
-      data: { hProperties: { className: "book-card-thumbnail" } },
+      data: { hProperties: { className: ["book-card-thumbnail"] } },
     };
 
     const thumbnailLink: Link = {
       type: "link",
       url: amazonUrl,
       data: {
-        hProperties: { target: "_blank", rel: "noopener sponsored" },
+        hProperties: { target: "_blank", rel: ["noopener", "sponsored"] },
       },
       children: [thumbnailImage],
     };
@@ -127,7 +127,7 @@ export class BookTransformer implements DirectiveTransformer {
       type: "link",
       url: amazonUrl,
       data: {
-        hProperties: { target: "_blank", rel: "noopener sponsored" },
+        hProperties: { target: "_blank", rel: ["noopener", "sponsored"] },
       },
       children: [
         {
@@ -159,7 +159,7 @@ export class BookTransformer implements DirectiveTransformer {
           className: "book-card-amazon-link",
           href: amazonUrl,
           target: "_blank",
-          rel: "noopener sponsored",
+          rel: ["noopener", "sponsored"],
         },
       },
       children: [{ type: "text", value: buttonText } as Text],

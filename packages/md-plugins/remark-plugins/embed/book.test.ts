@@ -251,7 +251,7 @@ describe("BookTransformer", () => {
       };
       expect(thumbnailLink.url).toBe("https://www.amazon.co.jp/dp/0123456789");
       expect(thumbnailLink.data).toEqual({
-        hProperties: { target: "_blank", rel: "noopener sponsored" },
+        hProperties: { target: "_blank", rel: ["noopener", "sponsored"] },
       });
     });
 
@@ -449,7 +449,7 @@ describe("BookTransformer", () => {
       };
       expect(thumbnailLink.type).toBe("link");
       expect(thumbnailLink.data).toEqual({
-        hProperties: { target: "_blank", rel: "noopener sponsored" },
+        hProperties: { target: "_blank", rel: ["noopener", "sponsored"] },
       });
 
       // Thumbnail image
@@ -463,7 +463,7 @@ describe("BookTransformer", () => {
       expect(thumbnailImg.url).toBe("https://example.com/thumb.jpg");
       expect(thumbnailImg.alt).toBe("Test Book");
       expect(thumbnailImg.data).toEqual({
-        hProperties: { className: "book-card-thumbnail" },
+        hProperties: { className: ["book-card-thumbnail"] },
       });
 
       // Info node
@@ -487,7 +487,7 @@ describe("BookTransformer", () => {
       expect(titleLink.type).toBe("link");
       expect(titleLink.url).toBe("https://www.amazon.co.jp/dp/0123456789");
       expect(titleLink.data).toEqual({
-        hProperties: { target: "_blank", rel: "noopener sponsored" },
+        hProperties: { target: "_blank", rel: ["noopener", "sponsored"] },
       });
       expect(titleLink.children[0].type).toBe("strong");
       expect(titleLink.children[0].children[0].value).toBe("Test Book");
@@ -511,7 +511,7 @@ describe("BookTransformer", () => {
           className: "book-card-amazon-link",
           href: "https://www.amazon.co.jp/dp/0123456789",
           target: "_blank",
-          rel: "noopener sponsored",
+          rel: ["noopener", "sponsored"],
         },
       });
       expect(buttonNode.children[0]).toEqual({

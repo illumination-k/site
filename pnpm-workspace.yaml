@@ -3,6 +3,11 @@ packages:
   - "packages/**"
   - web
   - cli
+# transitiveな脆弱バージョンを強制的に置き換える
+overrides:
+  "postcss@<8.5.18": "^8.5.25"
+  "sharp@<0.35.0": "^0.35.3"
+
 auditConfig:
   ignoreCves:
     - CVE-2026-4800
@@ -31,3 +36,7 @@ onlyBuiltDependencies:
 
 # provenanceの信頼レベルが低下したパッケージのインストールを拒否
 trustPolicy: no-downgrade
+
+# 公開から30日以上経過したバージョンはtrustチェックを免除
+# (provenance導入前の古いバージョンがtrust downgrade扱いされるのを防ぐ)
+trustPolicyIgnoreAfter: 43200
