@@ -5,6 +5,8 @@ on:
     paths:
       - "web/**"
       - posts/**
+      - "cli/**"
+      - "packages/**"
       - ".github/workflows/web-build.yaml"
   push:
     branches:
@@ -12,6 +14,8 @@ on:
     paths:
       - "web/**"
       - posts/**
+      - "cli/**"
+      - "packages/**"
       - ".github/workflows/web-build.yaml"
 
 permissions:
