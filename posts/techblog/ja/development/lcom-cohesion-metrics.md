@@ -25,18 +25,18 @@ updated_at: 2026-04-26
 
 オブジェクト指向設計の経験則として「**高凝集・低結合**」がよく挙げられます。凝集度（cohesion）は1つのモジュール（クラス）内の要素がどれだけ強く関連しているかを表す概念で、Single Responsibility Principle（SRP）と表裏の関係にあります。1つのクラスが複数の責務を持つほど、内部のメソッド群は別々のサブグループに分かれていくはずだ、という発想です。
 
-問題は、これを定量的に測りたいときに「関連している」をどう定義するかです。LCOMはこれを「**共通のインスタンス属性を参照していれば関連している**」と単純化することで計算可能にしました。逆向きの命名（cohesionではなく*lack of* cohesion）になっているのは、後述するLCOM1の定義上、値が大きいほど凝集度が低くなるためです。
+問題は、これを定量的に測りたいときに「関連している」をどう定義するかです。LCOMはこれを「**共通のインスタンス属性を参照していれば関連している**」と単純化することで計算可能にしました。逆向きの命名（cohesionではなく_lack of_ cohesion）になっているのは、後述するLCOM1の定義上、値が大きいほど凝集度が低くなるためです。
 
 ## LCOM の系譜
 
 LCOMはこれまでに何度も再定義されており、文献によって「LCOMx」の番号付けが揺れる厄介なメトリクスです。代表的なものを時系列で並べると以下のようになります。
 
-| 年    | 提案者                      | 名称           | 計算方法              | 値域            |
-| ----- | --------------------------- | -------------- | --------------------- | --------------- |
-| 1991  | Chidamber & Kemerer         | LCOM1          | 非共有ペア数          | $[0, \infty)$   |
-| 1994  | Chidamber & Kemerer（改訂） | LCOM2          | $\max(P - Q, 0)$      | $[0, \infty)$   |
-| 1995  | Hitz & Montazeri            | LCOM4          | グラフの連結成分数    | $[0, m]$        |
-| 1996  | Henderson-Sellers           | LCOM\* / LCOM96 | 属性ごとの平均利用率  | $[0, 1]$ 程度   |
+| 年   | 提案者                      | 名称            | 計算方法             | 値域          |
+| ---- | --------------------------- | --------------- | -------------------- | ------------- |
+| 1991 | Chidamber & Kemerer         | LCOM1           | 非共有ペア数         | $[0, \infty)$ |
+| 1994 | Chidamber & Kemerer（改訂） | LCOM2           | $\max(P - Q, 0)$     | $[0, \infty)$ |
+| 1995 | Hitz & Montazeri            | LCOM4           | グラフの連結成分数   | $[0, m]$      |
+| 1996 | Henderson-Sellers           | LCOM\* / LCOM96 | 属性ごとの平均利用率 | $[0, 1]$ 程度 |
 
 以下、それぞれの定義と問題点を見ていきます。表記を揃えるため、本記事ではクラス内のメソッド集合を $M$、属性集合を $A$ と書きます。メソッド数を $|M| = m$、属性数を $|A| = k$ とし、メソッド $m_i$ が参照する属性集合を $I_i \subseteq A$ で表します。
 
@@ -99,7 +99,7 @@ graph LR
 
 ## LCOM96 / LCOM\*（Henderson-Sellers 1996）
 
-Henderson-Sellersが1996年の著書 *Object-Oriented Metrics: Measures of Complexity* で提案したバリアントで、文献によっては **LCOM5**、**LCOM\***、**LCOM-HS**、**LCOM96** と呼ばれます。本記事では「96年提案である」ことが分かりやすいLCOM96を採用します。
+Henderson-Sellersが1996年の著書 _Object-Oriented Metrics: Measures of Complexity_ で提案したバリアントで、文献によっては **LCOM5**、**LCOM\***、**LCOM-HS**、**LCOM96** と呼ばれます。本記事では「96年提案である」ことが分かりやすいLCOM96を採用します。
 
 属性 $a_j$ を参照するメソッド数を $\mu(a_j)$、メソッド数を $m$、属性数を $k$ とすると、LCOM96は次のように定義されます。
 
@@ -307,12 +307,12 @@ LCOMは1991年から30年以上にわたって改訂されてきたメトリク�
 
 - **どのリファクタリング候補を優先するか**を絞り込むLCOM4
 - **クラス間の比較**をするための正規化済みLCOM96
-`ast` モジュールだけで100行程度の実装ができるので、自分のプロジェクトに合った形に拡張して使うのがいちばん筋がよさそうです。値は絶対指標ではなく、コードを読み直すきっかけとして使いましょう。
+  `ast` モジュールだけで100行程度の実装ができるので、自分のプロジェクトに合った形に拡張して使うのがいちばん筋がよさそうです。値は絶対指標ではなく、コードを読み直すきっかけとして使いましょう。
 
 ### 参考文献
 
-- Chidamber, S. R., & Kemerer, C. F. (1991). *Towards a metrics suite for object oriented design.* OOPSLA '91.
-- Chidamber, S. R., & Kemerer, C. F. (1994). *A Metrics Suite for Object Oriented Design.* IEEE TSE.
-- Hitz, M., & Montazeri, B. (1995). *Measuring coupling and cohesion in object-oriented systems.* ISACC '95.
-- Henderson-Sellers, B. (1996). *Object-Oriented Metrics: Measures of Complexity.* Prentice Hall.
-- Bieman, J. M., & Kang, B.-K. (1995). *Cohesion and reuse in an object-oriented system.* SSR '95.
+- Chidamber, S. R., & Kemerer, C. F. (1991). _Towards a metrics suite for object oriented design._ OOPSLA '91.
+- Chidamber, S. R., & Kemerer, C. F. (1994). _A Metrics Suite for Object Oriented Design._ IEEE TSE.
+- Hitz, M., & Montazeri, B. (1995). _Measuring coupling and cohesion in object-oriented systems._ ISACC '95.
+- Henderson-Sellers, B. (1996). _Object-Oriented Metrics: Measures of Complexity._ Prentice Hall.
+- Bieman, J. M., & Kang, B.-K. (1995). _Cohesion and reuse in an object-oriented system._ SSR '95.
