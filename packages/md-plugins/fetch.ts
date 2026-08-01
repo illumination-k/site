@@ -34,6 +34,31 @@ async function readBody(
   }
 }
 
+// AbortSignal.timeout uses an unref'd timer, so a fetch that never settles
+// leaves nothing keeping the event loop alive and Node exits silently with
+// code 0 mid-command. Race against a ref'd timer to guarantee settlement.
+async function fetchWithDeadline(
+  url: string,
+  init: RequestInit,
+  timeoutMs: number,
+): Promise<Response> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  try {
+    return await Promise.race([
+      fetch(url, init),
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(
+          () =>
+            reject(new Error(`Request timed out after ${timeoutMs}ms: ${url}`)),
+          timeoutMs,
+        );
+      }),
+    ]);
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 export async function fetchWithRetry<T = unknown>(
   url: string,
   config?: FetchOptions,
@@ -43,10 +68,14 @@ export async function fetchWithRetry<T = unknown>(
 
   for (let attempt = 0; attempt <= maxRetries; attempt++) {
     try {
-      const response = await fetch(url, {
-        headers: config?.headers,
-        signal: AbortSignal.timeout(timeoutMs),
-      });
+      const response = await fetchWithDeadline(
+        url,
+        {
+          headers: config?.headers,
+          signal: AbortSignal.timeout(timeoutMs),
+        },
+        timeoutMs,
+      );
 
       if (!response.ok) {
         throw new Error(
