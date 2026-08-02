@@ -499,8 +499,6 @@ GitHub Actionsで以下のワークフローを構成した。
 }
 ```
 
-メトリクスの推移は [Quality Metrics](/metrics) ページで確認できる。
-
 ### 所感
 
 - モノレポで複数パッケージを一括でmutation testingするのは、StrykerJSのVitest runnerがワークスペースを自動認識するため設定がシンプル

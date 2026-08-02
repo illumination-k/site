@@ -123,12 +123,6 @@ const en: Dictionary = {
     publications: "Publications",
     present: "Present",
   },
-  metrics: {
-    title: "Quality Metrics",
-    subtitle: "Test coverage and mutation score trends",
-    description:
-      "Code quality metrics for illumination-k.dev — test coverage and mutation score trends",
-  },
 };
 
 export default en;

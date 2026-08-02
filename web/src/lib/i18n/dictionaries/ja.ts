@@ -132,13 +132,6 @@ const ja: Dictionary = {
     publications: "論文",
     present: "現在",
   },
-  // Metrics page
-  metrics: {
-    title: "Quality Metrics",
-    subtitle: "テストカバレッジとミューテーションスコアの推移",
-    description:
-      "illumination-k.dev のコード品質メトリクス — テストカバレッジとミューテーションスコアの推移",
-  },
 };
 
 export default ja;

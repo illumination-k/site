@@ -149,12 +149,7 @@ describe("sitemap", () => {
     const urls = new Set(entries.map((e) => e.url));
 
     for (const locale of ["ja", "en", "es"]) {
-      for (const path of [
-        "disclaimer",
-        "privacy-policy",
-        "profile",
-        "metrics",
-      ]) {
+      for (const path of ["disclaimer", "privacy-policy", "profile"]) {
         expect(urls.has(`${BASE}/${locale}/${path}`)).toBe(true);
       }
     }

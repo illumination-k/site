@@ -499,8 +499,6 @@ The following workflow was configured in GitHub Actions:
 }
 ```
 
-Metric trends can be viewed on the [Quality Metrics](/metrics) page.
-
 ### Impressions
 
 - Running mutation testing across multiple packages in a monorepo is straightforward because StrykerJS's Vitest runner automatically recognizes workspaces

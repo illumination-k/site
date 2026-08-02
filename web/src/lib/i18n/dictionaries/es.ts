@@ -125,12 +125,6 @@ const es: Dictionary = {
     publications: "Publicaciones",
     present: "Actual",
   },
-  metrics: {
-    title: "Métricas de Calidad",
-    subtitle: "Tendencias de cobertura de pruebas y puntuación de mutación",
-    description:
-      "Métricas de calidad de código de illumination-k.dev — tendencias de cobertura de pruebas y puntuación de mutación",
-  },
 };
 
 export default es;
