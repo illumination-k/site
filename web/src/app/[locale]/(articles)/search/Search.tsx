@@ -77,15 +77,21 @@ export default function Search({ locale }: { locale: string }) {
           .array(pagefindResultSchema)
           .parse(results)
           .filter((r) => {
+            // Every post is statically generated under every locale, so an
+            // unfiltered query lists the same article once per locale.
+            if (!r.url.startsWith(`/${validLocale}/`)) {
+              return false;
+            }
+
             if (category) {
-              return r.url.toLowerCase().includes(category);
+              return r.url.includes(category);
             }
 
             return true;
           }),
       );
     },
-    [],
+    [validLocale],
   );
 
   useEffect(() => {
