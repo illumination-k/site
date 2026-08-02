@@ -47,11 +47,6 @@ export interface Dictionary {
     effectiveDate: string;
     sections: Section[];
   };
-  metrics: {
-    title: string;
-    subtitle: string;
-    description: string;
-  };
   profile: {
     title: string;
     subtitle: string;

@@ -14,7 +14,6 @@ const STATIC_PATHS = [
   "disclaimer",
   "privacy-policy",
   "profile",
-  "metrics",
 ] as const;
 
 async function generatePaginationSitemap(
