@@ -17,6 +17,7 @@ import {
   localeToLang,
   locales,
 } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/site";
 
 const schema = {
   params: z.object({
@@ -61,7 +62,7 @@ export class TagPagerFactory {
         openGraph: {
           title,
           description,
-          url: `https://www.illumination-k.dev/${locale}/${this.prefix}/tag/${tag}/${page}`,
+          url: `${SITE_URL}/${locale}/${this.prefix}/tag/${tag}/${page}`,
         },
       };
     };
@@ -157,7 +158,7 @@ export class TagTopPageFactory {
         openGraph: {
           title: dict.meta.tagList(this.prefix),
           description: dict.meta.tagListDescription(this.prefix),
-          url: `https://www.illumination-k.dev/${locale}/${this.prefix}/tag`,
+          url: `${SITE_URL}/${locale}/${this.prefix}/tag`,
         },
       };
     };

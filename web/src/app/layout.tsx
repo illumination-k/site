@@ -6,13 +6,15 @@ import { css, cx } from "@/styled-system/css";
 
 import type { Metadata } from "next";
 
+import { SITE_URL } from "@/lib/site";
+
 const notoSansJP = Noto_Sans_JP({
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
 });
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
-const siteUrl = "https://www.illumination-k.dev";
+const siteUrl = SITE_URL;
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

@@ -79,7 +79,7 @@ describe("TagPagerFactory", () => {
 
       expect(meta.title).toContain("rust");
       expect(meta.openGraph?.url).toBe(
-        "https://www.illumination-k.dev/ja/techblog/tag/rust/1",
+        "https://illumination-k.dev/ja/techblog/tag/rust/1",
       );
     });
 
@@ -93,7 +93,7 @@ describe("TagPagerFactory", () => {
       );
 
       expect(meta.openGraph?.url).toBe(
-        "https://www.illumination-k.dev/ja/paperstream/tag/go/2",
+        "https://illumination-k.dev/ja/paperstream/tag/go/2",
       );
       expect(meta.title).toContain("go");
     });
@@ -170,7 +170,7 @@ describe("TagTopPageFactory", () => {
 
     expect(meta.title).toContain("techblog");
     expect(meta.openGraph?.url).toBe(
-      "https://www.illumination-k.dev/ja/techblog/tag",
+      "https://illumination-k.dev/ja/techblog/tag",
     );
   });
 

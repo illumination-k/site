@@ -4,10 +4,11 @@ import pager from "@/features/articles/utils/pager";
 import { paperStreamService } from "@/features/paperStream/constants";
 import { blogService } from "@/features/techblog/constant";
 import { localeToLang, locales } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
-const BASE_URL = "https://www.illumination-k.dev";
+const BASE_URL = SITE_URL;
 
 const STATIC_PATHS = [
   "disclaimer",

@@ -4,15 +4,17 @@ import { flex } from "@/styled-system/patterns";
 import type { PostMeta } from "common";
 
 import TwitterIcon from "@/icons/TwitterIcon";
+import { SITE_URL } from "@/lib/site";
 
 import { TwitterIntent } from "./TwitterIntent";
 
 interface Props {
   className?: string;
   meta: PostMeta;
+  prefix: string;
 }
 
-export default function LeftSidebar({ className, meta }: Props) {
+export default function LeftSidebar({ className, meta, prefix }: Props) {
   return (
     <div className={className}>
       <div className={flex({ justifyContent: "end", mr: 4 })}>
@@ -20,7 +22,7 @@ export default function LeftSidebar({ className, meta }: Props) {
           <TwitterIntent
             aria-label="twitter share"
             text={meta.title}
-            url={`https://illumination-k.dev/techblog/post/${meta.uuid}`}
+            url={`${SITE_URL}/${prefix}/post/${meta.uuid}`}
           >
             <TwitterIcon className={css({ h: 8, w: 8, rounded: "full" })} />
           </TwitterIntent>

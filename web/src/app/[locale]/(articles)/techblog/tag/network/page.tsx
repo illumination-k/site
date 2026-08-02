@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import TagNetwork from "@/features/articles/components/TagNetwork";
 import { blogService } from "@/features/techblog/constant";
 import { type Locale, getDictionary, isLocale, localeToLang } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/site";
 
 export async function generateMetadata({
   params,
@@ -24,7 +25,7 @@ export async function generateMetadata({
     openGraph: {
       title,
       description,
-      url: `https://www.illumination-k.dev/${locale}/techblog/tag/network`,
+      url: `${SITE_URL}/${locale}/techblog/tag/network`,
     },
   };
 }
