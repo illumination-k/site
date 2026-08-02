@@ -12,6 +12,7 @@ import {
   localeToOgLocale,
   locales,
 } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/site";
 
 const paramsSchema = z.object({
   locale: z.string(),
@@ -52,7 +53,7 @@ export default class PostPageFactory {
         throw `${_params.uuid} is not found`;
       }
 
-      const url = `https://www.illumination-k.dev/${locale}/${this.prefix}/post/${post.meta.uuid}`;
+      const url = `${SITE_URL}/${locale}/${this.prefix}/post/${post.meta.uuid}`;
 
       return {
         title: post.meta.title,

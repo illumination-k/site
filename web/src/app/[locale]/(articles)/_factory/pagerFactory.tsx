@@ -14,6 +14,7 @@ import {
   localeToLang,
   locales,
 } from "@/lib/i18n";
+import { SITE_URL } from "@/lib/site";
 
 const schema = {
   params: z.object({
@@ -57,7 +58,7 @@ export default class PagerFactory {
         openGraph: {
           title,
           description,
-          url: `https://www.illumination-k.dev/${locale}/${this.prefix}/${page}`,
+          url: `${SITE_URL}/${locale}/${this.prefix}/${page}`,
         },
       };
     };

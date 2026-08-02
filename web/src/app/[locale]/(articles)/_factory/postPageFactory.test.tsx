@@ -94,7 +94,7 @@ describe("PostPageFactory", () => {
       expect(meta.title).toBe("Hello");
       expect(meta.description).toBe("World");
       expect(meta.openGraph?.url).toBe(
-        `https://www.illumination-k.dev/ja/techblog/post/${UUID}`,
+        `https://illumination-k.dev/ja/techblog/post/${UUID}`,
       );
       expect(meta.openGraph?.locale).toBe("ja_JP");
       const ogImages = meta.openGraph?.images as { url: string }[];
@@ -116,7 +116,7 @@ describe("PostPageFactory", () => {
 
       expect(meta.openGraph?.locale).toBe("en_US");
       expect(meta.openGraph?.url).toBe(
-        `https://www.illumination-k.dev/en/techblog/post/${UUID}`,
+        `https://illumination-k.dev/en/techblog/post/${UUID}`,
       );
     });
 

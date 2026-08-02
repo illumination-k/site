@@ -64,7 +64,7 @@ describe("PagerFactory", () => {
 
       expect(meta.title).toBe("techblog 記事一覧");
       expect(meta.openGraph?.url).toBe(
-        "https://www.illumination-k.dev/ja/techblog/1",
+        "https://illumination-k.dev/ja/techblog/1",
       );
     });
 
@@ -79,7 +79,7 @@ describe("PagerFactory", () => {
 
       expect(meta.title).toContain("paperstream");
       expect(meta.openGraph?.url).toBe(
-        "https://www.illumination-k.dev/en/paperstream/3",
+        "https://illumination-k.dev/en/paperstream/3",
       );
     });
 
@@ -96,7 +96,7 @@ describe("PagerFactory", () => {
       expect(meta.title).toContain("記事一覧");
       // The URL is built from the validated locale, which falls back to "ja".
       expect(meta.openGraph?.url).toBe(
-        "https://www.illumination-k.dev/ja/techblog/1",
+        "https://illumination-k.dev/ja/techblog/1",
       );
     });
   });

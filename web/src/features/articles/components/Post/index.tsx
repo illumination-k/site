@@ -85,6 +85,7 @@ export default function Post({
             },
           })}
           meta={meta}
+          prefix={prefix}
         />
         <article
           id="post-content"

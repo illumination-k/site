@@ -6,7 +6,7 @@ Disallow: /en/search
 Disallow: /es/search
 
 # Host
-Host: https://www.illumination-k.dev
+Host: https://illumination-k.dev
 
 # Sitemaps
-Sitemap: https://www.illumination-k.dev/sitemap.xml
+Sitemap: https://illumination-k.dev/sitemap.xml

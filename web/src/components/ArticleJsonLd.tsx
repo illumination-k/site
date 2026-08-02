@@ -1,12 +1,14 @@
 import type { PostMeta } from "common";
 
+import { SITE_URL } from "@/lib/site";
+
 interface ArticleJsonLdProps {
   meta: PostMeta;
   prefix: string;
 }
 
 export default function ArticleJsonLd({ meta, prefix }: ArticleJsonLdProps) {
-  const url = `https://www.illumination-k.dev/${prefix}/post/${meta.uuid}`;
+  const url = `${SITE_URL}/${prefix}/post/${meta.uuid}`;
 
   const jsonLd = {
     "@context": "https://schema.org",
@@ -21,11 +23,11 @@ export default function ArticleJsonLd({ meta, prefix }: ArticleJsonLdProps) {
       "@type": "WebPage",
       "@id": url,
     },
-    image: `https://www.illumination-k.dev/og/${prefix}/${meta.uuid}.png`,
+    image: `${SITE_URL}/og/${prefix}/${meta.uuid}.png`,
     author: {
       "@type": "Person",
       name: "illumination-k",
-      url: "https://www.illumination-k.dev",
+      url: SITE_URL,
     },
   };
 

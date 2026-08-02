@@ -131,7 +131,7 @@ vi.mock("@/features/paperStream/constants", () => ({
 // Import after vi.mock is set up.
 import sitemap from "./sitemap";
 
-const BASE = "https://www.illumination-k.dev";
+const BASE = "https://illumination-k.dev";
 
 describe("sitemap", () => {
   it("includes the site root and per-locale homepages", async () => {
