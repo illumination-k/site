@@ -75,9 +75,15 @@ const shared = vi.hoisted(() => {
         tags: ["go"],
         updated_at: "2024-03-01",
       }),
+      // Tag containing a space — used to verify <loc> values are URL-encoded.
+      makePost("TB-JA-EXT", {
+        lang: "ja",
+        tags: ["chrome extension"],
+        updated_at: "2024-03-02",
+      }),
     ],
     categories: ["techblog"],
-    tags: ["rust", "go"],
+    tags: ["rust", "go", "chrome extension"],
   };
 
   const PAPERSTREAM_DUMP: Dump = {
@@ -134,11 +140,13 @@ import sitemap from "./sitemap";
 const BASE = "https://illumination-k.dev";
 
 describe("sitemap", () => {
-  it("includes the site root and per-locale homepages", async () => {
+  it("includes the per-locale homepages but not the bare origin", async () => {
     const entries = await sitemap();
     const urls = entries.map((e) => e.url);
 
-    expect(urls).toContain(BASE);
+    // The origin only redirects to /ja and canonicalises there, so listing it
+    // would advertise a non-canonical URL.
+    expect(urls).not.toContain(BASE);
     expect(urls).toContain(`${BASE}/ja`);
     expect(urls).toContain(`${BASE}/en`);
     expect(urls).toContain(`${BASE}/es`);
@@ -155,12 +163,14 @@ describe("sitemap", () => {
     }
   });
 
-  it("includes the tag network page for every locale", async () => {
+  it("includes the tag network page for every locale and prefix", async () => {
     const entries = await sitemap();
     const urls = new Set(entries.map((e) => e.url));
 
     for (const locale of ["ja", "en", "es"]) {
-      expect(urls.has(`${BASE}/${locale}/techblog/tag/network`)).toBe(true);
+      for (const prefix of ["techblog", "paperstream"]) {
+        expect(urls.has(`${BASE}/${locale}/${prefix}/tag/network`)).toBe(true);
+      }
     }
   });
 
@@ -196,28 +206,37 @@ describe("sitemap", () => {
     expect(urls.has(`${BASE}/ja/paperstream/2`)).toBe(false);
   });
 
-  it("lists every unique post UUID across all languages for every locale", async () => {
+  it("lists each post only at the locale that owns its language", async () => {
     const entries = await sitemap();
     const urls = new Set(entries.map((e) => e.url));
 
-    for (const locale of ["ja", "en", "es"]) {
-      // en-only post is still emitted for all locales.
-      expect(urls.has(`${BASE}/${locale}/techblog/post/TB-EN-ONLY`)).toBe(true);
-      // ja-only post with the "go" tag is also present everywhere.
-      expect(urls.has(`${BASE}/${locale}/techblog/post/TB-JA-GO`)).toBe(true);
-      // Shared post appears once per locale.
-      expect(urls.has(`${BASE}/${locale}/techblog/post/TB-JA-RUST-1`)).toBe(
-        true,
-      );
-    }
+    // en-only post: /en only. The /ja and /es copies exist as static files but
+    // canonicalise to /en, so they must stay out of the sitemap.
+    expect(urls.has(`${BASE}/en/techblog/post/TB-EN-ONLY`)).toBe(true);
+    expect(urls.has(`${BASE}/ja/techblog/post/TB-EN-ONLY`)).toBe(false);
+    expect(urls.has(`${BASE}/es/techblog/post/TB-EN-ONLY`)).toBe(false);
+
+    // ja-only post: /ja only.
+    expect(urls.has(`${BASE}/ja/techblog/post/TB-JA-GO`)).toBe(true);
+    expect(urls.has(`${BASE}/en/techblog/post/TB-JA-GO`)).toBe(false);
+    expect(urls.has(`${BASE}/es/techblog/post/TB-JA-GO`)).toBe(false);
+
+    // Post translated into ja and en: both translations are canonical.
+    expect(urls.has(`${BASE}/ja/techblog/post/TB-JA-RUST-1`)).toBe(true);
+    expect(urls.has(`${BASE}/en/techblog/post/TB-JA-RUST-1`)).toBe(true);
+    expect(urls.has(`${BASE}/es/techblog/post/TB-JA-RUST-1`)).toBe(false);
   });
 
-  it("picks the most recent updated_at across languages for lastModified", async () => {
+  it("uses each translation's own updated_at for lastModified", async () => {
     const entries = await sitemap();
-    const shared = entries.find(
-      (e) => e.url === `${BASE}/ja/techblog/post/TB-JA-RUST-1`,
+    const byUrl = new Map(entries.map((e) => [e.url, e.lastModified]));
+
+    expect(byUrl.get(`${BASE}/ja/techblog/post/TB-JA-RUST-1`)).toBe(
+      "2024-02-01",
     );
-    expect(shared?.lastModified).toBe("2024-06-01");
+    expect(byUrl.get(`${BASE}/en/techblog/post/TB-JA-RUST-1`)).toBe(
+      "2024-06-01",
+    );
   });
 
   it("generates tag pagination per-locale and skips locales with no tagged posts", async () => {
@@ -245,6 +264,14 @@ describe("sitemap", () => {
     // Default tags (archive/draft) have no posts → no per-tag pages.
     expect(urls.has(`${BASE}/ja/techblog/tag/archive/1`)).toBe(false);
     expect(urls.has(`${BASE}/ja/techblog/tag/draft/1`)).toBe(false);
+  });
+
+  it("percent-encodes tags that are not URL-safe", async () => {
+    const entries = await sitemap();
+    const urls = new Set(entries.map((e) => e.url));
+
+    expect(urls.has(`${BASE}/ja/techblog/tag/chrome%20extension/1`)).toBe(true);
+    expect(urls.has(`${BASE}/ja/techblog/tag/chrome extension/1`)).toBe(false);
   });
 
   it("does not emit duplicate URLs", async () => {

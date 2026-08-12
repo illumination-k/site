@@ -19,7 +19,10 @@ export default function ArticleJsonLd({
     "@context": "https://schema.org",
     "@type": "Article",
     headline: meta.title,
-    description: meta.description,
+    // A post whose front-matter description is empty must omit the property
+    // rather than declare an empty one: `"description": ""` is an invalid
+    // value for the field, while an absent property is simply not stated.
+    ...(meta.description ? { description: meta.description } : {}),
     datePublished: meta.created_at,
     dateModified: meta.updated_at,
     inLanguage: meta.lang,
