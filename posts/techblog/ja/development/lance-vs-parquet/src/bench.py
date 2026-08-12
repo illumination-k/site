@@ -20,6 +20,8 @@ import time
 import lance
 import numpy as np
 import pyarrow as pa
+import pyarrow.feather as feather
+import pyarrow.ipc as ipc
 import pyarrow.parquet as pq
 
 N_ROWS = 200_000
@@ -32,9 +34,14 @@ WORDS = [
     "row", "group", "encoding", "compression", "metadata", "index", "scan",
 ]
 
-# parquet(default) reads a whole column chunk per lookup, so it gets fewer
-# probes; every number below is reported per row.
-PROBES = {"parquet(default)": 50, "parquet(tuned)": 500, "lance": 500}
+# Formats that read a large block per lookup get fewer probes; every number
+# below is reported per row, so the counts stay comparable.
+PROBES = {
+    "parquet(default)": 50,
+    "parquet(tuned)": 500,
+    "arrow-ipc": 20,
+    "lance": 500,
+}
 
 
 def rchar() -> int:
@@ -78,19 +85,26 @@ def measure(fn, repeat: int = 1):
     return out, best, (rchar() - start) // repeat
 
 
-def row_group_bounds(pf: pq.ParquetFile) -> list[tuple[int, int, int]]:
+def block_bounds(sizes: list[int]) -> list[tuple[int, int, int]]:
+    """Turn per-block row counts into (start, end, block_index) triples."""
     bounds, acc = [], 0
-    for i in range(pf.metadata.num_row_groups):
-        n = pf.metadata.row_group(i).num_rows
+    for i, n in enumerate(sizes):
         bounds.append((acc, acc + n, i))
         acc += n
     return bounds
+
+
+def row_group_bounds(pf: pq.ParquetFile) -> list[tuple[int, int, int]]:
+    return block_bounds(
+        [pf.metadata.row_group(i).num_rows for i in range(pf.metadata.num_row_groups)]
+    )
 
 
 def write_all(tbl: pa.Table) -> dict[str, str]:
     paths = {
         "parquet(default)": f"{OUT}/default.parquet",
         "parquet(tuned)": f"{OUT}/tuned.parquet",
+        "arrow-ipc": f"{OUT}/data.arrow",
         "lance": f"{OUT}/data.lance",
     }
     pq.write_table(tbl, paths["parquet(default)"])
@@ -101,6 +115,9 @@ def write_all(tbl: pa.Table) -> dict[str, str]:
         data_page_size=8 * 1024,
         write_page_index=True,
     )
+    # Feather v2 is the Arrow IPC file format. Defaults: LZ4 compression,
+    # 64K-row record batches.
+    feather.write_feather(tbl, paths["arrow-ipc"])
     lance.write_dataset(tbl, paths["lance"], mode="overwrite")
     return paths
 
@@ -112,6 +129,8 @@ def report_sizes(paths: dict[str, str]) -> None:
     for name in ("parquet(default)", "parquet(tuned)"):
         n = pq.ParquetFile(paths[name]).metadata.num_row_groups
         print(f"  {name} row groups: {n}")
+    with ipc.open_file(pa.OSFile(paths["arrow-ipc"], "rb")) as reader:
+        print(f"  arrow-ipc record batches: {reader.num_record_batches}")
 
 
 def report_scan(paths: dict[str, str]) -> None:
@@ -120,6 +139,8 @@ def report_scan(paths: dict[str, str]) -> None:
         for name, p in paths.items():
             if name.startswith("parquet"):
                 fn = lambda p=p, col=col: pq.read_table(p, columns=[col])
+            elif name == "arrow-ipc":
+                fn = lambda p=p, col=col: feather.read_table(p, columns=[col])
             else:
                 fn = lambda p=p, col=col: lance.dataset(p).to_table(columns=[col])
             fn()  # warm the page cache so we compare decode, not first-touch I/O
@@ -146,6 +167,23 @@ def report_random_access(paths: dict[str, str]) -> None:
                         for start, end, rg in bounds:
                             if start <= r < end:
                                 pf.read_row_group(rg, columns=[col]).slice(r - start, 1)
+                                break
+            elif name == "arrow-ipc":
+                # The IPC reader has no column projection: get_batch pulls every
+                # column of the batch, so the whole batch body is read.
+                reader = ipc.open_file(pa.OSFile(p, "rb"))
+                bounds = block_bounds(
+                    [
+                        reader.get_batch(i).num_rows
+                        for i in range(reader.num_record_batches)
+                    ]
+                )
+
+                def fn(reader=reader, bounds=bounds, col=col, rows=rows):
+                    for r in rows:
+                        for start, end, b in bounds:
+                            if start <= r < end:
+                                reader.get_batch(b).column(col).slice(r - start, 1)
                                 break
             else:
                 ds = lance.dataset(p)
