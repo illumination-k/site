@@ -55,18 +55,18 @@ Lanceが何を変えたのかを理解するには、まずParquetがどう組�
 
 Parquetファイルは行方向と列方向の二重の分割になっている。
 
-```text
-Parquet file
-├── Row Group 0                    ← 行方向の区切り（既定で数十万〜数百万行）
-│   ├── Column Chunk (id)          ← row group 内の1列分
-│   │   ├── Page 0                 ← エンコード・圧縮・I/O の最小単位（既定 1MiB）
-│   │   ├── Page 1
-│   │   └── ...
-│   ├── Column Chunk (text)
-│   └── Column Chunk (embedding)
-├── Row Group 1
-│   └── ...
-└── Footer                         ← Thrift。スキーマ、各chunkのオフセットと統計値
+```mermaid
+block-beta
+  columns 1
+  block:f
+    columns 3
+    rgt["Row Group 0 — 行方向の区切り（既定で数十万〜数百万行）"]:3
+    cc1["Column Chunk: id"] cc2["Column Chunk: text"] cc3["Column Chunk: embedding"]
+    p1["Page ← I/O・復号の最小単位（既定 1MiB）"] p2["Page"] p3["Page"]
+    q1["Page"] q2["Page"] q3["Page"]
+    rg1["Row Group 1 … 同じ構造の繰り返し"]:3
+    ft["Footer (Thrift): スキーマ / 各chunkのオフセット / 統計値"]:3
+  end
 ```
 
 重要なのは、**pageがエンコードとI/Oの最小単位になっている**という点にある。ある1行の値を読みたいとき、実際に読んで復号されるのはその行を含むpage全体になる。
@@ -97,6 +97,26 @@ Parquet file
 
 Lanceのデータファイルは、末尾が40バイトの固定長フッターで終わる。可変長のThriftメタデータを持つParquetと違って、フッターの読み方が固定されているので、`struct`だけでパースできる。
 
+```mermaid
+---
+config:
+  packet:
+    bitsPerRow: 8
+---
+packet-beta
+title Lance file footer (40 bytes)
+0-7: "column_metadata_start (u64)"
+8-15: "column_metadata_offsets_start (u64)"
+16-23: "global_buffer_offsets_start (u64)"
+24-27: "n_global_buffers"
+28-31: "n_columns"
+32-33: "major"
+34-35: "minor"
+36-39: "magic LANC"
+```
+
+図中の数字はフッター先頭（ファイル末尾から40バイト手前）を0としたバイトオフセットになる。この並びはそのまま`struct`の書式文字列に写せる。
+
 ::file[./lance-vs-parquet/src/footer.py#L7-L25]
 
 先ほどのベンチマークで書き出したファイルに対して実行すると、こうなる。
@@ -118,15 +138,19 @@ bench-data/data.lance/data/0111...02.lance (107,646,768 bytes)
 
 `major_version`が2、`minor_version`が1なので、pylance 10.0.0はファイルフォーマット2.1で書き出していることが確認できる。ファイル全体のレイアウトは次のようになっている。
 
-```text
-data.lance
-├── Column 0 のページ群
-├── Column 1 のページ群
-├── Column 2 のページ群
-├── Column Metadata           ← 列ごとに独立した protobuf メッセージ
-├── Column Metadata Offset Table
-├── Global Buffer Offset Table
-└── Footer (40 bytes 固定)
+```mermaid
+block-beta
+  columns 1
+  block:f
+    columns 1
+    d0["Column 0 のページ群"]
+    d1["Column 1 のページ群"]
+    d2["Column 2 のページ群"]
+    m["Column Metadata（列ごとの protobuf）"]
+    mo["Column Metadata Offset Table"]
+    gb["Global Buffer Offset Table"]
+    ft["Footer: 40 bytes 固定"]
+  end
 ```
 
 列メタデータが列ごとに分かれていて、そのオフセット表が別にあるところがポイントになる。3列のうち1列だけ読みたいとき、読むべきメタデータはその列のぶんだけで済む。列数が数千に及ぶワイドなスキーマでは、フッター全体をThriftで復号しなければならないParquetとの差が効いてくる。
@@ -141,6 +165,17 @@ Lance 2.1は、列の値の大きさに応じて2つのstructural encodingを使
 - チャンク内の値の個数は2のべき乗で、既定の上限は4096個（環境変数`LANCE_MINIBLOCK_MAX_VALUES`で調整できる）
 - 各チャンクはrepetition level、definition level、値のバッファを個別に持ち、8バイト境界にそろえられる
 
+```mermaid
+block-beta
+  columns 1
+  block:f
+    columns 4
+    t["mini-block chunk — 圧縮後 4KiB〜8KiB、値の個数は2のべき乗"]:4
+    h["header 2B"] r["rep levels"] df["def levels"] v["values"]
+    ri["repetition index: 行番号 → チャンクとオフセット"]:4
+  end
+```
+
 Parquetとの決定的な違いは、repetition indexを別に持っている点にある。これは「何番目の行がどのチャンクのどこから始まるか」を引くための索引で、これがあるおかげでチャンクの中身を先頭から復号しなくても目的の行に到達できる。結果として、**ネストが何段あってもランダムアクセスは1回のI/Oで済む**。Parquetがネストの深さに応じて悪化するのと対照的な挙動になる。
 
 チャンクを小さくすると索引が肥大化しそうに思えるが、論文はここも実測している。mini-blockの探索用メタデータはチャンクあたり24バイト、repetition indexを含めても41バイトで、10億行でも最大1.28GiBに収まる。先ほどのParquetの20GiBと比べると桁が違う。
@@ -150,6 +185,17 @@ Parquetとの決定的な違いは、repetition indexを別に持っている点
 256バイトを超える値、たとえば埋め込みベクトルや画像バイナリにはfull-zipが使われる。こちらは発想がかなり違う。
 
 mini-blockが「バッファを種類ごとに並べたチャンク」なのに対し、full-zipは**repetition level、definition level、値をすべて行優先に転置して1本のバッファにまとめる**。各値の直前には、その値のrepetition情報とdefinition情報をビットパックした1〜4バイトのcontrol wordが置かれる。可変長の値の場合は、オフセット配列ではなく長さを値の直前に持たせる。
+
+```mermaid
+block-beta
+  columns 1
+  block:f
+    columns 7
+    t["full-zip — rep / def / 値を行優先に転置して1本のバッファへ"]:7
+    c0["ctrl"] l0["len"] v0["value 0"] c1["ctrl"] l1["len"] v1["value 1"] more["…"]
+    ri["repetition index: 各 ctrl word の位置を指す"]:7
+  end
+```
 
 こうすると、ある1行のデータが物理的に連続した1区間になる。あとはrepetition indexでその区間の開始位置を引けばよく、**可変長の列でもランダムアクセスは最大2回のI/Oで完結する**。論文が示す「ネストの深さに依存しない」という性質はここから来ている。
 
