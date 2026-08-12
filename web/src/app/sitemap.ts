@@ -115,10 +115,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })),
   );
 
+  // The tag network is exported for every locale via the [locale] layout's
+  // generateStaticParams, but is only reachable from the tag index page.
+  const tagNetworkPages: MetadataRoute.Sitemap = locales.map((locale) => ({
+    url: `${BASE_URL}/${locale}/techblog/tag/network`,
+  }));
+
   return [
     { url: BASE_URL },
     ...localeHomepages,
     ...staticPages,
+    ...tagNetworkPages,
     ...techblogPosts,
     ...paperStreamPosts,
     ...techblogPagination,

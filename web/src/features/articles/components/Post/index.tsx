@@ -16,7 +16,16 @@ import PostCard from "../PostCard";
 export interface PostProps {
   headings: Headings;
   meta: PostMeta;
+  /** Route-scoped link prefix, e.g. `ja/techblog`. Drives in-page links. */
   prefix: string;
+  /**
+   * Canonical URL of this article. Distinct from `prefix`: a post that only
+   * exists in one language is exported under every locale, and the JSON-LD
+   * must agree with `alternates.canonical` about which URL is the real one.
+   */
+  canonicalUrl: string;
+  /** Absolute URL of the article's OG image. */
+  ogImageUrl: string;
   relatedPostMeta: PostMeta[];
   compiledMarkdown: string;
   dict: Dictionary;
@@ -30,6 +39,8 @@ md: sticky-header + content
 export default function Post({
   headings,
   prefix,
+  canonicalUrl,
+  ogImageUrl,
   compiledMarkdown,
   meta,
   relatedPostMeta,
@@ -41,7 +52,7 @@ export default function Post({
       // data-pagefind-body is used as a selector to construct the pagefind search index
       data-pagefind-body
     >
-      <ArticleJsonLd meta={meta} prefix={prefix} />
+      <ArticleJsonLd meta={meta} url={canonicalUrl} imageUrl={ogImageUrl} />
       <h1
         className={css({
           px: { base: "4", md: "6", lg: "10" },

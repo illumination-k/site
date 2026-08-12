@@ -120,6 +120,60 @@ describe("PostPageFactory", () => {
       );
     });
 
+    it("self-canonicalises and lists hreflang only for real translations", async () => {
+      const factory = new PostPageFactory(
+        "techblog",
+        makeService([
+          makePost(UUID, { lang: "ja" }),
+          makePost(UUID, { lang: "en" }),
+        ]),
+      );
+      const fn = factory.createGenerateMetadataFn();
+
+      const meta = await fn(
+        { params: Promise.resolve({ locale: "en", uuid: UUID }) },
+        stubResolvingMetadata,
+      );
+
+      expect(meta.alternates?.canonical).toBe(
+        `https://illumination-k.dev/en/techblog/post/${UUID}`,
+      );
+      // es has no translation, so it must not be advertised.
+      expect(meta.alternates?.languages).toEqual({
+        ja: `https://illumination-k.dev/ja/techblog/post/${UUID}`,
+        en: `https://illumination-k.dev/en/techblog/post/${UUID}`,
+        "x-default": `https://illumination-k.dev/ja/techblog/post/${UUID}`,
+      });
+    });
+
+    it("canonicalises an untranslated post back to the locale that owns it", async () => {
+      // A ja-only post is still exported at /en/... and /es/... with the very
+      // same Japanese body — those copies must point at /ja/....
+      const factory = new PostPageFactory(
+        "techblog",
+        makeService([makePost(UUID, { lang: "ja" })]),
+      );
+      const fn = factory.createGenerateMetadataFn();
+
+      const meta = await fn(
+        { params: Promise.resolve({ locale: "es", uuid: UUID }) },
+        stubResolvingMetadata,
+      );
+
+      expect(meta.alternates?.canonical).toBe(
+        `https://illumination-k.dev/ja/techblog/post/${UUID}`,
+      );
+      expect(Object.keys(meta.alternates?.languages ?? {})).toEqual([
+        "ja",
+        "x-default",
+      ]);
+      // OG data describes the content, which is Japanese on every locale.
+      expect(meta.openGraph?.locale).toBe("ja_JP");
+      expect(meta.openGraph?.url).toBe(
+        `https://illumination-k.dev/ja/techblog/post/${UUID}`,
+      );
+    });
+
     it("throws when the post is not found", async () => {
       const factory = new PostPageFactory("techblog", makeService([]));
       const fn = factory.createGenerateMetadataFn();

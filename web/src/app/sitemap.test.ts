@@ -155,6 +155,15 @@ describe("sitemap", () => {
     }
   });
 
+  it("includes the tag network page for every locale", async () => {
+    const entries = await sitemap();
+    const urls = new Set(entries.map((e) => e.url));
+
+    for (const locale of ["ja", "en", "es"]) {
+      expect(urls.has(`${BASE}/${locale}/techblog/tag/network`)).toBe(true);
+    }
+  });
+
   it("does not include any /search URL", async () => {
     const entries = await sitemap();
     for (const entry of entries) {

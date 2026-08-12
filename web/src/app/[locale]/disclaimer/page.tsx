@@ -8,6 +8,7 @@ import {
   isLocale,
   localeToOgLocale,
 } from "@/lib/i18n";
+import { buildAlternates } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -20,6 +21,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: `${dict.disclaimer.title} | illumination-k.dev`,
     description: `illumination-k.dev ${dict.disclaimer.title}`,
+    alternates: buildAlternates({
+      canonicalLocale: locale,
+      buildPath: (l) => `/${l}/disclaimer`,
+    }),
     openGraph: { locale: localeToOgLocale[locale] },
   };
 }

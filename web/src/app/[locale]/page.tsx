@@ -8,11 +8,40 @@ import {
   DocumentTextIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
-import type { Route } from "next";
+import type { Metadata, Route } from "next";
 
-import { type Locale, getDictionary, isLocale } from "@/lib/i18n";
+import {
+  type Locale,
+  getDictionary,
+  isLocale,
+  localeToOgLocale,
+} from "@/lib/i18n";
+import { buildAlternates } from "@/lib/seo";
 
 const caveat = Caveat({ subsets: ["latin"] });
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale: localeParam } = await params;
+  const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
+  const dict = await getDictionary(locale);
+
+  return {
+    description: dict.meta.siteDescription,
+    alternates: buildAlternates({
+      canonicalLocale: locale,
+      buildPath: (l) => `/${l}`,
+    }),
+    openGraph: {
+      title: "illumination-k.dev",
+      description: dict.meta.siteDescription,
+      locale: localeToOgLocale[locale],
+    },
+  };
+}
 
 export default async function Home({
   params,

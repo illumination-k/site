@@ -83,6 +83,47 @@ describe("PagerFactory", () => {
       );
     });
 
+    it("self-canonicalises page 1 and links every locale", async () => {
+      const factory = new PagerFactory("techblog", makeService([]));
+      const fn = factory.createGenerateMetadataFn();
+
+      const meta = await fn(
+        { params: Promise.resolve({ locale: "en", page: "1" }) },
+        stubResolvingMetadata,
+      );
+
+      expect(meta.alternates?.canonical).toBe(
+        "https://illumination-k.dev/en/techblog/1",
+      );
+      // Every locale gets a forced page 1, so all three are linkable.
+      expect(Object.keys(meta.alternates?.languages ?? {})).toEqual([
+        "ja",
+        "en",
+        "es",
+        "x-default",
+      ]);
+    });
+
+    it("drops hreflang for locales that do not reach the requested page", async () => {
+      // 11 ja posts → 2 ja pages; en and es only ever have page 1.
+      const posts = Array.from({ length: 11 }, (_, i) => makePost(uuid(i + 1)));
+      const factory = new PagerFactory("techblog", makeService(posts));
+      const fn = factory.createGenerateMetadataFn();
+
+      const meta = await fn(
+        { params: Promise.resolve({ locale: "ja", page: "2" }) },
+        stubResolvingMetadata,
+      );
+
+      expect(meta.alternates?.canonical).toBe(
+        "https://illumination-k.dev/ja/techblog/2",
+      );
+      expect(meta.alternates?.languages).toEqual({
+        ja: "https://illumination-k.dev/ja/techblog/2",
+        "x-default": "https://illumination-k.dev/ja/techblog/2",
+      });
+    });
+
     it("falls back to 'ja' when the locale param is invalid", async () => {
       const factory = new PagerFactory("techblog", makeService([]));
       const fn = factory.createGenerateMetadataFn();

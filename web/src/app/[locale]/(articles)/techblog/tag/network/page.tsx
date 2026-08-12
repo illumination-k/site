@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import TagNetwork from "@/features/articles/components/TagNetwork";
 import { blogService } from "@/features/techblog/constant";
 import { type Locale, getDictionary, isLocale, localeToLang } from "@/lib/i18n";
+import { buildAlternates } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
 export async function generateMetadata({
@@ -22,6 +23,10 @@ export async function generateMetadata({
   return {
     title,
     description,
+    alternates: buildAlternates({
+      canonicalLocale: locale,
+      buildPath: (l) => `/${l}/techblog/tag/network`,
+    }),
     openGraph: {
       title,
       description,

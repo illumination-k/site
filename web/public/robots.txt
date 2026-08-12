@@ -1,9 +1,11 @@
 # *
 User-agent: *
 Allow: /
-Disallow: /ja/search
-Disallow: /en/search
-Disallow: /es/search
+
+# /{locale}/search is kept out of the index with a `noindex` robots meta tag
+# (see web/src/app/[locale]/(articles)/search/page.tsx) rather than a Disallow
+# here: a disallowed URL can still be indexed without its content, because the
+# crawler never fetches the page and never sees the directive.
 
 # Host
 Host: https://illumination-k.dev

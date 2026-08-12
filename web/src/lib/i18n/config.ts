@@ -24,3 +24,9 @@ export function localeToLang(locale: Locale): "ja" | "en" | "es" {
   if (locale === "es") return "es";
   return "ja";
 }
+
+export function langToLocale(lang: "ja" | "en" | "es"): Locale {
+  if (lang === "en") return "en";
+  if (lang === "es") return "es";
+  return "ja";
+}

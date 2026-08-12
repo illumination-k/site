@@ -14,6 +14,7 @@ import {
   localeToLang,
   locales,
 } from "@/lib/i18n";
+import { buildAlternates } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
 const schema = {
@@ -37,6 +38,24 @@ export default class PagerFactory {
     this.blogService = blogService;
   }
 
+  /**
+   * Locales whose post count reaches `page`. Mirrors
+   * `createGenerateStaticParamsFn` so hreflang never points at a page that was
+   * not exported (e.g. `/es/techblog/3` when es only has one page of posts).
+   */
+  private async localesWithPage(page: number): Promise<Locale[]> {
+    const results = await Promise.all(
+      locales.map(async (locale) => {
+        const posts = await this.blogService.repo.filterPosts(
+          localeToLang(locale),
+        );
+        const totalPage = Math.max(1, pager.getTotalPage(posts));
+        return totalPage >= page ? locale : null;
+      }),
+    );
+    return results.filter((locale): locale is Locale => locale !== null);
+  }
+
   public createGenerateMetadataFn() {
     return async (
       { params }: { params: Promise<Params> },
@@ -55,6 +74,11 @@ export default class PagerFactory {
       return {
         title,
         description,
+        alternates: buildAlternates({
+          canonicalLocale: locale,
+          buildPath: (l) => `/${l}/${this.prefix}/${page}`,
+          availableLocales: await this.localesWithPage(Number(page)),
+        }),
         openGraph: {
           title,
           description,

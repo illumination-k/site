@@ -4,12 +4,17 @@ import { SITE_URL } from "@/lib/site";
 
 interface ArticleJsonLdProps {
   meta: PostMeta;
-  prefix: string;
+  /** Canonical URL of the article — must match `alternates.canonical`. */
+  url: string;
+  /** Absolute URL of the article's OG image. */
+  imageUrl: string;
 }
 
-export default function ArticleJsonLd({ meta, prefix }: ArticleJsonLdProps) {
-  const url = `${SITE_URL}/${prefix}/post/${meta.uuid}`;
-
+export default function ArticleJsonLd({
+  meta,
+  url,
+  imageUrl,
+}: ArticleJsonLdProps) {
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Article",
@@ -17,13 +22,14 @@ export default function ArticleJsonLd({ meta, prefix }: ArticleJsonLdProps) {
     description: meta.description,
     datePublished: meta.created_at,
     dateModified: meta.updated_at,
-    inLanguage: meta.lang === "ja" ? "ja" : "en",
+    inLanguage: meta.lang,
     keywords: meta.tags.join(", "),
+    url,
     mainEntityOfPage: {
       "@type": "WebPage",
       "@id": url,
     },
-    image: `${SITE_URL}/og/${prefix}/${meta.uuid}.png`,
+    image: imageUrl,
     author: {
       "@type": "Person",
       name: "illumination-k",
