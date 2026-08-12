@@ -1,0 +1,8 @@
+result
+result-*
+.direnv/
+.envrc.local
+.venv/
+__pycache__/
+*.pyc
+bench-data/

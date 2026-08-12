@@ -1,0 +1,13 @@
+[project]
+name = "lance-vs-parquet"
+version = "0"
+description = "Benchmarks for the 'Lance vs Parquet' blog post"
+requires-python = "==3.12.*"
+dependencies = [
+  "numpy==2.5.2",
+  "pyarrow==25.0.1",
+  "pylance==10.0.0",
+]
+
+[tool.uv]
+package = false
