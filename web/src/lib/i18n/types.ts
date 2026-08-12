@@ -31,6 +31,8 @@ export interface Dictionary {
     tagListDescription: (prefix: string) => string;
     tagNetwork: (prefix: string) => string;
     tagNetworkDescription: (prefix: string) => string;
+    search: string;
+    searchDescription: string;
   };
   search: {
     placeholder: string;

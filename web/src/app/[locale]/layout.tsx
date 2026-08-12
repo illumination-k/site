@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 import FooterBase from "@/components/FooterBase";
 import Nav from "@/components/Nav";
 import { getDictionary, isLocale, localeToOgLocale, locales } from "@/lib/i18n";
+import { FEED_TYPES } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
 import AdsScripts from "../ads-scripts";
@@ -44,6 +45,11 @@ export async function generateMetadata({
       template: "%s | illumination-k.dev",
     },
     description: dict.meta.siteDescription,
+    // Only the feeds here: a canonical set at the layout level would be
+    // inherited verbatim by every page that does not declare its own, making
+    // each of them claim to be the locale homepage. Pages build their own
+    // complete `alternates` with `buildAlternates`.
+    alternates: { types: FEED_TYPES },
     openGraph: {
       type: "website",
       siteName: "illumination-k.dev",

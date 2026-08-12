@@ -8,10 +8,12 @@ import {
   type Locale,
   getDictionary,
   isLocale,
+  langToLocale,
   localeToLang,
   localeToOgLocale,
   locales,
 } from "@/lib/i18n";
+import { buildAlternates } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
 const paramsSchema = z.object({
@@ -40,6 +42,21 @@ export default class PostPageFactory {
     };
   }
 
+  /**
+   * Locales that hold a real translation of this UUID, in `locales` order.
+   * Used for hreflang so we never advertise a locale whose page is just a
+   * copy of another language.
+   */
+  private async translatedLocales(uuid: string): Promise<Locale[]> {
+    const allPosts = await this.blogService.repo.list();
+    const langs = new Set(
+      allPosts
+        .filter((post) => post.meta.uuid === uuid)
+        .map((post) => post.meta.lang),
+    );
+    return locales.filter((locale) => langs.has(localeToLang(locale)));
+  }
+
   public createGenerateMetadataFn() {
     return async (
       { params }: { params: Promise<Params> },
@@ -53,11 +70,22 @@ export default class PostPageFactory {
         throw `${_params.uuid} is not found`;
       }
 
-      const url = `${SITE_URL}/${locale}/${this.prefix}/post/${post.meta.uuid}`;
+      // Every UUID is exported under every locale, so a post that only exists
+      // in one language is served identically at all three URLs. Point the
+      // canonical at the locale that actually owns the content, and only
+      // advertise hreflang for locales with a real translation.
+      const canonicalLocale = langToLocale(post.meta.lang);
+      const url = `${SITE_URL}/${canonicalLocale}/${this.prefix}/post/${post.meta.uuid}`;
+      const alternates = buildAlternates({
+        canonicalLocale,
+        buildPath: (l) => `/${l}/${this.prefix}/post/${post.meta.uuid}`,
+        availableLocales: await this.translatedLocales(_params.uuid),
+      });
 
       return {
         title: post.meta.title,
         description: post.meta.description,
+        alternates,
         openGraph: {
           type: "article",
           title: post.meta.title,
@@ -66,7 +94,9 @@ export default class PostPageFactory {
           publishedTime: post.meta.created_at,
           modifiedTime: post.meta.updated_at,
           tags: post.meta.tags,
-          locale: localeToOgLocale[locale],
+          // The content language, not the route locale: an untranslated post
+          // renders its original language under every locale.
+          locale: localeToOgLocale[canonicalLocale],
           images: [
             {
               url: `/og/${this.prefix}/${post.meta.uuid}.png`,
@@ -101,11 +131,15 @@ export default class PostPageFactory {
         getDictionary(locale),
       ]);
 
+      const canonicalLocale = langToLocale(post.meta.lang);
+
       return (
         <Post
           meta={post.meta}
           headings={post.headings}
           prefix={`${locale}/${this.prefix}`}
+          canonicalUrl={`${SITE_URL}/${canonicalLocale}/${this.prefix}/post/${post.meta.uuid}`}
+          ogImageUrl={`${SITE_URL}/og/${this.prefix}/${post.meta.uuid}.png`}
           relatedPostMeta={relatedPostMeta}
           compiledMarkdown={post.compiledMarkdown}
           dict={dict}

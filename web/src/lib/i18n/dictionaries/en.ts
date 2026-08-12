@@ -34,6 +34,8 @@ const en: Dictionary = {
     tagNetwork: (prefix: string) => `${prefix} Tag Network`,
     tagNetworkDescription: (prefix: string) =>
       `Tag co-occurrence network for ${prefix} articles on illumination-k.dev`,
+    search: "Search",
+    searchDescription: "Search articles on illumination-k.dev",
   },
   search: {
     placeholder: "Search articles...",

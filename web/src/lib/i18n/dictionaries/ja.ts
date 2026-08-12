@@ -38,6 +38,8 @@ const ja: Dictionary = {
     tagNetwork: (prefix: string) => `${prefix} タグネットワーク`,
     tagNetworkDescription: (prefix: string) =>
       `illumination-k.dev の${prefix}記事のタグ共起ネットワーク`,
+    search: "記事検索",
+    searchDescription: "illumination-k.dev の記事を検索します",
   },
   // Search
   search: {

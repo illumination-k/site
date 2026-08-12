@@ -17,6 +17,7 @@ import {
   localeToLang,
   locales,
 } from "@/lib/i18n";
+import { buildAlternates } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
 const schema = {
@@ -39,6 +40,27 @@ export class TagPagerFactory {
     this.blogService = blogService;
   }
 
+  /**
+   * Locales whose post count for `tag` reaches `page`. Mirrors
+   * `createGenerateStaticParamsFn`, which skips locales with no tagged posts,
+   * so hreflang never points at a page that was not exported.
+   */
+  private async localesWithTagPage(
+    tag: string,
+    page: number,
+  ): Promise<Locale[]> {
+    const results = await Promise.all(
+      locales.map(async (locale) => {
+        const posts = await this.blogService.repo.filterPosts(
+          localeToLang(locale),
+          tag,
+        );
+        return pager.getTotalPage(posts) >= page ? locale : null;
+      }),
+    );
+    return results.filter((locale): locale is Locale => locale !== null);
+  }
+
   public createGenerateMetadataFn() {
     return async (
       {
@@ -59,6 +81,11 @@ export class TagPagerFactory {
       return {
         title,
         description,
+        alternates: buildAlternates({
+          canonicalLocale: locale,
+          buildPath: (l) => `/${l}/${this.prefix}/tag/${tag}/${page}`,
+          availableLocales: await this.localesWithTagPage(tag, Number(page)),
+        }),
         openGraph: {
           title,
           description,
@@ -155,6 +182,10 @@ export class TagTopPageFactory {
       return {
         title: dict.meta.tagList(this.prefix),
         description: dict.meta.tagListDescription(this.prefix),
+        alternates: buildAlternates({
+          canonicalLocale: locale,
+          buildPath: (l) => `/${l}/${this.prefix}/tag`,
+        }),
         openGraph: {
           title: dict.meta.tagList(this.prefix),
           description: dict.meta.tagListDescription(this.prefix),

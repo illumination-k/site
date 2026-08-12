@@ -4,6 +4,7 @@ export {
   isLocale,
   localeLabels,
   localeToLang,
+  langToLocale,
   localeToOgLocale,
 } from "./config";
 export type { Locale } from "./config";
