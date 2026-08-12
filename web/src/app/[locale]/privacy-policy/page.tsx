@@ -19,7 +19,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
   const dict = await getDictionary(locale);
   return {
-    title: `${dict.privacyPolicy.title} | illumination-k.dev`,
+    // The [locale] layout's title template already appends
+    // " | illumination-k.dev"; repeating it here doubled the suffix.
+    title: dict.privacyPolicy.title,
     description: `illumination-k.dev ${dict.privacyPolicy.title}`,
     alternates: buildAlternates({
       canonicalLocale: locale,

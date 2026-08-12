@@ -25,11 +25,30 @@ function uuid(n: number): string {
 }
 
 describe("Pager", () => {
+  it("renders the heading as the page's h1", () => {
+    const { container } = render(
+      <Pager
+        prefix="ja/techblog"
+        heading="techblog 記事一覧"
+        pageInformation={{
+          pagePostMetas: [],
+          curPage: 1,
+          pages: [1],
+        }}
+        pageLinkGenerator={linkGen}
+      />,
+    );
+    const h1s = container.querySelectorAll("h1");
+    expect(h1s).toHaveLength(1);
+    expect(h1s[0].textContent).toBe("techblog 記事一覧");
+  });
+
   it("renders one PostCard per page post", () => {
     const posts = [meta(uuid(1), "first"), meta(uuid(2), "second")];
     render(
       <Pager
         prefix="ja/techblog"
+        heading="techblog 記事一覧"
         pageInformation={{
           pagePostMetas: posts,
           curPage: 1,
@@ -46,6 +65,7 @@ describe("Pager", () => {
     render(
       <Pager
         prefix="ja/techblog"
+        heading="techblog 記事一覧"
         pageInformation={{
           pagePostMetas: [],
           curPage: 3,
@@ -65,6 +85,7 @@ describe("Pager", () => {
     render(
       <Pager
         prefix="ja/techblog"
+        heading="techblog 記事一覧"
         pageInformation={{
           pagePostMetas: [],
           curPage: 1,
@@ -83,6 +104,7 @@ describe("Pager", () => {
     render(
       <Pager
         prefix="ja/techblog"
+        heading="techblog 記事一覧"
         pageInformation={{
           pagePostMetas: [],
           curPage: 10,
@@ -102,6 +124,7 @@ describe("Pager", () => {
     render(
       <Pager
         prefix="ja/techblog"
+        heading="techblog 記事一覧"
         pageInformation={{
           pagePostMetas: [],
           curPage: 12,
@@ -121,6 +144,7 @@ describe("Pager", () => {
     const { container, unmount } = render(
       <Pager
         prefix="ja/techblog"
+        heading="techblog 記事一覧"
         pageInformation={{
           pagePostMetas: [],
           curPage: 1,
@@ -138,6 +162,7 @@ describe("Pager", () => {
     render(
       <Pager
         prefix="ja/techblog"
+        heading="techblog 記事一覧"
         pageInformation={{
           pagePostMetas: [],
           curPage: 2,
@@ -155,6 +180,7 @@ describe("Pager", () => {
     render(
       <Pager
         prefix="ja/techblog"
+        heading="techblog 記事一覧"
         pageInformation={{
           pagePostMetas: [],
           curPage: 3,

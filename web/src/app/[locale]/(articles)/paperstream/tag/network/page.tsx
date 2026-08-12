@@ -1,8 +1,8 @@
-import { blogService } from "@/features/techblog/constant";
+import { paperStreamService } from "@/features/paperStream/constants";
 
 import TagNetworkPageFactory from "../../../_factory/tagNetworkFactory";
 
-const factory = new TagNetworkPageFactory("techblog", blogService);
+const factory = new TagNetworkPageFactory("paperstream", paperStreamService);
 
 export const generateMetadata = factory.createGenerateMetadataFn();
 

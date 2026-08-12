@@ -217,7 +217,8 @@ yargs(hideBin(process.argv))
     },
   )
   .command(
-    "migration",
+    // Same positional binding as `lint` — see the note there.
+    "migration <src>",
     "migration utils",
     (yargs) => {
       yargs.positional("src", { type: "string", describe: "posts src" });
@@ -229,7 +230,10 @@ yargs(hideBin(process.argv))
     }),
   )
   .command(
-    "lint",
+    // `<src>` has to be in the command string for yargs to bind the positional;
+    // without it `post-utils lint ./posts/techblog` failed `demandOption` and
+    // exited with "Invalid usage", so the SEO meta lint could never run.
+    "lint <src>",
     "Lint markdown posts for common issues",
     (yargs) => {
       yargs.positional("src", {

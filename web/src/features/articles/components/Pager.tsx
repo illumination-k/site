@@ -132,6 +132,11 @@ function Pagination({ curPage, pages, pageLinkGenerator }: PaginationProps) {
 
 interface PagerProps {
   prefix: string;
+  /**
+   * Page heading. Rendered as the `<h1>`: the cards below are `<h2>`, so
+   * without it a listing page has no top-level heading at all.
+   */
+  heading: string;
   pageInformation: PageInformation;
   pageLinkGenerator: (page: number) => Route;
   className?: string;
@@ -139,6 +144,7 @@ interface PagerProps {
 
 export default function Pager({
   prefix,
+  heading,
   pageInformation,
   pageLinkGenerator,
   className,
@@ -147,6 +153,18 @@ export default function Pager({
 
   return (
     <div className={className}>
+      <h1
+        className={css({
+          fontSize: { base: "xl", md: "2xl" },
+          fontWeight: "bold",
+          color: "text.primary",
+          px: 4,
+          pt: 5,
+          pb: 2,
+        })}
+      >
+        {heading}
+      </h1>
       {pagePostMetas.map((meta, i) => (
         <PostCard prefix={prefix} meta={meta} key={i} />
       ))}

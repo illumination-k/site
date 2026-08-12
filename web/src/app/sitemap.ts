@@ -3,18 +3,17 @@ import type { MetadataRoute } from "next";
 import pager from "@/features/articles/utils/pager";
 import { paperStreamService } from "@/features/paperStream/constants";
 import { blogService } from "@/features/techblog/constant";
-import { localeToLang, locales } from "@/lib/i18n";
+import { langToLocale, localeToLang, locales } from "@/lib/i18n";
 import { SITE_URL } from "@/lib/site";
 
 export const dynamic = "force-static";
 
 const BASE_URL = SITE_URL;
 
-const STATIC_PATHS = [
-  "disclaimer",
-  "privacy-policy",
-  "profile",
-] as const;
+const STATIC_PATHS = ["disclaimer", "privacy-policy", "profile"] as const;
+
+/** Article prefixes that ship a `/tag/network` page. */
+const TAG_NETWORK_PREFIXES = ["techblog", "paperstream"] as const;
 
 async function generatePaginationSitemap(
   prefix: string,
@@ -51,9 +50,14 @@ async function generateTagSitemap(
       for (const tag of tags) {
         const taggedPosts = await service.repo.filterPosts(lang, tag);
         const totalPage = pager.getTotalPage(taggedPosts);
+        // Tags may contain characters that are not legal in a URL path — e.g.
+        // "chrome extension". Next writes `url` into <loc> verbatim, so an
+        // unencoded space makes the entry an invalid URL that also disagrees
+        // with the page's own (encoded) canonical.
+        const encodedTag = encodeURIComponent(tag);
         for (let i = 1; i <= totalPage; i++) {
           entries.push({
-            url: `${BASE_URL}/${locale}/${prefix}/tag/${tag}/${i}`,
+            url: `${BASE_URL}/${locale}/${prefix}/tag/${encodedTag}/${i}`,
           });
         }
       }
@@ -67,25 +71,30 @@ async function generatePostSitemap(
   prefix: string,
   service: typeof blogService,
 ): Promise<MetadataRoute.Sitemap> {
-  // Post pages are statically generated for every unique UUID × every
-  // locale, regardless of which language the source post is authored in
-  // (see PostPageFactory.createGenerateStaticParamsFn). Mirror that here
-  // so posts that only exist in en/es are also listed.
+  // Post pages are statically generated for every unique UUID × every locale,
+  // so a post written only in ja is served byte-for-byte identically at
+  // /en/... and /es/.... Those copies canonicalise back to the locale that
+  // owns the content (see PostPageFactory.createGenerateMetadataFn), and a
+  // sitemap is supposed to advertise canonical URLs only — listing the copies
+  // asks crawlers to index pages we ourselves declare non-canonical.
+  //
+  // So emit one entry per language version that actually exists, at the locale
+  // that language belongs to.
   const allPosts = await service.repo.list();
-  const latestByUuid = new Map<string, string>();
+  const lastModifiedByUrl = new Map<string, string>();
   for (const post of allPosts) {
-    const existing = latestByUuid.get(post.meta.uuid);
+    const locale = langToLocale(post.meta.lang);
+    const url = `${BASE_URL}/${locale}/${prefix}/post/${post.meta.uuid}`;
+    const existing = lastModifiedByUrl.get(url);
     if (!existing || existing < post.meta.updated_at) {
-      latestByUuid.set(post.meta.uuid, post.meta.updated_at);
+      lastModifiedByUrl.set(url, post.meta.updated_at);
     }
   }
 
-  return locales.flatMap((locale) =>
-    Array.from(latestByUuid, ([uuid, lastModified]) => ({
-      url: `${BASE_URL}/${locale}/${prefix}/post/${uuid}`,
-      lastModified,
-    })),
-  );
+  return Array.from(lastModifiedByUrl, ([url, lastModified]) => ({
+    url,
+    lastModified,
+  }));
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -117,12 +126,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // The tag network is exported for every locale via the [locale] layout's
   // generateStaticParams, but is only reachable from the tag index page.
-  const tagNetworkPages: MetadataRoute.Sitemap = locales.map((locale) => ({
-    url: `${BASE_URL}/${locale}/techblog/tag/network`,
-  }));
+  const tagNetworkPages: MetadataRoute.Sitemap = locales.flatMap((locale) =>
+    TAG_NETWORK_PREFIXES.map((prefix) => ({
+      url: `${BASE_URL}/${locale}/${prefix}/tag/network`,
+    })),
+  );
 
+  // The bare origin is not listed: it only redirects to the default locale and
+  // canonicalises to `/${defaultLocale}`, which `localeHomepages` already has.
   return [
-    { url: BASE_URL },
     ...localeHomepages,
     ...staticPages,
     ...tagNetworkPages,

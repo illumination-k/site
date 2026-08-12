@@ -128,11 +128,18 @@ export class TagPagerFactory {
       const { page, tag, locale: localeParam } = params;
       const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
       const lang = localeToLang(locale);
-      const posts = await this.blogService.repo.filterPosts(lang, tag);
+      const [posts, dict] = await Promise.all([
+        this.blogService.repo.filterPosts(lang, tag),
+        getDictionary(locale),
+      ]);
       const pageInformation = pager.getPageInformation(
         posts.map((p) => p.meta),
         page,
       );
+      const heading =
+        page === 1
+          ? dict.meta.tagArticleList(tag)
+          : dict.meta.tagArticleListPage(tag, page);
 
       return (
         <div
@@ -149,6 +156,7 @@ export class TagPagerFactory {
               lg: { gridColumnStart: "3", gridColumnEnd: "11" },
             })}
             prefix={`${locale}/${this.prefix}`}
+            heading={heading}
             pageInformation={pageInformation}
             pageLinkGenerator={(page) =>
               `/${locale}/${this.prefix}/tag/${tag}/${page}` as Route
@@ -211,10 +219,21 @@ export class TagTopPageFactory {
           <div
             className={css({
               display: "flex",
-              justifyContent: "flex-end",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 4,
               mb: 4,
             })}
           >
+            <h1
+              className={css({
+                fontSize: { base: "xl", md: "2xl" },
+                fontWeight: "bold",
+                color: "text.primary",
+              })}
+            >
+              {dict.meta.tagList(this.prefix)}
+            </h1>
             <Link
               href={`/${locale}/${this.prefix}/tag/network` as Route}
               className={css({

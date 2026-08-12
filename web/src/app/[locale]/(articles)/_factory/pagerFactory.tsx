@@ -112,11 +112,18 @@ export default class PagerFactory {
       const { page, locale: localeParam } = params;
       const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
       const lang = localeToLang(locale);
-      const posts = await this.blogService.repo.filterPosts(lang);
+      const [posts, dict] = await Promise.all([
+        this.blogService.repo.filterPosts(lang),
+        getDictionary(locale),
+      ]);
       const pageInformation = pager.getPageInformation(
         posts.map((p) => p.meta),
         page,
       );
+      const heading =
+        page === 1
+          ? dict.meta.articleList(this.prefix)
+          : dict.meta.articleListPage(this.prefix, page);
 
       return (
         <div
@@ -133,6 +140,7 @@ export default class PagerFactory {
               lg: { gridColumnStart: "3", gridColumnEnd: "11" },
             })}
             prefix={`${locale}/${this.prefix}`}
+            heading={heading}
             pageInformation={pageInformation}
             pageLinkGenerator={(page) =>
               `/${locale}/${this.prefix}/${page}` as Route
