@@ -143,6 +143,65 @@ export function buildOgSvgMarkup({
   };
 }
 
+/**
+ * Site-wide social preview card.
+ *
+ * Used by every page that has no image of its own — the locale homepages,
+ * article and tag listings, and the static pages. Without it those pages share
+ * as a bare link on every social platform.
+ */
+export function buildDefaultOgSvgMarkup({
+  siteName,
+  tagline,
+}: {
+  siteName: string;
+  tagline: string;
+}) {
+  return {
+    type: "div",
+    props: {
+      style: {
+        width: `${WIDTH}px`,
+        height: `${HEIGHT}px`,
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        gap: "24px",
+        padding: "60px",
+        background:
+          "linear-gradient(135deg, #0c1222 0%, #1a2744 50%, #0f2040 100%)",
+        color: "#ffffff",
+        fontFamily: "NotoSansJP",
+      },
+      children: [
+        {
+          type: "span",
+          props: {
+            style: {
+              fontSize: "72px",
+              fontWeight: 700,
+              color: "#0ea5e9",
+            },
+            children: siteName,
+          },
+        },
+        {
+          type: "span",
+          props: {
+            style: {
+              fontSize: "32px",
+              color: "#94a3b8",
+              textAlign: "center",
+            },
+            children: tagline,
+          },
+        },
+      ],
+    },
+  };
+}
+
 async function loadFont(fontPath: string): Promise<ArrayBuffer> {
   const buffer = await readFileAsync(fontPath);
   return buffer.buffer.slice(
@@ -151,25 +210,15 @@ async function loadFont(fontPath: string): Promise<ArrayBuffer> {
   );
 }
 
-export default async function generateOgImages(
-  dumpPath: PathLike,
-  dst: PathLike,
-  prefix: string,
-  fontDir: PathLike,
-) {
-  const dump = await readDump(dumpPath);
-  const dstStr = dst.toString();
+type OgFonts = Awaited<ReturnType<typeof loadOgFonts>>;
 
-  await mkdirAsync(dstStr, { recursive: true });
+async function loadOgFonts(fontDir: PathLike) {
+  const [fontRegular, fontBold] = await Promise.all([
+    loadFont(path.join(fontDir.toString(), "NotoSansJP-Regular.ttf")),
+    loadFont(path.join(fontDir.toString(), "NotoSansJP-Bold.ttf")),
+  ]);
 
-  const fontRegular = await loadFont(
-    path.join(fontDir.toString(), "NotoSansJP-Regular.ttf"),
-  );
-  const fontBold = await loadFont(
-    path.join(fontDir.toString(), "NotoSansJP-Bold.ttf"),
-  );
-
-  const fonts = [
+  return [
     {
       name: "NotoSansJP",
       data: fontRegular,
@@ -183,6 +232,58 @@ export default async function generateOgImages(
       style: "normal" as const,
     },
   ];
+}
+
+async function renderOgPng(
+  markup: ReturnType<typeof buildOgSvgMarkup | typeof buildDefaultOgSvgMarkup>,
+  fonts: OgFonts,
+): Promise<Buffer> {
+  // satori accepts plain objects as virtual DOM nodes at runtime
+  const svg = await satori(markup as unknown as ReactNode, {
+    width: WIDTH,
+    height: HEIGHT,
+    fonts,
+  });
+
+  return sharp(Buffer.from(svg)).png({ quality: 85 }).toBuffer();
+}
+
+/**
+ * Writes the site-wide default OG image referenced by `DEFAULT_OG_IMAGE` in
+ * `web/src/lib/seo.ts`. Runs as part of `pnpm cli:og`, before the Next.js
+ * build, so the file exists by the time pages link to it.
+ */
+export async function generateDefaultOgImage(
+  dst: PathLike,
+  fontDir: PathLike,
+  siteName: string,
+  tagline: string,
+) {
+  const dstStr = dst.toString();
+  await mkdirAsync(path.dirname(dstStr), { recursive: true });
+
+  const fonts = await loadOgFonts(fontDir);
+  const png = await renderOgPng(
+    buildDefaultOgSvgMarkup({ siteName, tagline }),
+    fonts,
+  );
+  await writeFileAsync(dstStr, png);
+
+  logger.info({ dst: dstStr }, "Default OG image generated");
+}
+
+export default async function generateOgImages(
+  dumpPath: PathLike,
+  dst: PathLike,
+  prefix: string,
+  fontDir: PathLike,
+) {
+  const dump = await readDump(dumpPath);
+  const dstStr = dst.toString();
+
+  await mkdirAsync(dstStr, { recursive: true });
+
+  const fonts = await loadOgFonts(fontDir);
 
   logger.info({ count: dump.posts.length, prefix }, "Generating OG images");
 
@@ -194,14 +295,7 @@ export default async function generateOgImages(
       siteName: "illumination-k.dev",
     });
 
-    // satori accepts plain objects as virtual DOM nodes at runtime
-    const svg = await satori(markup as unknown as ReactNode, {
-      width: WIDTH,
-      height: HEIGHT,
-      fonts,
-    });
-
-    const png = await sharp(Buffer.from(svg)).png({ quality: 85 }).toBuffer();
+    const png = await renderOgPng(markup, fonts);
     const outPath = path.join(dstStr, `${post.meta.uuid}.png`);
     await writeFileAsync(outPath, png);
   }

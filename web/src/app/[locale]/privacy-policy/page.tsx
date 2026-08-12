@@ -2,13 +2,8 @@ import { css } from "@/styled-system/css";
 
 import type { Metadata } from "next";
 
-import {
-  type Locale,
-  getDictionary,
-  isLocale,
-  localeToOgLocale,
-} from "@/lib/i18n";
-import { buildAlternates } from "@/lib/seo";
+import { type Locale, getDictionary, isLocale } from "@/lib/i18n";
+import { buildAlternates, buildOpenGraph, buildTwitterCard } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -27,7 +22,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonicalLocale: locale,
       buildPath: (l) => `/${l}/privacy-policy`,
     }),
-    openGraph: { locale: localeToOgLocale[locale] },
+    openGraph: buildOpenGraph({
+      title: dict.privacyPolicy.title,
+      description: `illumination-k.dev ${dict.privacyPolicy.title}`,
+      path: `/${locale}/privacy-policy`,
+      locale,
+    }),
+    twitter: buildTwitterCard({
+      title: dict.privacyPolicy.title,
+      description: `illumination-k.dev ${dict.privacyPolicy.title}`,
+    }),
   };
 }
 

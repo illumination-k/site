@@ -14,8 +14,7 @@ import {
   localeToLang,
   locales,
 } from "@/lib/i18n";
-import { buildAlternates } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site";
+import { buildAlternates, buildOpenGraph, buildTwitterCard } from "@/lib/seo";
 
 const schema = {
   params: z.object({
@@ -79,11 +78,13 @@ export default class PagerFactory {
           buildPath: (l) => `/${l}/${this.prefix}/${page}`,
           availableLocales: await this.localesWithPage(Number(page)),
         }),
-        openGraph: {
+        openGraph: buildOpenGraph({
           title,
           description,
-          url: `${SITE_URL}/${locale}/${this.prefix}/${page}`,
-        },
+          path: `/${locale}/${this.prefix}/${page}`,
+          locale,
+        }),
+        twitter: buildTwitterCard({ title, description }),
       };
     };
   }

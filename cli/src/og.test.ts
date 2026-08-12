@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import { buildOgSvgMarkup } from "./og";
+import { buildDefaultOgSvgMarkup, buildOgSvgMarkup } from "./og";
 
 type Node = {
   type: string;
@@ -156,5 +156,35 @@ describe("buildOgSvgMarkup", () => {
     expect(markup.type).toBe("div");
     expect(markup.props.style?.width).toBe("1200px");
     expect(markup.props.style?.height).toBe("630px");
+  });
+});
+
+describe("buildDefaultOgSvgMarkup", () => {
+  const baseInput = {
+    siteName: "illumination-k.dev",
+    tagline: "Software Engineer / Bioinformatics",
+  };
+
+  it("uses the same OG image dimensions as the per-post card", () => {
+    const markup = buildDefaultOgSvgMarkup(baseInput) as Node;
+    expect(markup.type).toBe("div");
+    expect(markup.props.style?.width).toBe("1200px");
+    expect(markup.props.style?.height).toBe("630px");
+  });
+
+  it("renders the site name and the tagline", () => {
+    const markup = buildDefaultOgSvgMarkup(baseInput) as Node;
+
+    const siteName = findFirst(
+      markup,
+      (n) => n.props.children === baseInput.siteName,
+    );
+    const tagline = findFirst(
+      markup,
+      (n) => n.props.children === baseInput.tagline,
+    );
+
+    expect(siteName).not.toBeNull();
+    expect(tagline).not.toBeNull();
   });
 });

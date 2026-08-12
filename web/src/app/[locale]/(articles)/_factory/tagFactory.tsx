@@ -17,8 +17,7 @@ import {
   localeToLang,
   locales,
 } from "@/lib/i18n";
-import { buildAlternates } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site";
+import { buildAlternates, buildOpenGraph, buildTwitterCard } from "@/lib/seo";
 
 const schema = {
   params: z.object({
@@ -86,11 +85,13 @@ export class TagPagerFactory {
           buildPath: (l) => `/${l}/${this.prefix}/tag/${tag}/${page}`,
           availableLocales: await this.localesWithTagPage(tag, Number(page)),
         }),
-        openGraph: {
+        openGraph: buildOpenGraph({
           title,
           description,
-          url: `${SITE_URL}/${locale}/${this.prefix}/tag/${tag}/${page}`,
-        },
+          path: `/${locale}/${this.prefix}/tag/${tag}/${page}`,
+          locale,
+        }),
+        twitter: buildTwitterCard({ title, description }),
       };
     };
   }
@@ -187,18 +188,23 @@ export class TagTopPageFactory {
       const locale: Locale = isLocale(localeParam) ? localeParam : "ja";
       const dict = await getDictionary(locale);
 
+      const title = dict.meta.tagList(this.prefix);
+      const description = dict.meta.tagListDescription(this.prefix);
+
       return {
-        title: dict.meta.tagList(this.prefix),
-        description: dict.meta.tagListDescription(this.prefix),
+        title,
+        description,
         alternates: buildAlternates({
           canonicalLocale: locale,
           buildPath: (l) => `/${l}/${this.prefix}/tag`,
         }),
-        openGraph: {
-          title: dict.meta.tagList(this.prefix),
-          description: dict.meta.tagListDescription(this.prefix),
-          url: `${SITE_URL}/${locale}/${this.prefix}/tag`,
-        },
+        openGraph: buildOpenGraph({
+          title,
+          description,
+          path: `/${locale}/${this.prefix}/tag`,
+          locale,
+        }),
+        twitter: buildTwitterCard({ title, description }),
       };
     };
   }

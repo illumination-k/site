@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
 
 import { defaultLocale, locales } from "@/lib/i18n";
-import { absoluteUrl } from "@/lib/seo";
+import {
+  SITE_NAME,
+  absoluteUrl,
+  buildOpenGraph,
+  buildTwitterCard,
+} from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
 /**
@@ -20,10 +25,22 @@ import { SITE_URL } from "@/lib/site";
  */
 const DEFAULT_LOCALE_PATH = `/${defaultLocale}`;
 
+const DESCRIPTION = "Software Engineer / Bioinformatics";
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "illumination-k.dev",
-  description: "Software Engineer / Bioinformatics",
+  title: SITE_NAME,
+  description: DESCRIPTION,
+  // The origin is the URL most inbound links point at, so it needs a social
+  // preview of its own: this page is outside `[locale]`, so it inherits
+  // nothing from the locale layout.
+  openGraph: buildOpenGraph({
+    title: SITE_NAME,
+    description: DESCRIPTION,
+    path: DEFAULT_LOCALE_PATH,
+    locale: defaultLocale,
+  }),
+  twitter: buildTwitterCard({ title: SITE_NAME, description: DESCRIPTION }),
   alternates: {
     // The origin is not a page in its own right — it is an alias of the default
     // locale homepage, so hand all of its signals to that URL.

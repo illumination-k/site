@@ -10,13 +10,8 @@ import GithubIcon from "@/icons/GithubIcon";
 import LinkedInIcon from "@/icons/LinkedInIcon";
 import OrcidIcon from "@/icons/OrcidIcon";
 import TwitterIcon from "@/icons/TwitterIcon";
-import {
-  type Locale,
-  getDictionary,
-  isLocale,
-  localeToOgLocale,
-} from "@/lib/i18n";
-import { buildAlternates } from "@/lib/seo";
+import { type Locale, getDictionary, isLocale } from "@/lib/i18n";
+import { buildAlternates, buildOpenGraph, buildTwitterCard } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -33,11 +28,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       canonicalLocale: locale,
       buildPath: (l) => `/${l}/profile`,
     }),
-    openGraph: {
+    openGraph: buildOpenGraph({
       title: dict.profile.title,
       description: dict.profile.description,
-      locale: localeToOgLocale[locale],
-    },
+      path: `/${locale}/profile`,
+      locale,
+    }),
+    twitter: buildTwitterCard({
+      title: dict.profile.title,
+      description: dict.profile.description,
+    }),
   };
 }
 
