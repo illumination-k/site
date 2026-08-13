@@ -11,7 +11,12 @@ import type { Metadata } from "next";
 import FooterBase from "@/components/FooterBase";
 import Nav from "@/components/Nav";
 import { getDictionary, isLocale, localeToOgLocale, locales } from "@/lib/i18n";
-import { FEED_TYPES } from "@/lib/seo";
+import {
+  DEFAULT_OG_IMAGE,
+  FEED_TYPES,
+  SITE_NAME,
+  TWITTER_CREATOR,
+} from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
 import AdsScripts from "../ads-scripts";
@@ -41,8 +46,8 @@ export async function generateMetadata({
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: "illumination-k.dev",
-      template: "%s | illumination-k.dev",
+      default: SITE_NAME,
+      template: `%s | ${SITE_NAME}`,
     },
     description: dict.meta.siteDescription,
     // Only the feeds here: a canonical set at the layout level would be
@@ -50,15 +55,20 @@ export async function generateMetadata({
     // each of them claim to be the locale homepage. Pages build their own
     // complete `alternates` with `buildAlternates`.
     alternates: { types: FEED_TYPES },
+    // Pages override `openGraph`/`twitter` wholesale rather than merging into
+    // these (see `buildOpenGraph`), so these values only apply to a page that
+    // declares no block of its own.
     openGraph: {
       type: "website",
-      siteName: "illumination-k.dev",
+      siteName: SITE_NAME,
       url: `${SITE_URL}/${locale}`,
       locale: localeToOgLocale[locale],
+      images: [{ ...DEFAULT_OG_IMAGE }],
     },
     twitter: {
-      card: "summary",
-      creator: "@illuminationK",
+      card: "summary_large_image",
+      creator: TWITTER_CREATOR,
+      images: [DEFAULT_OG_IMAGE.url],
     },
   };
 }

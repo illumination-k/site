@@ -20,7 +20,11 @@ export default function Toc({ className, headings, meta, prefix }: Props) {
   const heading = meta.lang === "ja" ? "目次" : "Contents";
   return (
     <article className={className}>
-      <h1
+      {/* The post title is the page's only <h1>; this is a sub-heading of it.
+          A second <h1> (and the <p> that used to be nested inside it — flow
+          content is not allowed in a heading) muddied the outline on every
+          post page. */}
+      <h2
         className={css({
           fontSize: "lg",
           fontWeight: "black",
@@ -28,8 +32,8 @@ export default function Toc({ className, headings, meta, prefix }: Props) {
           color: "text.primary",
         })}
       >
-        <p>{heading}</p>
-      </h1>
+        {heading}
+      </h2>
       <ul>
         {headings.map(({ value, depth }, i) => (
           <li className={css({ mt: 2 })} key={i}>

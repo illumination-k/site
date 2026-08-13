@@ -13,7 +13,7 @@ import {
   localeToOgLocale,
   locales,
 } from "@/lib/i18n";
-import { buildAlternates } from "@/lib/seo";
+import { SITE_NAME, TWITTER_CREATOR, buildAlternates } from "@/lib/seo";
 import { SITE_URL } from "@/lib/site";
 
 const paramsSchema = z.object({
@@ -88,6 +88,7 @@ export default class PostPageFactory {
         alternates,
         openGraph: {
           type: "article",
+          siteName: SITE_NAME,
           title: post.meta.title,
           description: post.meta.description,
           url,
@@ -108,6 +109,7 @@ export default class PostPageFactory {
         },
         twitter: {
           card: "summary_large_image",
+          creator: TWITTER_CREATOR,
           title: post.meta.title,
           description: post.meta.description,
           images: [`/og/${this.prefix}/${post.meta.uuid}.png`],

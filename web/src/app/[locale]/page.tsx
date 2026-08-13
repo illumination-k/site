@@ -10,13 +10,13 @@ import {
 } from "@heroicons/react/24/outline";
 import type { Metadata, Route } from "next";
 
+import { type Locale, getDictionary, isLocale } from "@/lib/i18n";
 import {
-  type Locale,
-  getDictionary,
-  isLocale,
-  localeToOgLocale,
-} from "@/lib/i18n";
-import { buildAlternates } from "@/lib/seo";
+  SITE_NAME,
+  buildAlternates,
+  buildOpenGraph,
+  buildTwitterCard,
+} from "@/lib/seo";
 
 const caveat = Caveat({ subsets: ["latin"] });
 
@@ -35,11 +35,16 @@ export async function generateMetadata({
       canonicalLocale: locale,
       buildPath: (l) => `/${l}`,
     }),
-    openGraph: {
-      title: "illumination-k.dev",
+    openGraph: buildOpenGraph({
+      title: SITE_NAME,
       description: dict.meta.siteDescription,
-      locale: localeToOgLocale[locale],
-    },
+      path: `/${locale}`,
+      locale,
+    }),
+    twitter: buildTwitterCard({
+      title: SITE_NAME,
+      description: dict.meta.siteDescription,
+    }),
   };
 }
 

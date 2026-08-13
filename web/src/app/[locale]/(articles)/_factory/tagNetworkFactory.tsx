@@ -5,8 +5,7 @@ import type { Metadata } from "next";
 import TagNetwork from "@/features/articles/components/TagNetwork";
 import type BlogService from "@/features/articles/service";
 import { type Locale, getDictionary, isLocale, localeToLang } from "@/lib/i18n";
-import { buildAlternates } from "@/lib/seo";
-import { SITE_URL } from "@/lib/site";
+import { buildAlternates, buildOpenGraph, buildTwitterCard } from "@/lib/seo";
 
 interface Props {
   params: Promise<{ locale: string }>;
@@ -42,11 +41,13 @@ export default class TagNetworkPageFactory {
           canonicalLocale: locale,
           buildPath: (l) => `/${l}/${this.prefix}/tag/network`,
         }),
-        openGraph: {
+        openGraph: buildOpenGraph({
           title,
           description,
-          url: `${SITE_URL}/${locale}/${this.prefix}/tag/network`,
-        },
+          path: `/${locale}/${this.prefix}/tag/network`,
+          locale,
+        }),
+        twitter: buildTwitterCard({ title, description }),
       };
     };
   }

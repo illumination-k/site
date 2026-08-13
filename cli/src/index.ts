@@ -8,7 +8,7 @@ import { dumpSinglePost, getDumpPosts, writeDump } from "./io";
 import { lintPosts } from "./lint";
 import { logger } from "./logger";
 import { generateRedirect } from "./migration";
-import generateOgImages from "./og";
+import generateOgImages, { generateDefaultOgImage } from "./og";
 import { fetchOrcidProfile } from "./orcid";
 import { template } from "./template";
 
@@ -191,6 +191,39 @@ yargs(hideBin(process.argv))
         argv.dst as string,
         argv.prefix as string,
         argv.fontDir as string,
+      );
+    }),
+  )
+  .command(
+    "og-default",
+    "Generate the site-wide default OG image",
+    (yargs) => {
+      yargs.positional("dst", {
+        type: "string",
+        describe: "destination path for the PNG",
+      });
+      yargs.positional("fontDir", {
+        type: "string",
+        describe: "directory containing font files",
+      });
+      yargs.positional("siteName", {
+        type: "string",
+        describe: "site name rendered on the card",
+        default: "illumination-k.dev",
+      });
+      yargs.positional("tagline", {
+        type: "string",
+        describe: "tagline rendered under the site name",
+        default: "Software Engineer / Bioinformatics",
+      });
+      yargs.demandOption(["dst", "fontDir"]);
+    },
+    guarded("og-default", async (argv) => {
+      await generateDefaultOgImage(
+        argv.dst as string,
+        argv.fontDir as string,
+        argv.siteName as string,
+        argv.tagline as string,
       );
     }),
   )
