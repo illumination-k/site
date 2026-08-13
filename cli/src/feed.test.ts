@@ -110,6 +110,10 @@ describe("generateFeed", () => {
       expect(body).toContain("First Post");
       expect(body).toContain("Second Post");
       expect(body).toContain("English Only Post");
+      // The `www.` host is not attached to the Cloudflare Pages project and
+      // 404s on every path (see web/src/lib/site.ts) — feeds must never
+      // advertise it.
+      expect(body).not.toContain("www.illumination-k.dev");
     }
 
     // feed.json should be valid JSON and deduped by UUID (3 posts, one of
@@ -129,7 +133,7 @@ describe("generateFeed", () => {
     // The English translation must not be emitted separately.
     expect(firstItem.title).toBe("First Post");
     expect(firstItem.url).toBe(
-      `https://www.illumination-k.dev/ja/techblog/post/${UUID_FIRST}`,
+      `https://illumination-k.dev/ja/techblog/post/${UUID_FIRST}`,
     );
   });
 
@@ -139,20 +143,20 @@ describe("generateFeed", () => {
     const urls: string[] = json.items.map((item: { url: string }) => item.url);
 
     expect(urls).toContain(
-      `https://www.illumination-k.dev/ja/techblog/post/${UUID_FIRST}`,
+      `https://illumination-k.dev/ja/techblog/post/${UUID_FIRST}`,
     );
     expect(urls).toContain(
-      `https://www.illumination-k.dev/ja/techblog/post/${UUID_SECOND}`,
+      `https://illumination-k.dev/ja/techblog/post/${UUID_SECOND}`,
     );
     // English-only post keeps its /en/ prefix.
     expect(urls).toContain(
-      `https://www.illumination-k.dev/en/techblog/post/${UUID_EN_ONLY}`,
+      `https://illumination-k.dev/en/techblog/post/${UUID_EN_ONLY}`,
     );
 
     // No item should link to an unprefixed /techblog/post/... URL.
     for (const u of urls) {
       expect(u).not.toMatch(
-        /https:\/\/www\.illumination-k\.dev\/techblog\/post\//,
+        /https:\/\/illumination-k\.dev\/techblog\/post\//,
       );
     }
   });
@@ -164,9 +168,9 @@ describe("generateFeed", () => {
 
     // English-only (2024-05-10) → Second (2024-04-01) → First (2024-02-01)
     expect(ids).toEqual([
-      `https://www.illumination-k.dev/en/techblog/post/${UUID_EN_ONLY}`,
-      `https://www.illumination-k.dev/ja/techblog/post/${UUID_SECOND}`,
-      `https://www.illumination-k.dev/ja/techblog/post/${UUID_FIRST}`,
+      `https://illumination-k.dev/en/techblog/post/${UUID_EN_ONLY}`,
+      `https://illumination-k.dev/ja/techblog/post/${UUID_SECOND}`,
+      `https://illumination-k.dev/ja/techblog/post/${UUID_FIRST}`,
     ]);
   });
 
