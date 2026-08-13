@@ -34,8 +34,14 @@ describe("plugin exports", () => {
     expect(REMARK_LINT_PLUGINS.length).toBeGreaterThan(0);
   });
 
-  it("REMARK_LINT_PLUGINS contains exactly 1 plugin", () => {
-    expect(REMARK_LINT_PLUGINS).toHaveLength(1);
+  it("REMARK_LINT_PLUGINS contains exactly 2 plugins", () => {
+    expect(REMARK_LINT_PLUGINS).toHaveLength(2);
+  });
+
+  it("all REMARK_LINT_PLUGINS entries are functions", () => {
+    for (const plugin of REMARK_LINT_PLUGINS) {
+      expect(typeof plugin).toBe("function");
+    }
   });
 
   it("all REMARK_PLUGINS entries are functions or arrays", () => {

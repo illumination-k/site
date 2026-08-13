@@ -104,10 +104,13 @@ npx textlint posts/techblog/ja/{category}/{filename}.md
 
 ### 6. cli lint検証（必須）
 
-cli lintを実行する。エラーがあれば修正する。検出される主な問題は2種類:
+cli lintを実行する。エラーがあれば修正する。検出される主な問題は3種類:
 
 - **レンダリングされない強調** — `**...**`や`*...*`がテキストのまま残る問題。典型的な原因は`**`の前後にスペースが必要なケース。
+- **禁止フレーズ** — 「半分だけ正しい」「と言っても過言ではない」のような、それらしく読めるが何も説明していないレトリック。エラーメッセージに代わりに何を書くべきかが出るので、それに従って具体的に書き直す。パターンは `packages/md-plugins/remark-plugins/lintBannedPhrases.ts` の `DEFAULT_BANNED_PHRASES` にある。
 - **SEO metaの文字数** — front-matterの`title`・`description`が想定範囲外だとエラーになる。日本語記事（`lang: ja`）の範囲は `title` 15〜60文字、`description` 50〜160文字。
+
+禁止フレーズを増やしたいときは `DEFAULT_BANNED_PHRASES` にパターンと理由を足す。パターンは**技術的に正当な用法まで巻き込まないよう狭く**書く（例: 「半分だけ」単体ではなく「半分だけ正しい」を対象にする）。
 
 ```bash
 pnpm cli:build && pnpm cli lint --src posts

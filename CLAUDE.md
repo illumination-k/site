@@ -74,7 +74,7 @@ The granular dump/og scripts (`cli:dump:techblog`, `cli:dump:paper-stream`, `cli
 5. Next.js consumes `web/dump/*.json` at build time for static page generation (`output: "export"`).
 6. Pagefind indexes the built `out/` directory for client-side search (`build:pagefind`).
 7. `pnpm cli paper-stream` exports posts from Notion (filtered by Status=`Done`) into `posts/paperStream` + `posts/public/paperStream`.
-8. `pnpm cli lint` runs custom lint rules on markdown posts (e.g. unrendered emphasis, SEO meta checks) — separate from textlint.
+8. `pnpm cli lint` runs custom lint rules on markdown posts (e.g. unrendered emphasis, banned rhetorical phrases, SEO meta checks) — separate from textlint.
 
 ## Formatting, Linting & Type Checking
 

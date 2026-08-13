@@ -12,6 +12,7 @@ import {
   FigureDirective,
   attachIdToHeadings,
   codeTitle,
+  lintBannedPhrases,
   lintUnrenderedEmphasis,
 } from "./remark-plugins";
 import remarkDirectiveEmbedGenerator, {
@@ -46,9 +47,14 @@ export const REHYPE_PLUGINS = {
   rehypePrism,
 };
 
-export const REMARK_LINT_PLUGINS = [lintUnrenderedEmphasis];
+export const REMARK_LINT_PLUGINS = [lintUnrenderedEmphasis, lintBannedPhrases];
 
 export { lintUnrenderedEmphasis } from "./remark-plugins";
+export {
+  lintBannedPhrases,
+  DEFAULT_BANNED_PHRASES,
+  type BannedPhrase,
+} from "./remark-plugins";
 
 export {
   fetchWithRetry,
