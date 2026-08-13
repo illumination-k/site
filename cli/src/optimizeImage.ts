@@ -5,8 +5,6 @@ import util from "node:util";
 
 import type { Image, Root } from "mdast";
 
-import sizeOf from "image-size";
-
 import { cacheGet, cacheSet, fetchWithRetry, getCacheKey } from "md-plugins";
 import sharp from "sharp";
 import { file } from "tmp-promise";
@@ -75,7 +73,14 @@ type Option = {
 
 const writeAsync = util.promisify(fs.writeFile);
 const copyAsync = util.promisify(fs.copyFile);
-const sizeOfAsync = util.promisify(sizeOf);
+
+// image-sizeはICNS/JXL/HEIFパーサに未修正のDoS脆弱性
+// (GHSA-w3rx-r6r6-pgpr / GHSA-5p2g-fcmc-qvqq)があるため、
+// すでに依存しているsharpのmetadataでサイズを取得する
+const sizeOfAsync = async (imagePath: string): Promise<Size> => {
+  const { width, height } = await sharp(imagePath).metadata();
+  return { width, height };
+};
 
 const optimizeImage = (option: Option) => {
   const postDirPath = path.resolve(path.dirname(option.postPath.toString()));
