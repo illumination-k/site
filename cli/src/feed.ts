@@ -29,7 +29,10 @@ function pickPrimaryVersions(posts: DumpPost[]): DumpPost[] {
 
 export default async function generateFeed(dumpPath: PathLike, dst: PathLike) {
   const dump = await readDump(dumpPath);
-  const url = "https://www.illumination-k.dev";
+  // Must stay in sync with `web/src/lib/site.ts` (SITE_URL): the `www.`
+  // variant is not attached to the Cloudflare Pages project and 404s on
+  // every path, so feed links must use the bare apex host.
+  const url = "https://illumination-k.dev";
   const now = new Date();
 
   const author: Author = {
