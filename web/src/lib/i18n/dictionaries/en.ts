@@ -120,6 +120,12 @@ const en: Dictionary = {
     subtitle: "Employment, Education & Publications",
     description:
       "Profile of illumination-k — employment, education, and publications (via ORCID)",
+    biography: "Biography",
+    biographyParagraphs: [
+      "illumination-k (Shogo Kawamura) works in software engineering and bioinformatics, holding a BSc in Agriculture and a PhD in Biostudies from Kyoto University (2023), supported by a JSPS Research Fellowship from 2021 to 2023.",
+      "Research covers the genomics and transcriptomics of the liverwort Marchantia polymorpha — the MarpolBase and MarpolBase Expression databases, identification of its sex-determining factor, and deep-learning analysis of morphological variation — with papers in Current Biology, Cell Reports, and Plant and Cell Physiology.",
+      "Since 2023, illumination-k has worked as a software engineer at Preferred Networks while continuing to collaborate on liverwort genome projects, and writes about Rust, Python, front-end development, and bioinformatics at illumination-k.dev.",
+    ],
     employment: "Employment",
     education: "Education",
     publications: "Publications",

@@ -129,6 +129,15 @@ const ja: Dictionary = {
     subtitle: "経歴・学歴・論文",
     description:
       "illumination-k のプロフィール — 経歴・学歴・論文一覧（ORCID連携）",
+    biography: "経歴書",
+    // 資格・受賞歴・特技・趣味は公開情報から確認できないため未記載。
+    // 追記する場合は 3 言語すべてを更新し、日本語は 700 文字以内に収めること
+    // （web/src/lib/i18n/biography.test.ts が文字数と三人称表記を検証する）。
+    biographyParagraphs: [
+      "illumination-k（Shogo Kawamura）は、バイオインフォマティクスとソフトウェアエンジニアリングを専門とする。京都大学農学部を卒業後、同大学院生命科学研究科で修士課程・博士課程を修了し、2023年に博士号を取得した。博士課程在学中は日本学術振興会特別研究員（2021年〜2023年）を務めた。",
+      "研究テーマはゼニゴケ Marchantia polymorpha のゲノム・トランスクリプトーム解析であり、公開データベース MarpolBase および MarpolBase Expression の開発、性決定因子の同定、深層学習を用いた形態変異の解析などに携わってきた。成果は Current Biology、Cell Reports、Plant and Cell Physiology 等の学術誌に発表されている。",
+      "2023年より Preferred Networks にソフトウェアエンジニアとして勤務するかたわら、ゼニゴケ類のゲノム解析プロジェクトに共同研究者として参加を続けている。個人サイト illumination-k.dev では、Rust、Python、フロントエンド開発、バイオインフォマティクスに関する記事を日本語と英語を中心に公開している。",
+    ],
     employment: "職歴",
     education: "学歴",
     publications: "論文",

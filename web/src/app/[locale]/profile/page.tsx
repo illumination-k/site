@@ -2,6 +2,7 @@ import { css } from "@/styled-system/css";
 
 import type { Metadata } from "next";
 
+import { Biography } from "@/features/profile/components/Biography";
 import { EducationList } from "@/features/profile/components/EducationList";
 import { EmploymentList } from "@/features/profile/components/EmploymentList";
 import { WorkList } from "@/features/profile/components/WorkList";
@@ -202,6 +203,14 @@ export default async function ProfilePage({ params }: Props) {
           <span>LinkedIn</span>
         </a>
       </div>
+
+      {/* Biography */}
+      {dict.profile.biographyParagraphs.length > 0 && (
+        <section className={sectionStyle}>
+          <h2 className={sectionHeadingStyle}>{dict.profile.biography}</h2>
+          <Biography paragraphs={dict.profile.biographyParagraphs} />
+        </section>
+      )}
 
       {/* Employment */}
       {profile.employments.length > 0 && (

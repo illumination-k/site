@@ -53,6 +53,8 @@ export interface Dictionary {
     title: string;
     subtitle: string;
     description: string;
+    biography: string;
+    biographyParagraphs: string[];
     employment: string;
     education: string;
     publications: string;
