@@ -124,7 +124,7 @@ const es: Dictionary = {
       "Perfil de illumination-k — empleo, educación y publicaciones (vía ORCID)",
     biography: "Biografía",
     biographyParagraphs: [
-      "Shogo Kawamura trabaja en biología molecular, bioinformática e ingeniería de software. Cursó la licenciatura en Agronomía y el doctorado en biología molecular en la Universidad de Kioto (2023), con una beca de investigación de la JSPS entre 2021 y 2023.",
+      "Shogo Kawamura trabaja en biología molecular, bioinformática e ingeniería de software. Cursó la licenciatura en Agronomía y el doctorado en Biociencias (Biostudies) en la Universidad de Kioto (2023), con una beca de investigación de la JSPS entre 2021 y 2023.",
       "Su investigación se centra en la genómica y la transcriptómica de la hepática Marchantia polymorpha: las bases de datos MarpolBase y MarpolBase Expression, la identificación de su factor determinante del sexo y el análisis de la variación morfológica mediante aprendizaje profundo, con artículos en Current Biology, Cell Reports y Plant and Cell Physiology.",
       "Desde 2023 investiga y desarrolla software en Preferred Networks, con foco en el aprendizaje automático, y sigue colaborando en proyectos de genómica de hepáticas.",
     ],
