@@ -2,6 +2,7 @@ import type {
   ProfileDump,
   ProfileEducation,
   ProfileEmployment,
+  ProfileFunding,
   ProfileWork,
   ProfileWorkAuthor,
 } from "common/profile";
@@ -165,6 +166,58 @@ export async function fetchEducations(
     "affiliation-group": OrcidAffiliationGroup[];
   };
   return parseAffiliations(data["affiliation-group"], "education-summary");
+}
+
+interface OrcidFundingSummary {
+  title: { title: { value: string } };
+  type?: string | null;
+  organization: OrcidOrganization;
+  "start-date"?: OrcidDate | null;
+  "end-date"?: OrcidDate | null;
+  "external-ids"?: {
+    "external-id"?: OrcidExternalId[];
+  } | null;
+  url?: { value: string } | null;
+}
+
+interface OrcidFundingGroup {
+  "funding-summary": OrcidFundingSummary[];
+}
+
+export async function fetchFundings(
+  orcidId: string,
+): Promise<ProfileFunding[]> {
+  const data = (await fetchOrcidJson(orcidId, "fundings")) as {
+    group: OrcidFundingGroup[];
+  };
+
+  const fundings: ProfileFunding[] = [];
+
+  for (const group of data.group ?? []) {
+    // ORCID already groups the duplicate claims of one grant together, so the
+    // first summary in a group is enough.
+    const summary = group["funding-summary"]?.[0];
+    if (!summary) continue;
+
+    const externalIds = summary["external-ids"]?.["external-id"] ?? [];
+    const grantId = externalIds.find(
+      (id) => id["external-id-type"] === "grant_number",
+    );
+
+    fundings.push({
+      title: summary.title.title.value,
+      organizationName: summary.organization.name,
+      type: summary.type ?? undefined,
+      grantNumber: grantId?.["external-id-value"] ?? undefined,
+      url: summary.url?.value ?? grantId?.["external-id-url"]?.value,
+      startDate: formatOrcidDate(summary["start-date"]),
+      endDate: formatOrcidDate(summary["end-date"]),
+    });
+  }
+
+  // Sort by startDate descending (most recent first)
+  fundings.sort((a, b) => (b.startDate ?? "").localeCompare(a.startDate ?? ""));
+  return fundings;
 }
 
 function selectPreferredSummary(
@@ -393,12 +446,14 @@ export async function fetchWorks(orcidId: string): Promise<ProfileWork[]> {
 export async function fetchOrcidProfile(orcidId: string): Promise<ProfileDump> {
   logger.info({ orcidId }, "Fetching ORCID profile");
 
-  const [ownerNames, employments, educations, works] = await Promise.all([
-    fetchOwnerNames(orcidId),
-    fetchEmployments(orcidId),
-    fetchEducations(orcidId),
-    fetchWorks(orcidId),
-  ]);
+  const [ownerNames, employments, educations, works, fundings] =
+    await Promise.all([
+      fetchOwnerNames(orcidId),
+      fetchEmployments(orcidId),
+      fetchEducations(orcidId),
+      fetchWorks(orcidId),
+      fetchFundings(orcidId),
+    ]);
 
   logger.info(
     {
@@ -406,6 +461,7 @@ export async function fetchOrcidProfile(orcidId: string): Promise<ProfileDump> {
       employments: employments.length,
       educations: educations.length,
       works: works.length,
+      fundings: fundings.length,
     },
     "ORCID profile fetched",
   );
@@ -417,5 +473,6 @@ export async function fetchOrcidProfile(orcidId: string): Promise<ProfileDump> {
     employments,
     educations,
     works,
+    fundings,
   };
 }

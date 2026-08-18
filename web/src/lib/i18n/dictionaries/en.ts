@@ -120,9 +120,16 @@ const en: Dictionary = {
     subtitle: "Employment, Education & Publications",
     description:
       "Profile of illumination-k — employment, education, and publications (via ORCID)",
+    biography: "Biography",
+    biographyParagraphs: [
+      "Shogo Kawamura works in molecular biology, bioinformatics, and software engineering, holding a BSc in Agriculture and a PhD in Biostudies from Kyoto University (2023), supported from 2021 to 2023 by a Grant-in-Aid for JSPS Fellows (DC2, 21J15550).",
+      "The main contributions are the MarpolBase and MarpolBase Expression databases and the ancestral gibberellin-related pathway of the liverwort Marchantia polymorpha, where a SABATH-family enzyme was shown to regulate development. Related work spans a GRAS transcription factor mediating far-red light responses, the sex-determining factor, and deep-learning analysis of morphological variation, with papers in The Plant Cell, Current Biology, and Plant and Cell Physiology.",
+      "Since 2023, Shogo Kawamura has been a researcher and engineer at Preferred Networks, working on machine learning while continuing to collaborate on liverwort genome projects.",
+    ],
     employment: "Employment",
     education: "Education",
     publications: "Publications",
+    funding: "Funding",
     present: "Present",
   },
 };

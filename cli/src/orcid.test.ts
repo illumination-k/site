@@ -5,6 +5,7 @@ import {
   dedupeWorksByTitle,
   fetchCitationCount,
   fetchCrossrefWorkMetadata,
+  fetchFundings,
   fetchOwnerNames,
   titleSimilarity,
 } from "./orcid";
@@ -210,6 +211,160 @@ describe("fetchOwnerNames", () => {
     expect(aliases).toEqual(
       expect.arrayContaining(["Jane Doe", "Doe Jane", "Jane Q. Doe", "J. Doe"]),
     );
+  });
+});
+
+describe("fetchFundings", () => {
+  const originalFetch = globalThis.fetch;
+
+  afterEach(() => {
+    globalThis.fetch = originalFetch;
+  });
+
+  function mockFundings(body: unknown) {
+    globalThis.fetch = vi.fn(
+      async () => new Response(JSON.stringify(body), { status: 200 }),
+    ) as unknown as typeof fetch;
+  }
+
+  it("maps a funding summary onto the profile shape", async () => {
+    mockFundings({
+      group: [
+        {
+          "funding-summary": [
+            {
+              title: {
+                title: {
+                  value:
+                    "陸上植物における植物ホルモン・ジベレリンを介した生殖細胞分化機構の解明",
+                },
+              },
+              type: "grant",
+              organization: {
+                name: "Japan Society for the Promotion of Science",
+              },
+              "start-date": { year: { value: "2021" }, month: { value: "4" } },
+              "end-date": { year: { value: "2023" }, month: { value: "3" } },
+              "external-ids": {
+                "external-id": [
+                  {
+                    "external-id-type": "grant_number",
+                    "external-id-value": "21J15550",
+                    "external-id-url": {
+                      value:
+                        "https://kaken.nii.ac.jp/ja/grant/KAKENHI-PROJECT-21J15550/",
+                    },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    const fundings = await fetchFundings("0000-0002-3066-2940");
+    expect(fundings).toEqual([
+      {
+        title:
+          "陸上植物における植物ホルモン・ジベレリンを介した生殖細胞分化機構の解明",
+        organizationName: "Japan Society for the Promotion of Science",
+        type: "grant",
+        grantNumber: "21J15550",
+        url: "https://kaken.nii.ac.jp/ja/grant/KAKENHI-PROJECT-21J15550/",
+        startDate: "2021-04",
+        endDate: "2023-03",
+      },
+    ]);
+  });
+
+  it("prefers the summary url over the grant number url", async () => {
+    mockFundings({
+      group: [
+        {
+          "funding-summary": [
+            {
+              title: { title: { value: "Funded project" } },
+              organization: { name: "Funder" },
+              url: { value: "https://example.com/project" },
+              "external-ids": {
+                "external-id": [
+                  {
+                    "external-id-type": "grant_number",
+                    "external-id-value": "123",
+                    "external-id-url": { value: "https://example.org/grant" },
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    const fundings = await fetchFundings("0000-0000-0000-0000");
+    expect(fundings[0]?.url).toBe("https://example.com/project");
+  });
+
+  it("ignores external ids that are not grant numbers", async () => {
+    mockFundings({
+      group: [
+        {
+          "funding-summary": [
+            {
+              title: { title: { value: "Award without a grant number" } },
+              organization: { name: "Funder" },
+              "external-ids": {
+                "external-id": [
+                  {
+                    "external-id-type": "doi",
+                    "external-id-value": "10.1/x",
+                  },
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    });
+
+    const fundings = await fetchFundings("0000-0000-0000-0000");
+    expect(fundings[0]?.grantNumber).toBeUndefined();
+    expect(fundings[0]?.url).toBeUndefined();
+  });
+
+  it("sorts by start date, most recent first, and skips empty groups", async () => {
+    mockFundings({
+      group: [
+        {
+          "funding-summary": [
+            {
+              title: { title: { value: "Older" } },
+              organization: { name: "Funder" },
+              "start-date": { year: { value: "2018" } },
+            },
+          ],
+        },
+        { "funding-summary": [] },
+        {
+          "funding-summary": [
+            {
+              title: { title: { value: "Newer" } },
+              organization: { name: "Funder" },
+              "start-date": { year: { value: "2021" } },
+            },
+          ],
+        },
+      ],
+    });
+
+    const fundings = await fetchFundings("0000-0000-0000-0000");
+    expect(fundings.map((f) => f.title)).toEqual(["Newer", "Older"]);
+  });
+
+  it("returns an empty list when the record has no funding", async () => {
+    mockFundings({ group: [] });
+    expect(await fetchFundings("0000-0000-0000-0000")).toEqual([]);
   });
 });
 
