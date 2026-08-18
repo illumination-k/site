@@ -7,7 +7,9 @@ import { getDictionary } from "./getDictionary";
 // submissions, so it has to stay short enough to paste into those forms:
 // ~700 characters in Japanese, ~100 words in the latin-script locales.
 const MAX_JA_CHARACTERS = 700;
-const MAX_WORDS = 130;
+// Spanish needs roughly 15% more words than English to say the same thing,
+// so the two latin locales get their own ceilings rather than one shared cap.
+const MAX_WORDS: Record<"en" | "es", number> = { en: 130, es: 145 };
 
 // A blurb written for a third party must not slip into first person.
 const FIRST_PERSON_PATTERNS: Record<string, RegExp> = {
@@ -40,7 +42,7 @@ describe("profile biography", () => {
         .join(" ")
         .split(/\s+/)
         .filter(Boolean);
-      expect(words.length).toBeLessThanOrEqual(MAX_WORDS);
+      expect(words.length).toBeLessThanOrEqual(MAX_WORDS[locale]);
     },
   );
 

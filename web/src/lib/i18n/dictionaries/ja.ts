@@ -135,7 +135,7 @@ const ja: Dictionary = {
     // （web/src/lib/i18n/biography.test.ts が文字数と三人称表記を検証する）。
     biographyParagraphs: [
       "Shogo Kawamura は、分子生物学とバイオインフォマティクス、およびソフトウェアエンジニアリングを専門とする。京都大学農学部を卒業後、同大学院生命科学研究科で分子生物学を専攻し、2023年に博士号を取得した。博士課程在学中は日本学術振興会特別研究員（2021年〜2023年）を務めた。",
-      "研究テーマはゼニゴケ Marchantia polymorpha のゲノム・トランスクリプトーム解析であり、公開データベース MarpolBase および MarpolBase Expression の開発、性決定因子の同定、深層学習を用いた形態変異の解析などに携わってきた。成果は Current Biology、Cell Reports、Plant and Cell Physiology 等の学術誌に発表されている。",
+      "主要な研究成果は、ゼニゴケ Marchantia polymorpha がもつ祖先的なジベレリン関連経路の解明である。SABATH ファミリー酵素が同経路を介して発生を制御すること、および GRAS 転写因子がジベレリン関連化合物を介して遠赤色光応答を担うことを明らかにした。あわせて、公開データベース MarpolBase および MarpolBase Expression の開発、性決定因子の同定、深層学習を用いた形態変異の解析にも携わり、成果は The Plant Cell、Current Biology、Cell Reports、Plant and Cell Physiology 等の学術誌に発表されている。",
       "2023年より Preferred Networks でリサーチャー／エンジニアとして機械学習に関する研究開発に従事するかたわら、ゼニゴケ類のゲノム解析プロジェクトにも共同研究者として参加を続けている。",
     ],
     employment: "職歴",

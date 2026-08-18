@@ -123,7 +123,7 @@ const en: Dictionary = {
     biography: "Biography",
     biographyParagraphs: [
       "Shogo Kawamura works in molecular biology, bioinformatics, and software engineering, holding a BSc in Agriculture and a PhD in Biostudies from Kyoto University (2023), supported by a JSPS Research Fellowship from 2021 to 2023.",
-      "Research covers the genomics and transcriptomics of the liverwort Marchantia polymorpha — the MarpolBase and MarpolBase Expression databases, identification of its sex-determining factor, and deep-learning analysis of morphological variation — with papers in Current Biology, Cell Reports, and Plant and Cell Physiology.",
+      "The main contribution is on the ancestral gibberellin-related pathway of the liverwort Marchantia polymorpha: a SABATH-family enzyme that regulates development through it, and a GRAS transcription factor that mediates far-red light responses via gibberellin-related compounds. Related work spans the MarpolBase databases, the sex-determining factor, and deep-learning analysis of morphological variation, with papers in The Plant Cell, Current Biology, and Plant and Cell Physiology.",
       "Since 2023, Shogo Kawamura has been a researcher and engineer at Preferred Networks, working on machine learning while continuing to collaborate on liverwort genome projects.",
     ],
     employment: "Employment",
