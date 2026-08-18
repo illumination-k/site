@@ -125,7 +125,7 @@ const es: Dictionary = {
     biography: "Biografía",
     biographyParagraphs: [
       "Shogo Kawamura trabaja en biología molecular, bioinformática e ingeniería de software. Cursó la licenciatura en Agronomía y el doctorado en Biociencias (Biostudies) en la Universidad de Kioto (2023), con una ayuda Grant-in-Aid for JSPS Fellows (DC2, 21J15550) entre 2021 y 2023.",
-      "Su principal aportación es la vía ancestral de las giberelinas en la hepática Marchantia polymorpha: una enzima SABATH que regula el desarrollo por esa vía y un factor de transcripción GRAS que media las respuestas a la luz rojo lejano. También ha trabajado en las bases de datos MarpolBase, el factor determinante del sexo y el análisis morfológico mediante aprendizaje profundo, con artículos en The Plant Cell, Current Biology y Plant and Cell Physiology.",
+      "Sus principales aportaciones son las bases de datos MarpolBase y MarpolBase Expression y la vía ancestral de las giberelinas en la hepática Marchantia polymorpha, donde demostró que una enzima SABATH regula el desarrollo. En trabajos relacionados figuran un factor de transcripción GRAS que media las respuestas a la luz rojo lejano, el factor determinante del sexo y el análisis morfológico mediante aprendizaje profundo, con artículos en The Plant Cell, Current Biology y Plant and Cell Physiology.",
       "Desde 2023 investiga y desarrolla software en Preferred Networks, con foco en el aprendizaje automático, y sigue colaborando en proyectos de genómica de hepáticas.",
     ],
     employment: "Empleo",
