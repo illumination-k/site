@@ -131,6 +131,7 @@ const es: Dictionary = {
     employment: "Empleo",
     education: "Educación",
     publications: "Publicaciones",
+    funding: "Financiación",
     present: "Actual",
   },
 };

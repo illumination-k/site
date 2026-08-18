@@ -58,6 +58,7 @@ export interface Dictionary {
     employment: string;
     education: string;
     publications: string;
+    funding: string;
     present: string;
   };
   post: {

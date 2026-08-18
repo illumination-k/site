@@ -129,6 +129,7 @@ const en: Dictionary = {
     employment: "Employment",
     education: "Education",
     publications: "Publications",
+    funding: "Funding",
     present: "Present",
   },
 };

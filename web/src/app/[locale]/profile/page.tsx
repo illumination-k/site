@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import { Biography } from "@/features/profile/components/Biography";
 import { EducationList } from "@/features/profile/components/EducationList";
 import { EmploymentList } from "@/features/profile/components/EmploymentList";
+import { FundingList } from "@/features/profile/components/FundingList";
 import { WorkList } from "@/features/profile/components/WorkList";
 import { profileRepository } from "@/features/profile/constants";
 import GithubIcon from "@/icons/GithubIcon";
@@ -229,6 +230,17 @@ export default async function ProfilePage({ params }: Props) {
           <h2 className={sectionHeadingStyle}>{dict.profile.education}</h2>
           <EducationList
             educations={profile.educations}
+            presentLabel={dict.profile.present}
+          />
+        </section>
+      )}
+
+      {/* Funding */}
+      {profile.fundings.length > 0 && (
+        <section className={sectionStyle}>
+          <h2 className={sectionHeadingStyle}>{dict.profile.funding}</h2>
+          <FundingList
+            fundings={profile.fundings}
             presentLabel={dict.profile.present}
           />
         </section>

@@ -40,6 +40,18 @@ export const profileWorkSchema = z.object({
 
 export type ProfileWork = z.infer<typeof profileWorkSchema>;
 
+export const profileFundingSchema = z.object({
+  title: z.string(),
+  organizationName: z.string(),
+  type: z.string().optional(),
+  grantNumber: z.string().optional(),
+  url: z.string().optional(),
+  startDate: z.string().optional(),
+  endDate: z.string().optional(),
+});
+
+export type ProfileFunding = z.infer<typeof profileFundingSchema>;
+
 export const profileDumpSchema = z.object({
   orcidId: z.string(),
   fetchedAt: z.string(),
@@ -47,6 +59,7 @@ export const profileDumpSchema = z.object({
   employments: z.array(profileEmploymentSchema),
   educations: z.array(profileEducationSchema),
   works: z.array(profileWorkSchema),
+  fundings: z.array(profileFundingSchema).default([]),
 });
 
 export type ProfileDump = z.infer<typeof profileDumpSchema>;

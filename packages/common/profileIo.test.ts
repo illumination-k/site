@@ -20,6 +20,13 @@ function makeValidDump(): ProfileDump {
         authors: [{ name: "Jane Doe", orcid: "0000-0000-0000-0001" }],
       },
     ],
+    fundings: [
+      {
+        title: "A Grant",
+        organizationName: "Funding Agency",
+        grantNumber: "12345",
+      },
+    ],
   };
 }
 

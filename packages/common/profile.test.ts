@@ -4,6 +4,7 @@ import {
   profileDumpSchema,
   profileEducationSchema,
   profileEmploymentSchema,
+  profileFundingSchema,
   profileWorkAuthorSchema,
   profileWorkSchema,
 } from "./profile";
@@ -142,6 +143,44 @@ describe("profileWorkSchema", () => {
   });
 });
 
+describe("profileFundingSchema", () => {
+  it("parses a fully populated funding record", () => {
+    const result = profileFundingSchema.parse({
+      title: "Grant-in-Aid for JSPS Fellows",
+      organizationName: "Japan Society for the Promotion of Science",
+      type: "grant",
+      grantNumber: "21J15550",
+      url: "https://kaken.nii.ac.jp/ja/grant/KAKENHI-PROJECT-21J15550/",
+      startDate: "2021-04",
+      endDate: "2023-03",
+    });
+
+    expect(result.grantNumber).toBe("21J15550");
+    expect(result.organizationName).toBe(
+      "Japan Society for the Promotion of Science",
+    );
+  });
+
+  it("requires title and organizationName", () => {
+    expect(() => profileFundingSchema.parse({ title: "No funder" })).toThrow();
+    expect(() =>
+      profileFundingSchema.parse({ organizationName: "No title" }),
+    ).toThrow();
+  });
+
+  it("treats type, grantNumber, url and the dates as optional", () => {
+    const result = profileFundingSchema.parse({
+      title: "Bare grant",
+      organizationName: "Funder",
+    });
+    expect(result.type).toBeUndefined();
+    expect(result.grantNumber).toBeUndefined();
+    expect(result.url).toBeUndefined();
+    expect(result.startDate).toBeUndefined();
+    expect(result.endDate).toBeUndefined();
+  });
+});
+
 describe("profileDumpSchema", () => {
   function validDump() {
     return {
@@ -186,6 +225,25 @@ describe("profileDumpSchema", () => {
   it("requires educations to be an array", () => {
     expect(() =>
       profileDumpSchema.parse({ ...validDump(), educations: null }),
+    ).toThrow();
+  });
+
+  it("defaults fundings to an empty array for dumps written before the field existed", () => {
+    const result = profileDumpSchema.parse(validDump());
+    expect(result.fundings).toEqual([]);
+  });
+
+  it("parses fundings when present", () => {
+    const result = profileDumpSchema.parse({
+      ...validDump(),
+      fundings: [{ title: "Grant", organizationName: "Funder" }],
+    });
+    expect(result.fundings).toHaveLength(1);
+  });
+
+  it("rejects a fundings entry with the wrong shape", () => {
+    expect(() =>
+      profileDumpSchema.parse({ ...validDump(), fundings: [{ title: 1 }] }),
     ).toThrow();
   });
 
