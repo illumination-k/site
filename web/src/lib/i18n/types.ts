@@ -11,6 +11,7 @@ export interface Dictionary {
     paperStream: string;
     paperStreamSub: string;
     profile: string;
+    oss: string;
   };
   nav: {
     techBlog: string;
@@ -67,5 +68,12 @@ export interface Dictionary {
     aiGeneratedWarning: string;
     githubIssuePrompt: string;
     readNext: string;
+  };
+  oss: {
+    title: string;
+    subtitle: string;
+    description: string;
+    homepage: string;
+    moreOnGithub: string;
   };
 }

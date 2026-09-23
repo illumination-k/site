@@ -9,6 +9,7 @@ const ja: Dictionary = {
     paperStream: "Paper Stream",
     paperStreamSub: "論文メモ",
     profile: "プロフィール",
+    oss: "OSS",
   },
   // Navigation
   nav: {
@@ -143,6 +144,13 @@ const ja: Dictionary = {
     publications: "論文",
     funding: "研究助成",
     present: "現在",
+  },
+  oss: {
+    title: "OSS",
+    subtitle: "OSS プロジェクト",
+    description: "illumination-k が開発・公開している OSS プロジェクトの一覧",
+    homepage: "ドキュメント",
+    moreOnGithub: "GitHub ですべてのリポジトリを見る",
   },
 };
 
