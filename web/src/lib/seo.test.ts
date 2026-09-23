@@ -131,7 +131,7 @@ describe("buildTwitterCard", () => {
   });
 
   it("falls back to the site-wide preview image", () => {
-    expect(buildTwitterCard(input).images).toEqual([DEFAULT_OG_IMAGE.url]);
+    expect(buildTwitterCard(input)?.images).toEqual([DEFAULT_OG_IMAGE.url]);
   });
 });
 
