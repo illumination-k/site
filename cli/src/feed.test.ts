@@ -155,9 +155,7 @@ describe("generateFeed", () => {
 
     // No item should link to an unprefixed /techblog/post/... URL.
     for (const u of urls) {
-      expect(u).not.toMatch(
-        /https:\/\/illumination-k\.dev\/techblog\/post\//,
-      );
+      expect(u).not.toMatch(/https:\/\/illumination-k\.dev\/techblog\/post\//);
     }
   });
 

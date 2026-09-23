@@ -8,6 +8,7 @@ const en: Dictionary = {
     paperStream: "Paper Stream",
     paperStreamSub: "Paper notes",
     profile: "Profile",
+    oss: "OSS",
   },
   nav: {
     techBlog: "TechBlog",
@@ -131,6 +132,13 @@ const en: Dictionary = {
     publications: "Publications",
     funding: "Funding",
     present: "Present",
+  },
+  oss: {
+    title: "OSS",
+    subtitle: "Open Source Projects",
+    description: "Open source projects developed by illumination-k",
+    homepage: "Docs",
+    moreOnGithub: "See all repositories on GitHub",
   },
 };
 

@@ -99,7 +99,7 @@ describe("PostPageFactory", () => {
       expect(meta.openGraph?.locale).toBe("ja_JP");
       const ogImages = meta.openGraph?.images as { url: string }[];
       expect(ogImages[0].url).toBe(`/og/techblog/${UUID}.png`);
-      expect(meta.twitter?.card).toBe("summary_large_image");
+      expect(meta.twitter).toMatchObject({ card: "summary_large_image" });
     });
 
     it("uses the english OG locale when locale is en", async () => {

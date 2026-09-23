@@ -10,7 +10,12 @@ export const dynamic = "force-static";
 
 const BASE_URL = SITE_URL;
 
-const STATIC_PATHS = ["disclaimer", "privacy-policy", "profile"] as const;
+const STATIC_PATHS = [
+  "disclaimer",
+  "privacy-policy",
+  "profile",
+  "oss",
+] as const;
 
 /** Article prefixes that ship a `/tag/network` page. */
 const TAG_NETWORK_PREFIXES = ["techblog", "paperstream"] as const;

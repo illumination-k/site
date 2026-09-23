@@ -5,6 +5,7 @@ import { css, cx } from "@/styled-system/css";
 
 import {
   BookOpenIcon,
+  CodeBracketIcon,
   DocumentTextIcon,
   UserIcon,
 } from "@heroicons/react/24/outline";
@@ -19,6 +20,28 @@ import {
 } from "@/lib/seo";
 
 const caveat = Caveat({ subsets: ["latin"] });
+
+const pillLinkStyle = css({
+  display: "inline-flex",
+  alignItems: "center",
+  gap: 2,
+  px: 5,
+  py: 2.5,
+  rounded: "full",
+  bg: "bg.surface",
+  borderWidth: 1,
+  borderColor: "border.default",
+  color: "text.secondary",
+  fontSize: "sm",
+  fontWeight: "medium",
+  transition: "all",
+  transitionDuration: "normal",
+  _hover: {
+    borderColor: "accent.primary",
+    color: "accent.primary",
+    transform: "translateY(-1px)",
+  },
+});
 
 export async function generateMetadata({
   params,
@@ -122,35 +145,28 @@ export default async function Home({
           })}
         />
 
-        {/* Profile Link */}
-        <Link
-          href={`/${locale}/profile` as Route}
+        {/* Profile / OSS Links */}
+        <div
           className={css({
-            display: "inline-flex",
-            alignItems: "center",
-            gap: 2,
-            px: 5,
-            py: 2.5,
-            rounded: "full",
-            bg: "bg.surface",
-            borderWidth: 1,
-            borderColor: "border.default",
-            color: "text.secondary",
-            fontSize: "sm",
-            fontWeight: "medium",
-            transition: "all",
-            transitionDuration: "normal",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+            gap: 3,
             animation: "fadeInUp 0.6s ease-out 0.2s both",
-            _hover: {
-              borderColor: "accent.primary",
-              color: "accent.primary",
-              transform: "translateY(-1px)",
-            },
           })}
         >
-          <UserIcon aria-hidden="true" className={css({ h: 4, w: 4 })} />
-          <span>{dict.home.profile}</span>
-        </Link>
+          <Link href={`/${locale}/profile` as Route} className={pillLinkStyle}>
+            <UserIcon aria-hidden="true" className={css({ h: 4, w: 4 })} />
+            <span>{dict.home.profile}</span>
+          </Link>
+          <Link href={`/${locale}/oss` as Route} className={pillLinkStyle}>
+            <CodeBracketIcon
+              aria-hidden="true"
+              className={css({ h: 4, w: 4 })}
+            />
+            <span>{dict.home.oss}</span>
+          </Link>
+        </div>
 
         {/* Content Cards */}
         <div
